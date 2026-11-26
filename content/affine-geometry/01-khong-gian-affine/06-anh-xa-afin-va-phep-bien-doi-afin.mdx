@@ -1,17 +1,18 @@
 ---
 id: anh-xa-afin-va-phep-bien-doi-afin
 title: "Ánh xạ Affine và Phép Biến đổi Affine"
-description: "Định nghĩa ánh xạ affine, ánh xạ tuyến tính liên kết, phương trình tọa độ và phép biến đổi affine."
-estimatedMinutes: 45
+description: "Định nghĩa và các tính chất cơ bản của ánh xạ affine, đẳng cấu affine, phép biến đổi affine, phương trình ma trận, đổi mục tiêu và ảnh của đơn hình, hình hộp."
+estimatedMinutes: 60
 level: intermediate
 prerequisites: []
 tags:
   - "ánh xạ affine"
-  - "phép biến đổi"
+  - "phép biến đổi affine"
   - "ma trận affine"
+  - "phép thấu xạ affine"
 sources:
   - source: gt-hhcc-nmh-2004
-    pages: '48-58'
+    pages: '31-42'
     sections: '§6'
 status: published
 version: 1.0.0
@@ -22,202 +23,891 @@ authoring:
   draftedAt: '2026-11-03'
 ---
 
-## 1. Định nghĩa
+## 1. Định nghĩa Ánh xạ Affine
 
-<Definition id="def-s6-1" title="Định nghĩa">
-Cho $\mathcal{A}$, $\mathcal{A}$′ là hai không gian afin trên $\mathbb{K}$ liên kết với $V$, $V$′. Ánh xạ $f: \mathcal{A} \to \mathcal{A}'$ gọi là *ánh xạ afin* nếu có ánh xạ tuyến tính $\varphi : V \to V'$ sao cho với mọi $M, N \in \mathcal{A}, M' = f(M), N' = f(N)$ thì $\vect{M'N'} = \varphi (\vect{MN})$. Ánh xạ φ gọi là *ánh xạ tuyến tính liên kết* với *f*, kí hiệu $\varphi =$ *f̄*.
+<Definition id="def-s6-1" title="Ánh xạ affine và ánh xạ tuyến tính liên kết">
+Cho $\mathcal{A}$ và $\mathcal{A}'$ là hai không gian affine trên trường $\mathbb{K}$ lần lượt liên kết với hai không gian vectơ $V = \overrightarrow{\mathcal{A}}$ và $V' = \overrightarrow{\mathcal{A}'}$. Ánh xạ $f: \mathcal{A} \to \mathcal{A}'$ được gọi là **<GlossaryTerm termId="anh-xa-afin">ánh xạ affine</GlossaryTerm>** nếu tồn tại một ánh xạ tuyến tính $\varphi: V \to V'$ sao cho với mọi cặp điểm $M, N \in \mathcal{A}$ và ảnh $M' = f(M)$, $N' = f(N)$, ta luôn có:
+
+$$
+\overrightarrow{M'N'} = \varphi(\overrightarrow{MN}).
+$$
+
+Ánh xạ tuyến tính $\varphi: V \to V'$ được gọi là **ánh xạ tuyến tính liên kết** với ánh xạ affine $f$.
 </Definition>
 
-## 2. Tính chất của ánh xạ afin
+<Remark title="Ký hiệu ánh xạ tuyến tính liên kết">
+Người ta còn ký hiệu ánh xạ tuyến tính liên kết với ánh xạ affine $f: \mathcal{A} \to \mathcal{A}'$ là:
 
-<Theorem id="thm-s6-2" title="Tính chất">
-a) Mỗi ánh xạ afin *f* chỉ có một ánh xạ tuyến tính liên kết duy nhất (vì $\varphi (\vect{MN}) = \vect{M'N'} = \varphi '(\vect{MN})$ với mọi M, N).
+$$
+\varphi = \bar{f}: \overrightarrow{\mathcal{A}} \to \overrightarrow{\mathcal{A}'}.
+$$
+</Remark>
 
-b) Với mỗi ánh xạ tuyến tính $\varphi : V \to V'$ và cặp điểm $I \in \mathcal{A}, I' \in \mathcal{A}'$, có duy nhất ánh xạ afin *f* nhận φ làm ánh xạ tuyến tính liên kết và $f(I) = I' (M'$ xác định bởi $\vect{I'M'} = \varphi (\vect{IM}))$.
+## 2. Tính chất của Ánh xạ Affine
 
-c) Tích g∘*f* của hai ánh xạ afin là ánh xạ afin, có ánh xạ tuyến tính liên kết là ψ∘φ.
-
-d) Cho $n+1$ điểm độc lập M$_{0}$,…,M$_{n}$ của $\mathcal{A} ^{n}$ và $n+1$ điểm tùy ý M′$_{0}$,…,M′$_{n}$ của $\mathcal{A}$′.
-
-Khi đó có một và chỉ một ánh xạ afin $f: \mathcal{A}^{n} \to \mathcal{A}'$ sao cho $f(M_{i}) = M'_{i}, i = 0..n$.
-
-e) Ánh xạ afin biến một m-phẳng của $\mathcal{A}$ thành một l-phẳng của $\mathcal{A}$′ với $l \le m$ (vì ảnh của phương của m-phẳng qua φ là không gian con l chiều, $l \le m)$.
+<Theorem id="thm-s6-2" title="Các tính chất cơ bản của ánh xạ affine">
+1. **a)** Mỗi ánh xạ affine $f: \mathcal{A} \to \mathcal{A}'$ chỉ có **một ánh xạ tuyến tính liên kết duy nhất** $\varphi: V \to V'$.
+2. **b)** Với mỗi ánh xạ tuyến tính $\varphi: V \to V'$ và với mỗi cặp điểm $I \in \mathcal{A}$, $I' \in \mathcal{A}'$, xác định được **duy nhất một ánh xạ affine** $f: \mathcal{A} \to \mathcal{A}'$ nhận $\varphi$ làm ánh xạ tuyến tính liên kết và thỏa mãn $f(I) = I'$.
+3. **c)** Tích (hợp thành) của hai ánh xạ affine $f: \mathcal{A} \to \mathcal{A}'$ và $g: \mathcal{A}' \to \mathcal{A}''$ là một ánh xạ affine, ký hiệu $g \circ f: \mathcal{A} \to \mathcal{A}''$, và ánh xạ tuyến tính liên kết của $g \circ f$ là tích $\psi \circ \varphi$ của hai ánh xạ tuyến tính liên kết $\varphi$ (của $f$) và $\psi$ (của $g$).
+4. **d)** Cho $n + 1$ <GlossaryTerm termId="doc-lap-afin">điểm độc lập</GlossaryTerm> $M_0, M_1, \dots, M_n$ trong không gian affine $n$ chiều $\mathcal{A}^n$ và $n + 1$ điểm tùy ý $M'_0, M'_1, \dots, M'_n$ trong không gian affine $\mathcal{A}'$. Khi đó có **một và chỉ một** ánh xạ affine $f: \mathcal{A}^n \to \mathcal{A}'$ sao cho $f(M_i) = M'_i$ với mọi $i = 0, 1, \dots, n$.
+5. **e)** Ánh xạ affine $f: \mathcal{A} \to \mathcal{A}'$ biến một <GlossaryTerm termId="m-phang">m-phẳng</GlossaryTerm> của $\mathcal{A}$ thành một $l$-phẳng của $\mathcal{A}'$ với $l \le m$.
 </Theorem>
 
-## 3. Đẳng cấu afin
+<Proof of="thm-s6-2" defaultOpen={true}>
+- **Chứng minh a):** Giả sử $f$ còn có một ánh xạ tuyến tính liên kết khác là $\varphi': V \to V'$. Với mọi vectơ $\vec{u} \in V$, lấy điểm $M \in \mathcal{A}$ và điểm $N \in \mathcal{A}$ sao cho $\overrightarrow{MN} = \vec{u}$. Đặt $M' = f(M), N' = f(N)$, ta có:
 
-<Definition id="def-s6-3" title="Định nghĩa">
-Ánh xạ afin $f: \mathcal{A} \to \mathcal{A}'$ là song ánh thì gọi là *phép đẳng cấu afin* của $\mathcal{A}$ lên $\mathcal{A}$′.
+$$
+\varphi(\overrightarrow{MN}) = \overrightarrow{M'N'} = \varphi'(\overrightarrow{MN}) \implies \varphi(\vec{u}) = \varphi'(\vec{u}) \quad (\forall \vec{u} \in V),
+$$
 
-Khi đó $\mathcal{A}$ và $\mathcal{A}$′ có cùng số chiều và φ là phép đẳng cấu tuyến tính giữa hai không gian vectơ liên kết.
+  hay $\varphi = \varphi'$.
 
-**Hệ quả.** Với hai mục tiêu afin \{E$_{0}$; E$_{i}$\} của $\mathcal{A} ^{n}$ và \{E′$_{0}$; E′$_{i}$\} của $\mathcal{A}$′$^{n}$, có duy nhất một phép đẳng cấu afin *f* sao cho $f(E_{i}) = E'_{i}, i = 0..n$.
-</Definition>
+- **Chứng minh b):**
+  - *Sự tồn tại:* Xác định ánh xạ $f: \mathcal{A} \to \mathcal{A}'$ biến mỗi điểm $M \in \mathcal{A}$ thành điểm duy nhất $M' \in \mathcal{A}'$ sao cho $\overrightarrow{I'M'} = \varphi(\overrightarrow{IM})$ (nhờ tiên đề Weyl trong $\mathcal{A}'$). Khi đó $f$ là ánh xạ affine liên kết với $\varphi$, vì với mọi $M, N \in \mathcal{A}$:
 
-## 4. Phép biến đổi afin
+$$
+\varphi(\overrightarrow{MN}) = \varphi(\overrightarrow{IN} - \overrightarrow{IM}) = \varphi(\overrightarrow{IN}) - \varphi(\overrightarrow{IM}) = \overrightarrow{I'N'} - \overrightarrow{I'M'} = \overrightarrow{M'N'}.
+$$
 
-<Definition id="def-s6-4" title="Định nghĩa">
-Phép đẳng cấu afin $f: \mathcal{A} \to \mathcal{A}$ của $\mathcal{A}$ lên chính nó gọi là *phép biến đổi afin* (*phép afin*).
+    Đồng thời do $\varphi(\overrightarrow{II}) = \varphi(\vec{0}) = \vec{0}$ nên $\overrightarrow{I'f(I)} = \vec{0}$, tức $f(I) = I'$.
+  - *Tính duy nhất:* Giả sử $f': \mathcal{A} \to \mathcal{A}'$ cũng là ánh xạ affine có ánh xạ tuyến tính liên kết $\varphi$ và $f'(I) = I'$. Khi đó với mọi $M \in \mathcal{A}$:
 
-Khi đó ánh xạ tuyến tính liên kết φ là một phép tự đẳng cấu (phép biến đổi tuyến tính) của $\overline{\mathcal{A}}$.
+$$
+\overrightarrow{I'f'(M)} = \overrightarrow{f'(I)f'(M)} = \varphi(\overrightarrow{IM}) = \overrightarrow{I'f(M)} \implies f'(M) = f(M),
+$$
 
-Thí dụ (phép tịnh tiến). Cố định $\vec{v} \in V$, xét $f: M ↦ M'$ với $\vect{MM'} = \vec{v}$.
+    suy ra $f' = f$.
 
-Đó là phép tịnh tiến t$_{v}$, với $\varphi = Id_{V}$.
+- **Chứng minh c):** Gọi $\varphi: \overrightarrow{\mathcal{A}} \to \overrightarrow{\mathcal{A}'}$ và $\psi: \overrightarrow{\mathcal{A}'} \to \overrightarrow{\mathcal{A}''}$ lần lượt là ánh xạ tuyến tính liên kết của $f$ và $g$. Theo đại số tuyến tính, tích $\psi \circ \varphi: \overrightarrow{\mathcal{A}} \to \overrightarrow{\mathcal{A}''}$ cũng là một ánh xạ tuyến tính. Với mọi $M, N \in \mathcal{A}$, đặt $M' = f(M), N' = f(N)$ và $M'' = g(M') = (g \circ f)(M), N'' = g(N') = (g \circ f)(N)$, ta có:
 
-Ngược lại phép biến đổi afin có $\varphi = Id_{V}$ là phép tịnh tiến.
-</Definition>
+$$
+\overrightarrow{M''N''} = \psi(\overrightarrow{M'N'}) = \psi\bigl(\varphi(\overrightarrow{MN})\bigr) = (\psi \circ \varphi)(\overrightarrow{MN}),
+$$
 
-<Theorem id="thm-s6-5" title="Định lí">
-b) Cho hai hệ $n+1$ điểm độc lập A$_{0}$,…,A$_{n}$ và A′$_{0}$,…,A′$_{n}$ của $\mathcal{A} ^{n}$; có duy nhất phép biến đổi afin *f* với $f(A_{i}) = A'_{i}$.
+  nên $g \circ f$ là ánh xạ affine có ánh xạ tuyến tính liên kết là $\psi \circ \varphi$.
 
-c) Tích của hai phép afin là phép afin có phép biến đổi tuyến tính liên kết là tích ψ∘φ; đảo ngược *f*$^{-1}$ là phép afin có phép liên kết φ$^{-1}$.
+- **Chứng minh d):** Vì $n + 1$ điểm $M_0, M_1, \dots, M_n$ độc lập trong $\mathcal{A}^n$ nên hệ $n$ vectơ $\{\overrightarrow{M_0M_1}, \overrightarrow{M_0M_2}, \dots, \overrightarrow{M_0M_n}\}$ là một cơ sở của không gian vectơ $\overrightarrow{\mathcal{A}^n}$. Do đó tồn tại duy nhất một ánh xạ tuyến tính $\varphi: \overrightarrow{\mathcal{A}^n} \to \overrightarrow{\mathcal{A}'}$ sao cho:
 
-d) Phép biến đổi afin biến m-phẳng thành m-phẳng (áp dụng 2e cho *f* và *f*$^{-1}$ để có $l \le m$ và $m \le l)$.
+$$
+\varphi(\overrightarrow{M_0M_i}) = \overrightarrow{M'_0M'_i} \quad \text{với } i = 1, 2, \dots, n
+$$
 
-Đặc biệt biến đường thẳng thành đường thẳng.
+  *(với $i = 0$, hiển nhiên $\varphi(\overrightarrow{M_0M_0}) = \vec{0} = \overrightarrow{M'_0M'_0}$)*. Theo tính chất b), có duy nhất một ánh xạ affine $f: \mathcal{A}^n \to \mathcal{A}'$ nhận $\varphi$ làm ánh xạ tuyến tính liên kết và thỏa mãn $f(M_0) = M'_0$. Khi đó với mọi $i = 1, \dots, n$: $\overrightarrow{M'_0f(M_i)} = \varphi(\overrightarrow{M_0M_i}) = \overrightarrow{M'_0M'_i} \implies f(M_i) = M'_i$. Ngược lại, mọi ánh xạ affine $g$ thỏa mãn $g(M_i) = M'_i$ ($i = 0, \dots, n$) đều có ánh xạ tuyến tính liên kết $\bar{g}$ thỏa mãn $\bar{g}(\overrightarrow{M_0M_i}) = \overrightarrow{M'_0M'_i}$, nên $\bar{g} = \varphi$ và $g(M_0) = M'_0$, suy ra $g = f$.
 
-e) Phép biến đổi afin bảo tồn tỉ số đơn: nếu P, Q, R thẳng hàng và $P' = f(P), \dots$ thì P′, Q′, R′ thẳng hàng và (PQR) $= (P'Q'R')$.
-</Theorem>
+- **Chứng minh e):** Gọi $\varphi: \overrightarrow{\mathcal{A}} \to \overrightarrow{\mathcal{A}'}$ là ánh xạ tuyến tính liên kết của $f: \mathcal{A} \to \mathcal{A}'$ và gọi $\mathcal{A}^m$ là một $m$-phẳng của $\mathcal{A}$ có phương $\overrightarrow{\mathcal{A}^m} \subset \overrightarrow{\mathcal{A}}$ ($\dim \overrightarrow{\mathcal{A}^m} = m$). Vì $\varphi$ là ánh xạ tuyến tính nên ảnh $W' = \varphi(\overrightarrow{\mathcal{A}^m})$ là một không gian vectơ con $l$ chiều của $\overrightarrow{\mathcal{A}'}$ với $l = \dim \varphi(\overrightarrow{\mathcal{A}^m}) \le \dim \overrightarrow{\mathcal{A}^m} = m$.
 
-<Proof of="thm-s6-5">
-Nếu $\vect{PQ} = \lambda \vect{PR}$ thì $\vect{P'Q'} = \varphi (\vect{PQ}) = \lambda \varphi (\vect{PR}) = \lambda \vect{P'R'}$.
+  Lấy một điểm cố định $I \in \mathcal{A}^m$, đặt $I' = f(I) \in \mathcal{A}'$, và gọi $\mathcal{A}'^l$ là $l$-phẳng trong $\mathcal{A}'$ đi qua $I'$ có phương $\overrightarrow{\mathcal{A}'^l} = \varphi(\overrightarrow{\mathcal{A}^m})$ *(đính chính lỗi in cuối tr. 33 – giữa tr. 34: bản gốc in nhầm thành đi qua $I$, phương $\overrightarrow{\mathcal{A}^m}$ và đổi ký hiệu điểm gốc sang $A, A'$)*. Ta chứng minh $f(\mathcal{A}^m) = \mathcal{A}'^l$:
+  1. Nếu $M' \in f(\mathcal{A}^m)$, gọi $M \in \mathcal{A}^m$ là một tạo ảnh sao cho $M' = f(M)$. Khi đó $\overrightarrow{IM} \in \overrightarrow{\mathcal{A}^m}$, nên $\overrightarrow{I'M'} = \varphi(\overrightarrow{IM}) \in \varphi(\overrightarrow{\mathcal{A}^m}) = \overrightarrow{\mathcal{A}'^l}$, suy ra $M' \in \mathcal{A}'^l$. Vậy $f(\mathcal{A}^m) \subset \mathcal{A}'^l$.
+  2. Ngược lại, nếu $M' \in \mathcal{A}'^l$ thì $\overrightarrow{I'M'} \in \overrightarrow{\mathcal{A}'^l} = \varphi(\overrightarrow{\mathcal{A}^m})$, do đó tồn tại vectơ $\vec{x} \in \overrightarrow{\mathcal{A}^m}$ sao cho $\varphi(\vec{x}) = \overrightarrow{I'M'}$. Gọi $M$ là điểm thuộc $\mathcal{A}^m$ xác định bởi $\overrightarrow{IM} = \vec{x}$; khi đó $\overrightarrow{I'f(M)} = \varphi(\overrightarrow{IM}) = \varphi(\vec{x}) = \overrightarrow{I'M'}$, tức $f(M) = M' \in f(\mathcal{A}^m)$. Vậy $\mathcal{A}'^l \subset f(\mathcal{A}^m)$, suy ra $f(\mathcal{A}^m) = \mathcal{A}'^l$.
 </Proof>
 
-<Example id="ex-s6-7" title="Ví dụ">
-Tịnh tiến t$_{v}$ với $\vec{v} = (2,1)$ biến $M(x,y)$ thành $M'(x+2, y+1); \varphi = Id$.
+## 3. Đẳng cấu Affine
 
-Nó biến đường thẳng $y = 3x$ thành đường thẳng qua $(2,1)$ cùng phương $(1,3)$ (vẫn là 1-phẳng).
+<Definition id="def-s6-3" title="Phép đẳng cấu affine">
+Nếu ánh xạ affine $f: \mathcal{A} \to \mathcal{A}'$ là một **song ánh** thì $f$ được gọi là **phép đẳng cấu affine** của không gian affine $\mathcal{A}$ lên không gian affine $\mathcal{A}'$.
 
-Với phép afin *f* ở mục 5 dưới đây, P(0,0), Q(1,0), R(2,0) có $\vect{PQ} = ½\vect{PR}$; ảnh P′(1,2), Q′(2,3), R′(3,4) có $\vect{P'Q'} = (1,1) = ½(2,2) = ½\vect{P'R'}$, tỉ số không đổi.
+Khi đó ánh xạ tuyến tính liên kết $\varphi: \overrightarrow{\mathcal{A}} \to \overrightarrow{\mathcal{A}'}$ cũng là một song ánh (vì với điểm gốc $I \in \mathcal{A}, I' = f(I)$, phép tương ứng $M \leftrightarrow \overrightarrow{IM}$ và $M' \leftrightarrow \overrightarrow{I'M'}$ là các song ánh), tức $\varphi$ là **phép đẳng cấu tuyến tính** giữa $\overrightarrow{\mathcal{A}}$ và $\overrightarrow{\mathcal{A}'}$, kéo theo $\dim \mathcal{A} = \dim \mathcal{A}'$.
+</Definition>
+
+<Corollary id="cor-s6-3" title="Đẳng cấu affine duy nhất giữa hai mục tiêu cùng chiều">
+Trong hai không gian affine $n$ chiều $\mathcal{A}^n$ và $\mathcal{A}'^n$, lần lượt cho hai <GlossaryTerm termId="muc-tieu-afin">mục tiêu affine</GlossaryTerm> $\{E_0; E_i\}$ và $\{E'_0; E'_i\}$ ($i = 1, 2, \dots, n$). Khi đó có duy nhất một phép đẳng cấu affine $f: \mathcal{A}^n \to \mathcal{A}'^n$ sao cho $f(E_i) = E'_i$ với mọi $i = 0, 1, 2, \dots, n$.
+</Corollary>
+
+## 4. Phép Biến đổi Affine
+
+<Definition id="def-s6-4" title="Phép biến đổi affine (phép affine)">
+Phép đẳng cấu affine $f: \mathcal{A} \to \mathcal{A}$ của không gian affine $\mathcal{A}$ lên chính nó được gọi là **<GlossaryTerm termId="phep-bien-doi-afin">phép biến đổi affine</GlossaryTerm>** của $\mathcal{A}$, gọi tắt là **phép affine**.
+
+Khi đó ánh xạ tuyến tính liên kết $\varphi: \overrightarrow{\mathcal{A}} \to \overrightarrow{\mathcal{A}}$ của $f$ là một **phép tự đẳng cấu tuyến tính** (còn gọi là *phép biến đổi tuyến tính không suy biến*).
+</Definition>
+
+<Example id="ex-s6-4a" title="Thí dụ: Phép tịnh tiến và đặc trưng qua phép đồng nhất tuyến tính">
+Cho không gian affine $\mathcal{A}$ liên kết với không gian vectơ $V = \overrightarrow{\mathcal{A}}$ và một vectơ cố định $\vec{v} \in V$. Xét ánh xạ $f: \mathcal{A} \to \mathcal{A}$ biến mỗi điểm $M$ thành điểm $M' = f(M)$ sao cho $\overrightarrow{MM'} = \vec{v}$. Ánh xạ đó được gọi là **phép tịnh tiến** theo vectơ $\vec{v}$, ký hiệu là $t_{\vec{v}}$, và $\vec{v}$ gọi là *vectơ tịnh tiến*.
+
+- **Chiều thuận:** Phép tịnh tiến $t_{\vec{v}}$ là một phép biến đổi affine (song ánh với ánh xạ ngược $t_{-\vec{v}}$) nhận phép đồng nhất $\id_V: V \to V$ làm ánh xạ tuyến tính liên kết. Thật vậy, với mọi $M, N \in \mathcal{A}$ và $M' = t_{\vec{v}}(M), N' = t_{\vec{v}}(N)$, theo quy tắc Chasles ta có:
+
+$$
+\overrightarrow{M'N'} = \overrightarrow{M'M} + \overrightarrow{MN} + \overrightarrow{NN'} = -\vec{v} + \overrightarrow{MN} + \vec{v} = \overrightarrow{MN} = \id_V(\overrightarrow{MN}).
+$$
+
+- **Chiều đảo:** Ngược lại, nếu $f: \mathcal{A} \to \mathcal{A}$ là một phép biến đổi affine có ánh xạ tuyến tính liên kết $\varphi = \id_V$ thì $f$ bắt buộc là một phép tịnh tiến. Thật vậy, lấy một điểm $I \in \mathcal{A}$ cố định và đặt $I' = f(I)$. Khi đó với mọi điểm $M \in \mathcal{A}$ (đặt $M' = f(M)$), vì $\overrightarrow{I'M'} = \varphi(\overrightarrow{IM}) = \id_V(\overrightarrow{IM}) = \overrightarrow{IM}$ nên *(đính chính lỗi in tr. 35 gõ nhầm $\overrightarrow{Mf(M)}$ thành $\overrightarrow{M\varphi(M)}$)*:
+
+$$
+\overrightarrow{Mf(M)} = \overrightarrow{MM'} = \overrightarrow{MI} + \overrightarrow{II'} + \overrightarrow{I'M'} = \overrightarrow{MI} + \overrightarrow{II'} + \overrightarrow{IM} = (\overrightarrow{MI} + \overrightarrow{IM}) + \overrightarrow{II'} = \overrightarrow{II'}.
+$$
+
+  Vectơ $\vec{v} = \overrightarrow{II'}$ không phụ thuộc vào $M$, chứng tỏ $f = t_{\vec{v}}$.
 </Example>
 
-## 5. Phương trình của phép biến đổi afin
-
-Trong $\mathcal{A} ^{n}$ với mục tiêu \{E$_{0}$; E$_{i}$\}, cho phép afin *f* và $E'_{i} = f(E_{i})$.
-
-Gọi C là ma trận chuyển từ cơ sở \{$\vect{E_{0}E_{i}}$\} sang \{$\vect{E'_{0}E'_{i}}$\}, và $(b_{1}, \dots ,b_{n})$ là tọa độ của $E'_{0} = f(E_{0})$.
-
-Nếu X(x$_{i}$) và $X' = f(X)$ có tọa độ (x′$_{i}$) thì
-
-<Theorem id="thm-s6-8" title="Phương trình của phép afin">
-$$
-[x'] = C*[x] + [b]. (1)
-$$
-
-  Ma trận $C*$ không suy biến gọi là *ma trận của phép afin* *f*.
-
-Đối với cơ sở \{$\vect{e_{i}}$\}, phép biến đổi tuyến tính liên kết φ có phương trình $[x'] = C*[x]$.
-
-Ngược lại, đối với mục tiêu đã chọn, mỗi phương trình $[x'] = B[x] + [b]$ với B là ma trận vuông cấp n không suy biến là phương trình của một phép biến đổi afin duy nhất.
+<Theorem id="thm-s6-5" title="Các định lí cơ bản về phép biến đổi affine">
+1. **b)** Trong không gian affine $\mathcal{A}^n$, cho hai hệ gồm $n + 1$ điểm độc lập là $A_0, A_1, \dots, A_n$ và $A'_0, A'_1, \dots, A'_n$. Khi đó tồn tại duy nhất một phép biến đổi affine $f: \mathcal{A}^n \to \mathcal{A}^n$ sao cho $f(A_i) = A'_i$ với mọi $i = 0, 1, \dots, n$.
+2. **c)** Tích $g \circ f$ của hai phép affine $f, g$ là một phép affine có phép biến đổi tuyến tính liên kết là tích $\psi \circ \varphi$; phép đảo ngược $f^{-1}$ của một phép affine $f$ cũng là một phép affine và có phép biến đổi tuyến tính liên kết là $\varphi^{-1}$.
+3. **d)** Phép biến đổi affine biến một $m$-phẳng thành một $m$-phẳng (*Hệ quả:* phép affine $f: \mathcal{A} \to \mathcal{A}$ biến một đường thẳng thành một đường thẳng).
+4. **e)** Phép affine $f: \mathcal{A} \to \mathcal{A}$ (trong không gian affine thực) **bảo tồn tỉ số đơn** của các hệ ba điểm thẳng hàng: nếu $P, Q, R$ thẳng hàng (với $Q \neq R, P \neq R$) và $P' = f(P), Q' = f(Q), R' = f(R)$ thì $P', Q', R'$ thẳng hàng và $(PQR) = (P'Q'R')$.
 </Theorem>
 
-<Example id="ex-s6-9" title="Thí dụ 1 (sách)">
-Phép tịnh tiến t$_{v}$ có $\varphi = Id$ nên ma trận là ma trận đơn vị: $[x'] = [x] + [b]$, với [b] là tọa độ của $E'_{0} = t_{v}(E_{0})$.
-
-Thí dụ 2 (sách).
-
-Trong $\mathcal{A} ^{2}$, lập phương trình phép afin *f* biến $A(1,0), B(0,2), C(-3,0)$ thành $A'(2,3), B'(-1,4), C'(-2,-1)$.Đặt $x'_{1} = a_{1}x_{1} + a_{2}x_{2} + c_{1}, x'_{2} = b_{1}x_{1} + b_{2}x_{2} + c_{2}$.Thay ba cặp điểm được hệ 6 phương trình: 
-
-$$
-\begin{cases} 2 = a_{1} + c_{1} \\ 3 = b_{1} + c_{2} \\ -1 = 2a_{2} + c_{1} \\ 4 = 2b_{2} + c_{2} \\ -2 = -3a_{1} + c_{1} \\ -1 = -3b_{1} + c_{2}. \end{cases}
-$$
-
- Giải ra $a_{1} = 1, a_{2} = -1, c_{1} = 1, b_{1} = b_{2} = 1, c_{2} = 2$:
- 
+<Proof of="thm-s6-5" defaultOpen={true}>
+- **Chứng minh b):** Theo tính chất d) của <Ref to="thm-s6-2" />, tồn tại duy nhất ánh xạ affine $f: \mathcal{A}^n \to \mathcal{A}^n$ sao cho $f(A_i) = A'_i$ ($i = 0, \dots, n$). Ánh xạ tuyến tính liên kết $\varphi$ của $f$ biến cơ sở $\{\overrightarrow{A_0A_1}, \dots, \overrightarrow{A_0A_n}\}$ thành cơ sở $\{\overrightarrow{A'_0A'_1}, \dots, \overrightarrow{A'_0A'_n}\}$ nên $\varphi$ là tự đẳng cấu tuyến tính, kéo theo $f$ là song ánh (với $\overrightarrow{A'_0f(M)} = \varphi(\overrightarrow{A_0M})$), tức $f$ là phép biến đổi affine duy nhất.
+- **Chứng minh c):** Cho hai phép affine $f, g: \mathcal{A} \to \mathcal{A}$ có các tự đẳng cấu tuyến tính liên kết $\varphi, \psi: \overrightarrow{\mathcal{A}} \to \overrightarrow{\mathcal{A}}$. Với mọi $M, N \in \mathcal{A}$, đặt $M' = f(M), N' = f(N)$ và $M'' = g(M') = (g \circ f)(M), N'' = g(N') = (g \circ f)(N)$, ta có $\overrightarrow{M''N''} = \psi(\overrightarrow{M'N'}) = (\psi \circ \varphi)(\overrightarrow{MN})$. Vì $f, g$ là song ánh và $\psi \circ \varphi$ là tự đẳng cấu tuyến tính nên $g \circ f$ là phép biến đổi affine. Tương tự, vì $f$ là song ánh nên tồn tại ánh xạ ngược $f^{-1}: \mathcal{A} \to \mathcal{A}$; với mọi $M', N' \in \mathcal{A}$, đặt $M = f^{-1}(M'), N = f^{-1}(N')$ thì $\overrightarrow{M'N'} = \varphi(\overrightarrow{MN}) \iff \overrightarrow{f^{-1}(M')f^{-1}(N')} = \overrightarrow{MN} = \varphi^{-1}(\overrightarrow{M'N'})$, chứng tỏ $f^{-1}$ là phép affine có tự đẳng cấu tuyến tính liên kết là $\varphi^{-1}$.
+- **Chứng minh d):** Giả sử $f: \mathcal{A} \to \mathcal{A}$ là phép affine và $\mathcal{A}^m$ là một $m$-phẳng của $\mathcal{A}$. Theo tính chất e) của <Ref to="thm-s6-2" /> *(đính chính lỗi in tr. 36 dẫn nhầm là tính chất c)*, tập ảnh $f(\mathcal{A}^m)$ là một $l$-phẳng của $\mathcal{A}$ với $l \le m$. Mặt khác, theo câu c), $f^{-1}: \mathcal{A} \to \mathcal{A}$ cũng là một phép affine biến $l$-phẳng $f(\mathcal{A}^m)$ thành $m$-phẳng $f^{-1}\bigl(f(\mathcal{A}^m)\bigr) = \mathcal{A}^m$, nên áp dụng lại tính chất 2e) cho $f^{-1}$ ta có $m \le l$. Suy ra $l = m$, vậy $f(\mathcal{A}^m)$ là một $m$-phẳng (với $m = 1$, đường thẳng biến thành đường thẳng).
+- **Chứng minh e):** Gọi $\varphi$ là tự đẳng cấu tuyến tính liên kết với $f$. Giả sử $P, Q, R$ thẳng hàng với $(PQR) = \lambda$, tức $\overrightarrow{PQ} = \lambda\overrightarrow{PR}$ (và $Q \neq R \implies P' \neq R'$ hoặc $Q' \neq R'$ do $f$ đơn ánh). Khi đó:
 
 $$
-x'_{1} = x_{1} - x_{2} + 1, x'_{2} = x_{1} + x_{2} + 2.
-$$
-</Example>
-
-## 6. Phương trình của phép biến đổi afin đối với hai mục tiêu khác nhau
-
-<Theorem id="thm-s6-10" title="Định lí">
-Nếu đối với \{E$_{0}$; E$_{i}$\}, *f* có phương trình $[x'] = B[x] + [b]$, và đối với mục tiêu khác \{E′$_{0}$; E′$_{i}$\} có phương trình $[x'] = B'[x] + [b']$, thì
- 
-
-$$
-B' = (C*)^{-1} B C*,
+\overrightarrow{P'Q'} = \varphi(\overrightarrow{PQ}) = \varphi(\lambda\overrightarrow{PR}) = \lambda\varphi(\overrightarrow{PR}) = \lambda\overrightarrow{P'R'}.
 $$
 
- 
-với C là ma trận chuyển từ \{$\vect{E_{0}E_{i}}$\} sang \{$\vect{E'_{0}E'_{i}}$\} (vì B, B′ là ma trận của cùng φ đối với hai cơ sở).
-
-**Chú ý.** Khi cho $[x] = [0]$ thì $[x'] = [b]: (b_{1}, \dots ,b_{n})$ chính là tọa độ của *f*(E$_{0}$) đối với mục tiêu đã cho.
-</Theorem>
-
-<Example id="ex-s6-11" title="Ví dụ">
-Lấy $B = \begin{pmatrix} 1 & -1 \\ 1 & 1 \end{pmatrix}$ của *f* ở thí dụ 2.
-
-Đổi sang mục tiêu cùng gốc với $\vect{e'_{1}} = \vect{e_{1}}, \vect{e'_{2}} = 2\vect{e_{2}}$, tức $C = C* = diag(1, 2)$.Khi đó $B' =$ C$^{-1}$BC $= \begin{pmatrix} 1 & -2 \\ ½ & 1 \end{pmatrix}$.Kiểm tra: $\varphi (\vect{e_{1}}) = (1,1) = \vect{e'_{1}} + ½\vect{e'_{2}}$ (cột 1 của B′ là (1, ½)) và $\varphi (\vect{e'_{2}}) = (-2,2) = -2\vect{e'_{1}} + \vect{e'_{2}}$ (cột 2 là $(-2, 1)).$
-</Example>
-
-## 7. Ảnh của đơn hình m chiều và của hình hộp m chiều qua phép biến đổi afin f
-
-<Theorem id="thm-s6-12" title="Định lí">
-a) Qua phép biến đổi afin, một đơn hình m chiều biến thành một đơn hình m chiều: $S(A'_{0}, \dots ,A'_{m}) = f(S(A_{0}, \dots ,A_{m}))$, với $A'_{i} = f(A_{i})$.
-
-b) Qua phép biến đổi afin, một m-hộp biến thành một m-hộp.
-</Theorem>
-
-<Proof of="thm-s6-12">
-Vì *f* có phương trình $[x'] = B[x] + [b]$ nên điểm X có $[x] = t_{0}[a_{0}] + \dots + t_{m}[a_{m}] (\sum_{i=0}^{m}t_{i} = 1, t_{i} \ge 0)$ có ảnh $[x'] = B(\sum_{i=0}^{m}t_{i}[a_{i}]) + [b] = \sum_{i=0}^{m}t_{i}(B[a_{i}] + [b]) = \sum_{i=0}^{m}t_{i}[a'_{i}]$, tức X′ thuộc đơn hình xác định bởi A′$_{0}$,…,A′$_{m}$ (độc lập vì *f* song ánh); ngược lại mọi điểm của đơn hình ấy là ảnh.
-
-*Chứng minh b).* Nếu $\vect{P_{0}M} = \sum_{i=1}^{m} \lambda _{i}\vect{P_{0}P_{i}} (0 \le \lambda _{i} \le 1)$ thì $\varphi (\vect{P_{0}M}) = \sum_{i=1}^{m} \lambda _{i}\vect{P'_{0}P'_{i}}$, tức M′ thuộc hình hộp $H(P'_{0}, \dots ,P'_{m})$; các điểm P′$_{i}$ độc lập.
+  Đẳng thức này chứng tỏ $P', Q', R'$ thẳng hàng và $(P'Q'R') = \lambda = (PQR)$.
 </Proof>
 
-<Example id="ex-s6-14" title="Ví dụ">
-Với $f: x'_{1} = x_{1} - x_{2} + 1, x'_{2} = x_{1} + x_{2} + 2$ (thí dụ 2), tam giác A$_{0}$(0,0), A$_{1}$(1,0), A$_{2}$(0,1) biến thành tam giác A′$_{0}$(1,2), A′$_{1}$(2,3), A′$_{2}$(0,3).
-
-Điểm $(¼,¼) = ½A_{0} + ¼A_{1} + ¼A_{2}$ có ảnh $(1, \frac{5}{2})$, đúng bằng $½(1,2) + ¼(2,3) + ¼(0,3) = (1, \frac{5}{2})$.
-
-Hình vuông đơn vị (2-hộp) biến thành hình bình hành có đỉnh (1,2), (2,3), (0,3), (1,4).
+<Example id="ex-s6-7" title="Minh họa phép tịnh tiến và bảo tồn tỉ số đơn trên R^2">
+- Phép tịnh tiến $t_{\vec{v}}$ theo $\vec{v} = (2, 1)$ trong $\R^2$ biến $M(x, y)$ thành $M'(x + 2, y + 1)$ với $\varphi = \id_{\R^2}$; đường thẳng $y = 3x$ (qua $(0, 0)$ phương $(1, 3)$) biến thành đường thẳng $y - 1 = 3(x - 2) \iff 3x - y - 5 = 0$ (qua $(2, 1)$ cùng phương $(1, 3)$).
+- Xét phép biến đổi affine $f(x_1, x_2) = (x_1 - x_2 + 1,\; x_1 + x_2 + 2)$ và ba điểm thẳng hàng $P(0, 0), Q(1, 0), R(2, 0)$ có $\overrightarrow{PQ} = \dfrac{1}{2}\overrightarrow{PR}$, tức $(PQR) = \dfrac{1}{2}$. Các ảnh $P'(1, 2), Q'(2, 3), R'(3, 4)$ có $\overrightarrow{P'Q'} = (1, 1) = \dfrac{1}{2}(2, 2) = \dfrac{1}{2}\overrightarrow{P'R'}$, nên $(P'Q'R') = \dfrac{1}{2} = (PQR)$.
 </Example>
 
-## Bài tập vận dụng và củng cố
+## 5. Phương trình của Phép Biến đổi Affine
 
-<Exercise id="exr-s6-1" title="Phép biến đổi afin và phương trình (§6, mục 5)">
-Phép afin f của A² biến O(0,0), E₁(1,0), E₂(0,1) lần lượt thành (1,2), (2,3), (0,3). Viết phương trình của f và tìm ảnh của M(2,1).
+Trong không gian affine $\mathcal{A}^n$, chọn một mục tiêu affine cố định $\{E_0; E_i\}$ ($i = 1, \dots, n$). Cho phép biến đổi affine $f: \mathcal{A}^n \to \mathcal{A}^n$; ta thiết lập hệ thức liên hệ giữa tọa độ $(x_1, x_2, \dots, x_n)$ của điểm $X \in \mathcal{A}^n$ và tọa độ $(x'_1, x'_2, \dots, x'_n)$ của điểm ảnh $X' = f(X)$ đối với cùng mục tiêu $\{E_0; E_i\}$.
 
+<Theorem id="thm-s6-8" title="Phương trình ma trận của phép biến đổi affine">
+Trong $\mathcal{A}^n$ với mục tiêu affine $\{E_0; E_i\}$, đặt $E'_i = f(E_i)$ ($i = 0, 1, \dots, n$), gọi $C$ là ma trận chuyển từ cơ sở $\{\overrightarrow{E_0E_i}\}$ sang cơ sở $\{\overrightarrow{E'_0E'_i}\}$ (theo hàng, $C^*$ là ma trận chuyển vị của $C$), và gọi $(b_1, b_2, \dots, b_n)$ là tọa độ của điểm $E'_0 = f(E_0)$ đối với $\{E_0; E_i\}$. Khi đó phương trình của phép biến đổi affine $f$ có dạng:
+
+$$
+[x'] = C^*[x] + [b], \tag{1}
+$$
+
+trong đó $[x], [x'], [b]$ lần lượt là ma trận cột tọa độ của $X, X' = f(X)$ và $E'_0 = f(E_0)$ đối với $\{E_0; E_i\}$.
+
+- Ma trận vuông không suy biến $C^*$ được gọi là **ma trận của phép affine $f$** đối với mục tiêu $\{E_0; E_i\}$. Đối với cơ sở nền $\{\vec{e}_i\} = \{\overrightarrow{E_0E_i}\}$, phép biến đổi tuyến tính liên kết $\varphi$ có phương trình $[x'] = C^*[x]$ (với $[x], [x']$ là ma trận cột tọa độ của $\vec{x}$ và $\varphi(\vec{x})$).
+- **Chiều đảo:** Ngược lại, đối với một mục tiêu đã chọn $\{E_0; E_i\}$, mỗi phương trình có dạng $[x'] = B[x] + [b]$, trong đó $B$ là ma trận vuông cấp $n$ không suy biến ($\det B \neq 0$), đều là phương trình của một phép biến đổi affine duy nhất $f: \mathcal{A}^n \to \mathcal{A}^n$.
+</Theorem>
+
+<Proof of="thm-s6-8" defaultOpen={true}>
+1. **Chiều thuận:** Vì $f$ là phép biến đổi affine (song ánh) và $\{E_0, E_1, \dots, E_n\}$ độc lập nên $n + 1$ điểm ảnh $E'_0, E'_1, \dots, E'_n$ cũng độc lập và tạo thành một mục tiêu affine $\{E'_0; E'_i\}$ của $\mathcal{A}^n$.
+
+   Với điểm $X \in \mathcal{A}^n$ có tọa độ $(x_1, x_2, \dots, x_n)$ đối với $\{E_0; E_i\}$, ta có:
+
+$$
+\overrightarrow{E_0X} = x_1\overrightarrow{E_0E_1} + x_2\overrightarrow{E_0E_2} + \dots + x_n\overrightarrow{E_0E_n}.
+$$
+
+   Tác động ánh xạ tuyến tính liên kết $\varphi$ của $f$ (với $X' = f(X)$ và $\varphi(\overrightarrow{E_0E_i}) = \overrightarrow{E'_0E'_i}$):
+
+$$
+\overrightarrow{E'_0X'} = \varphi(\overrightarrow{E_0X}) = x_1\overrightarrow{E'_0E'_1} + x_2\overrightarrow{E'_0E'_2} + \dots + x_n\overrightarrow{E'_0E'_n}.
+$$
+
+   Đẳng thức trên chứng tỏ điểm ảnh $X'$ có tọa độ đối với mục tiêu mới $\{E'_0; E'_i\}$ đúng bằng $(x_1, x_2, \dots, x_n)$! Như vậy mối liên hệ giữa $(x_1, \dots, x_n)$ và tọa độ $(x'_1, \dots, x'_n)$ của $X'$ đối với mục tiêu cũ $\{E_0; E_i\}$ chính là công thức đổi mục tiêu cho cùng một điểm $X'$ giữa $\{E_0; E_i\}$ và $\{E'_0; E'_i\}$. Áp dụng công thức đổi mục tiêu ở Mục 3, §2, với $C$ là ma trận chuyển từ $\{\overrightarrow{E_0E_i}\}$ sang $\{\overrightarrow{E'_0E'_i}\}$ và $[b]$ là cột tọa độ của $E'_0$ đối với $\{E_0; E_i\}$, ta nhận được ngay $[x'] = C^*[x] + [b]$.
+
+2. **Chiều đảo:** Giả sử cho trước phương trình $[x'] = B[x] + [b]$ với $\det B \neq 0$ *(đính chính lỗi in tr. 38 gõ dư dấu phẩy thành $[b']$ ở hai câu đầu)*. Gọi $E'_0 \in \mathcal{A}^n$ là điểm có cột tọa độ $[b] = (b_1, \dots, b_n)^{\mathsf{T}}$ đối với $\{E_0; E_i\}$, và xác định duy nhất cơ sở $\{\overrightarrow{E'_0E'_i}\}$ từ cơ sở $\{\overrightarrow{E_0E_i}\}$ bởi ma trận chuyển $C = B^*$ (không suy biến vì $\det B^* = \det B \neq 0$, thỏa mãn $(B^*)^* = B$). Khi đó $\{E'_0; E'_i\}$ là một mục tiêu affine hoàn toàn xác định của $\mathcal{A}^n$.
+
+   Theo câu b) của <Ref to="thm-s6-5" />, tồn tại duy nhất phép biến đổi affine $f: \mathcal{A}^n \to \mathcal{A}^n$ sao cho $f(E_i) = E'_i$ với mọi $i = 0, 1, \dots, n$. Theo chiều thuận vừa chứng minh, phương trình của $f$ đối với $\{E_0; E_i\}$ là $[x'] = C^*[x] + [b] = B[x] + [b]$.
+</Proof>
+
+<Example id="ex-s6-9a" title="Thí dụ 1: Phương trình của phép tịnh tiến trong A^n">
+Một phép tịnh tiến $t_{\vec{v}}: \mathcal{A}^n \to \mathcal{A}^n$ nhận phép đồng nhất $\id_{V^n}$ làm phép biến đổi tuyến tính liên kết, nên ma trận của nó đối với mọi mục tiêu $\{E_0; E_i\}$ luôn là ma trận đơn vị $I_n$. Vậy phương trình của phép tịnh tiến có dạng:
+
+$$
+[x'] = [x] + [b],
+$$
+
+trong đó $[b]$ là ma trận cột tọa độ của điểm $E'_0 = t_{\vec{v}}(E_0)$ đối với $\{E_0; E_i\}$ (cũng chính là cột tọa độ của vectơ tịnh tiến $\vec{v} = \overrightarrow{E_0E'_0}$ đối với cơ sở nền $\{\overrightarrow{E_0E_i}\}$).
+</Example>
+
+<Example id="ex-s6-9b" title="Thí dụ 2: Lập phương trình phép biến đổi affine trên mặt phẳng A^2">
+Trong mặt phẳng affine $\mathcal{A}^2$ đối với mục tiêu đã chọn, hãy lập phương trình của phép biến đổi affine $f$ biến ba điểm $A(1, 0)$, $B(0, 2)$, $C(-3, 0)$ lần lượt thành $A'(2, 3)$, $B'(-1, 4)$, $C'(-2, -1)$.
+
+**Giải:** Phương trình tổng quát của phép affine $f$ trên $\mathcal{A}^2$ có dạng:
+
+$$
+\begin{cases}
+x'_1 = a_1 x_1 + a_2 x_2 + c_1 \\
+x'_2 = b_1 x_1 + b_2 x_2 + c_2
+\end{cases}
+\quad \text{hay} \quad
+\begin{bmatrix} x'_1 \\ x'_2 \end{bmatrix}
+= \begin{bmatrix} a_1 & a_2 \\ b_1 & b_2 \end{bmatrix}
+\begin{bmatrix} x_1 \\ x_2 \end{bmatrix}
++ \begin{bmatrix} c_1 \\ c_2 \end{bmatrix}.
+$$
+
+Thay tọa độ theo giả thiết $A(1, 0) \mapsto A'(2, 3)$, $B(0, 2) \mapsto B'(-1, 4)$ và $C(-3, 0) \mapsto C'(-2, -1)$, ta thu được hệ $6$ phương trình tuyến tính với $6$ ẩn $a_1, a_2, b_1, b_2, c_1, c_2$:
+
+$$
+\begin{cases}
+2 = a_1 + c_1 \\
+3 = b_1 + c_2
+\end{cases}
+\qquad
+\begin{cases}
+-1 = 2a_2 + c_1 \\
+4 = 2b_2 + c_2
+\end{cases}
+\qquad
+\begin{cases}
+-2 = -3a_1 + c_1 \\
+-1 = -3b_1 + c_2.
+\end{cases}
+$$
+
+Từ phương trình thứ nhất và thứ năm: $4a_1 = 4 \implies a_1 = 1, c_1 = 1$, thế vào phương trình thứ ba được $2a_2 = -2 \implies a_2 = -1$. Từ phương trình thứ hai và thứ sáu: $4b_1 = 4 \implies b_1 = 1, c_2 = 2$, thế vào phương trình thứ tư được $2b_2 = 2 \implies b_2 = 1$. Do $\det \begin{bmatrix} 1 & -1 \\ 1 & 1 \end{bmatrix} = 2 \neq 0$, phương trình của phép biến đổi affine $f$ cần tìm là:
+
+$$
+\begin{bmatrix} x'_1 \\ x'_2 \end{bmatrix}
+= \begin{bmatrix} 1 & -1 \\ 1 & 1 \end{bmatrix}
+\begin{bmatrix} x_1 \\ x_2 \end{bmatrix}
++ \begin{bmatrix} 1 \\ 2 \end{bmatrix}
+\iff
+\begin{cases}
+x'_1 = x_1 - x_2 + 1 \\
+x'_2 = x_1 + x_2 + 2.
+\end{cases}
+$$
+</Example>
+
+## 6. Phương trình của Phép Biến đổi Affine đối với Hai Mục tiêu Khác nhau
+
+<Theorem id="thm-s6-10" title="Liên hệ giữa ma trận của phép biến đổi affine đối với hai mục tiêu">
+Giả sử đối với mục tiêu affine $\{E_0; E_i\}$, phép biến đổi affine $f: \mathcal{A}^n \to \mathcal{A}^n$ có phương trình $[x'] = B[x] + [b]$, và đối với một mục tiêu affine khác $\{E'_0; E'_i\}$, phép affine $f$ đó có phương trình $[y'] = B'[y] + [b']$ *(trong sách viết cùng ký hiệu biến $[x'] = B'[x] + [b']$)*. Khi đó hai ma trận $B$ và $B'$ liên hệ với nhau bởi công thức đồng dạng:
+
+$$
+B' = (C^*)^{-1} B C^*,
+$$
+
+trong đó $C$ là ma trận chuyển từ cơ sở nền $\{\overrightarrow{E_0E_i}\}$ sang cơ sở nền $\{\overrightarrow{E'_0E'_i}\}$ ($i = 1, 2, \dots, n$).
+</Theorem>
+
+<Proof of="thm-s6-10" defaultOpen={true}>
+Theo <Ref to="thm-s6-8" />, $B$ và $B'$ đồng thời là ma trận biểu diễn của cùng một phép biến đổi tuyến tính liên kết $\varphi: V^n \to V^n$ đối với hai cơ sở nền tương ứng $\{\vec{e}_i\} = \{\overrightarrow{E_0E_i}\}$ và $\{\vec{e}'_i\} = \{\overrightarrow{E'_0E'_i}\}$. Với $\vec{v} \in V^n$ có cột tọa độ $[u]$ theo $\{\vec{e}_i\}$ và $[u_{\text{mới}}]$ theo $\{\vec{e}'_i\}$, công thức đổi cơ sở cho $[u] = C^*[u_{\text{mới}}]$ và tương tự cho ảnh $\varphi(\vec{v})$: $[u'] = C^*[u'_{\text{mới}}]$. Thay vào $[u'] = B[u]$ ta có $C^*[u'_{\text{mới}}] = B C^*[u_{\text{mới}}] \iff [u'_{\text{mới}}] = (C^*)^{-1} B C^* [u_{\text{mới}}]$, suy ra $B' = (C^*)^{-1} B C^*$.
+</Proof>
+
+<Remark title="Ý nghĩa hình học của cột tự do [b] khi lập phương trình phép affine">
+Trong phương trình $[x'] = B[x] + [b]$ của phép biến đổi affine $f$ đối với mục tiêu $\{E_0; E_i\}$, nếu cho $[x] = [0]$ (ứng với gốc $E_0$) thì $[x'] = [b]$. Điều đó có nghĩa là $(b_1, b_2, \dots, b_n)$ chính là tọa độ của điểm ảnh $f(E_0)$ đối với mục tiêu $\{E_0; E_i\}$, giúp rút ngắn đáng kể quá trình lập phương trình phép affine khi giả thiết cho biết trước ảnh của gốc mục tiêu.
+</Remark>
+
+<Example id="ex-s6-11" title="Minh họa công thức đổi ma trận B' = (C*)^{-1} B C*">
+Xét phép affine $f$ ở <Ref to="ex-s6-9b" /> có ma trận $B = \begin{bmatrix} 1 & -1 \\ 1 & 1 \end{bmatrix}$ đối với cơ sở nền $\{\vec{e}_1, \vec{e}_2\}$. Nếu đổi sang mục tiêu mới cùng gốc với cơ sở nền $\vec{e}'_1 = \vec{e}_1,\; \vec{e}'_2 = 2\vec{e}_2$, thì $C = C^* = \begin{bmatrix} 1 & 0 \\ 0 & 2 \end{bmatrix}$ và:
+
+$$
+B' = (C^*)^{-1} B C^* = \begin{bmatrix} 1 & 0 \\ 0 & 1/2 \end{bmatrix} \begin{bmatrix} 1 & -1 \\ 1 & 1 \end{bmatrix} \begin{bmatrix} 1 & 0 \\ 0 & 2 \end{bmatrix} = \begin{bmatrix} 1 & -2 \\ 1/2 & 1 \end{bmatrix}.
+$$
+
+Kiểm chứng trực tiếp: $\varphi(\vec{e}'_1) = \varphi(\vec{e}_1) = \vec{e}_1 + \vec{e}_2 = \vec{e}'_1 + \dfrac{1}{2}\vec{e}'_2$ (cột $1$ của $B'$) và $\varphi(\vec{e}'_2) = 2\varphi(\vec{e}_2) = -2\vec{e}_1 + 2\vec{e}_2 = -2\vec{e}'_1 + \vec{e}'_2$ (cột $2$ của $B'$).
+</Example>
+
+## 7. Ảnh của Đơn hình $m$ Chiều và của Hình hộp $m$ Chiều qua Phép Biến đổi Affine
+
+<Theorem id="thm-s6-12" title="Tính bất biến affine của đơn hình m chiều và hình hộp m chiều">
+Trong không gian affine thực $\mathcal{A}^n$, qua một phép biến đổi affine $f: \mathcal{A}^n \to \mathcal{A}^n$:
+
+1. **a)** Một đơn hình $m$ chiều biến thành một đơn hình $m$ chiều: nếu $A'_i = f(A_i)$ ($i = 0, 1, \dots, m$) thì $f\bigl(S(A_0, A_1, \dots, A_m)\bigr) = S(A'_0, A'_1, \dots, A'_m)$.
+2. **b)** Một hình hộp $m$ chiều ($m$-hộp) biến thành một hình hộp $m$ chiều: nếu $P'_i = f(P_i)$ ($i = 0, 1, \dots, m$) thì $f\bigl(H(P_0, P_1, \dots, P_m)\bigr) = H(P'_0, P'_1, \dots, P'_m)$.
+</Theorem>
+
+<Proof of="thm-s6-12" defaultOpen={true}>
+- **Chứng minh a):** Giả sử đơn hình $S(A_0, A_1, \dots, A_m)$ được xác định bởi $m + 1$ điểm độc lập $A_0, A_1, \dots, A_m$. Đối với một mục tiêu affine đã chọn, gọi $[a_i]$ là ma trận cột tọa độ của đỉnh $A_i$ ($i = 0, 1, \dots, m$). Theo định nghĩa đơn hình ở §5, điểm $X$ có cột tọa độ $[x]$ thuộc $S(A_0, \dots, A_m)$ khi và chỉ khi:
+
+$$
+[x] = t_0[a_0] + t_1[a_1] + \dots + t_m[a_m], \quad \text{với } t_i \ge 0 \;\; (\forall i = 0, \dots, m) \quad \text{và} \quad t_0 + t_1 + \dots + t_m = 1.
+$$
+
+  Giả sử phép biến đổi affine $f$ có phương trình $[x'] = B[x] + [b]$ ($\det B \neq 0$). Vì tự đẳng cấu tuyến tính liên kết $\varphi$ bảo toàn tính độc lập tuyến tính nên hệ $m + 1$ điểm ảnh $A'_0, A'_1, \dots, A'_m$ ($A'_i = f(A_i)$, có cột tọa độ $[a'_i] = B[a_i] + [b]$) cũng là $m + 1$ điểm độc lập và xác định $m$-đơn hình $S(A'_0, \dots, A'_m)$. Chú ý điều kiện $t_0 + t_1 + \dots + t_m = 1 \implies [b] = (t_0 + t_1 + \dots + t_m)[b]$, với mọi điểm $X \in \mathcal{A}^n$ và ảnh $X' = f(X)$, ta có biến đổi tương đương (do $B$ khả nghịch):
+
+$$
+\begin{aligned}
+[x] = \sum_{i=0}^{m} t_i [a_i]
+&\iff [x'] = B\left(\sum_{i=0}^{m} t_i [a_i]\right) + [b] \\
+&\iff [x'] = t_0\bigl(B[a_0] + [b]\bigr) + t_1\bigl(B[a_1] + [b]\bigr) + \dots + t_m\bigl(B[a_m] + [b]\bigr) \\
+&\iff [x'] = t_0[a'_0] + t_1[a'_1] + \dots + t_m[a'_m],
+\end{aligned}
+$$
+
+  với cùng bộ tham số $t_i \ge 0$, $\sum_{i=0}^{m} t_i = 1$. Do đó $X \in S(A_0, \dots, A_m) \iff f(X) \in S(A'_0, \dots, A'_m)$, tức $f\bigl(S(A_0, \dots, A_m)\bigr) = S(A'_0, \dots, A'_m)$.
+
+- **Chứng minh b):** Xét $m$-hộp $H(P_0, P_1, \dots, P_m)$ xác định bởi $m + 1$ điểm độc lập $P_0, P_1, \dots, P_m$, gồm những điểm $M \in \mathcal{A}^n$ thỏa mãn $\overrightarrow{P_0M} = \sum_{i=1}^{m} \lambda_i \overrightarrow{P_0P_i}$ với $0 \le \lambda_i \le 1$ *(đính chính lỗi in cuối tr. 41 – đầu tr. 42: bản gốc thiếu chỉ số $0$ ở $\overrightarrow{P_0M}$ và $\overrightarrow{P'_0M'}$)*.
+
+  Gọi $\varphi$ là tự đẳng cấu tuyến tính liên kết của $f$ và đặt $P'_i = f(P_i)$ ($i = 0, \dots, m$), $M' = f(M)$. Vì $\varphi$ là đẳng cấu tuyến tính và $\varphi(\overrightarrow{P_0P_i}) = \overrightarrow{P'_0P'_i}$, các điểm $P'_0, P'_1, \dots, P'_m$ cũng là $m + 1$ điểm độc lập, đồng thời:
+
+$$
+\overrightarrow{P_0M} = \sum_{i=1}^{m} \lambda_i \overrightarrow{P_0P_i}
+\iff \overrightarrow{P'_0M'} = \varphi(\overrightarrow{P_0M}) = \sum_{i=1}^{m} \lambda_i \varphi(\overrightarrow{P_0P_i}) = \sum_{i=1}^{m} \lambda_i \overrightarrow{P'_0P'_i}
+$$
+
+  với $0 \le \lambda_i \le 1$ ($i = 1, \dots, m$). Do $f$ là song ánh nên $f\bigl(H(P_0, P_1, \dots, P_m)\bigr) = H(P'_0, P'_1, \dots, P'_m)$.
+</Proof>
+
+<Example id="ex-s6-14" title="Ảnh của tam giác đơn vị và hình vuông đơn vị qua phép biến đổi affine">
+Với phép biến đổi affine $f(x_1, x_2) = (x_1 - x_2 + 1,\; x_1 + x_2 + 2)$ ở <Ref to="ex-s6-9b" />:
+
+- Tam giác đơn vị ($2$-đơn hình) $S(A_0, A_1, A_2)$ với $A_0(0, 0), A_1(1, 0), A_2(0, 1)$ biến thành tam giác $S(A'_0, A'_1, A'_2)$ với $A'_0(1, 2), A'_1(2, 3), A'_2(0, 3)$. Điểm $M\left(\dfrac{1}{4}, \dfrac{1}{4}\right)$ ứng với $(t_0, t_1, t_2) = \left(\dfrac{1}{2}, \dfrac{1}{4}, \dfrac{1}{4}\right)$ có ảnh $f(M) = \left(1, \dfrac{5}{2}\right)$, khớp chính xác với $\dfrac{1}{2}(1, 2) + \dfrac{1}{4}(2, 3) + \dfrac{1}{4}(0, 3) = \left(1, \dfrac{5}{2}\right)$.
+- Hình vuông đơn vị ($2$-hộp) $H(A_0, A_1, A_2) = [0, 1]^2$ biến thành hình bình hành $H(A'_0, A'_1, A'_2)$ có $4$ đỉnh $(1, 2), (2, 3), (0, 3)$ và $f(1, 1) = (1, 4)$.
+</Example>
+
+## 8. Bài tập Vận dụng và Củng cố
+
+<Exercise id="exr-s6-38" title="Bài tập 1.38 — Phép chiếu song song lên siêu phẳng trong A^3 là ánh xạ affine">
+Chứng minh rằng trong không gian affine $\mathcal{A}^3$, cho <GlossaryTerm termId="sieu-phang">siêu phẳng</GlossaryTerm> (mặt phẳng) $\alpha$, phép chiếu song song lên $\alpha$ theo phương của một vectơ $\vec{m} \neq \vec{0}$ không thuộc phương $\overrightarrow{\alpha}$ là một ánh xạ affine.
 
 <Hint>
-Ảnh của gốc cho phần tự do, ảnh của e₁, e₂ cho các cột của ma trận.
+Phân tích không gian vectơ liên kết $V^3 = \overrightarrow{\alpha} \oplus \operatorname{span}\{\vec{m}\}$ làm tổng trực tiếp, từ đó xác định ánh xạ tuyến tính liên kết $\varphi: V^3 \to V^3$ chiếu lên $\overrightarrow{\alpha}$ theo phương $\operatorname{span}\{\vec{m}\}$.
 </Hint>
 
 <Solution>
-f(O) = (1,2) nên phần tự do là (1,2).
+Vì $\alpha$ là siêu phẳng của $\mathcal{A}^3$ nên $\dim \overrightarrow{\alpha} = 2$; mặt khác $\vec{m} \neq \vec{0}$ và $\vec{m} \notin \overrightarrow{\alpha}$, do đó $V^3 = \overrightarrow{\mathcal{A}^3}$ phân tích thành tổng trực tiếp $V^3 = \overrightarrow{\alpha} \oplus \operatorname{span}\{\vec{m}\}$.
 
- $ varphi$ (e₁) = (2,3) - (1,2) = (1,1);  $ varphi$ (e₂) = (0,3) - (1,2) = (-1,1).
+Với mỗi điểm $M \in \mathcal{A}^3$, đường thẳng $d_M$ đi qua $M$ có phương $\operatorname{span}\{\vec{m}\}$ không song song và không nằm trong $\alpha$, nên cắt $\alpha$ tại một điểm duy nhất $M' = p(M)$ đặc trưng bởi hai điều kiện: $M' \in \alpha$ và $\overrightarrow{MM'} = \lambda_M \vec{m}$ ($\lambda_M \in \mathbb{K}$).
 
-x' = x - y + 1, y' = x + y + 2.
+Xét ánh xạ $\varphi: V^3 \to V^3$ biến mỗi vectơ $\vec{w} = \vec{u} + \lambda\vec{m}$ (với $\vec{u} \in \overrightarrow{\alpha}, \lambda \in \mathbb{K}$ duy nhất) thành $\varphi(\vec{w}) = \vec{u}$. Dễ thấy $\varphi$ là một ánh xạ tuyến tính (phép chiếu tuyến tính lên $\overrightarrow{\alpha}$ song song với $\operatorname{span}\{\vec{m}\}$). Với mọi cặp điểm $M, N \in \mathcal{A}^3$ và ảnh $M' = p(M), N' = p(N) \in \alpha$, theo quy tắc Chasles ta có:
 
-M(2,1) ↦ (2-1+1, 2+1+2) = (2,5).
+$$
+\overrightarrow{MN} = \overrightarrow{MM'} + \overrightarrow{M'N'} + \overrightarrow{N'N} = \overrightarrow{M'N'} + (\lambda_M - \lambda_N)\vec{m}.
+$$
 
-**Đáp án:** f(M) = (2,5); phương trình: x' = x - y + 1, y' = x + y + 2
+Vì $\overrightarrow{M'N'} \in \overrightarrow{\alpha}$ và $(\lambda_M - \lambda_N)\vec{m} \in \operatorname{span}\{\vec{m}\}$, theo định nghĩa của $\varphi$ ta suy ra ngay $\varphi(\overrightarrow{MN}) = \overrightarrow{M'N'}$. Vậy phép chiếu song song $p$ là một ánh xạ affine nhận $\varphi$ làm ánh xạ tuyến tính liên kết.
 </Solution>
 </Exercise>
 
-<Exercise id="exr-s6-2" title="Phép biến đổi afin và hệ số diện tích (§6)">
-Phép afin f của A² biến O(0,0), E₁(1,0), E₂(0,1) lần lượt thành O(0,0), (1,1), (-1,1). Tìm ảnh của M(2,3) và định thức của phần tuyến tính (hệ số biến diện tích).
+<Exercise id="exr-s6-39" title="Bài tập 1.39 — Khảo sát ánh xạ chiếu tọa độ triệt tiêu thành phần thứ nhất trong A^n">
+Cho không gian affine $\mathcal{A}^n$ với mục tiêu affine $\{O; \vec{e}_1, \vec{e}_2, \dots, \vec{e}_n\}$. Với mỗi điểm $X = (x_1, x_2, \dots, x_n)$, đặt tương ứng điểm $X' = (0, x_2, x_3, \dots, x_n)$, ta được ánh xạ $f: \mathcal{A}^n \to \mathcal{A}^n$ mà $f(X) = X'$.
 
+Chứng minh rằng $f$ là ánh xạ affine; nó liên kết với ánh xạ tuyến tính nào? Ảnh $f(\mathcal{A}^n)$ là tập nào? Hãy minh họa phép chiếu song song này trong không gian affine ba chiều.
 
 <Hint>
-Hai cột của ma trận là ảnh của e₁ và e₂.
+Tính tọa độ của $\overrightarrow{f(M)f(N)}$ theo tọa độ của $\overrightarrow{MN}$ đối với cơ sở nền $\{\vec{e}_1, \dots, \vec{e}_n\}$ để tìm ma trận của $\varphi$.
 </Hint>
 
 <Solution>
-Ma trận B = [[1,-1],[1,1]], f(x,y) = (x - y, x + y).
+1. **Chứng minh $f$ là ánh xạ affine và tìm ánh xạ tuyến tính liên kết $\varphi$:**
+   Xét ánh xạ $\varphi: V^n \to V^n$ trên không gian vectơ liên kết xác định đối với cơ sở $\{\vec{e}_1, \dots, \vec{e}_n\}$ bởi:
 
-f(2,3) = (2 - 3, 2 + 3) = (-1, 5).
+$$
+\varphi(u_1\vec{e}_1 + u_2\vec{e}_2 + \dots + u_n\vec{e}_n) = 0\vec{e}_1 + u_2\vec{e}_2 + \dots + u_n\vec{e}_n,
+$$
 
-det B = 1·1 - (-1)·1 = 2.
+   tức $\varphi(\vec{e}_1) = \vec{0}$ và $\varphi(\vec{e}_k) = \vec{e}_k$ với mọi $k = 2, \dots, n$. Đây rõ ràng là một ánh xạ tuyến tính (có ma trận là $\operatorname{diag}(0, 1, 1, \dots, 1)$). Với mọi cặp điểm $M(x_1, \dots, x_n)$ và $N(y_1, \dots, y_n)$ thuộc $\mathcal{A}^n$, ta có $\overrightarrow{MN} = (y_1 - x_1, y_2 - x_2, \dots, y_n - x_n)$, còn $M' = f(M) = (0, x_2, \dots, x_n)$ và $N' = f(N) = (0, y_2, \dots, y_n)$ thỏa mãn:
 
-**Đáp án:** f(M) = (-1, 5); det = 2 (diện tích mọi hình nhân đôi)
+$$
+\overrightarrow{M'N'} = (0,\; y_2 - x_2,\; \dots,\; y_n - x_n) = \varphi(\overrightarrow{MN}).
+$$
+
+   Vậy $f$ là một ánh xạ affine liên kết với ánh xạ tuyến tính $\varphi$.
+
+2. **Tập ảnh $f(\mathcal{A}^n)$:**
+   Mọi điểm $X' = (0, x_2, \dots, x_n) \in f(\mathcal{A}^n)$ đều thỏa mãn phương trình $x_1 = 0$; ngược lại mọi điểm $Y(0, y_2, \dots, y_n)$ thuộc siêu phẳng $x_1 = 0$ đều là ảnh của chính nó ($f(Y) = Y$). Vậy $f(\mathcal{A}^n)$ chính là **siêu phẳng tọa độ $x_1 = 0$** (đi qua gốc $O$ và có phương $\operatorname{span}\{\vec{e}_2, \dots, \vec{e}_n\}$).
+
+3. **Minh họa trong không gian ba chiều $\mathcal{A}^3$:**
+   Trong $\mathcal{A}^3$ với mục tiêu $\{O; \vec{e}_1, \vec{e}_2, \vec{e}_3\}$, ánh xạ $f(x_1, x_2, x_3) = (0, x_2, x_3)$ có $\overrightarrow{XX'} = (-x_1, 0, 0) = -x_1\vec{e}_1$ và $X'$ nằm trên mặt phẳng tọa độ $(Ox_2 x_3): x_1 = 0$. Đó chính là **phép chiếu song song theo phương trục tọa độ thứ nhất $Ox_1$ ($\operatorname{span}\{\vec{e}_1\}$) lên mặt phẳng tọa độ $(Ox_2 x_3)$**.
+</Solution>
+</Exercise>
+
+<Exercise id="exr-s6-40" title="Bài tập 1.40 — Điều kiện để một ánh xạ giữa hai không gian affine là ánh xạ affine">
+Cho hai không gian affine $\mathcal{A}$ và $\mathcal{A}'$ *(có số chiều dương trên trường $\mathbb{K}$, chẳng hạn $\mathbb{R}$)*. Có phải mọi ánh xạ $f: \mathcal{A} \to \mathcal{A}'$ đều là ánh xạ affine hay không? Nếu không, hãy đặt điều kiện để ánh xạ $f$ trở thành ánh xạ affine.
+
+<Hint>
+Chỉ ra một phản ví dụ phi tuyến trên đường thẳng affine $\R^1$, sau đó sử dụng tính chất b) của <Ref to="thm-s6-2" /> qua một điểm gốc cố định $I \in \mathcal{A}$ để nêu điều kiện cần và đủ.
+</Hint>
+
+<Solution>
+1. **Không phải mọi ánh xạ $f: \mathcal{A} \to \mathcal{A}'$ đều là ánh xạ affine:**
+   Chẳng hạn xét $\mathcal{A} = \mathcal{A}' = \R^1$ và ánh xạ $f: \R^1 \to \R^1$ cho bởi $f(x) = x^2$. Lấy ba điểm $M(0), N(1), P(2)$: ta có $\overrightarrow{MN} = 1 = \overrightarrow{NP}$, nhưng ảnh của chúng là $f(M) = 0, f(N) = 1, f(P) = 4$ lại có $\overrightarrow{f(M)f(N)} = 1 \neq 3 = \overrightarrow{f(N)f(P)}$. Do đó không thể tồn tại bất kỳ ánh xạ (thậm chí chưa cần tuyến tính) $\varphi: \R \to \R$ nào thỏa mãn $\overrightarrow{f(X)f(Y)} = \varphi(\overrightarrow{XY})$ với mọi $X, Y$.
+
+2. **Điều kiện cần và đủ để $f: \mathcal{A} \to \mathcal{A}'$ là ánh xạ affine:**
+   Cố định một điểm $I \in \mathcal{A}$ và đặt $I' = f(I) \in \mathcal{A}'$. Với mỗi vectơ $\vec{u} \in \overrightarrow{\mathcal{A}}$, gọi $M_{\vec{u}} \in \mathcal{A}$ là điểm duy nhất sao cho $\overrightarrow{IM_{\vec{u}}} = \vec{u}$ và xét ánh xạ cảm sinh $\varphi_I: \overrightarrow{\mathcal{A}} \to \overrightarrow{\mathcal{A}'}$ định nghĩa bởi:
+
+$$
+\varphi_I(\vec{u}) = \overrightarrow{I'\,f(M_{\vec{u}})}.
+$$
+
+   Khi đó **$f$ là ánh xạ affine khi và chỉ khi $\varphi_I$ là một ánh xạ tuyến tính**, tức với mọi $\vec{u}, \vec{v} \in \overrightarrow{\mathcal{A}}$ và mọi $k \in \mathbb{K}$:
+
+$$
+\varphi_I(\vec{u} + \vec{v}) = \varphi_I(\vec{u}) + \varphi_I(\vec{v}) \qquad \text{và} \qquad \varphi_I(k\vec{u}) = k\varphi_I(\vec{u}).
+$$
+
+   Thật vậy, nếu $f$ là ánh xạ affine liên kết với $\varphi$ thì $\varphi_I(\vec{u}) = \overrightarrow{f(I)f(M_{\vec{u}})} = \varphi(\overrightarrow{IM_{\vec{u}}}) = \varphi(\vec{u})$ là ánh xạ tuyến tính; ngược lại, nếu $\varphi_I$ tuyến tính thì với mọi $M, N \in \mathcal{A}$, $\overrightarrow{f(M)f(N)} = \overrightarrow{I'f(N)} - \overrightarrow{I'f(M)} = \varphi_I(\overrightarrow{IN}) - \varphi_I(\overrightarrow{IM}) = \varphi_I(\overrightarrow{MN})$, nên $f$ là ánh xạ affine. *(Một điều kiện hình học tương đương khác: $f$ bảo toàn tâm tỉ cự của mọi hệ điểm, tức $f(G) = G'$ với cùng họ trọng số).*
+</Solution>
+</Exercise>
+
+<Exercise id="exr-s6-41" title="Bài tập 1.41 — Cặp phép chiếu affine lên hai phẳng bù phương trong A^n">
+Trong không gian $\mathcal{A}^n$, cho $m$-phẳng $P$ có phương $V^m$ và $(n - m)$-phẳng $Q$ có phương $V^{n-m}$ sao cho $V^m \cap V^{n-m} = \{\vec{0}\}$.
+
+a) Chứng minh $P$ và $Q$ chỉ có một điểm chung duy nhất.
+
+b) Gọi $M$ là một điểm bất kỳ của $\mathcal{A}^n$, gọi $P'$ là $m$-phẳng đi qua $M$ và cùng phương (song song hoặc trùng) với $P$, gọi $Q'$ là $(n - m)$-phẳng đi qua $M$ và cùng phương với $Q$. Chứng minh rằng $P'$ và $Q$ chỉ cắt nhau tại $1$ điểm; $Q'$ và $P$ cũng cắt nhau tại $1$ điểm và ký hiệu các điểm đó lần lượt là $M_q$ và $M_p$.
+
+c) Xét ánh xạ $p: \mathcal{A}^n \to P \subset \mathcal{A}^n$ sao cho $p(M) = M_p$ và ánh xạ $q: \mathcal{A}^n \to Q \subset \mathcal{A}^n$ sao cho $q(M) = M_q$ *(lần lượt gọi là phép chiếu lên $P$ theo phương $V^{n-m}$ và phép chiếu lên $Q$ theo phương $V^m$)*. Chứng minh rằng $p$ và $q$ là những ánh xạ affine thỏa mãn các tính chất:
+
+$$
+p^2 = p, \qquad q^2 = q, \qquad pq = qp = c_O
+$$
+
+*(lưu ý: bản in gốc tr. 78 ký hiệu $pq = qp = 1$ và giải thích rõ "$1$ ký hiệu cho ánh xạ hằng"; ở đây ta viết tường minh $c_O$ là ánh xạ hằng biến mọi điểm thành giao điểm duy nhất $O = P \cap Q$)*.
+
+d) Chứng minh rằng nếu có một điểm $A \in P$ và điểm $B \in Q$ thì luôn có một điểm $X$ duy nhất của $\mathcal{A}^n$ sao cho $p(X) = A$ và $q(X) = B$.
+
+<Hint>
+Sử dụng phân tích tổng trực tiếp $V^n = V^m \oplus V^{n-m}$. Đặt $\{O\} = P \cap Q$; với mỗi $M \in \mathcal{A}^n$, tách duy nhất $\overrightarrow{OM} = \vec{u} + \vec{v}$ ($\vec{u} \in V^m, \vec{v} \in V^{n-m}$) để chỉ ra $\overrightarrow{OM_p} = \vec{u}$ và $\overrightarrow{OM_q} = \vec{v}$.
+</Hint>
+
+<Solution>
+- **a)** Vì $\dim V^m = m$, $\dim V^{n-m} = n - m$ và $V^m \cap V^{n-m} = \{\vec{0}\}$ nên $\dim(V^m + V^{n-m}) = m + (n - m) - 0 = n$, tức $V^n = V^m \oplus V^{n-m}$. Lấy $I \in P, J \in Q$ bất kỳ thì $\overrightarrow{IJ} \in V^n = V^m + V^{n-m}$, nên theo điều kiện cắt nhau của hai phẳng ở §3, $P \cap Q \neq \varnothing$ và giao $P \cap Q$ là cái phẳng có phương $V^m \cap V^{n-m} = \{\vec{0}\}$ ($0$-phẳng). Vậy $P$ và $Q$ cắt nhau tại một điểm chung duy nhất $O$.
+
+- **b)** Với mọi $M \in \mathcal{A}^n$, $m$-phẳng $P'$ đi qua $M$ vẫn có phương $V^m$, còn $(n - m)$-phẳng $Q$ có phương $V^{n-m}$ với $V^m \cap V^{n-m} = \{\vec{0}\}$. Áp dụng đúng chứng minh câu a cho cặp $(P', Q)$ và cặp $(Q', P)$, ta suy ra $P' \cap Q = \{M_q\}$ là điểm duy nhất và $Q' \cap P = \{M_p\}$ cũng là điểm duy nhất.
+
+- **c)** Cố định $O = P \cap Q$. Với mỗi $M \in \mathcal{A}^n$, phân tích duy nhất $\overrightarrow{OM} = \vec{u} + \vec{v}$ ($\vec{u} \in V^m, \vec{v} \in V^{n-m}$). Gọi $\pi_1, \pi_2: V^n \to V^n$ là hai phép chiếu tuyến tính bù nhau: $\pi_1(\vec{u} + \vec{v}) = \vec{u}$ và $\pi_2(\vec{u} + \vec{v}) = \vec{v}$ (thỏa mãn $\pi_1^2 = \pi_1$, $\pi_2^2 = \pi_2$, $\pi_1 \circ \pi_2 = \pi_2 \circ \pi_1 = 0$).
+  - Điểm $M_1 \in \mathcal{A}^n$ xác định bởi $\overrightarrow{OM_1} = \vec{u} \in V^m$ nằm trên $P$, đồng thời $\overrightarrow{MM_1} = \vec{u} - (\vec{u} + \vec{v}) = -\vec{v} \in V^{n-m}$ nên $M_1 \in Q'$; do $Q' \cap P = \{M_p\}$ duy nhất nên $M_p = M_1$, tức $\overrightarrow{OM_p} = \pi_1(\overrightarrow{OM})$. Hoàn toàn tương tự, $\overrightarrow{OM_q} = \vec{v} = \pi_2(\overrightarrow{OM})$.
+  - Với mọi $M, N \in \mathcal{A}^n$: $\overrightarrow{p(M)p(N)} = \overrightarrow{ON_p} - \overrightarrow{OM_p} = \pi_1(\overrightarrow{ON} - \overrightarrow{OM}) = \pi_1(\overrightarrow{MN})$ và $\overrightarrow{q(M)q(N)} = \pi_2(\overrightarrow{MN})$. Vậy $p, q$ là các ánh xạ affine liên kết với $\pi_1, \pi_2$.
+  - Vì $p(O) = O$ và $q(O) = O$, áp dụng tính chất b, c) của <Ref to="thm-s6-2" /> tại điểm gốc $O$:
+    - $\overrightarrow{O\,p^2(M)} = \pi_1^2(\overrightarrow{OM}) = \pi_1(\overrightarrow{OM}) = \overrightarrow{O\,p(M)} \implies p^2 = p$; tương tự $q^2 = q$.
+    - $\overrightarrow{O\,(p \circ q)(M)} = (\pi_1 \circ \pi_2)(\overrightarrow{OM}) = \vec{0}$ và $\overrightarrow{O\,(q \circ p)(M)} = (\pi_2 \circ \pi_1)(\overrightarrow{OM}) = \vec{0}$, nên $(p \circ q)(M) = (q \circ p)(M) = O$ với mọi $M \in \mathcal{A}^n$ (tức $pq = qp = c_O$ là ánh xạ hằng nhận giá trị $O$).
+
+- **d)** Cho $A \in P$ ($\implies \overrightarrow{OA} \in V^m$) và $B \in Q$ ($\implies \overrightarrow{OB} \in V^{n-m}$). Với mọi $X \in \mathcal{A}^n$, phân tích duy nhất $\overrightarrow{OX} = \vec{u} + \vec{v}$ ($\vec{u} \in V^m, \vec{v} \in V^{n-m}$) cho $\overrightarrow{O\,p(X)} = \vec{u}$ và $\overrightarrow{O\,q(X)} = \vec{v}$. Do đó:
+
+$$
+\begin{cases} p(X) = A \\ q(X) = B \end{cases}
+\iff
+\begin{cases} \vec{u} = \overrightarrow{OA} \\ \vec{v} = \overrightarrow{OB} \end{cases}
+\iff \overrightarrow{OX} = \overrightarrow{OA} + \overrightarrow{OB}.
+$$
+
+  Theo tiên đề Weyl, tồn tại duy nhất điểm $X \in \mathcal{A}^n$ thỏa mãn $\overrightarrow{OX} = \overrightarrow{OA} + \overrightarrow{OB}$.
+</Solution>
+</Exercise>
+
+<Exercise id="exr-s6-42" title="Bài tập 1.42 — Lập phương trình phép biến đổi affine trong A^2 đối với hai mục tiêu">
+Trong mặt phẳng affine $\mathcal{A}^2$, cho phép affine $f$ biến đổi các điểm như sau:
+
+$$
+A(1, 1) \mapsto A'(1, 1), \qquad B(2, 0) \mapsto B'(2, 0), \qquad C(1, 0) \mapsto C'(2, 2).
+$$
+
+Viết phương trình phép affine đó đối với mục tiêu đã chọn và đối với mục tiêu $\{A; B, C\}$.
+
+<Hint>
+Kiểm tra $A, B, C$ độc lập ($\overrightarrow{AB} = (1, -1), \overrightarrow{AC} = (0, -1)$). Đối với mục tiêu $\{A; B, C\}$, chú ý $A$ và $B$ là hai điểm bất động của $f$ nên $f(A) = A(0, 0)$ và $f(B) = B(1, 0)$, chỉ cần tìm tọa độ của $C'(2, 2)$ đối với $\{A; B, C\}$.
+</Hint>
+
+<Solution>
+Ta có $\overrightarrow{AB} = (1, -1)$ và $\overrightarrow{AC} = (0, -1)$ không tỉ lệ ($\det \begin{bmatrix} 1 & 0 \\ -1 & -1 \end{bmatrix} = -1 \neq 0$) nên $\{A; B, C\}$ là một mục tiêu affine của $\mathcal{A}^2$; đồng thời $\overrightarrow{A'B'} = (1, -1)$ và $\overrightarrow{A'C'} = (1, 1)$ có định thức $1 - (-1) = 2 \neq 0$ nên $f$ là phép biến đổi affine duy nhất.
+
+1. **Phương trình của $f$ đối với mục tiêu ban đầu:**
+   Gọi $\varphi$ là tự đẳng cấu tuyến tính liên kết của $f$ đối với cơ sở nền $\{\vec{e}_1, \vec{e}_2\}$. Vì $\vec{e}_2 = -\overrightarrow{AC} = (0, 1)$ và $\vec{e}_1 = \overrightarrow{AB} + \vec{e}_2 = (1, 0)$, ta tính được hai cột của ma trận $B$:
+
+$$
+\varphi(\vec{e}_2) = -\varphi(\overrightarrow{AC}) = -\overrightarrow{A'C'} = (-1, -1), \qquad \varphi(\vec{e}_1) = \varphi(\overrightarrow{AB}) + \varphi(\vec{e}_2) = (1, -1) + (-1, -1) = (0, -2).
+$$
+
+   Suy ra $B = \begin{bmatrix} 0 & -1 \\ -2 & -1 \end{bmatrix}$. Thay $C(1, 0) \mapsto C'(2, 2)$ vào $[x'] = B[x] + [b]$ được $\begin{bmatrix} 0 \\ -2 \end{bmatrix} + [b] = \begin{bmatrix} 2 \\ 2 \end{bmatrix} \implies [b] = \begin{bmatrix} 2 \\ 4 \end{bmatrix}$. Vậy phương trình của $f$ đối với mục tiêu đã chọn là:
+
+$$
+\begin{cases}
+x'_1 = -x_2 + 2 \\
+x'_2 = -2x_1 - x_2 + 4.
+\end{cases}
+$$
+
+2. **Phương trình của $f$ đối với mục tiêu $\{A; B, C\}$:**
+   Gọi $(y_1, y_2)$ và $(y'_1, y'_2)$ là tọa độ của $X$ và $X' = f(X)$ đối với mục tiêu $\{A; B, C\}$ (gốc $A$, cơ sở nền $\vec{u}_1 = \overrightarrow{AB} = (1, -1)$, $\vec{u}_2 = \overrightarrow{AC} = (0, -1)$).
+   - Vì $f(A) = A$, gốc mục tiêu đứng yên nên cột tự do $[b'] = \begin{bmatrix} 0 \\ 0 \end{bmatrix}$.
+   - Vì $f(B) = B$, $\varphi(\vec{u}_1) = \overrightarrow{A'B'} = \vec{u}_1 = 1\vec{u}_1 + 0\vec{u}_2$ (cột $1$ của $B'$).
+   - Vì $f(C) = C'(2, 2)$, ta biểu diễn $\overrightarrow{AC'} = (1, 1) = 1\cdot(1, -1) + (-2)\cdot(0, -1) = \vec{u}_1 - 2\vec{u}_2$, nên $\varphi(\vec{u}_2) = \vec{u}_1 - 2\vec{u}_2$ (cột $2$ của $B'$).
+
+   Vậy phương trình của $f$ đối với mục tiêu $\{A; B, C\}$ là:
+
+$$
+\begin{bmatrix} y'_1 \\ y'_2 \end{bmatrix} = \begin{bmatrix} 1 & 1 \\ 0 & -2 \end{bmatrix}\begin{bmatrix} y_1 \\ y_2 \end{bmatrix}
+\iff
+\begin{cases}
+y'_1 = y_1 + y_2 \\
+y'_2 = -2y_2.
+\end{cases}
+$$
+
+   *(Kiểm chứng qua <Ref to="thm-s6-10" />: với $C^* = \begin{bmatrix} 1 & 0 \\ -1 & -1 \end{bmatrix} = (C^*)^{-1}$, tích $(C^*)^{-1} B C^* = \begin{bmatrix} 1 & 0 \\ -1 & -1 \end{bmatrix}\begin{bmatrix} 0 & -1 \\ -2 & -1 \end{bmatrix}\begin{bmatrix} 1 & 0 \\ -1 & -1 \end{bmatrix} = \begin{bmatrix} 1 & 1 \\ 0 & -2 \end{bmatrix}$, khớp hoàn toàn).*
+</Solution>
+</Exercise>
+
+<Exercise id="exr-s6-43" title="Bài tập 1.43 — Phép biến đổi affine trong A^3: lập phương trình, điểm kép, phương bất biến và đổi mục tiêu">
+Trong không gian affine $\mathcal{A}^3$ với mục tiêu đã chọn, cho các điểm:
+
+$$
+\begin{aligned}
+A_0 &= (1, 1, 1), & A_1 &= (2, 0, 0), & A_2 &= (1, 0, 0), & A_3 &= (1, 1, 0); \\
+A'_0 &= (0, 0, 0), & A'_1 &= (0, 1, 0), & A'_2 &= (2, 0, 1), & A'_3 &= (1, 0, 1).
+\end{aligned}
+$$
+
+a) Chứng minh bốn điểm $A_0, A_1, A_2, A_3$ và bốn điểm $A'_0, A'_1, A'_2, A'_3$ đều độc lập.
+
+b) Lập phương trình phép biến đổi affine $f: \mathcal{A}^3 \to \mathcal{A}^3$ sao cho $f(A_i) = A'_i$ ($i = 0, 1, 2, 3$) đối với mục tiêu đã chọn.
+
+c) Tìm các điểm kép và phương bất biến của phép affine đó.
+
+d) Viết phương trình phép affine $f$ đó đối với mục tiêu $\{A_0; A_1, A_2, A_3\}$.
+
+<Hint>
+Ở câu b, lợi dụng các vectơ đơn vị $\overrightarrow{A_2A_1} = \vec{e}_1$, $\overrightarrow{A_2A_3} = \vec{e}_2$, $\overrightarrow{A_3A_0} = \vec{e}_3$ để suy ra ngay 3 cột của ma trận $B$. Ở câu c, giải $(B - I_3)[x] = -[b]$ để tìm điểm kép và xét phương trình đặc trưng $\det(B - \lambda I_3) = 0$ để tìm phương bất biến $1$ chiều.
+</Hint>
+
+<Solution>
+- **a) Kiểm tra tính độc lập của hai hệ điểm:**
+  Lập ma trận cột tọa độ của hai hệ vectơ $\{\overrightarrow{A_0A_1}, \overrightarrow{A_0A_2}, \overrightarrow{A_0A_3}\}$ và $\{\overrightarrow{A'_0A'_1}, \overrightarrow{A'_0A'_2}, \overrightarrow{A'_0A'_3}\}$:
+
+$$
+C^* = \begin{bmatrix} 1 & 0 & 0 \\ -1 & -1 & 0 \\ -1 & -1 & -1 \end{bmatrix} \implies \det C^* = 1 \neq 0;
+\qquad
+D^* = \begin{bmatrix} 0 & 2 & 1 \\ 1 & 0 & 0 \\ 0 & 1 & 1 \end{bmatrix} \implies \det D^* = -(2 - 1) = -1 \neq 0.
+$$
+
+  Cả hai định thức đều khác $0$ nên $\{A_0, A_1, A_2, A_3\}$ và $\{A'_0, A'_1, A'_2, A'_3\}$ đều là các hệ gồm $4$ điểm độc lập trong $\mathcal{A}^3$.
+
+- **b) Phương trình của $f$ đối với mục tiêu đã chọn:**
+  Ta nhận thấy ngay $\vec{e}_1 = \overrightarrow{A_2A_1} = (1, 0, 0)$, $\vec{e}_2 = \overrightarrow{A_2A_3} = (0, 1, 0)$ và $\vec{e}_3 = \overrightarrow{A_3A_0} = (0, 0, 1)$, do đó tự đẳng cấu tuyến tính liên kết $\varphi$ tác động lên cơ sở nền như sau:
+
+$$
+\begin{aligned}
+\varphi(\vec{e}_1) &= \overrightarrow{A'_2A'_1} = (0, 1, 0) - (2, 0, 1) = (-2, 1, -1), \\
+\varphi(\vec{e}_2) &= \overrightarrow{A'_2A'_3} = (1, 0, 1) - (2, 0, 1) = (-1, 0, 0), \\
+\varphi(\vec{e}_3) &= \overrightarrow{A'_3A'_0} = (0, 0, 0) - (1, 0, 1) = (-1, 0, -1).
+\end{aligned}
+$$
+
+  Vậy ma trận của $f$ là $B = \begin{bmatrix} -2 & -1 & -1 \\ 1 & 0 & 0 \\ -1 & 0 & -1 \end{bmatrix}$. Thay $f(A_0) = A'_0$, tức $B\begin{bmatrix} 1 \\ 1 \\ 1 \end{bmatrix} + [b] = \begin{bmatrix} 0 \\ 0 \\ 0 \end{bmatrix}$, ta được $[b] = -\begin{bmatrix} -4 \\ 1 \\ -2 \end{bmatrix} = \begin{bmatrix} 4 \\ -1 \\ 2 \end{bmatrix}$. Phương trình của $f$ là:
+
+$$
+\begin{cases}
+x'_1 = -2x_1 - x_2 - x_3 + 4 \\
+x'_2 = x_1 - 1 \\
+x'_3 = -x_1 - x_3 + 2.
+\end{cases}
+$$
+
+- **c) Điểm kép và phương bất biến của $f$:**
+  1. **Điểm kép ($f(X) = X$):** Giải hệ $(B - I_3)[x] = -[b]$:
+
+$$
+\begin{cases}
+-3x_1 - x_2 - x_3 = -4 \\
+x_1 - x_2 = 1 \\
+-x_1 - 2x_3 = -2.
+\end{cases}
+$$
+
+     Từ hai phương trình sau rút ra $x_2 = x_1 - 1$ và $x_3 = 1 - \dfrac{x_1}{2}$, thế vào phương trình đầu: $-3x_1 - (x_1 - 1) - \left(1 - \dfrac{x_1}{2}\right) = -4 \iff -\dfrac{7}{2}x_1 = -4 \iff x_1 = \dfrac{8}{7}$, suy ra $x_2 = \dfrac{1}{7}$ và $x_3 = \dfrac{3}{7}$. Vậy $f$ có **một điểm kép duy nhất** là $I\left(\dfrac{8}{7},\; \dfrac{1}{7},\; \dfrac{3}{7}\right)$.
+
+  2. **Phương bất biến ($1$ chiều) của $f$:** Một phương $1$ chiều $\operatorname{span}\{\vec{u}\}$ ($\vec{u} \neq \vec{0}$) là phương bất biến của $f$ khi và chỉ khi $\varphi(\vec{u}) = \lambda\vec{u}$ ($\lambda \neq 0$). Xét phương trình đặc trưng của $B$:
+
+$$
+\det(B - \lambda I_3) = \det \begin{bmatrix} -2 - \lambda & -1 & -1 \\ 1 & -\lambda & 0 \\ -1 & 0 & -1 - \lambda \end{bmatrix} = -(\lambda^3 + 3\lambda^2 + 2\lambda + 1) = 0 \iff (\lambda + 1)^3 - (\lambda + 1) + 1 = 0.
+$$
+
+     - Trên trường $\mathbb{Q}$, đa thức bậc ba $P(\lambda) = \lambda^3 + 3\lambda^2 + 2\lambda + 1$ không có nghiệm hữu tỉ ($P(\pm 1) \neq 0$), nên không tồn tại phương bất biến $1$ chiều hữu tỉ.
+     - Trên trường thực $\mathbb{R}$, đặt $t = \lambda + 1$ được $t^3 - t + 1 = 0$ có biệt thức $\Delta = -23 < 0$, nên phương trình có **duy nhất một giá trị riêng thực**:
+
+$$
+\lambda_0 = -1 - \sqrt[3]{\frac{1}{2} + \frac{\sqrt{69}}{18}} - \sqrt[3]{\frac{1}{2} - \frac{\sqrt{69}}{18}} \approx -2{,}3247 \in (-3, -2).
+$$
+
+       Từ hệ $(B - \lambda_0 I_3)[u] = [0]$ ($u_1 = \lambda_0 u_2$ và $-u_1 - (\lambda_0 + 1)u_3 = 0$), chọn $u_2 = \lambda_0 + 1 \neq 0$, ta thu được **phương bất biến $1$ chiều thực duy nhất** là $\operatorname{span}\bigl\{\bigl(\lambda_0(\lambda_0 + 1),\; \lambda_0 + 1,\; -\lambda_0\bigr)\bigr\}$. *(Ngoài ra, ứng với cặp nghiệm phức liên hợp còn lại của $P(\lambda) = 0$, $\varphi$ còn có một không gian con bất biến $2$ chiều thực duy nhất bù với phương $1$ chiều trên).*
+
+- **d) Phương trình của $f$ đối với mục tiêu $\{A_0; A_1, A_2, A_3\}$:**
+  Công thức đổi mục tiêu từ $\{E_0; E_i\}$ sang $\{A_0; A_1, A_2, A_3\}$ là $[x] = C^*[y] + [a_0]$ với $(C^*)^{-1} = \begin{bmatrix} 1 & 0 & 0 \\ -1 & -1 & 0 \\ 0 & 1 & -1 \end{bmatrix}$. Khi đó tọa độ $[y']$ của $X' = f(X)$ trong $\{A_0; A_1, A_2, A_3\}$ liên hệ với $[y]$ bởi $[y'] = B'[y] + [b']$, trong đó:
+
+$$
+B' = (C^*)^{-1} B C^* = \begin{bmatrix} 1 & 0 & 0 \\ -1 & -1 & 0 \\ 0 & 1 & -1 \end{bmatrix} \begin{bmatrix} -2 & -1 & -1 \\ 1 & 0 & 0 \\ -1 & 0 & -1 \end{bmatrix} \begin{bmatrix} 1 & 0 & 0 \\ -1 & -1 & 0 \\ -1 & -1 & -1 \end{bmatrix} = \begin{bmatrix} 0 & 2 & 1 \\ -1 & -2 & -1 \\ 1 & -1 & -1 \end{bmatrix},
+$$
+
+  và $[b'] = (C^*)^{-1}([a'_0] - [a_0]) = \begin{bmatrix} 1 & 0 & 0 \\ -1 & -1 & 0 \\ 0 & 1 & -1 \end{bmatrix}\begin{bmatrix} -1 \\ -1 \\ -1 \end{bmatrix} = \begin{bmatrix} -1 \\ 2 \\ 0 \end{bmatrix}$ (tọa độ của $A'_0 = f(A_0)$ đối với $\{A_0; A_1, A_2, A_3\}$). Vậy phương trình cần tìm là:
+
+$$
+\begin{cases}
+y'_1 = 2y_2 + y_3 - 1 \\
+y'_2 = -y_1 - 2y_2 - y_3 + 2 \\
+y'_3 = y_1 - y_2 - y_3.
+\end{cases}
+$$
+</Solution>
+</Exercise>
+
+<Exercise id="exr-s6-44" title="Bài tập 1.44 — Phương trình phép biến đổi affine hoán vị hai đỉnh của tứ diện">
+Trong không gian affine $\mathcal{A}^3$, cho một tứ diện $ABCD$. Lập phương trình phép biến đổi affine $f$ đối với mục tiêu $\{A; B, C, D\}$ sao cho:
+
+$$
+f(A) = B, \qquad f(B) = A, \qquad f(C) = C, \qquad f(D) = D.
+$$
+
+<Hint>
+Trong mục tiêu $\{A; B, C, D\}$, tọa độ bốn đỉnh lần lượt là $A(0, 0, 0)$, $B(1, 0, 0)$, $C(0, 1, 0)$, $D(0, 0, 1)$. Chú ý các cột của ma trận $B$ là tọa độ của $\overrightarrow{f(A)f(B)} = \overrightarrow{BA}$, $\overrightarrow{f(A)f(C)} = \overrightarrow{BC}$ và $\overrightarrow{f(A)f(D)} = \overrightarrow{BD}$ theo cơ sở $\{\overrightarrow{AB}, \overrightarrow{AC}, \overrightarrow{AD}\}$.
+</Hint>
+
+<Solution>
+Đối với mục tiêu $\{A; B, C, D\}$ (cơ sở nền $\vec{e}_1 = \overrightarrow{AB}, \vec{e}_2 = \overrightarrow{AC}, \vec{e}_3 = \overrightarrow{AD}$), gốc $A(0, 0, 0)$ biến thành $f(A) = B(1, 0, 0)$, nên cột hệ số tự do là $[b] = \begin{bmatrix} 1 \\ 0 \\ 0 \end{bmatrix}$.
+
+Ba cột của ma trận $M$ biểu diễn tự đẳng cấu tuyến tính liên kết $\varphi$ lần lượt là:
+
+- $\varphi(\vec{e}_1) = \overrightarrow{f(A)f(B)} = \overrightarrow{BA} = -\vec{e}_1 = (-1, 0, 0)^{\mathsf{T}}$;
+- $\varphi(\vec{e}_2) = \overrightarrow{f(A)f(C)} = \overrightarrow{BC} = \overrightarrow{AC} - \overrightarrow{AB} = -\vec{e}_1 + \vec{e}_2 = (-1, 1, 0)^{\mathsf{T}}$;
+- $\varphi(\vec{e}_3) = \overrightarrow{f(A)f(D)} = \overrightarrow{BD} = \overrightarrow{AD} - \overrightarrow{AB} = -\vec{e}_1 + \vec{e}_3 = (-1, 0, 1)^{\mathsf{T}}$.
+
+Vậy phương trình của phép biến đổi affine $f$ đối với mục tiêu $\{A; B, C, D\}$ là:
+
+$$
+\begin{bmatrix} x'_1 \\ x'_2 \\ x'_3 \end{bmatrix}
+= \begin{bmatrix} -1 & -1 & -1 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix}
+\begin{bmatrix} x_1 \\ x_2 \\ x_3 \end{bmatrix}
++ \begin{bmatrix} 1 \\ 0 \\ 0 \end{bmatrix}
+\iff
+\begin{cases}
+x'_1 = -x_1 - x_2 - x_3 + 1 \\
+x'_2 = x_2 \\
+x'_3 = x_3.
+\end{cases}
+$$
+
+*(Kiểm chứng: $A(0, 0, 0) \mapsto (1, 0, 0) = B$, $B(1, 0, 0) \mapsto (0, 0, 0) = A$, $C(0, 1, 0) \mapsto (0, 1, 0) = C$, $D(0, 0, 1) \mapsto (0, 0, 1) = D$; đây là phép đối xứng song song qua mặt phẳng trung tuyến đi qua $CD$ và trung điểm của $AB$ theo phương đường thẳng $AB$).*
+</Solution>
+</Exercise>
+
+<Exercise id="exr-s6-45" title="Bài tập 1.45 — Tìm phương trình của phép biến đổi affine ngược f^{-1} trong A^2">
+Trong mặt phẳng affine $\mathcal{A}^2$, cho phép biến đổi affine $f$ đối với mục tiêu đã chọn:
+
+$$
+f: \begin{cases}
+x'_1 = 2x_1 - 3x_2 - 7 \\
+x'_2 = 3x_1 - 5x_2 - 9.
+\end{cases}
+$$
+
+Hãy tìm phép affine ngược $f^{-1}$ *(đính chính lỗi in tr. 79: bản scan mờ dấu trừ ở số mũ nên nhìn giống $f^1$)*.
+
+<Hint>
+Giải hệ phương trình tuyến tính trên để rút $(x_1, x_2)$ theo $(x'_1, x'_2)$, hoặc tính $[x] = B^{-1}[x'] - B^{-1}[b]$ với $B = \begin{bmatrix} 2 & -3 \\ 3 & -5 \end{bmatrix}$.
+</Hint>
+
+<Solution>
+Ma trận của $f$ là $B = \begin{bmatrix} 2 & -3 \\ 3 & -5 \end{bmatrix}$ có $\det B = 2(-5) - (-3)(3) = -10 + 9 = -1 \neq 0$, suy ra ma trận nghịch đảo là:
+
+$$
+B^{-1} = \frac{1}{-1}\begin{bmatrix} -5 & 3 \\ -3 & 2 \end{bmatrix} = \begin{bmatrix} 5 & -3 \\ 3 & -2 \end{bmatrix}.
+$$
+
+Từ $[x'] = B[x] + [b]$ với $[b] = \begin{bmatrix} -7 \\ -9 \end{bmatrix}$, nhân trái với $B^{-1}$ ta rút được $[x] = B^{-1}[x'] - B^{-1}[b]$:
+
+$$
+-B^{-1}[b] = -\begin{bmatrix} 5 & -3 \\ 3 & -2 \end{bmatrix}\begin{bmatrix} -7 \\ -9 \end{bmatrix} = -\begin{bmatrix} -35 + 27 \\ -21 + 18 \end{bmatrix} = \begin{bmatrix} 8 \\ 3 \end{bmatrix}.
+$$
+
+Do đó $x_1 = 5x'_1 - 3x'_2 + 8$ và $x_2 = 3x'_1 - 2x'_2 + 3$. Viết lại theo ký hiệu biến chuẩn $(x_1, x_2) \mapsto (x'_1, x'_2)$, phương trình của phép biến đổi affine ngược $f^{-1}$ là:
+
+$$
+f^{-1}: \begin{cases}
+x'_1 = 5x_1 - 3x_2 + 8 \\
+x'_2 = 3x_1 - 2x_2 + 3.
+\end{cases}
+$$
+</Solution>
+</Exercise>
+
+<Exercise id="exr-s6-46" title="Bài tập 1.46 — Tìm ảnh, tạo ảnh của điểm và đường thẳng cùng điểm bất động trong A^2">
+Trong $\mathcal{A}^2$, cho phép biến đổi affine $f$ đối với mục tiêu đã chọn:
+
+$$
+f: \begin{cases}
+x'_1 = 3x_1 + 2x_2 - 2 \\
+x'_2 = 2x_1 + 2x_2 - 1.
+\end{cases}
+$$
+
+a) Tìm ảnh và tạo ảnh của điểm $M(1, 2)$.
+
+b) Tìm ảnh và tạo ảnh của đường thẳng $d$ có phương trình $3x_1 + 2x_2 - 6 = 0$.
+
+c) Tìm điểm kép (điểm bất động) của phép affine $f$.
+
+<Hint>
+Tính trước phương trình phép ngược $f^{-1}$ ($\det B = 6 - 4 = 2$). Với đường thẳng $d$, tạo ảnh $f^{-1}(d)$ gồm các điểm $X$ sao cho $f(X) \in d$, còn ảnh $f(d)$ gồm các điểm $X'$ sao cho $f^{-1}(X') \in d$.
+</Hint>
+
+<Solution>
+Ta có $B = \begin{bmatrix} 3 & 2 \\ 2 & 2 \end{bmatrix}$ với $\det B = 2 \neq 0$, nên $B^{-1} = \begin{bmatrix} 1 & -1 \\ -1 & 3/2 \end{bmatrix}$. Giải $(x_1, x_2)$ theo $(x'_1, x'_2)$ từ hệ của $f$:
+
+$$
+\begin{cases}
+x_1 = x'_1 - x'_2 + 1 \\[4pt]
+x_2 = -x'_1 + \dfrac{3}{2}x'_2 - \dfrac{1}{2}.
+\end{cases}
+$$
+
+- **a) Ảnh và tạo ảnh của điểm $M(1, 2)$:**
+  - **Ảnh $M' = f(M)$:** Thay $(x_1, x_2) = (1, 2)$ vào phương trình của $f$: $x'_1 = 3(1) + 2(2) - 2 = 5$, $x'_2 = 2(1) + 2(2) - 1 = 5$. Vậy $f(M) = (5, 5)$.
+  - **Tạo ảnh $M_0 = f^{-1}(M)$:** Thay $(x'_1, x'_2) = (1, 2)$ vào công thức ngược: $x_1 = 1 - 2 + 1 = 0$, $x_2 = -1 + \dfrac{3}{2}(2) - \dfrac{1}{2} = \dfrac{3}{2}$. Vậy $f^{-1}(M) = \left(0,\; \dfrac{3}{2}\right)$.
+
+- **b) Ảnh và tạo ảnh của đường thẳng $d: 3x_1 + 2x_2 - 6 = 0$:**
+  - **Ảnh $d' = f(d)$:** Điểm $X'(x'_1, x'_2) \in f(d) \iff X = f^{-1}(X') \in d$. Thay $x_1 = x'_1 - x'_2 + 1$ và $x_2 = -x'_1 + \dfrac{3}{2}x'_2 - \dfrac{1}{2}$ vào $3x_1 + 2x_2 - 6 = 0$ *(hoặc nhận xét ngay từ phương trình đầu của $f$: $3x_1 + 2x_2 = x'_1 + 2$)*:
+
+$$
+(x'_1 + 2) - 6 = 0 \iff x'_1 - 4 = 0.
+$$
+
+    Vậy ảnh $f(d)$ là đường thẳng có phương trình $x_1 - 4 = 0$.
+  - **Tạo ảnh $d_0 = f^{-1}(d)$:** Điểm $X(x_1, x_2) \in f^{-1}(d) \iff X' = f(X) \in d \iff 3x'_1 + 2x'_2 - 6 = 0$. Thay biểu thức của $x'_1, x'_2$:
+
+$$
+3(3x_1 + 2x_2 - 2) + 2(2x_1 + 2x_2 - 1) - 6 = 0 \iff 13x_1 + 10x_2 - 14 = 0.
+$$
+
+    Vậy tạo ảnh $f^{-1}(d)$ là đường thẳng có phương trình $13x_1 + 10x_2 - 14 = 0$.
+
+- **c) Điểm kép (điểm bất động) của $f$:**
+  Giải hệ $f(X) = X$ (tức $x'_1 = x_1, x'_2 = x_2$):
+
+$$
+\begin{cases}
+3x_1 + 2x_2 - 2 = x_1 \\
+2x_1 + 2x_2 - 1 = x_2
+\end{cases}
+\iff
+\begin{cases}
+2x_1 + 2x_2 = 2 \\
+2x_1 + x_2 = 1
+\end{cases}
+\iff
+\begin{cases}
+x_1 = 0 \\
+x_2 = 1.
+\end{cases}
+$$
+
+  Vậy phép affine $f$ có duy nhất một điểm bất động là $I(0, 1)$.
+</Solution>
+</Exercise>
+
+<Exercise id="exr-s6-47" title="Bài tập 1.47 — Lập phương trình phép biến đổi mục tiêu và tìm tọa độ các đỉnh mục tiêu mới trong A^n">
+Trong không gian affine $\mathcal{A}^n$, cho công thức đổi mục tiêu:
+
+$$
+\begin{cases}
+x_1 = y_1 + y_2 + y_3 + \dots + y_n + 1 \\
+x_2 = \phantom{y_1 + {}} y_2 + y_3 + \dots + y_n + 2 \\
+x_3 = \phantom{y_1 + y_2 + {}} y_3 + \dots + y_n + 3 \\
+\;\;\vdots \\
+x_n = \phantom{y_1 + y_2 + y_3 + \dots + {}} y_n + n,
+\end{cases}
+$$
+
+trong đó $(x_1, x_2, \dots, x_n)$ là tọa độ của một điểm $X \in \mathcal{A}^n$ đối với mục tiêu thứ nhất $\{E_0; E_i\}$ và $(y_1, y_2, \dots, y_n)$ là tọa độ của điểm $X$ đó đối với mục tiêu thứ hai $\{E'_0; E'_i\}$.
+
+Lập phương trình phép biến đổi affine $f$ đối với mục tiêu thứ nhất sao cho $f$ biến mục tiêu thứ nhất thành mục tiêu thứ hai ($f(E_i) = E'_i$ với $i = 0, 1, \dots, n$). Tìm tọa độ các đỉnh của mục tiêu thứ hai đối với mục tiêu thứ nhất.
+
+<Hint>
+Đối chiếu chứng minh của <Ref to="thm-s6-8" />: công thức đổi mục tiêu $[x] = C^*[y] + [b]$ có cùng ma trận $C^*$ và cột tự do $[b]$ với phương trình $[x'] = C^*[x] + [b]$ của phép biến đổi affine biến $\{E_0; E_i\}$ thành $\{E'_0; E'_i\}$.
+</Hint>
+
+<Solution>
+1. **Phương trình của phép biến đổi affine $f$ đối với mục tiêu thứ nhất $\{E_0; E_i\}$:**
+   Công thức đổi mục tiêu đã cho viết dưới dạng ma trận là $[x] = C^*[y] + [b]$, trong đó $C^*$ là ma trận tam giác trên có mọi phần tử trên và phía trên đường chéo chính đều bằng $1$ ($\det C^* = 1 \neq 0$), còn $[b] = (1, 2, \dots, n)^{\mathsf{T}}$ là cột tọa độ của gốc mới $E'_0$ đối với mục tiêu thứ nhất.
+
+   Theo chứng minh của <Ref to="thm-s6-8" />, nếu $f: \mathcal{A}^n \to \mathcal{A}^n$ biến $E_i \mapsto E'_i$ ($i = 0, 1, \dots, n$) thì với điểm $X$ có tọa độ $(x_1, \dots, x_n)$ trong mục tiêu thứ nhất, ảnh $X' = f(X)$ có tọa độ trong mục tiêu thứ hai đúng bằng $(y_1, \dots, y_n) = (x_1, \dots, x_n)$. Do đó tọa độ $(x'_1, \dots, x'_n)$ của $X'$ đối với mục tiêu thứ nhất được xác định bởi $[x'] = C^*[x] + [b]$:
+
+$$
+f: \begin{cases}
+x'_1 = x_1 + x_2 + x_3 + \dots + x_n + 1 \\
+x'_2 = \phantom{x_1 + {}} x_2 + x_3 + \dots + x_n + 2 \\
+x'_3 = \phantom{x_1 + x_2 + {}} x_3 + \dots + x_n + 3 \\
+\;\;\vdots \\
+x'_n = \phantom{x_1 + x_2 + x_3 + \dots + {}} x_n + n,
+\end{cases}
+\quad \text{hay gọn là} \quad x'_i = \sum_{j=i}^{n} x_j + i \quad (i = 1, 2, \dots, n).
+$$
+
+2. **Tọa độ các điểm của mục tiêu thứ hai $\{E'_0; E'_1, \dots, E'_n\}$ đối với mục tiêu thứ nhất:**
+   - **Gốc $E'_0 = f(E_0)$** (ứng với $x_1 = \dots = x_n = 0$):
+
+$$
+E'_0 = (1, 2, 3, \dots, n).
+$$
+
+   - **Đỉnh thứ $k$ là $E'_k = f(E_k)$** ($1 \le k \le n$, ứng với $x_k = 1$ và $x_j = 0$ với mọi $j \neq k$): trong tổng $\sum_{j=i}^{n} x_j$, giá trị bằng $1$ nếu $i \le k$ và bằng $0$ nếu $i > k$. Do đó tọa độ thứ $i$ của $E'_k$ bằng $i + 1$ khi $1 \le i \le k$ và bằng $i$ khi $k < i \le n$:
+
+$$
+E'_k = (\underbrace{2,\; 3,\; \dots,\; k + 1}_{k \text{ tọa độ đầu}},\; \underbrace{k + 1,\; k + 2,\; \dots,\; n}_{n - k \text{ tọa độ sau}}) \quad (k = 1, 2, \dots, n).
+$$
+
+   *(Cụ thể: $E'_1 = (2, 2, 3, \dots, n)$, $E'_2 = (2, 3, 3, 4, \dots, n)$, ..., $E'_n = (2, 3, 4, \dots, n + 1)$).*
+</Solution>
+</Exercise>
+
+<Exercise id="exr-s6-48" title="Bài tập 1.48 — Phép biến đổi affine có n + 1 điểm kép độc lập là phép đồng nhất">
+Chứng minh rằng trong $\mathcal{A}^n$, nếu một phép biến đổi affine $f$ có $n + 1$ điểm kép độc lập thì $f$ là phép đồng nhất.
+
+<Hint>
+So sánh $f$ với phép biến đổi đồng nhất $\id_{\mathcal{A}^n}$ trên hệ $n + 1$ điểm kép độc lập và áp dụng câu b) của <Ref to="thm-s6-5" />.
+</Hint>
+
+<Solution>
+Giả sử $A_0, A_1, \dots, A_n$ là $n + 1$ điểm độc lập trong $\mathcal{A}^n$ đều là điểm kép của phép biến đổi affine $f$, nghĩa là:
+
+$$
+f(A_i) = A_i \quad \text{với mọi } i = 0, 1, \dots, n.
+$$
+
+Mặt khác, phép biến đổi đồng nhất $\id_{\mathcal{A}^n}: \mathcal{A}^n \to \mathcal{A}^n$ (biến mọi điểm $M \mapsto M$, liên kết với tự đẳng cấu đồng nhất $\id_{V^n}$) hiển nhiên cũng là một phép biến đổi affine thỏa mãn:
+
+$$
+\id_{\mathcal{A}^n}(A_i) = A_i \quad \text{với mọi } i = 0, 1, \dots, n.
+$$
+
+Theo câu b) của <Ref to="thm-s6-5" /> (hoặc tính chất d của <Ref to="thm-s6-2" />), qua $n + 1$ điểm độc lập $A_0, A_1, \dots, A_n$ chỉ có **duy nhất** một phép biến đổi affine nhận bộ ảnh $(A_0, A_1, \dots, A_n)$. Do đó bắt buộc $f = \id_{\mathcal{A}^n}$, tức $f$ là phép đồng nhất.
+</Solution>
+</Exercise>
+
+<Exercise id="exr-s6-49" title="Bài tập 1.49 — Phương trình và tính chất đường nối điểm - ảnh của phép thấu xạ affine">
+Trong không gian affine $\mathcal{A}^n$, phép biến đổi affine $f: \mathcal{A}^n \to \mathcal{A}^n$ được gọi là một **phép thấu xạ affine** nếu tồn tại một siêu phẳng $\mathcal{A}^{n-1}$ sao cho mọi điểm $M$ của siêu phẳng đó đều là điểm kép ($f(M) = M$). Siêu phẳng $\mathcal{A}^{n-1}$ được gọi là **nền thấu xạ**.
+
+Hãy chọn một mục tiêu affine thích hợp và viết phương trình của phép thấu xạ affine đó. Sau đó chứng minh rằng nếu phép thấu xạ affine không phải là phép đồng nhất thì các đường thẳng nối một điểm với ảnh phân biệt của nó hoặc song song với nhau hoặc trùng nhau.
+
+<Hint>
+Chọn mục tiêu $\{E_0; E_1, \dots, E_{n-1}, E_n\}$ sao cho $n$ điểm độc lập $E_0, E_1, \dots, E_{n-1}$ nằm trên nền thấu xạ $\mathcal{A}^{n-1}$ (khi đó $\mathcal{A}^{n-1}$ có phương trình $x_n = 0$), rồi tính vectơ $\overrightarrow{MM'}$ theo tọa độ $x_n$.
+</Hint>
+
+<Solution>
+1. **Chọn mục tiêu thích hợp và lập phương trình phép thấu xạ affine:**
+   Trên siêu phẳng nền thấu xạ $\mathcal{A}^{n-1}$ ($\dim \mathcal{A}^{n-1} = n - 1$), chọn $n$ điểm độc lập $E_0, E_1, \dots, E_{n-1}$, và lấy thêm một điểm $E_n \notin \mathcal{A}^{n-1}$. Khi đó $\{E_0; E_1, \dots, E_{n-1}, E_n\}$ là một mục tiêu affine của $\mathcal{A}^n$, trong đó nền thấu xạ $\mathcal{A}^{n-1}$ có phương trình $x_n = 0$.
+   - Vì $E_0 \in \mathcal{A}^{n-1}$ nên $f(E_0) = E_0(0, \dots, 0)$, do đó cột hệ số tự do $[b] = [0]$ (theo nhận xét ở Mục 6).
+   - Vì $E_j \in \mathcal{A}^{n-1}$ với mọi $j = 1, \dots, n - 1$ nên $f(E_j) = E_j$, kéo theo $\varphi(\vec{e}_j) = \overrightarrow{f(E_0)f(E_j)} = \overrightarrow{E_0E_j} = \vec{e}_j$. Như vậy $n - 1$ cột đầu của ma trận $B$ trùng với $n - 1$ cột đầu của ma trận đơn vị $I_n$.
+   - Gọi $(a_1, a_2, \dots, a_{n-1}, a_n)$ là tọa độ của điểm $E'_n = f(E_n)$ đối với $\{E_0; E_1, \dots, E_n\}$, thì $\varphi(\vec{e}_n) = \overrightarrow{E_0E'_n} = (a_1, \dots, a_{n-1}, a_n)^{\mathsf{T}}$ là cột thứ $n$ của $B$. Để $f$ là phép biến đổi affine ($\det B \neq 0$), điều kiện cần và đủ là $\det B = a_n \neq 0$.
+
+   Vậy trong mục tiêu đã chọn, phương trình của phép thấu xạ affine $f$ có dạng:
+
+$$
+\begin{cases}
+x'_1 = x_1 + a_1 x_n \\
+x'_2 = x_2 + a_2 x_n \\
+\;\;\vdots \\
+x'_{n-1} = x_{n-1} + a_{n-1} x_n \\
+x'_n = a_n x_n
+\end{cases}
+\qquad (a_n \neq 0).
+$$
+
+2. **Tính chất của các đường thẳng $MM'$ khi $f \neq \id_{\mathcal{A}^n}$:**
+   Giả sử $f$ không phải là phép đồng nhất; khi đó bộ $n$ số $(a_1, a_2, \dots, a_{n-1}, a_n - 1) \neq (0, 0, \dots, 0)$ (vì nếu $a_1 = \dots = a_{n-1} = 0$ và $a_n = 1$ thì $x'_i = x_i$ với mọi $i$, tức $f = \id_{\mathcal{A}^n}$). Đặt vectơ cố định khác $\vec{0}$:
+
+$$
+\vec{w} = (a_1,\; a_2,\; \dots,\; a_{n-1},\; a_n - 1) \neq \vec{0}.
+$$
+
+   Xét một điểm $M(x_1, \dots, x_n) \in \mathcal{A}^n$ bất kỳ có ảnh $M' = f(M)$ phân biệt với $M$ ($M' \neq M$). Từ phương trình của $f$, ta tính được tọa độ vectơ $\overrightarrow{MM'}$:
+
+$$
+\overrightarrow{MM'} = (x'_1 - x_1,\; \dots,\; x'_{n-1} - x_{n-1},\; x'_n - x_n) = x_n(a_1,\; a_2,\; \dots,\; a_{n-1},\; a_n - 1) = x_n\vec{w}.
+$$
+
+   Vì $M' \neq M$ nên $\overrightarrow{MM'} \neq \vec{0}$, kéo theo $x_n \neq 0$ (tức $M \notin \mathcal{A}^{n-1}$). Đẳng thức $\overrightarrow{MM'} = x_n\vec{w}$ ($x_n \neq 0$) chứng tỏ **mọi đường thẳng $MM'$ nối một điểm với ảnh phân biệt của nó đều có cùng một phương $1$ chiều cố định là $\operatorname{span}\{\vec{w}\}$** (gọi là *phương của phép thấu xạ*). Hai đường thẳng bất kỳ có cùng phương trong $\mathcal{A}^n$ thì chỉ có thể **hoặc song song với nhau** (nếu không có điểm chung), **hoặc trùng nhau** (nếu có điểm chung).
 </Solution>
 </Exercise>
 
 <KeyTakeaways>
-- Ánh xạ affine là ánh xạ giữa hai không gian affine bảo toàn quan hệ vectơ qua ánh xạ tuyến tính liên kết.
-- Phép biến đổi affine hoàn toàn xác định khi biết ảnh của một mục tiêu affine.
+- Ánh xạ $f: \mathcal{A} \to \mathcal{A}'$ là ánh xạ affine nếu liên kết với một ánh xạ tuyến tính duy nhất $\varphi: \overrightarrow{\mathcal{A}} \to \overrightarrow{\mathcal{A}'}$ sao cho $\overrightarrow{f(M)f(N)} = \varphi(\overrightarrow{MN})$ (<Ref to="def-s6-1" />); ánh xạ affine hoàn toàn được xác định khi biết ảnh của $n + 1$ điểm độc lập và biến $m$-phẳng thành $l$-phẳng với $l \le m$ (<Ref to="thm-s6-2" />).
+- Phép biến đổi affine $f: \mathcal{A}^n \to \mathcal{A}^n$ (song ánh affine trên chính $\mathcal{A}^n$) biến $m$-phẳng thành $m$-phẳng, bảo tồn tỉ số đơn (<Ref to="thm-s6-5" />), biến $m$-đơn hình thành $m$-đơn hình và $m$-hộp thành $m$-hộp (<Ref to="thm-s6-12" />).
+- Đối với mục tiêu $\{E_0; E_i\}$, phép biến đổi affine được biểu diễn bởi $[x'] = B[x] + [b]$ với $\det B \neq 0$ và $[b]$ là cột tọa độ của $f(E_0)$ (<Ref to="thm-s6-8" />); khi đổi sang mục tiêu mới có ma trận chuyển cơ sở $C$, ma trận của phép biến đổi đổi theo quy luật đồng dạng $B' = (C^*)^{-1} B C^*$ (<Ref to="thm-s6-10" />).
 </KeyTakeaways>
