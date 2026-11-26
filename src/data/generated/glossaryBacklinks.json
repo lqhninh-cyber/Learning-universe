@@ -2,7 +2,7 @@
   "stats": {
     "totalLessons": 122,
     "totalTerms": 67,
-    "totalBacklinks": 506,
+    "totalBacklinks": 507,
     "termsWithBacklinks": 67,
     "lessonsWithBacklinks": 116
   },
@@ -2743,6 +2743,14 @@
         "count": 7
       },
       {
+        "lessonId": "muc-tieu-truc-chuan-toa-do-truc-chuan",
+        "lessonCode": "HHAVE 2.3",
+        "lessonTitle": "Mục tiêu Trực chuẩn và Tọa độ Trực chuẩn",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/muc-tieu-truc-chuan-toa-do-truc-chuan",
+        "count": 5
+      },
+      {
         "lessonId": "cac-phang-trong-khong-gian-euclide",
         "lessonCode": "HHAVE 2.4",
         "lessonTitle": "Các Phẳng trong Không gian Ơclit",
@@ -2806,7 +2814,7 @@
         "lessonTitle": "Mục tiêu Trực chuẩn và Tọa độ Trực chuẩn",
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/muc-tieu-truc-chuan-toa-do-truc-chuan",
-        "count": 16
+        "count": 28
       },
       {
         "lessonId": "sieu-mat-bac-hai-trong-khong-gian-euclide",
@@ -4574,6 +4582,7 @@
     ],
     "muc-tieu-truc-chuan-toa-do-truc-chuan": [
       "muc-tieu-truc-chuan",
+      "khong-gian-euclide",
       "muc-tieu-afin"
     ],
     "cac-phang-trong-khong-gian-euclide": [

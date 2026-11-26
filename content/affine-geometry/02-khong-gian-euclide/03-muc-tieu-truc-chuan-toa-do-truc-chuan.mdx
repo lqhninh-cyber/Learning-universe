@@ -1,17 +1,21 @@
 ---
 id: muc-tieu-truc-chuan-toa-do-truc-chuan
-title: "Mục tiêu Trực chuẩn và Tọa độ Trực chuẩn"
-description: "Cơ sở trực chuẩn, mục tiêu trực chuẩn, ma trận trực kinh và công thức đổi mục tiêu trực chuẩn."
-estimatedMinutes: 45
+title: 'Mục tiêu Trực chuẩn và Tọa độ Trực chuẩn'
+description: 'Mục tiêu trực chuẩn, công thức đổi mục tiêu trực chuẩn, khoảng cách hai điểm và biểu thức tọa độ của các tích vectơ.'
+estimatedMinutes: 65
 level: basic
-prerequisites: []
+prerequisites:
+  - bo-sung-ve-cac-phep-toan-tren-khong-gian-vecto
+  - khong-gian-euclide
 tags:
-  - "mục tiêu trực chuẩn"
-  - "tọa độ trực chuẩn"
-  - "ma trận trực kinh"
+  - 'mục tiêu trực chuẩn'
+  - 'tọa độ trực chuẩn'
+  - 'ma trận trực giao'
+  - 'khoảng cách'
+  - 'tích có hướng'
 sources:
   - source: gt-hhcc-nmh-2004
-    pages: '96-102'
+    pages: '89-92'
     sections: '§3'
 status: published
 version: 1.0.0
@@ -24,184 +28,579 @@ authoring:
 
 ## 1. Mục tiêu trực chuẩn
 
-<Definition id="def-e3-1" title="Định nghĩa">
-Mục tiêu afin \{O; $\vect{e_{1}}$,…,$\vect{e_{n}}$\} của $\mathbb{E} ^{n}$ gọi là *mục tiêu trực chuẩn* (hệ tọa độ Đề-các vuông góc) nếu cơ sở \{$\vect{e_{i}}$\} của **Ē**$^{n}$ là cơ sở trực chuẩn:
- 
-
+<Definition id="def-e3-1" title="Định nghĩa mục tiêu trực chuẩn">
+Mục tiêu affine $\{O; \vec{e}_1, \vec{e}_2, \dots, \vec{e}_n\}$ của <GlossaryTerm termId="khong-gian-euclide">không gian Ơclit</GlossaryTerm> $n$ chiều $\mathcal{E}^n$ được gọi là <GlossaryTerm termId="muc-tieu-truc-chuan">mục tiêu trực chuẩn</GlossaryTerm> (hay *hệ tọa độ Đề-các vuông góc*) nếu cơ sở $\{\vec{e}_1, \vec{e}_2, \dots, \vec{e}_n\}$ của không gian vectơ Ơclit liên kết $\overrightarrow{\mathcal{E}^n}$ là *cơ sở trực chuẩn*, nghĩa là các vectơ cơ sở đôi một vuông góc và đều có độ dài bằng $1$:
 $$
-\vect{e_{i}}·\vect{e_{j}} = \delta _{ij} = 0 khi i \neq j; = 1 khi i = j, (i, j = 1, \dots ,n).
+\vec{e}_i \cdot \vec{e}_j = \delta_{ij} = \begin{cases} 0, & i \neq j, \\ 1, & i = j \end{cases} \quad (i, j = 1, 2, \dots, n).
 $$
 </Definition>
 
 ## 2. Tọa độ trực chuẩn
 
-Tọa độ của điểm thuộc $\mathbb{E} ^{n}$ đối với một mục tiêu trực chuẩn gọi là *tọa độ trực chuẩn* (tọa độ Đề-các vuông góc).
+<Definition id="def-e3-2" title="Định nghĩa tọa độ trực chuẩn">
+Tọa độ của một điểm $M \in \mathcal{E}^n$ đối với một mục tiêu trực chuẩn $\{O; \vec{e}_1, \vec{e}_2, \dots, \vec{e}_n\}$ được gọi là *tọa độ trực chuẩn* của điểm đó đối với mục tiêu đã cho (hay còn gọi là *tọa độ Đề-các vuông góc* của điểm đó). Tương tự, tọa độ của một vectơ $\vec{a} \in \overrightarrow{\mathcal{E}^n}$ đối với cơ sở trực chuẩn $\{\vec{e}_1, \dots, \vec{e}_n\}$ được gọi là tọa độ trực chuẩn của vectơ $\vec{a}$.
+</Definition>
 
-Mọi không gian vectơ Ơclit n chiều $(n \ge 1)$ đều có cơ sở trực chuẩn, nên $\mathbb{E} ^{n}$ luôn có mục tiêu trực chuẩn.
+<Proposition id="prop-e3-exists" title="Sự tồn tại của mục tiêu trực chuẩn">
+Mọi không gian vectơ Ơclit $n$ chiều ($n \ge 1$) đều có cơ sở trực chuẩn; do đó trong mọi không gian Ơclit $n$ chiều $\mathcal{E}^n$ ($n \ge 1$) luôn tồn tại những mục tiêu trực chuẩn.
+</Proposition>
+
+<Proof>
+Xuất phát từ một cơ sở bất kì $\{\vec{a}_1, \vec{a}_2, \dots, \vec{a}_n\}$ của $\overrightarrow{\mathcal{E}^n}$, theo quy trình trực giao hóa Gram–Schmidt (đã trình bày ở Bài 2.1, Bài tập 2.1), ta xây dựng được hệ cơ sở trực giao $\{\vec{v}_1, \vec{v}_2, \dots, \vec{v}_n\}$ với $\vec{v}_k \neq \vec{0}$ ($k = 1, \dots, n$) và $\vec{v}_i \cdot \vec{v}_j = 0$ ($i \neq j$). Đặt $\vec{e}_k = \dfrac{1}{|\vec{v}_k|}\vec{v}_k$ với mọi $k = 1, \dots, n$, ta thu được cơ sở trực chuẩn $\{\vec{e}_1, \dots, \vec{e}_n\}$ của $\overrightarrow{\mathcal{E}^n}$. Lấy một điểm $O \in \mathcal{E}^n$ tùy ý, bộ $\{O; \vec{e}_1, \dots, \vec{e}_n\}$ là một mục tiêu trực chuẩn của $\mathcal{E}^n$.
+</Proof>
 
 ## 3. Đổi mục tiêu trực chuẩn
 
-<Theorem id="thm-e3-2" title="Công thức">
-Cho hai mục tiêu trực chuẩn \{O; $\vect{e_{i}}$\} và \{O′; $\vect{e'_{i}}$\}.
+<Theorem id="thm-e3-2" title="Công thức đổi mục tiêu trực chuẩn">
+Cho hai mục tiêu trực chuẩn $\{O; \vec{e}_1, \vec{e}_2, \dots, \vec{e}_n\}$ và $\{O'; \vec{e}'_1, \vec{e}'_2, \dots, \vec{e}'_n\}$ của không gian Ơclit $n$ chiều $\mathcal{E}^n$. Gọi $C = [c_{ij}]_{n \times n}$ là ma trận chuyển từ cơ sở $\{\vec{e}_1, \dots, \vec{e}_n\}$ sang cơ sở $\{\vec{e}'_1, \dots, \vec{e}'_n\}$ (viết theo dòng: $\vec{e}'_i = \sum_{j=1}^n c_{ij}\vec{e}_j$). Vì cả hai cơ sở đều là cơ sở trực chuẩn nên $C$ là một *ma trận trực giao* cấp $n$ ($C C^* = C^* C = I_n$, với $C^* = C^T$ là ma trận chuyển vị của $C$).
 
-Gọi C là ma trận chuyển từ \{$\vect{e_{i}}$\} sang \{$\vect{e'_{i}}$\}; vì cả hai cơ sở đều trực chuẩn nên C là ma trận trực giao cấp n.
-
-Công thức đổi mục tiêu trực chuẩn là
- 
-
+Khi đó công thức đổi mục tiêu trực chuẩn là:
 $$
-[x] = C*[x'] + [a_{0}],
+[x] = C^* [x'] + [a_0],
 $$
-
- 
-trong đó $C*$ là ma trận chuyển vị của C, [a$_{0}$] là cột tọa độ của gốc O′ đối với \{O; $\vect{e_{i}}$\}, còn [x], [x′] là cột tọa độ của cùng một điểm đối với hai mục tiêu.
+trong đó $[a_0]$ là ma trận cột tọa độ của gốc mới $O'$ đối với mục tiêu cũ $\{O; \vec{e}_1, \dots, \vec{e}_n\}$, còn $[x]$ và $[x']$ là hai ma trận cột tọa độ của cùng một điểm $M \in \mathcal{E}^n$ lần lượt đối với mục tiêu $\{O; \vec{e}_i\}$ và mục tiêu $\{O'; \vec{e}'_i\}$.
 </Theorem>
 
-<Example id="ex-e3-3" title="Ví dụ">
-Trong $\mathbb{E} ^{2}$ với mục tiêu trực chuẩn \{O; $\vect{e_{1}}$, $\vect{e_{2}}$\}, xét \{O′; $\vect{e'_{1}}$, $\vect{e'_{2}}$\} với $O'(1,0), \vect{e'_{1}} = (0,1), \vect{e'_{2}} = (-1,0)$.
-
-Khi đó $C = \begin{pmatrix} 0 & 1 \\ -1 & 0 \end{pmatrix}$ (hàng là tọa độ của $\vect{e'_{i}}), CC* = I$ nên C trực giao.
-
-Công thức cho  
-
+<Proof>
+Theo giả thiết, $\vec{e}'_i = \sum_{k=1}^n c_{ik}\vec{e}_k$ ($i = 1, \dots, n$). Tính tích vô hướng $\vec{e}'_i \cdot \vec{e}'_j$ theo cơ sở trực chuẩn $\{\vec{e}_k\}$ ($\vec{e}_k \cdot \vec{e}_l = \delta_{kl}$):
 $$
-\begin{cases} x_{1} = -x'_{2} + 1 \\ x_{2} = x'_{1}. \end{cases}
+\delta_{ij} = \vec{e}'_i \cdot \vec{e}'_j = \left(\sum_{k=1}^n c_{ik}\vec{e}_k\right) \cdot \left(\sum_{l=1}^n c_{jl}\vec{e}_l\right) = \sum_{k=1}^n c_{ik} c_{jk}.
 $$
+Vế phải chính là phần tử ở dòng $i$, cột $j$ của tích ma trận $C C^*$. Do đó $C C^* = I_n$ (suy ra $C^{-1} = C^*$, $C^* C = I_n$ và $(\det C)^2 = 1 \implies \det C = \pm 1$), tức $C$ là ma trận trực giao cấp $n$.
 
- Kiểm tra: điểm $x' = (1,0)$ là $O' + \vect{e'_{1}} = (1,1)$, và công thức cho (1,1). ✓
+Với điểm $M \in \mathcal{E}^n$ tùy ý có tọa độ $(x_1, \dots, x_n)$ đối với $\{O; \vec{e}_i\}$ và $(x'_1, \dots, x'_n)$ đối với $\{O'; \vec{e}'_i\}$, còn $O'$ có tọa độ $(a_1^0, \dots, a_n^0)$ đối với $\{O; \vec{e}_i\}$, theo quy tắc Chasles $\overrightarrow{OM} = \overrightarrow{OO'} + \overrightarrow{O'M}$ ta có:
+$$
+\sum_{j=1}^n x_j\vec{e}_j = \sum_{j=1}^n a_j^0\vec{e}_j + \sum_{i=1}^n x'_i\vec{e}'_i = \sum_{j=1}^n a_j^0\vec{e}_j + \sum_{i=1}^n x'_i \left(\sum_{j=1}^n c_{ij}\vec{e}_j\right) = \sum_{j=1}^n \left(\sum_{i=1}^n c_{ij} x'_i + a_j^0\right)\vec{e}_j.
+$$
+Đồng nhất hệ số theo cơ sở $\{\vec{e}_j\}$ được $x_j = \sum_{i=1}^n c_{ij}x'_i + a_j^0$ ($j = 1, \dots, n$), viết dưới dạng ma trận cột chính là $[x] = C^*[x'] + [a_0]$ (và công thức ngược là $[x'] = C([x] - [a_0])$).
+</Proof>
+
+<Example id="ex-e3-3" title="Ví dụ đổi mục tiêu trực chuẩn trong mặt phẳng Ơclit">
+Trong $\mathcal{E}^2$ với mục tiêu trực chuẩn $\{O; \vec{e}_1, \vec{e}_2\}$, xét mục tiêu mới $\{O'; \vec{e}'_1, \vec{e}'_2\}$ với $O'(1, 0)$, $\vec{e}'_1 = \left(\dfrac{3}{5}, \dfrac{4}{5}\right)$ và $\vec{e}'_2 = \left(-\dfrac{4}{5}, \dfrac{3}{5}\right)$.
+
+Ta kiểm tra được $|\vec{e}'_1|^2 = \dfrac{9 + 16}{25} = 1 = |\vec{e}'_2|^2$ và $\vec{e}'_1 \cdot \vec{e}'_2 = 0$, nên $\{O'; \vec{e}'_1, \vec{e}'_2\}$ là mục tiêu trực chuẩn với ma trận chuyển trực giao:
+$$
+C = \begin{bmatrix} \frac{3}{5} & \frac{4}{5} \\ -\frac{4}{5} & \frac{3}{5} \end{bmatrix}, \qquad C^* = \begin{bmatrix} \frac{3}{5} & -\frac{4}{5} \\ \frac{4}{5} & \frac{3}{5} \end{bmatrix}.
+$$
+Công thức đổi tọa độ $[x] = C^*[x'] + [a_0]$ là:
+$$
+\begin{cases}
+x_1 = \frac{3}{5}x'_1 - \frac{4}{5}x'_2 + 1, \\
+x_2 = \frac{4}{5}x'_1 + \frac{3}{5}x'_2.
+\end{cases}
+$$
+Chẳng hạn điểm $M$ có tọa độ mới $(x'_1, x'_2) = (5, -5)$ sẽ có tọa độ cũ là $x_1 = 3 + 4 + 1 = 8$, $x_2 = 4 - 3 = 1$, tức $M(8, 1)$.
 </Example>
 
 ## 4. Khoảng cách giữa hai điểm
 
-<Definition id="def-e3-4" title="Định nghĩa">
-Khoảng cách giữa hai điểm M, N của $\mathbb{E} ^{n}$ là số $d(M,N) = |\vect{MN}| = \sqrt{\vect{MN}^{2}}$ (độ dài của đoạn thẳng).
+<Definition id="def-e3-4" title="Định nghĩa khoảng cách giữa hai điểm">
+Cho hai điểm $M, N$ của không gian Ơclit $\mathcal{E}^n$. *Khoảng cách* giữa hai điểm đó, kí hiệu $d(M, N)$ (cũng gọi là *độ dài đoạn thẳng* $MN$), được định nghĩa là độ dài của vectơ $\overrightarrow{MN}$:
+$$
+d(M, N) = |\overrightarrow{MN}| = \sqrt{\overrightarrow{MN}^2}.
+$$
 </Definition>
 
-Như vậy dựa vào tích vô hướng, ta định nghĩa được khái niệm khoảng cách giữa hai điểm hay độ dài của một đoạn thẳng hay mô-đun của một vectơ.
+Như vậy, dựa vào tích vô hướng, ta định nghĩa được thống nhất khoảng cách giữa hai điểm, độ dài của một đoạn thẳng và mô-đun của một vectơ. Từ đó suy ra các tính chất cơ bản sau đây:
 
-Do đó:
+<Theorem id="thm-e3-5" title="Các tính chất cơ bản của khoảng cách">
+Với mọi điểm $M, N, P \in \mathcal{E}^n$:
 
-<Theorem id="thm-e3-5" title="Tính chất">
-a) $d(M,N) = d(N,M)$;
+1. **Tính đối xứng:** $d(M, N) = d(N, M)$.
+2. **Tính xác định dương:** $d(M, N) \ge 0$, và $d(M, N) = 0 \iff M \equiv N$.
+3. **Bất đẳng thức tam giác:** $d(M, N) + d(N, P) \ge d(M, P)$.
+4. **Điều kiện điểm thuộc đoạn thẳng:** Nếu $M, N, P$ là ba điểm phân biệt thì điểm $N$ thuộc đoạn thẳng $MP$ khi và chỉ khi $d(M, N) + d(N, P) = d(M, P)$.
+5. **Biểu thức tọa độ trực chuẩn:** Nếu đối với một mục tiêu trực chuẩn cho trước, các điểm có tọa độ $M = (x_1, x_2, \dots, x_n)$ và $N = (y_1, y_2, \dots, y_n)$ thì:
+   $$
+   d(M, N) = \sqrt{\sum_{i=1}^n (y_i - x_i)^2}.
+   $$
+</Theorem>
 
-b) $d(M,N) \ge 0$ và $d(M,N) = 0 \iff M ≡ N$;
+<Proof>
+1. Vì $\overrightarrow{NM} = -\overrightarrow{MN}$ nên $d(N, M) = |\overrightarrow{NM}| = |-\overrightarrow{MN}| = |\overrightarrow{MN}| = d(M, N)$.
+2. Theo tiên đề (4) của tích vô hướng, $\overrightarrow{MN}^2 \ge 0 \implies d(M, N) \ge 0$, và $d(M, N) = 0 \iff \overrightarrow{MN}^2 = 0 \iff \overrightarrow{MN} = \vec{0} \iff M \equiv N$.
+3. Theo quy tắc Chasles $\overrightarrow{MP} = \overrightarrow{MN} + \overrightarrow{NP}$ và bất đẳng thức tam giác của độ dài vectơ (Bài 2.1, Mục 2):
+   $$
+   d(M, P) = |\overrightarrow{MN} + \overrightarrow{NP}| \le |\overrightarrow{MN}| + |\overrightarrow{NP}| = d(M, N) + d(N, P).
+   $$
+4. Đặt $\vec{u} = \overrightarrow{MN} \neq \vec{0}$ và $\vec{v} = \overrightarrow{NP} \neq \vec{0}$ (do $M, N, P$ đôi một phân biệt). Bình phương hai vế không âm của đẳng thức $d(M, P) = d(M, N) + d(N, P)$:
+   $$
+   |\vec{u} + \vec{v}|^2 = (|\vec{u}| + |\vec{v}|)^2 \iff \vec{u}^2 + 2(\vec{u} \cdot \vec{v}) + \vec{v}^2 = |\vec{u}|^2 + 2|\vec{u}|\,|\vec{v}| + |\vec{v}|^2 \iff \vec{u} \cdot \vec{v} = |\vec{u}|\,|\vec{v}|.
+   $$
+   Theo điều kiện xảy ra dấu $"="$ của bất đẳng thức Cauchy–Bunyakovsky–Schwarz (với $\vec{u}, \vec{v} \neq \vec{0}$ và tích vô hướng dương), điều này tương đương với sự tồn tại số thực $\lambda > 0$ sao cho $\vec{u} = \lambda\vec{v}$, tức là $\overrightarrow{MN} = \lambda\overrightarrow{NP}$. Viết $\overrightarrow{NP} = \overrightarrow{MP} - \overrightarrow{MN}$, ta được $(1 + \lambda)\overrightarrow{MN} = \lambda\overrightarrow{MP} \iff \overrightarrow{MN} = t\overrightarrow{MP}$ với $t = \dfrac{\lambda}{1 + \lambda} \in (0, 1)$, nghĩa là $N$ thuộc đoạn thẳng $MP$ (theo định nghĩa đoạn thẳng ở Chương I, §5).
+5. Trong mục tiêu trực chuẩn $\{O; \vec{e}_1, \dots, \vec{e}_n\}$, ta có $\overrightarrow{MN} = \sum_{i=1}^n (y_i - x_i)\vec{e}_i$. Vì $\vec{e}_i \cdot \vec{e}_j = \delta_{ij}$ nên:
+   $$
+   \overrightarrow{MN}^2 = \left(\sum_{i=1}^n (y_i - x_i)\vec{e}_i\right) \cdot \left(\sum_{j=1}^n (y_j - x_j)\vec{e}_j\right) = \sum_{i=1}^n (y_i - x_i)^2,
+   $$
+   lấy căn bậc hai không âm ta được $d(M, N) = \sqrt{\sum_{i=1}^n (y_i - x_i)^2}$.
+</Proof>
 
-c) $d(M,N) + d(N,P) \ge d(M,P)$ với mọi M, N, P;
-
-d) nếu M, N, P phân biệt thì N thuộc đoạn $MP \iff d(M,N) + d(N,P) = d(M,P)$;
-
-e) với tọa độ trực chuẩn M(x$_{i}$), N(y$_{i}$):
- 
-
+<Example id="ex-e3-6" title="Ví dụ tính khoảng cách và kiểm tra điểm thuộc đoạn thẳng">
+Trong $\mathcal{E}^3$ với mục tiêu trực chuẩn, cho ba điểm $M(1, 2, 2)$, $N(4, 6, 14)$ và $P(7, 10, 26)$. Ta có:
 $$
-d(M,N) = \sqrt{\sum_{i=1}^{n} (y_{i} - x_{i})^{2}}.
+d(M, N) = \sqrt{(4 - 1)^2 + (6 - 2)^2 + (14 - 2)^2} = \sqrt{9 + 16 + 144} = \sqrt{169} = 13,
+$$
+$$
+d(N, P) = \sqrt{(7 - 4)^2 + (10 - 6)^2 + (26 - 14)^2} = \sqrt{9 + 16 + 144} = 13,
+$$
+$$
+d(M, P) = \sqrt{(7 - 1)^2 + (10 - 2)^2 + (26 - 2)^2} = \sqrt{36 + 64 + 576} = \sqrt{676} = 26.
+$$
+Vì $d(M, N) + d(N, P) = 13 + 13 = 26 = d(M, P)$ và $d(M, N) = d(N, P)$, điểm $N$ thuộc đoạn thẳng $MP$ và chính là trung điểm của đoạn $MP$.
+</Example>
+
+## 5. Biểu thức tọa độ của tích vô hướng của hai vectơ
+
+<Theorem id="thm-e3-7" title="Biểu thức tọa độ trực chuẩn của tích vô hướng, độ dài và góc">
+**a) Công thức tích vô hướng:** Trong không gian Ơclit $\mathcal{E}^n$ với mục tiêu trực chuẩn $\{O; \vec{e}_1, \dots, \vec{e}_n\}$ cho trước, giả sử $\vec{a} = (a_1, a_2, \dots, a_n)$ và $\vec{b} = (b_1, b_2, \dots, b_n)$ thuộc $V_E^n$. Khi đó:
+$$
+\vec{a} \cdot \vec{b} = \sum_{i=1}^n a_i b_i = a_1 b_1 + a_2 b_2 + \dots + a_n b_n.
+$$
+
+**b) Hệ quả:** Độ dài của vectơ $\vec{a}$ và côsin góc giữa hai vectơ khác vectơ-không $\vec{a}, \vec{b}$ được tính bởi:
+$$
+|\vec{a}| = \sqrt{\sum_{i=1}^n a_i^2}, \qquad \cos\widehat{(\vec{a}, \vec{b})} = \frac{\vec{a} \cdot \vec{b}}{|\vec{a}|\,|\vec{b}|} = \frac{\sum_{i=1}^n a_i b_i}{\sqrt{\sum_{i=1}^n a_i^2}\sqrt{\sum_{i=1}^n b_i^2}}.
 $$
 </Theorem>
 
-<Example id="ex-e3-6" title="Ví dụ">
-Trong $\mathbb{E} ^{3}$, M(1,2,2), N(4,6,14): 
-
+<Proof>
+Viết $\vec{a} = \sum_{i=1}^n a_i\vec{e}_i$ và $\vec{b} = \sum_{j=1}^n b_j\vec{e}_j$. Áp dụng tính chất song tuyến tính của tích vô hướng và hệ thức trực chuẩn $\vec{e}_i \cdot \vec{e}_j = \delta_{ij}$:
 $$
-d(M,N) = \sqrt{9 + 16 + 144} = 13.
+\vec{a} \cdot \vec{b} = \left(\sum_{i=1}^n a_i\vec{e}_i\right) \cdot \left(\sum_{j=1}^n b_j\vec{e}_j\right) = \sum_{i=1}^n \sum_{j=1}^n a_i b_j (\vec{e}_i \cdot \vec{e}_j) = \sum_{i=1}^n \sum_{j=1}^n a_i b_j \delta_{ij} = \sum_{i=1}^n a_i b_i.
 $$
+Thay $\vec{b} = \vec{a}$ ta được $|\vec{a}|^2 = \vec{a} \cdot \vec{a} = \sum_{i=1}^n a_i^2 \implies |\vec{a}| = \sqrt{\sum_{i=1}^n a_i^2}$, và thế vào định nghĩa $\cos\widehat{(\vec{a}, \vec{b})} = \dfrac{\vec{a} \cdot \vec{b}}{|\vec{a}|\,|\vec{b}|}$ ta thu được hệ quả b).
+</Proof>
 
- Với $P(7,10,26): d(N,P) = 13$ và $d(M,P) = \sqrt{36 + 64 + 576} = 26 = d(M,N) + d(N,P)$, nên N thuộc đoạn MP (N là trung điểm). ✓
+<Example id="ex-e3-8" title="Ví dụ tính tích vô hướng và góc trong tọa độ trực chuẩn">
+Trong $V_E^3$ với cơ sở trực chuẩn, cho $\vec{a} = (1, 2, 2)$ và $\vec{b} = (3, 0, 4)$. Khi đó:
+$$
+\vec{a} \cdot \vec{b} = 1 \cdot 3 + 2 \cdot 0 + 2 \cdot 4 = 11, \qquad |\vec{a}| = \sqrt{1^2 + 2^2 + 2^2} = 3, \qquad |\vec{b}| = \sqrt{3^2 + 0^2 + 4^2} = 5,
+$$
+suy ra $\cos\widehat{(\vec{a}, \vec{b})} = \dfrac{11}{3 \cdot 5} = \dfrac{11}{15}$.
 </Example>
 
-## 5. Biểu thức tọa độ của tích vô hướng trong VnE
+## 6. Biểu thức tọa độ của tích có hướng trong không gian ba chiều
 
-<Theorem id="thm-e3-7" title="Công thức">
-Đối với mục tiêu trực chuẩn, $\vec{a} = (a_{1}, \dots ,a_{n}), \vec{b} = (b_{1}, \dots ,b_{n})$ thì $\vec{a}·\vec{b} = \sum_{i=1}^{n}a_{i}\vect{e_{i}}·\sum_{j=1}^{n}b_{j}\vect{e_{j}} = \sum_{i=1}^{n}a_{i}b_{i}$.
-
-Hệ quả:
- 
-
+<Theorem id="thm-e3-9" title="Biểu thức tọa độ trực chuẩn của tích có hướng và các hệ quả">
+**a) Công thức tọa độ:** Trong hệ tọa độ Đề-các vuông góc thuận $Oxyz$ (tức mục tiêu trực chuẩn $\{O; \vec{e}_1, \vec{e}_2, \vec{e}_3\}$ với tam diện $(\vec{e}_1, \vec{e}_2, \vec{e}_3)$ thuận), cho hai vectơ $\vec{a} = (a_1, a_2, a_3)$ và $\vec{b} = (b_1, b_2, b_3)$ trong $V_E^3$. Khi đó vectơ $\vec{c} = \vec{a} \wedge \vec{b}$ có tọa độ là:
 $$
-|\vec{a}| = \sqrt{\sum_{i=1}^{n}a^{2}_{i}}, cos(\vec{a},\vec{b}) = \sum_{i=1}^{n}a_{i}b_{i} / (\sqrt{\sum_{i=1}^{n}a^{2}_{i}}·\sqrt{\sum_{i=1}^{n}b^{2}_{i}}).
+\vec{c} = \vec{a} \wedge \vec{b} = \left(
+\begin{vmatrix} a_2 & a_3 \\ b_2 & b_3 \end{vmatrix},
+\begin{vmatrix} a_3 & a_1 \\ b_3 & b_1 \end{vmatrix},
+\begin{vmatrix} a_1 & a_2 \\ b_1 & b_2 \end{vmatrix}
+\right).
 $$
+
+**b) Hệ quả:**
+- Nếu $\varphi = \widehat{(\vec{a}, \vec{b})} \in [0, \pi]$ là góc giữa hai vectơ khác vectơ-không $\vec{a}, \vec{b}$ thì *(đính chính dấu $\pm$ thừa ở vế giữa bản in tr. 91: với góc không định hướng $\varphi \in [0, \pi]$ giữa hai vectơ trong $V_E^3$, luôn có $\sin\varphi \ge 0$)*:
+  $$
+  \sin\varphi = \frac{|\vec{a} \wedge \vec{b}|}{|\vec{a}|\,|\vec{b}|} = \frac{\sqrt{\begin{vmatrix} a_2 & a_3 \\ b_2 & b_3 \end{vmatrix}^2 + \begin{vmatrix} a_3 & a_1 \\ b_3 & b_1 \end{vmatrix}^2 + \begin{vmatrix} a_1 & a_2 \\ b_1 & b_2 \end{vmatrix}^2}}{\sqrt{a_1^2 + a_2^2 + a_3^2}\sqrt{b_1^2 + b_2^2 + b_3^2}}.
+  $$
+- Diện tích $S$ của hình bình hành dựng trên hai vectơ $\vec{a}, \vec{b}$ là:
+  $$
+  S = |\vec{a} \wedge \vec{b}| = \sqrt{\begin{vmatrix} a_2 & a_3 \\ b_2 & b_3 \end{vmatrix}^2 + \begin{vmatrix} a_3 & a_1 \\ b_3 & b_1 \end{vmatrix}^2 + \begin{vmatrix} a_1 & a_2 \\ b_1 & b_2 \end{vmatrix}^2}.
+  $$
 </Theorem>
 
-<Example id="ex-e3-8" title="Ví dụ">
-$\vec{a} = (1,2,2), \vec{b} = (3,0,4): \vec{a}·\vec{b} = 3 + 0 + 8 = 11, |\vec{a}| = 3, |\vec{b}| = 5$, nên $cos(\vec{a},\vec{b}) = \frac{11}{15}$.
+<Proof>
+Vì $\{\vec{e}_1, \vec{e}_2, \vec{e}_3\}$ là cơ sở trực chuẩn thuận của $V_E^3$, theo định nghĩa tích có hướng ta có $\vec{e}_i \wedge \vec{e}_i = \vec{0}$ ($i = 1, 2, 3$) và:
+$$
+\vec{e}_1 \wedge \vec{e}_2 = \vec{e}_3 = -\vec{e}_2 \wedge \vec{e}_1, \qquad \vec{e}_2 \wedge \vec{e}_3 = \vec{e}_1 = -\vec{e}_3 \wedge \vec{e}_2, \qquad \vec{e}_3 \wedge \vec{e}_1 = \vec{e}_2 = -\vec{e}_1 \wedge \vec{e}_3.
+$$
+Áp dụng tính chất phân phối và kết hợp số thực của tích có hướng cho $\vec{a} = a_1\vec{e}_1 + a_2\vec{e}_2 + a_3\vec{e}_3$ và $\vec{b} = b_1\vec{e}_1 + b_2\vec{e}_2 + b_3\vec{e}_3$:
+$$
+\begin{aligned}
+\vec{a} \wedge \vec{b}
+&= (a_1\vec{e}_1 + a_2\vec{e}_2 + a_3\vec{e}_3) \wedge (b_1\vec{e}_1 + b_2\vec{e}_2 + b_3\vec{e}_3) \\
+&= (a_2 b_3 - a_3 b_2)\vec{e}_1 + (a_3 b_1 - a_1 b_3)\vec{e}_2 + (a_1 b_2 - a_2 b_1)\vec{e}_3 \\
+&= \begin{vmatrix} a_2 & a_3 \\ b_2 & b_3 \end{vmatrix}\vec{e}_1 + \begin{vmatrix} a_3 & a_1 \\ b_3 & b_1 \end{vmatrix}\vec{e}_2 + \begin{vmatrix} a_1 & a_2 \\ b_1 & b_2 \end{vmatrix}\vec{e}_3.
+\end{aligned}
+$$
+*(Chú ý: nếu cơ sở trực chuẩn $\{\vec{e}_1, \vec{e}_2, \vec{e}_3\}$ là tam diện nghịch thì $\vec{e}_1 \wedge \vec{e}_2 = -\vec{e}_3$, do đó vế phải đổi dấu).* Áp dụng tiếp công thức độ dài ở Mục 5 cho vectơ $\vec{c} = \vec{a} \wedge \vec{b}$ và định nghĩa $|\vec{a} \wedge \vec{b}| = |\vec{a}|\,|\vec{b}|\sin\varphi = S$, ta thu được toàn bộ hệ quả b).
+</Proof>
+
+<Example id="ex-e3-10" title="Ví dụ tính tích có hướng, góc và diện tích hình bình hành">
+Trong $V_E^3$ với cơ sở trực chuẩn thuận, cho $\vec{a} = (1, 2, 3)$ và $\vec{b} = (4, 5, 6)$. Ta tính ba định thức cấp $2$:
+$$
+\begin{vmatrix} 2 & 3 \\ 5 & 6 \end{vmatrix} = -3, \qquad \begin{vmatrix} 3 & 1 \\ 6 & 4 \end{vmatrix} = 6, \qquad \begin{vmatrix} 1 & 2 \\ 4 & 5 \end{vmatrix} = -3,
+$$
+nên $\vec{a} \wedge \vec{b} = (-3, 6, -3)$. Kiểm tra lại: $(-3, 6, -3) \cdot (1, 2, 3) = -3 + 12 - 9 = 0$ và $(-3, 6, -3) \cdot (4, 5, 6) = -12 + 30 - 18 = 0$.
+
+Diện tích hình bình hành dựng trên $\vec{a}, \vec{b}$ là $S = |\vec{a} \wedge \vec{b}| = \sqrt{(-3)^2 + 6^2 + (-3)^2} = \sqrt{54} = 3\sqrt{6}$; với $|\vec{a}| = \sqrt{14}$ và $|\vec{b}| = \sqrt{77}$, ta có $\sin\widehat{(\vec{a}, \vec{b})} = \dfrac{3\sqrt{6}}{\sqrt{14}\sqrt{77}} = \dfrac{3\sqrt{33}}{77}$.
 </Example>
 
-## 6. Biểu thức tọa độ của tích có hướng trong V3E
+## 7. Biểu thức tọa độ của tích hỗn hợp trong không gian ba chiều
 
-<Theorem id="thm-e3-9" title="a) Công thức">
-Trong hệ tọa độ Đề-các vuông góc Oxyz, $\vec{a} = (a_{1},a_{2},a_{3}), \vec{b} = (b_{1},b_{2},b_{3})$ thì $\vec{c} = \vec{a} ∧ \vec{b}$ có tọa độ
- 
-
+<Theorem id="thm-e3-12" title="Biểu thức định thức của tích hỗn hợp và thể tích hình hộp">
+Trong hệ tọa độ Đề-các vuông góc thuận của $V_E^3$ *(đính chính lỗi in tiêu đề Mục 7 tr. 92 ghi $V_E^n$ thay vì $V_E^3$)*, cho ba vectơ $\vec{a} = (a_1, a_2, a_3)$, $\vec{b} = (b_1, b_2, b_3)$ và $\vec{c} = (c_1, c_2, c_3)$. Khi đó tích hỗn hợp của chúng bằng định thức cấp $3$ lập từ tọa độ ba vectơ:
 $$
-\vec{c} = ( |a_{2} a_{3}; b_{2} b_{3}|, |a_{3} a_{1}; b_{3} b_{1}|, |a_{1} a_{2}; b_{1} b_{2}| ).
+(\vec{a}, \vec{b}, \vec{c}) = \begin{vmatrix}
+a_1 & a_2 & a_3 \\
+b_1 & b_2 & b_3 \\
+c_1 & c_2 & c_3
+\end{vmatrix}.
 $$
-
- 
-b) Hệ quả. Nếu φ là góc giữa $\vec{a}$, $\vec{b}$ thì
- 
-
-$$
-sin \varphi = \pm |\vec{a} ∧ \vec{b}| / (|\vec{a}||\vec{b}|) = \sqrt{|a_{2} a_{3}; b_{2} b_{3}|^{2} + |a_{3} a_{1}; b_{3} b_{1}|^{2} + |a_{1} a_{2}; b_{1} b_{2}|^{2}} / (\sqrt{a^{2}_{1}+a^{2}_{2}+a^{2}_{3}}·\sqrt{b^{2}_{1}+b^{2}_{2}+b^{2}_{3}}).
-$$
+Nếu $\vec{a}, \vec{b}, \vec{c}$ không đồng phẳng và $V$ là thể tích hình hộp dựng trên ba vectơ đó thì $(\vec{a}, \vec{b}, \vec{c}) = \pm V$ (mang dấu $+$ khi $(\vec{a}, \vec{b}, \vec{c})$ thuận, dấu $-$ khi nghịch; và bằng $0$ khi ba vectơ đồng phẳng).
 </Theorem>
 
-<Example id="ex-e3-10" title="Ví dụ">
-$\vec{a} = (1,2,3), \vec{b} = (4,5,6)$: các định thức cấp 2 là $2·6 - 3·5 = -3, 3·4 - 1·6 = 6, 1·5 - 2·4 = -3$, nên $\vec{a} ∧ \vec{b} = (-3,6,-3)$.
+<Proof>
+Kết hợp biểu thức tọa độ của tích có hướng $\vec{a} \wedge \vec{b}$ ở Mục 6 và biểu thức tọa độ của tích vô hướng ở Mục 5, ta có:
+$$
+(\vec{a}, \vec{b}, \vec{c}) = (\vec{a} \wedge \vec{b}) \cdot \vec{c} = \begin{vmatrix} a_2 & a_3 \\ b_2 & b_3 \end{vmatrix} c_1 + \begin{vmatrix} a_3 & a_1 \\ b_3 & b_1 \end{vmatrix} c_2 + \begin{vmatrix} a_1 & a_2 \\ b_1 & b_2 \end{vmatrix} c_3.
+$$
+Chú ý rằng $\begin{vmatrix} a_3 & a_1 \\ b_3 & b_1 \end{vmatrix} = -\begin{vmatrix} a_1 & a_3 \\ b_1 & b_3 \end{vmatrix}$, nên vế phải chính là khai triển định thức cấp $3$ theo dòng thứ ba:
+$$
+(\vec{a}, \vec{b}, \vec{c}) = c_1 \begin{vmatrix} a_2 & a_3 \\ b_2 & b_3 \end{vmatrix} - c_2 \begin{vmatrix} a_1 & a_3 \\ b_1 & b_3 \end{vmatrix} + c_3 \begin{vmatrix} a_1 & a_2 \\ b_1 & b_2 \end{vmatrix} = \begin{vmatrix}
+a_1 & a_2 & a_3 \\
+b_1 & b_2 & b_3 \\
+c_1 & c_2 & c_3
+\end{vmatrix}.
+$$
+Đối chiếu với ý nghĩa hình học của tích hỗn hợp (Bài 2.1, Mục 4), khi ba vectơ không đồng phẳng ta có ngay $(\vec{a}, \vec{b}, \vec{c}) = \pm V$.
+</Proof>
 
-Kiểm tra vuông góc:$(-3,6,-3)·(1,2,3) = -3 + 12 - 9 = 0$ và $(-3,6,-3)·(4,5,6) = -12 + 30 - 18 = 0$.Độ dài $\sqrt{54}, |\vec{a}| = \sqrt{14}, |\vec{b}| = \sqrt{77}$ nên $sin \varphi = \frac{\sqrt{54}}{\sqrt{1078}} (≈ 0,224)$.
+<Example id="ex-e3-13" title="Ví dụ tính thể tích hình hộp bằng định thức">
+Trong $V_E^3$ với cơ sở trực chuẩn thuận, cho $\vec{a} = (1, 0, 0)$, $\vec{b} = (1, 2, 0)$ và $\vec{c} = (1, 1, 3)$. Định thức tọa độ có dạng tam giác dưới:
+$$
+(\vec{a}, \vec{b}, \vec{c}) = \begin{vmatrix}
+1 & 0 & 0 \\
+1 & 2 & 0 \\
+1 & 1 & 3
+\end{vmatrix} = 1 \cdot 2 \cdot 3 = 6 > 0.
+$$
+Vậy hình hộp dựng trên ba vectơ có thể tích $V = 6$ và bộ ba $(\vec{a}, \vec{b}, \vec{c})$ là một tam diện thuận.
 </Example>
 
-Gọi S là diện tích hình bình hành dựng trên $\vec{a}$, $\vec{b}$ thì
- 
+## Bài tập
 
+*(Trọn bộ $9$ bài tập còn lại của cụm bài tập §1, §2, §3 cuối Chương II, trang 135–136, hoàn tất đủ $16/16$ bài từ 2.1 đến 2.16 cùng với Bài 2.1 và Bài 2.2).*
+
+<Exercise id="exr-e3-1" title="Bài tập 2.2 (Bổ sung cơ sở trực giao trong không gian bốn chiều — tr. 135)">
+Trong $V_E^4$ đối với cơ sở trực chuẩn cho trước, cho các vectơ có tọa độ là:
 $$
-S = |\vec{a} ∧ \vec{b}| = \sqrt{|a_{2} a_{3}; b_{2} b_{3}|^{2} + |a_{3} a_{1}; b_{3} b_{1}|^{2} + |a_{1} a_{2}; b_{1} b_{2}|^{2}}.
+\vec{a} = (1, 1, 1, 2), \qquad \vec{b} = (1, 2, 3, -3).
 $$
 
-<Example id="ex-e3-11" title="Ví dụ">
-Với $\vec{a} = (1,2,3), \vec{b} = (4,5,6)$ ở ví dụ trên: 
+a) Chứng minh $\vec{a} \perp \vec{b}$.
 
-$$
-S = \sqrt{9 + 36 + 9} = \sqrt{54} = 3\sqrt{6}.
-$$
-</Example>
-
-## 7. Biểu thức tọa độ của tích hỗn hợp trong V3E
-
-<Theorem id="thm-e3-12" title="Công thức">
-Trong hệ tọa độ Đề-các vuông góc, cho ba vectơ không đồng phẳng $\vec{a} = (a_{1},a_{2},a_{3}), \vec{b} = (b_{1},b_{2},b_{3}), \vec{c} = (c_{1},c_{2},c_{3})$.
-
-Gọi V là thể tích hình hộp dựng trên ba vectơ ấy thì $\pm V = (\vec{a},\vec{b},\vec{c}) = (\vec{a} ∧ \vec{b})·\vec{c} = |a_{2} a_{3}; b_{2} b_{3}|c_{1} + |a_{3} a_{1}; b_{3} b_{1}|c_{2} + |a_{1} a_{2}; b_{1} b_{2}|c_{3}$, tức là
- 
-
-$$
-(\vec{a},\vec{b},\vec{c}) = det [a_{1} a_{2} a_{3}; b_{1} b_{2} b_{3}; c_{1} c_{2} c_{3}] = \pm V.
-$$
-</Theorem>
-
-<Example id="ex-e3-13" title="Ví dụ">
-$\vec{a} = (1,0,0), \vec{b} = (1,2,0), \vec{c} = (1,1,3)$: định thức tam giác dưới bằng $1·2·3 = 6$ nên $V = 6$ và dấu dương cho biết tam diện thuận.
-
-Hoán đổi hai vectơ bất kì thì định thức đổi dấu $(-6)$.
-</Example>
-
-## Bài tập vận dụng và củng cố
-
-<Exercise id="exr-e3-1" title="Khoảng cách giữa hai điểm (§3, mục 4)">
-Trong E³ có M(1,2,2) và N(4,6,14). Tính d(M, N).
-
+b) Hãy bổ sung vào $\{\vec{a}, \vec{b}\}$ hai vectơ nữa để được một cơ sở trực giao.
 
 <Hint>
-d(M,N) = √(Σ[i=1|n](yᵢ) - xᵢ)².
+Câu a: Tính $\vec{a} \cdot \vec{b}$ theo công thức tổng tích các tọa độ tương ứng. Câu b: Giải hệ phương trình tuyến tính thuần nhất $\vec{a} \cdot \vec{x} = 0$, $\vec{b} \cdot \vec{x} = 0$ để tìm không gian con $2$ chiều bù trực giao với $\operatorname{span}\{\vec{a}, \vec{b}\}$, chọn một vectơ khác $\vec{0}$ trong đó rồi tìm vectơ thứ tư vuông góc với nó.
 </Hint>
 
 <Solution>
-d = √(3² + 4² + 12²) = √169.
+**a) Chứng minh $\vec{a} \perp \vec{b}$:**
 
-**Đáp án:** 13
+Vì cơ sở đã cho là trực chuẩn nên:
+$$
+\vec{a} \cdot \vec{b} = 1 \cdot 1 + 1 \cdot 2 + 1 \cdot 3 + 2 \cdot (-3) = 1 + 2 + 3 - 6 = 0 \implies \vec{a} \perp \vec{b}.
+$$
+
+**b) Bổ sung hai vectơ để được cơ sở trực giao của $V_E^4$:**
+
+Gọi $\vec{x} = (x_1, x_2, x_3, x_4) \in V_E^4$ vuông góc với cả $\vec{a}$ và $\vec{b}$. Điều kiện $\vec{a} \cdot \vec{x} = 0$ và $\vec{b} \cdot \vec{x} = 0$ cho hệ:
+$$
+\begin{cases}
+x_1 + x_2 + x_3 + 2x_4 = 0, \\
+x_1 + 2x_2 + 3x_3 - 3x_4 = 0.
+\end{cases}
+$$
+Lấy phương trình thứ hai trừ phương trình thứ nhất được $x_2 + 2x_3 - 5x_4 = 0 \implies x_2 = -2x_3 + 5x_4$; thế ngược vào phương trình thứ nhất được $x_1 = -(-2x_3 + 5x_4) - x_3 - 2x_4 = x_3 - 7x_4$. Vậy mọi vectơ vuông góc với $\vec{a}, \vec{b}$ có dạng:
+$$
+\vec{x} = (x_3 - 7x_4,\; -2x_3 + 5x_4,\; x_3,\; x_4) \quad (x_3, x_4 \in \mathbb{R}).
+$$
+- Chọn $x_3 = 1, x_4 = 0$, ta được vectơ thứ ba $\vec{u}_1 = (1, -2, 1, 0) \neq \vec{0}$.
+- Chọn vectơ thứ tư $\vec{u}_2$ thuộc họ nghiệm trên sao cho $\vec{u}_1 \cdot \vec{u}_2 = 0$:
+  $$
+  1(x_3 - 7x_4) - 2(-2x_3 + 5x_4) + 1(x_3) + 0(x_4) = 6x_3 - 17x_4 = 0.
+  $$
+  Lấy $x_3 = 17, x_4 = 6$, ta được $\vec{u}_2 = (-25, -4, 17, 6) \neq \vec{0}$.
+
+Bốn vectơ khác vectơ-không $\{\vec{a}, \vec{b}, \vec{u}_1, \vec{u}_2\}$ đôi một vuông góc nên độc lập tuyến tính (ma trận Gram là ma trận đường chéo có các phần tử đường chéo dương) và tạo thành một cơ sở trực giao của $V_E^4$. *(Nếu chọn $x_3 = 0, x_4 = 1$ ở bước đầu thì thu được cặp $\vec{c} = (-7, 5, 0, 1)$ và $\vec{d} = (44, 65, -75, -17)$ ở Bài tập 2.8 bên dưới).*
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e3-2" title="Bài tập 2.3 (Diện tích hình bình hành theo cơ sở trực chuẩn — tr. 135)">
+Tính diện tích hình bình hành dựng trên hai vectơ $\vec{a} = (8, 4, 1)$ và $\vec{b} = (2, -3, 1)$ đối với một cơ sở trực chuẩn trong $V_E^3$.
+
+<Hint>
+Áp dụng công thức $S = |\vec{a} \wedge \vec{b}|$ (hoặc dùng đẳng thức Lagrange $S^2 = \vec{a}^2\vec{b}^2 - (\vec{a} \cdot \vec{b})^2$, không phụ thuộc vào định hướng của cơ sở trực chuẩn).
+</Hint>
+
+<Solution>
+Xét trong cơ sở trực chuẩn thuận (nếu cơ sở nghịch thì $\vec{a} \wedge \vec{b}$ chỉ đổi dấu, độ dài không đổi), ta tính các định thức cấp $2$:
+$$
+\begin{vmatrix} 4 & 1 \\ -3 & 1 \end{vmatrix} = 7, \qquad \begin{vmatrix} 1 & 8 \\ 1 & 2 \end{vmatrix} = -6, \qquad \begin{vmatrix} 8 & 4 \\ 2 & -3 \end{vmatrix} = -32,
+$$
+tức $\vec{a} \wedge \vec{b} = \pm(7, -6, -32)$. Do đó diện tích hình bình hành dựng trên $\vec{a}, \vec{b}$ là:
+$$
+S = |\vec{a} \wedge \vec{b}| = \sqrt{7^2 + (-6)^2 + (-32)^2} = \sqrt{49 + 36 + 1024} = \sqrt{1109}.
+$$
+*(Kiểm tra lại bằng đẳng thức Lagrange: $\vec{a}^2 = 81$, $\vec{b}^2 = 14$, $\vec{a} \cdot \vec{b} = 16 - 12 + 1 = 5 \implies S = \sqrt{81 \cdot 14 - 5^2} = \sqrt{1134 - 25} = \sqrt{1109}$).*
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e3-3" title="Bài tập 2.4 (Tính tích hỗn hợp trong cơ sở trực chuẩn — tr. 135)">
+Đối với một cơ sở trực chuẩn (định hướng thuận) trong $V_E^3$, cho ba vectơ:
+$$
+\vec{a} = (3, 1, 2), \qquad \vec{b} = (2, 7, 4), \qquad \vec{c} = (1, 2, 1).
+$$
+Tính tích hỗn hợp $(\vec{a}, \vec{b}, \vec{c}) = (\vec{a} \wedge \vec{b}) \cdot \vec{c}$.
+
+<Hint>
+Áp dụng công thức định thức cấp $3$ ở Mục 7 (hoặc tính trực tiếp $\vec{a} \wedge \vec{b}$ rồi nhân vô hướng với $\vec{c}$).
+</Hint>
+
+<Solution>
+Đối với cơ sở trực chuẩn thuận, ta có:
+$$
+\vec{a} \wedge \vec{b} = \left(
+\begin{vmatrix} 1 & 2 \\ 7 & 4 \end{vmatrix},
+\begin{vmatrix} 2 & 3 \\ 4 & 2 \end{vmatrix},
+\begin{vmatrix} 3 & 1 \\ 2 & 7 \end{vmatrix}
+\right) = (-10, -8, 19).
+$$
+Nhân vô hướng với $\vec{c} = (1, 2, 1)$, ta được:
+$$
+(\vec{a}, \vec{b}, \vec{c}) = (-10) \cdot 1 + (-8) \cdot 2 + 19 \cdot 1 = -10 - 16 + 19 = -7.
+$$
+*(Nếu cơ sở trực chuẩn đã cho là tam diện nghịch thì tích hỗn hợp đổi dấu thành $+7$).*
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e3-4" title="Bài tập 2.5 (Khoảng cách từ một điểm đến một đường thẳng trong không gian ba chiều — tr. 135)">
+Trong $\mathcal{E}^3$, tính khoảng cách từ một điểm $M_1$ đến đường thẳng $d$ cho biết các tọa độ trực chuẩn của điểm $M_1$ là $(x_1, x_2, x_3)$, của điểm $M_0$ thuộc $d$ là $(x_1^0, x_2^0, x_3^0)$ và đường thẳng $d$ có vectơ chỉ phương $\vec{a} = (a_1, a_2, a_3) \neq \vec{0}$.
+
+<Hint>
+Dựng hình bình hành trên hai vectơ $\overrightarrow{M_0M_1}$ và $\vec{a}$: diện tích hình bình hành bằng $|\overrightarrow{M_0M_1} \wedge \vec{a}|$, mặt khác bằng tích cạnh đáy $|\vec{a}|$ với chiều cao hạ từ $M_1$ xuống đường thẳng $d$.
+</Hint>
+
+<Solution>
+Gọi $H$ là hình chiếu vuông góc của $M_1$ lên đường thẳng $d$. Khoảng cách từ $M_1$ đến $d$ chính là chiều cao $h = d(M_1, H)$ của hình bình hành dựng trên hai vectơ $\overrightarrow{M_0M_1}$ và $\vec{a}$ ứng với cạnh đáy có độ dài $|\vec{a}| > 0$.
+
+Theo ý nghĩa hình học của tích có hướng, diện tích $S$ của hình bình hành này bằng $|\overrightarrow{M_0M_1} \wedge \vec{a}| = |\vec{a}| \cdot h$ (kể cả khi $M_1 \in d$, hai vế đều bằng $0$). Do đó:
+$$
+d(M_1, d) = h = \frac{|\overrightarrow{M_0M_1} \wedge \vec{a}|}{|\vec{a}|}.
+$$
+Với $\overrightarrow{M_0M_1} = (x_1 - x_1^0, x_2 - x_2^0, x_3 - x_3^0)$ và $\vec{a} = (a_1, a_2, a_3)$ trong mục tiêu trực chuẩn, áp dụng công thức Mục 6 ta được:
+$$
+d(M_1, d) = \frac{\sqrt{
+\begin{vmatrix} x_2 - x_2^0 & x_3 - x_3^0 \\ a_2 & a_3 \end{vmatrix}^2 +
+\begin{vmatrix} x_3 - x_3^0 & x_1 - x_1^0 \\ a_3 & a_1 \end{vmatrix}^2 +
+\begin{vmatrix} x_1 - x_1^0 & x_2 - x_2^0 \\ a_1 & a_2 \end{vmatrix}^2
+}}{\sqrt{a_1^2 + a_2^2 + a_3^2}}.
+$$
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e3-5" title="Bài tập 2.6 (Tìm các đỉnh còn lại của hình vuông trong không gian ba chiều — tr. 135)">
+Với hệ tọa độ trực chuẩn $\{O; \vec{e}_1, \vec{e}_2, \vec{e}_3\}$ trong $\mathcal{E}^3$, cho hai điểm $A(2, -1, 3)$ và $B(1, 1, 5)$. Hình vuông $ABCD$ và điểm $M_0\left(\dfrac{5}{2}, -3, 0\right)$ thuộc mặt phẳng $(ABC)$. Hãy tìm tọa độ các điểm $C$ và $D$.
+
+<Hint>
+Tính $\overrightarrow{AB}$ và $\overrightarrow{AM_0}$, lập vectơ pháp tuyến $\vec{n} = \overrightarrow{AB} \wedge \overrightarrow{AM_0}$ của mặt phẳng $(ABC)$, từ đó tìm vectơ $\vec{w} = \vec{n} \wedge \overrightarrow{AB}$ nằm trong mặt phẳng $(ABC)$ và vuông góc với $\overrightarrow{AB}$, rồi chuẩn hóa độ dài bằng $|\overrightarrow{AB}|$ để suy ra hai vị trí của $\overrightarrow{AD}$ và $\overrightarrow{BC} = \overrightarrow{AD}$.
+</Hint>
+
+<Solution>
+Ta có $\overrightarrow{AB} = (-1, 2, 2)$, độ dài cạnh hình vuông là $|\overrightarrow{AB}| = \sqrt{(-1)^2 + 2^2 + 2^2} = 3$.
+
+Xét vectơ $\overrightarrow{AM_0} = \left(\dfrac{1}{2}, -2, -3\right)$. Tích có hướng của $\overrightarrow{AB}$ và $\overrightarrow{AM_0}$ (trong cơ sở trực chuẩn thuận) là:
+$$
+\vec{n} = \overrightarrow{AB} \wedge \overrightarrow{AM_0} = \left(
+\begin{vmatrix} 2 & 2 \\ -2 & -3 \end{vmatrix},
+\begin{vmatrix} 2 & -1 \\ -3 & \frac{1}{2} \end{vmatrix},
+\begin{vmatrix} -1 & 2 \\ \frac{1}{2} & -2 \end{vmatrix}
+\right) = (-2, -2, 1) \neq \vec{0}.
+$$
+Vì $\vec{n} \neq \vec{0}$ nên $A, B, M_0$ không thẳng hàng, mặt phẳng $\Pi = (ABC) = (ABM_0)$ hoàn toàn xác định và nhận $\vec{n} = (-2, -2, 1)$ làm vectơ vuông góc với phương $\overrightarrow{\Pi}$.
+
+Trong hình vuông $ABCD \subset \Pi$, vectơ $\overrightarrow{AD}$ vừa nằm trong $\overrightarrow{\Pi}$ (tức $\overrightarrow{AD} \perp \vec{n}$), vừa vuông góc với $\overrightarrow{AB}$, lại có độ dài $|\overrightarrow{AD}| = |\overrightarrow{AB}| = 3$. Do đó $\overrightarrow{AD}$ cùng phương với tích có hướng:
+$$
+\vec{w} = \vec{n} \wedge \overrightarrow{AB} = \left(
+\begin{vmatrix} -2 & 1 \\ 2 & 2 \end{vmatrix},
+\begin{vmatrix} 1 & -2 \\ 2 & -1 \end{vmatrix},
+\begin{vmatrix} -2 & -2 \\ -1 & 2 \end{vmatrix}
+\right) = (-6, 3, -6) = 3(-2, 1, -2).
+$$
+Đặt $\vec{u} = (-2, 1, -2)$, ta thấy ngay $|\vec{u}| = \sqrt{(-2)^2 + 1^2 + (-2)^2} = 3 = |\overrightarrow{AB}|$. Vậy $\overrightarrow{AD} = \pm\vec{u}$, kết hợp với $\overrightarrow{BC} = \overrightarrow{AD}$ cho hai nghiệm hình vuông đối xứng nhau qua đường thẳng $AB$ trên mặt phẳng $(ABC)$:
+
+- **Trường hợp 1:** $\overrightarrow{AD} = (-2, 1, -2)$:
+  $$
+  D = A + \overrightarrow{AD} = (0, 0, 1), \qquad C = B + \overrightarrow{AD} = (-1, 2, 3).
+  $$
+- **Trường hợp 2:** $\overrightarrow{AD} = (2, -1, 2)$:
+  $$
+  D = A + \overrightarrow{AD} = (4, -2, 5), \qquad C = B + \overrightarrow{AD} = (3, 0, 7).
+  $$
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e3-6" title="Bài tập 2.8 (Hoàn thiện cơ sở trực giao từ ba vectơ đôi một vuông góc trong V4E — tr. 135–136)">
+Trong không gian vectơ Ơclit $V_E^4$ đối với cơ sở trực chuẩn cho trước, cho ba vectơ có tọa độ lần lượt là:
+$$
+\vec{a} = (1, 1, 1, 2), \qquad \vec{b} = (1, 2, 3, -3), \qquad \vec{c} = (-7, 5, 0, 1).
+$$
+Chứng minh $\vec{a} \perp \vec{b}$, $\vec{b} \perp \vec{c}$, $\vec{c} \perp \vec{a}$ và hãy bổ sung vào hệ $\{\vec{a}, \vec{b}, \vec{c}\}$ **một** vectơ nữa để được một cơ sở trực giao của $V_E^4$ *(đính chính lỗi in sách gốc đầu tr. 136 ghi "bổ sung vào hệ $\{\vec{a}, \vec{b}\}$ hai vectơ nữa", do đã cho sẵn ba vectơ trực giao trong không gian $4$ chiều)*.
+
+<Hint>
+Kiểm tra ba tích vô hướng đều bằng $0$, sau đó giải hệ $3$ phương trình tuyến tính thuần nhất $\vec{a} \cdot \vec{d} = 0$, $\vec{b} \cdot \vec{d} = 0$, $\vec{c} \cdot \vec{d} = 0$ (tận dụng biểu diễn nghiệm $(x_3 - 7x_4, -2x_3 + 5x_4, x_3, x_4)$ đã giải ở Bài tập 2.2).
+</Hint>
+
+<Solution>
+**1. Kiểm tra tính đôi một vuông góc:**
+$$
+\vec{a} \cdot \vec{b} = 1(1) + 1(2) + 1(3) + 2(-3) = 0 \implies \vec{a} \perp \vec{b},
+$$
+$$
+\vec{b} \cdot \vec{c} = 1(-7) + 2(5) + 3(0) + (-3)(1) = -7 + 10 + 0 - 3 = 0 \implies \vec{b} \perp \vec{c},
+$$
+$$
+\vec{c} \cdot \vec{a} = (-7)(1) + 5(1) + 0(1) + 1(2) = -7 + 5 + 0 + 2 = 0 \implies \vec{c} \perp \vec{a}.
+$$
+
+**2. Tìm vectơ thứ tư $\vec{d} = (x_1, x_2, x_3, x_4) \neq \vec{0}$ vuông góc với $\vec{a}, \vec{b}, \vec{c}$:**
+
+Theo lời giải Bài tập 2.2b, mọi vectơ vuông góc với $\vec{a}$ và $\vec{b}$ có dạng:
+$$
+\vec{d} = (x_3 - 7x_4,\; -2x_3 + 5x_4,\; x_3,\; x_4) \quad (x_3, x_4 \in \mathbb{R}).
+$$
+Áp dụng thêm điều kiện $\vec{c} \cdot \vec{d} = 0$ với $\vec{c} = (-7, 5, 0, 1)$:
+$$
+-7(x_3 - 7x_4) + 5(-2x_3 + 5x_4) + 0 \cdot x_3 + 1 \cdot x_4 = -17x_3 + 75x_4 = 0 \iff 17x_3 = 75x_4.
+$$
+Chọn $x_3 = 75$ và $x_4 = 17$ (hoặc đổi dấu $x_3 = -75, x_4 = -17$), ta được:
+$$
+x_1 = 75 - 7 \cdot 17 = -44, \qquad x_2 = -2 \cdot 75 + 5 \cdot 17 = -65,
+$$
+tức là $\vec{d} = (-44, -65, 75, 17)$ (hoặc $\vec{d} = (44, 65, -75, -17)$). Thử lại:
+$$
+\vec{a} \cdot \vec{d} = 44 + 65 - 75 - 34 = 0, \quad \vec{b} \cdot \vec{d} = 44 + 130 - 225 + 51 = 0, \quad \vec{c} \cdot \vec{d} = -308 + 325 + 0 - 17 = 0.
+$$
+Vậy $\{\vec{a}, \vec{b}, \vec{c}, \vec{d}\}$ với $\vec{d} = (44, 65, -75, -17)$ là một cơ sở trực giao của $V_E^4$.
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e3-7" title="Bài tập 2.10 (Kiểm tra không thẳng hàng và tính diện tích tam giác — tr. 136)">
+Với hệ tọa độ trực chuẩn trong $\mathcal{E}^3$, cho ba điểm $A(3, 4, -1)$, $B(2, 0, 3)$ và $C(-3, 5, 4)$. Hãy chứng tỏ ba điểm đó không thẳng hàng và hãy tính diện tích của tam giác $ABC$ đó.
+
+<Hint>
+Tính tích có hướng $\overrightarrow{AB} \wedge \overrightarrow{AC}$: ba điểm không thẳng hàng khi và chỉ khi $\overrightarrow{AB} \wedge \overrightarrow{AC} \neq \vec{0}$, và khi đó $S_{\triangle ABC} = \dfrac{1}{2}|\overrightarrow{AB} \wedge \overrightarrow{AC}|$.
+</Hint>
+
+<Solution>
+Ta có tọa độ hai vectơ nối từ $A$:
+$$
+\overrightarrow{AB} = (-1, -4, 4), \qquad \overrightarrow{AC} = (-6, 1, 5).
+$$
+Trong cơ sở trực chuẩn thuận, tích có hướng của chúng là:
+$$
+\overrightarrow{AB} \wedge \overrightarrow{AC} = \left(
+\begin{vmatrix} -4 & 4 \\ 1 & 5 \end{vmatrix},
+\begin{vmatrix} 4 & -1 \\ 5 & -6 \end{vmatrix},
+\begin{vmatrix} -1 & -4 \\ -6 & 1 \end{vmatrix}
+\right) = (-24, -19, -25) \neq \vec{0}.
+$$
+Vì $\overrightarrow{AB} \wedge \overrightarrow{AC} \neq \vec{0}$ nên hai vectơ $\overrightarrow{AB}, \overrightarrow{AC}$ không cộng tuyến, tức ba điểm $A, B, C$ không thẳng hàng.
+
+Diện tích tam giác $ABC$ bằng một nửa diện tích hình bình hành dựng trên $\overrightarrow{AB}, \overrightarrow{AC}$:
+$$
+S_{\triangle ABC} = \frac{1}{2}|\overrightarrow{AB} \wedge \overrightarrow{AC}| = \frac{1}{2}\sqrt{(-24)^2 + (-19)^2 + (-25)^2} = \frac{1}{2}\sqrt{576 + 361 + 625} = \frac{\sqrt{1562}}{2}.
+$$
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e3-8" title="Bài tập 2.11 (Tích có hướng kép và tích vô hướng của hai tích có hướng — tr. 136)">
+Trong $\mathcal{E}^3$ với mục tiêu trực chuẩn (định hướng thuận), cho các vectơ:
+$$
+\vec{a} = (3, 0, -1), \quad \vec{b} = (2, 4, 3), \quad \vec{c} = (-1, 3, 2), \quad \vec{d} = (2, 0, 1).
+$$
+Hãy tính $(\vec{a} \wedge \vec{b}) \wedge \vec{c}$ và $(\vec{a} \wedge \vec{c}) \cdot (\vec{b} \wedge \vec{d})$.
+
+<Hint>
+Tính lần lượt tọa độ của $\vec{a} \wedge \vec{b}$, $\vec{a} \wedge \vec{c}$ và $\vec{b} \wedge \vec{d}$ theo công thức định thức cấp $2$ ở Mục 6, sau đó thực hiện phép nhân có hướng và nhân vô hướng tương ứng.
+</Hint>
+
+<Solution>
+**1. Tính $(\vec{a} \wedge \vec{b}) \wedge \vec{c}$:**
+
+Trước hết tính $\vec{a} \wedge \vec{b}$ với $\vec{a} = (3, 0, -1)$, $\vec{b} = (2, 4, 3)$:
+$$
+\vec{a} \wedge \vec{b} = \left(
+\begin{vmatrix} 0 & -1 \\ 4 & 3 \end{vmatrix},
+\begin{vmatrix} -1 & 3 \\ 3 & 2 \end{vmatrix},
+\begin{vmatrix} 3 & 0 \\ 2 & 4 \end{vmatrix}
+\right) = (4, -11, 12).
+$$
+Tiếp tục nhân có hướng với $\vec{c} = (-1, 3, 2)$:
+$$
+(\vec{a} \wedge \vec{b}) \wedge \vec{c} = \left(
+\begin{vmatrix} -11 & 12 \\ 3 & 2 \end{vmatrix},
+\begin{vmatrix} 12 & 4 \\ 2 & -1 \end{vmatrix},
+\begin{vmatrix} 4 & -11 \\ -1 & 3 \end{vmatrix}
+\right) = (-58, -20, 1).
+$$
+*(Kiểm chứng độc lập bằng công thức $(\vec{a} \wedge \vec{b}) \wedge \vec{c} = (\vec{a} \cdot \vec{c})\vec{b} - (\vec{b} \cdot \vec{c})\vec{a}$: vì $\vec{a} \cdot \vec{c} = -5$ và $\vec{b} \cdot \vec{c} = 16$ nên $-5(2, 4, 3) - 16(3, 0, -1) = (-58, -20, 1)$, khớp hoàn toàn).*
+
+**2. Tính $(\vec{a} \wedge \vec{c}) \cdot (\vec{b} \wedge \vec{d})$:**
+
+Ta tính riêng từng tích có hướng:
+$$
+\vec{a} \wedge \vec{c} = \left(
+\begin{vmatrix} 0 & -1 \\ 3 & 2 \end{vmatrix},
+\begin{vmatrix} -1 & 3 \\ 2 & -1 \end{vmatrix},
+\begin{vmatrix} 3 & 0 \\ -1 & 3 \end{vmatrix}
+\right) = (3, -5, 9),
+$$
+$$
+\vec{b} \wedge \vec{d} = \left(
+\begin{vmatrix} 4 & 3 \\ 0 & 1 \end{vmatrix},
+\begin{vmatrix} 3 & 2 \\ 1 & 2 \end{vmatrix},
+\begin{vmatrix} 2 & 4 \\ 2 & 0 \end{vmatrix}
+\right) = (4, 4, -8).
+$$
+Nhân vô hướng hai vectơ vừa tìm được *(lưu ý kết quả này không phụ thuộc vào việc cơ sở trực chuẩn là thuận hay nghịch vì tích của hai dấu $\pm 1$ bằng $+1$)*:
+$$
+(\vec{a} \wedge \vec{c}) \cdot (\vec{b} \wedge \vec{d}) = 3 \cdot 4 + (-5) \cdot 4 + 9 \cdot (-8) = 12 - 20 - 72 = -80.
+$$
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e3-9" title="Bài tập 2.13 (Các côsin chỉ phương của vectơ đơn vị trong VnE — tr. 136)">
+Giả sử trong $V_E^n$ đã chọn một cơ sở **trực chuẩn** $\{\vec{e}_1, \vec{e}_2, \dots, \vec{e}_n\}$ *(đính chính lỗi in thiếu từ "trực chuẩn" ở câu mở đầu Bài 2.13 tr. 136)*. Đối với mỗi vectơ đơn vị $\vec{e}$ ($|\vec{e}| = 1$), ta đặt $\alpha_i = \widehat{(\vec{e}, \vec{e}_i)}$ ($i = 1, 2, \dots, n$). Chứng minh rằng:
+$$
+\vec{e} = \sum_{i=1}^n (\cos\alpha_i)\vec{e}_i \quad \text{và} \quad \sum_{i=1}^n \cos^2\alpha_i = 1.
+$$
+
+<Hint>
+Giả sử $\vec{e} = \sum_{j=1}^n x_j\vec{e}_j$, nhân vô hướng hai vế với từng $\vec{e}_i$ và sử dụng $\vec{e}_j \cdot \vec{e}_i = \delta_{ji}$ cùng $|\vec{e}| = |\vec{e}_i| = 1$ để tính $x_i = \cos\alpha_i$; sau đó áp dụng công thức $|\vec{e}|^2 = \sum_{i=1}^n x_i^2 = 1$.
+</Hint>
+
+<Solution>
+Vì $\{\vec{e}_1, \vec{e}_2, \dots, \vec{e}_n\}$ là cơ sở của $V_E^n$, vectơ đơn vị $\vec{e}$ được biểu diễn duy nhất dưới dạng:
+$$
+\vec{e} = \sum_{j=1}^n x_j\vec{e}_j \quad (x_1, \dots, x_n \in \mathbb{R}).
+$$
+Với mỗi chỉ số $i \in \{1, 2, \dots, n\}$, ta lấy tích vô hướng của $\vec{e}$ với $\vec{e}_i$. Một mặt, do cơ sở trực chuẩn ($\vec{e}_j \cdot \vec{e}_i = \delta_{ji}$):
+$$
+\vec{e} \cdot \vec{e}_i = \left(\sum_{j=1}^n x_j\vec{e}_j\right) \cdot \vec{e}_i = \sum_{j=1}^n x_j(\vec{e}_j \cdot \vec{e}_i) = x_i.
+$$
+Mặt khác, theo định nghĩa góc giữa hai vectơ khác vectơ-không với $|\vec{e}| = 1$ và $|\vec{e}_i| = 1$:
+$$
+\vec{e} \cdot \vec{e}_i = |\vec{e}|\,|\vec{e}_i|\cos\widehat{(\vec{e}, \vec{e}_i)} = 1 \cdot 1 \cdot \cos\alpha_i = \cos\alpha_i.
+$$
+So sánh hai biểu thức trên ta được $x_i = \cos\alpha_i$ với mọi $i = 1, \dots, n$ *(các số $\cos\alpha_1, \dots, \cos\alpha_n$ được gọi là các côsin chỉ phương của vectơ đơn vị $\vec{e}$)*. Thay vào khai triển tọa độ của $\vec{e}$ ta có:
+$$
+\vec{e} = \sum_{i=1}^n (\cos\alpha_i)\vec{e}_i.
+$$
+Cuối cùng, áp dụng công thức độ dài của vectơ theo tọa độ trực chuẩn (Mục 5) kết hợp giả thiết $|\vec{e}| = 1$:
+$$
+1 = |\vec{e}|^2 = \sum_{i=1}^n x_i^2 = \sum_{i=1}^n \cos^2\alpha_i.
+$$
 </Solution>
 </Exercise>
 
 <KeyTakeaways>
-- Trong mục tiêu trực chuẩn, tích vô hướng và khoảng cách có biểu thức tọa độ đơn giản nhất.
-- Ma trận chuyển cơ sở giữa hai mục tiêu trực chuẩn là ma trận trực giao (trực kinh).
+- Trong mục tiêu trực chuẩn $\{O; \vec{e}_1, \dots, \vec{e}_n\}$ ($\vec{e}_i \cdot \vec{e}_j = \delta_{ij}$), tích vô hướng có biểu thức chính tắc $\vec{a} \cdot \vec{b} = \sum_{i=1}^n a_i b_i$ và khoảng cách giữa hai điểm là $d(M, N) = \sqrt{\sum_{i=1}^n (y_i - x_i)^2}$.
+- Ma trận chuyển cơ sở $C$ giữa hai mục tiêu trực chuẩn là ma trận trực giao ($C C^* = I_n$), dẫn đến công thức đổi tọa độ trực chuẩn $[x] = C^*[x'] + [a_0]$.
+- Trong cơ sở trực chuẩn thuận của $V_E^3$, tích có hướng được tính qua ba định thức con cấp $2$, còn tích hỗn hợp bằng định thức cấp $3$ của ba hàng tọa độ.
 </KeyTakeaways>
