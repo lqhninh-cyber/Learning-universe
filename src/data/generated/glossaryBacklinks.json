@@ -2199,6 +2199,14 @@
         "count": 13
       },
       {
+        "lessonId": "cac-sieu-mat-bac-hai-trong-khong-gian-afin",
+        "lessonCode": "HHAVE 1.8",
+        "lessonTitle": "Các Siêu mặt Bậc hai trong Không gian Affine",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/cac-sieu-mat-bac-hai-trong-khong-gian-afin",
+        "count": 7
+      },
+      {
         "lessonId": "tam-ti-cu-cua-mot-he-diem",
         "lessonCode": "HHAVE 1.4",
         "lessonTitle": "Tâm Tỉ Cự của một Hệ Điểm",
@@ -2220,14 +2228,6 @@
         "lessonTitle": "Tọa độ Affine và Mục tiêu Affine",
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/toa-do-afin-va-muc-tieu-afin",
-        "count": 4
-      },
-      {
-        "lessonId": "cac-sieu-mat-bac-hai-trong-khong-gian-afin",
-        "lessonCode": "HHAVE 1.8",
-        "lessonTitle": "Các Siêu mặt Bậc hai trong Không gian Affine",
-        "subjectId": "hinh-hoc-affine",
-        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/cac-sieu-mat-bac-hai-trong-khong-gian-afin",
         "count": 4
       },
       {
@@ -2411,6 +2411,14 @@
         "count": 16
       },
       {
+        "lessonId": "cac-sieu-mat-bac-hai-trong-khong-gian-afin",
+        "lessonCode": "HHAVE 1.8",
+        "lessonTitle": "Các Siêu mặt Bậc hai trong Không gian Affine",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/cac-sieu-mat-bac-hai-trong-khong-gian-afin",
+        "count": 16
+      },
+      {
         "lessonId": "sieu-cau-trong-khong-gian-euclide",
         "lessonCode": "HHAVE 2.10",
         "lessonTitle": "Siêu cầu trong Không gian Ơclit",
@@ -2424,14 +2432,6 @@
         "lessonTitle": "Ánh xạ Affine và Phép Biến đổi Affine",
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/anh-xa-afin-va-phep-bien-doi-afin",
-        "count": 9
-      },
-      {
-        "lessonId": "cac-sieu-mat-bac-hai-trong-khong-gian-afin",
-        "lessonCode": "HHAVE 1.8",
-        "lessonTitle": "Các Siêu mặt Bậc hai trong Không gian Affine",
-        "subjectId": "hinh-hoc-affine",
-        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/cac-sieu-mat-bac-hai-trong-khong-gian-afin",
         "count": 9
       },
       {
@@ -2611,6 +2611,14 @@
         "count": 7
       },
       {
+        "lessonId": "cac-sieu-mat-bac-hai-trong-khong-gian-afin",
+        "lessonCode": "HHAVE 1.8",
+        "lessonTitle": "Các Siêu mặt Bậc hai trong Không gian Affine",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/cac-sieu-mat-bac-hai-trong-khong-gian-afin",
+        "count": 6
+      },
+      {
         "lessonId": "hinh-hoc-euclide",
         "lessonCode": "HHAVE 2.7",
         "lessonTitle": "Hình học Ơclit theo Quan điểm Klein",
@@ -2635,14 +2643,6 @@
         "count": 2
       },
       {
-        "lessonId": "cac-sieu-mat-bac-hai-trong-khong-gian-afin",
-        "lessonCode": "HHAVE 1.8",
-        "lessonTitle": "Các Siêu mặt Bậc hai trong Không gian Affine",
-        "subjectId": "hinh-hoc-affine",
-        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/cac-sieu-mat-bac-hai-trong-khong-gian-afin",
-        "count": 1
-      },
-      {
         "lessonId": "mo-hinh-xa-anh-cua-khong-gian-euclide",
         "lessonCode": "HHAVE 3.11",
         "lessonTitle": "Mô hình Xạ ảnh của Không gian Ơclit",
@@ -2658,7 +2658,7 @@
         "lessonTitle": "Các Siêu mặt Bậc hai trong Không gian Affine",
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/cac-sieu-mat-bac-hai-trong-khong-gian-afin",
-        "count": 28
+        "count": 52
       },
       {
         "lessonId": "sieu-mat-bac-hai-trong-khong-gian-xa-anh",
@@ -4527,8 +4527,8 @@
       "sieu-mat-bac-hai",
       "sieu-phang",
       "khong-gian-afin",
-      "muc-tieu-afin",
-      "phep-bien-doi-afin"
+      "phep-bien-doi-afin",
+      "muc-tieu-afin"
     ],
     "bo-sung-ve-cac-phep-toan-tren-khong-gian-vecto": [],
     "khong-gian-euclide": [
