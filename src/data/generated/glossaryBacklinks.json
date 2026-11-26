@@ -2,7 +2,7 @@
   "stats": {
     "totalLessons": 122,
     "totalTerms": 67,
-    "totalBacklinks": 499,
+    "totalBacklinks": 502,
     "termsWithBacklinks": 67,
     "lessonsWithBacklinks": 115
   },
@@ -2183,6 +2183,14 @@
         "count": 19
       },
       {
+        "lessonId": "nhom-cac-phep-bien-doi-afin-va-hinh-hoc-afin",
+        "lessonCode": "HHAVE 1.7",
+        "lessonTitle": "Nhóm các Phép Biến đổi Affine và Hình học Affine",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/nhom-cac-phep-bien-doi-afin-va-hinh-hoc-afin",
+        "count": 15
+      },
+      {
         "lessonId": "mo-hinh-xa-anh-cua-khong-gian-afin",
         "lessonCode": "HHAVE 3.6",
         "lessonTitle": "Mô hình Xạ ảnh của Không gian Affine",
@@ -2237,14 +2245,6 @@
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-xa-anh/sieu-mat-bac-hai-trong-khong-gian-xa-anh",
         "count": 3
-      },
-      {
-        "lessonId": "nhom-cac-phep-bien-doi-afin-va-hinh-hoc-afin",
-        "lessonCode": "HHAVE 1.7",
-        "lessonTitle": "Nhóm các Phép Biến đổi Affine và Hình học Affine",
-        "subjectId": "hinh-hoc-affine",
-        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/nhom-cac-phep-bien-doi-afin-va-hinh-hoc-afin",
-        "count": 2
       },
       {
         "lessonId": "cac-phang-trong-khong-gian-euclide",
@@ -2305,6 +2305,14 @@
         "count": 7
       },
       {
+        "lessonId": "nhom-cac-phep-bien-doi-afin-va-hinh-hoc-afin",
+        "lessonCode": "HHAVE 1.7",
+        "lessonTitle": "Nhóm các Phép Biến đổi Affine và Hình học Affine",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/nhom-cac-phep-bien-doi-afin-va-hinh-hoc-afin",
+        "count": 6
+      },
+      {
         "lessonId": "cac-phang-trong-khong-gian-afin",
         "lessonCode": "HHAVE 1.3",
         "lessonTitle": "Các Phẳng trong Không gian Affine",
@@ -2335,14 +2343,6 @@
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/cac-sieu-mat-bac-hai-trong-khong-gian-afin",
         "count": 2
-      },
-      {
-        "lessonId": "nhom-cac-phep-bien-doi-afin-va-hinh-hoc-afin",
-        "lessonCode": "HHAVE 1.7",
-        "lessonTitle": "Nhóm các Phép Biến đổi Affine và Hình học Affine",
-        "subjectId": "hinh-hoc-affine",
-        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/nhom-cac-phep-bien-doi-afin-va-hinh-hoc-afin",
-        "count": 1
       },
       {
         "lessonId": "muc-tieu-truc-chuan-toa-do-truc-chuan",
@@ -2517,6 +2517,14 @@
         "count": 54
       },
       {
+        "lessonId": "nhom-cac-phep-bien-doi-afin-va-hinh-hoc-afin",
+        "lessonCode": "HHAVE 1.7",
+        "lessonTitle": "Nhóm các Phép Biến đổi Affine và Hình học Affine",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/nhom-cac-phep-bien-doi-afin-va-hinh-hoc-afin",
+        "count": 4
+      },
+      {
         "lessonId": "anh-xa-afin-va-phep-bien-doi-afin",
         "lessonCode": "HHAVE 1.6",
         "lessonTitle": "Ánh xạ Affine và Phép Biến đổi Affine",
@@ -2535,6 +2543,14 @@
         "count": 33
       },
       {
+        "lessonId": "nhom-cac-phep-bien-doi-afin-va-hinh-hoc-afin",
+        "lessonCode": "HHAVE 1.7",
+        "lessonTitle": "Nhóm các Phép Biến đổi Affine và Hình học Affine",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/nhom-cac-phep-bien-doi-afin-va-hinh-hoc-afin",
+        "count": 8
+      },
+      {
         "lessonId": "sieu-cau-trong-khong-gian-euclide",
         "lessonCode": "HHAVE 2.10",
         "lessonTitle": "Siêu cầu trong Không gian Ơclit",
@@ -2551,6 +2567,14 @@
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/anh-xa-afin-va-phep-bien-doi-afin",
         "count": 42
+      },
+      {
+        "lessonId": "nhom-cac-phep-bien-doi-afin-va-hinh-hoc-afin",
+        "lessonCode": "HHAVE 1.7",
+        "lessonTitle": "Nhóm các Phép Biến đổi Affine và Hình học Affine",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/nhom-cac-phep-bien-doi-afin-va-hinh-hoc-afin",
+        "count": 3
       },
       {
         "lessonId": "anh-xa-dang-cu-va-phep-bien-doi-dang-cu",
@@ -2576,7 +2600,7 @@
         "lessonTitle": "Nhóm các Phép Biến đổi Affine và Hình học Affine",
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/nhom-cac-phep-bien-doi-afin-va-hinh-hoc-afin",
-        "count": 7
+        "count": 25
       },
       {
         "lessonId": "mo-hinh-xa-anh-cua-khong-gian-afin",
@@ -4494,7 +4518,10 @@
     "nhom-cac-phep-bien-doi-afin-va-hinh-hoc-afin": [
       "phep-bien-doi-afin",
       "khong-gian-afin",
-      "muc-tieu-afin"
+      "tap-loi",
+      "muc-tieu-afin",
+      "tam-ti-cu",
+      "anh-xa-afin"
     ],
     "cac-sieu-mat-bac-hai-trong-khong-gian-afin": [
       "sieu-mat-bac-hai",

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-26T10:59:45.465Z",
+  "updatedAt": "2026-11-26T11:54:27.986Z",
   "lessons": {
     "tap-hop-anh-xa-va-cong-cu-so-hoc": {
       "path": "content/algebraic-structures/00-ngon-ngu-va-cong-cu-dai-so/01-tap-hop-anh-xa-va-cong-cu-so-hoc.mdx",
@@ -878,19 +878,28 @@
       "path": "content/affine-geometry/01-khong-gian-affine/07-nhom-cac-phep-bien-doi-afin-va-hinh-hoc-afin.mdx",
       "status": "published",
       "version": "1.0.0",
-      "sha256": "e0f549b408baf78cdb27f7aaa8c1f4e768d2a914012a806f783ba80dd773ccf4",
+      "sha256": "429f9be38f8850f5591ca3a8bc746c1c4d500fe4386b5debb7853b6fd413f43c",
       "numberedBlocks": {
         "def-s7-1": "1.7.1",
         "def-s7-2": "1.7.2",
+        "ex-s7-2a": "1.7.1",
         "def-s7-3": "1.7.3",
-        "ex-s7-4": "1.7.1",
+        "ex-s7-4": "1.7.2",
         "def-s7-5": "1.7.4",
         "def-s7-6": "1.7.5",
-        "ex-s7-7": "1.7.2",
+        "ex-s7-7": "1.7.3",
         "def-s7-8": "1.7.6",
         "def-s7-9": "1.7.7",
-        "ex-s7-10": "1.7.3",
-        "exr-s7-1": "1.7.1"
+        "ex-s7-10": "1.7.4",
+        "exr-s7-50": "1.7.1",
+        "exr-s7-51": "1.7.2",
+        "exr-s7-52": "1.7.3",
+        "exr-s7-53": "1.7.4",
+        "exr-s7-54": "1.7.5",
+        "exr-s7-55": "1.7.6",
+        "exr-s7-56": "1.7.7",
+        "exr-s7-57": "1.7.8",
+        "exr-s7-58": "1.7.9"
       }
     },
     "cac-sieu-mat-bac-hai-trong-khong-gian-afin": {

@@ -1,17 +1,19 @@
 ---
 id: nhom-cac-phep-bien-doi-afin-va-hinh-hoc-afin
 title: "Nhóm các Phép Biến đổi Affine và Hình học Affine"
-description: "Cấu trúc nhóm của các phép biến đổi affine, quan điểm Erlangen của Klein và các bất biến affine."
-estimatedMinutes: 45
+description: "Không gian hình học, nhóm các phép biến đổi, quan hệ tương đương đối với nhóm, bất biến affine, hình học affine theo chương trình Erlangen và định lí Menelaus, Ceva."
+estimatedMinutes: 50
 level: advanced
 prerequisites: []
 tags:
   - "nhóm affine"
   - "quan điểm Klein"
   - "bất biến affine"
+  - "định lí Menelaus"
+  - "định lí Ceva"
 sources:
   - source: gt-hhcc-nmh-2004
-    pages: '59-65'
+    pages: '42-46'
     sections: '§7'
 status: published
 version: 1.0.0
@@ -22,128 +24,432 @@ authoring:
   draftedAt: '2026-11-03'
 ---
 
-## 1. Các định nghĩa
+## 1. Các Định nghĩa Cơ bản
 
-<Definition id="def-s7-1" title="a) Không gian hình học">
-Là một tập hợp M khác rỗng, mỗi phần tử gọi là một *điểm*.
+<Definition id="def-s7-1" title="Không gian hình học, hình và phép biến đổi">
+**Không gian hình học** là một tập hợp $M$ khác rỗng mà mỗi phần tử của nó được gọi là một **điểm**.
 
-Mỗi tập hợp con H của M gọi là một *hình*.
-
-Một song ánh $f: M \to M$ của M lên chính nó gọi là một *phép biến đổi*; tập hợp các phép biến đổi của M làm thành một *nhóm* đối với phép toán lấy tích các song ánh.
+- Mỗi tập hợp con $H$ của $M$ ($H \subset M$) được gọi là một **hình**.
+- Một song ánh $f: M \to M$ của $M$ lên chính nó được gọi là một **phép biến đổi** của $M$; tập hợp tất cả các phép biến đổi của $M$ làm thành một **nhóm** đối với phép toán lấy tích (hợp thành) các song ánh.
 </Definition>
 
-<Definition id="def-s7-2" title="b) Nhóm các phép biến đổi">
-Một tập hợp F không rỗng gồm những phép biến đổi của M gọi là một *nhóm các phép biến đổi* nếu có hai điều kiện: $(i) f, g \in F$ thì $g∘f \in F; (ii) f \in F$ thì $f^{-1} \in F$.
+<Definition id="def-s7-2" title="Nhóm các phép biến đổi của một không gian">
+Một tập hợp $F$ không rỗng gồm những phép biến đổi $f$ nào đó của không gian $M$ được gọi là một **nhóm các phép biến đổi** (đối với phép toán tích của hai phép biến đổi) nếu thỏa mãn hai điều kiện sau đây:
 
-Khi đó F chứa phép đồng nhất $e = Id_{M} (e = f∘f^{-1})$, và tích có tính chất kết hợp.
+1. Nếu $f$ và $g$ là hai phép biến đổi bất kỳ thuộc tập hợp $F$ thì tích $g \circ f$ cũng là một phép biến đổi thuộc $F$.
+2. Nếu $f$ là phép biến đổi thuộc $F$ thì phép đảo ngược $f^{-1}$ cũng thuộc $F$.
 </Definition>
 
-<Definition id="def-s7-3" title="c) Tương đương">
-Cho F là nhóm biến đổi của M, hai hình H$_{1}$, H$_{2}$ gọi là *tương đương đối với nhóm F* nếu có phép biến đổi $f \in F$ để $f(H_{1}) = H_{2}$.
-</Definition>
+Với hai điều kiện trên, ta dễ dàng chứng minh được tập hợp $F$ luôn chứa phép biến đổi đồng nhất $e = \id_M$ và thỏa mãn đầy đủ các tiên đề nhóm:
 
-Từ định nghĩa suy ra ba tính chất của quan hệ tương đương: mọi hình tương đương với chính nó (dùng e); H$_{1}$ ~ H$_{2}$ thì H$_{2}$ ~ H$_{1}$ (dùng *f*$^{-1}$); H$_{1}$ ~ H$_{2}$, H$_{2}$ ~ H$_{3}$ thì H$_{1}$ ~ H$_{3}$ (dùng g∘*f*).
+- **Phần tử đơn vị:** Vì $F \neq \varnothing$, tồn tại ít nhất một phép biến đổi $f \in F$. Theo điều kiện thứ hai, $f^{-1} \in F$; áp dụng tiếp điều kiện thứ nhất cho cặp $f^{-1}, f \in F$, ta suy ra $e = f \circ f^{-1} \in F$. Phép đồng nhất $e = \id_M$ đóng vai trò phần tử đơn vị trong $F$ vì $e \circ g = g \circ e = g$ với mọi $g \in F$.
+- **Tính chất kết hợp:** Đối với bất kỳ ba phép biến đổi $f, g, h$ của không gian $M$, tích ánh xạ luôn có tính kết hợp: $f \circ (g \circ h) = (f \circ g) \circ h$.
 
-Do đó tập các hình của M chia thành các *lớp F-tương đương*.
-
-**Thí dụ 1.**
-
-Tập *𝒜* tất cả các phép afin của $\mathcal{A}$ là một nhóm biến đổi, gọi là *nhóm afin* của $\mathcal{A}$.
-
-**Thí dụ 2.**
-
-Tập các phép tịnh tiến của $\mathcal{A}$ là một nhóm; còn tập các phép vị tự không lập thành nhóm vì tích hai phép vị tự có thể không phải là phép vị tự.
-
-<Example id="ex-s7-4" title="Ví dụ">
-$t_{u}∘t_{v} = t_{u+v}$ và $(t_{v})^{-1} = t_{-v}$ nên tịnh tiến thỏa (i), (ii).
-
-Trong $\mathcal{A} ^{2}$, hai tam giác ABC và A′B′C′ bất kì luôn tương đương afin vì có duy nhất phép afin biến $(A,B,C)$ thành $(A',B',C')$.
-
-Chẳng hạn A(0,0), B(1,0), C(0,1) và A′(0,0), B′(2,0), C′(1,3): phép afin là $f(x,y) = (2x + y, 3y)$; kiểm tra $f(B) = (2,0), f(C) = (1,3).$
+<Example id="ex-s7-2a" title="Thí dụ về nhóm affine, nhóm tịnh tiến và tập các phép vị tự">
+- **Thí dụ 1 (Nhóm affine):** Gọi $\mathscr{A}$ (còn ký hiệu là $\Aff(\mathcal{A})$) là tập hợp tất cả các <GlossaryTerm termId="phep-bien-doi-afin">phép biến đổi affine</GlossaryTerm> của <GlossaryTerm termId="khong-gian-afin">không gian affine</GlossaryTerm> $\mathcal{A}$. Theo tính chất 4c ở §6, tích của hai phép affine là phép affine và nghịch đảo của một phép affine cũng là phép affine, nên $\mathscr{A}$ là một nhóm biến đổi của $\mathcal{A}$, gọi là **nhóm affine** của $\mathcal{A}$.
+- **Thí dụ 2 (Nhóm tịnh tiến và tập các phép vị tự):** Tập hợp tất cả các phép tịnh tiến của $\mathcal{A}$ làm thành một nhóm (vì $t_{\vec{u}} \circ t_{\vec{v}} = t_{\vec{u} + \vec{v}}$ và $(t_{\vec{u}})^{-1} = t_{-\vec{u}}$); trong khi đó **tập hợp các phép vị tự không lập thành một nhóm**, vì tích của hai phép vị tự có tâm phân biệt với tích hai tỉ số bằng $1$ là một phép tịnh tiến khác phép đồng nhất (không có điểm bất động nên không phải là phép vị tự).
 </Example>
 
-## 2. Các bất biến đối với nhóm các phép biến đổi afin
+<Definition id="def-s7-3" title="Hai hình tương đương đối với một nhóm biến đổi">
+Cho $F$ là một nhóm biến đổi của không gian $M$ và $H_1, H_2$ là hai hình nào đó của $M$. Hình $H_1$ được gọi là **tương đương với hình $H_2$ đối với nhóm $F$** nếu tồn tại một phép biến đổi $f \in F$ biến hình $H_1$ thành hình $H_2$, tức $f(H_1) = H_2$. Ta ký hiệu:
 
-<Definition id="def-s7-5" title="a) Định nghĩa">
-Một tính chất của hình H gọi là *bất biến đối với nhóm F* nếu nó không thay đổi khi dùng một phép biến đổi $f \in F$ biến H thành hình khác; tức là mọi hình H$_{1}$ tương đương với H đối với F đều có tính chất đó.
-
-Các tính chất bất biến đối với nhóm afin *𝒜* gọi là *tính chất afin* (*bất biến afin*).
+$$
+H_1 \overset{(F)}{\sim} H_2.
+$$
 </Definition>
 
-<Definition id="def-s7-6" title="b) Các tính chất afin">
-Tính chất độc lập hay không độc lập của một hệ điểm là tính chất afin (phép afin biến hệ điểm độc lập thành hệ điểm độc lập).
+Từ <Ref to="def-s7-3" /> và cấu trúc nhóm của $F$, ta suy ra ba tính chất của một quan hệ tương đương:
 
-Tính chất song song, cắt nhau hay chéo nhau của hai cái phẳng cũng là tính chất afin (nếu α song song với β thì *f*(α) song song với *f*(β)).
+1. **Tính phản xạ:** Một hình $H$ bất kỳ của $M$ luôn tương đương với chính nó đối với nhóm $F$ ($H \overset{(F)}{\sim} H$), vì có phép đồng nhất $e \in F$ và $e(H) = H$.
+2. **Tính đối xứng:** Nếu $H_1 \overset{(F)}{\sim} H_2$ thì $H_2 \overset{(F)}{\sim} H_1$. Thật vậy, nếu có $f \in F$ sao cho $f(H_1) = H_2$ thì có $f^{-1} \in F$ để $f^{-1}(H_2) = H_1$.
+3. **Tính bắc cầu:** Nếu $H_1 \overset{(F)}{\sim} H_2$ và $H_2 \overset{(F)}{\sim} H_3$ thì $H_1 \overset{(F)}{\sim} H_3$. Thật vậy, nếu có $f, g \in F$ sao cho $f(H_1) = H_2$ và $g(H_2) = H_3$ thì $(g \circ f)(H_1) = g\bigl(f(H_1)\bigr) = H_3$ với $g \circ f \in F$.
 
-Các khái niệm xây dựng từ các bất biến afin gọi là *khái niệm afin*.
+Như vậy, tập hợp tất cả các hình của không gian $M$ được phân hoạch thành các **lớp $F$-tương đương** đôi một rời nhau, sao cho hai hình thuộc cùng một lớp khi và chỉ khi có một phép biến đổi $f \in F$ biến hình này thành hình kia.
 
-*Thí dụ.*
+<Example id="ex-s7-4" title="Mọi tam giác trong mặt phẳng affine thuộc cùng một lớp tương đương affine">
+Trong mặt phẳng affine $\mathcal{A}^2$, tất cả các hình tam giác đều thuộc cùng một lớp tương đương đối với nhóm affine $\mathscr{A}^2$, vì hai tam giác bất kỳ $ABC$ và $A'B'C'$ (ứng với hai hệ ba <GlossaryTerm termId="doc-lap-afin">điểm độc lập</GlossaryTerm> $\{A, B, C\}$ và $\{A', B', C'\}$) luôn xác định duy nhất một phép biến đổi affine $f \in \mathscr{A}^2$ sao cho $f(A) = A', f(B) = B', f(C) = C'$ (kéo theo $f\bigl(S(A, B, C)\bigr) = S(A', B', C')$).
 
-Tam giác, đường trung tuyến của tam giác, hình bình hành, m-phẳng, tỉ số đơn của ba điểm thẳng hàng là những khái niệm afin; còn hình vuông, tam giác đều, hình lập phương, đường tròn không phải là những khái niệm afin vì các hình này thay đổi qua phép biến đổi afin.
-</Definition>
-
-<Example id="ex-s7-7" title="Ví dụ">
-Với $f(x,y) = (2x + y, 3y)$: hai đường thẳng song song $y = 0$ và $y = 1$ biến thành $y' = 0$ và $y' = 3$, vẫn song song (bất biến afin).
-
-Trung điểm $(½,0)$ của AB biến thành $(1,0)$ là trung điểm của A′B′ (bảo tồn tỉ số đơn).
-
-Nhưng độ dài $AB = 1$ biến thành $A'B' = 2$, và góc vuông BAC biến thành góc giữa $(2,0)$ và $(1,3)$ không vuông, nên độ dài và góc không phải bất biến afin.
+Chẳng hạn trong $\R^2$, tam giác vuông cân $A(0, 0), B(1, 0), C(0, 1)$ biến thành tam giác thường $A'(0, 0), B'(2, 0), C'(1, 3)$ qua phép biến đổi affine $f(x_1, x_2) = (2x_1 + x_2,\; 3x_2)$.
 </Example>
 
-## 3. Hình học afin
+## 2. Các Bất biến đối với Nhóm các Phép Biến đổi Affine
 
-<Definition id="def-s7-8" title="a) Hình học của một nhóm các phép biến đổi">
-Môn học nghiên cứu mọi bất biến đối với nhóm F các phép biến đổi của không gian M gọi là *hình học của nhóm F trên không gian M*.
+<Definition id="def-s7-5" title="Bất biến đối với nhóm F và bất biến affine">
+Một tính chất của hình $H$ được gọi là **bất biến đối với nhóm $F$** nếu tính chất đó không thay đổi khi ta dùng một phép biến đổi bất kỳ $f \in F$ để biến hình $H$ thành một hình khác; nói cách khác, mọi hình $H_1$ tương đương với $H$ đối với nhóm $F$ đều có tính chất đó.
 
-Nếu $F' \subset F$ là nhóm con thì mọi bất biến của nhóm F đều là bất biến của nhóm con F′, nên hình học của nhóm F là một bộ phận của hình học của nhóm F′; hình học của nhóm con F′ phong phú hơn.
+Các tính chất bất biến đối với nhóm các phép biến đổi affine $\mathscr{A}$ trên không gian affine $\mathcal{A}$ được gọi là các **tính chất affine** hay các **bất biến affine**.
 </Definition>
 
-<Definition id="def-s7-9" title="b) Hình học afin">
-Áp dụng vào không gian afin $\mathcal{A} ^{n}$ với nhóm afin *𝒜*$^{n}$: hai hình H$_{1}$, H$_{2}$ của $\mathcal{A} ^{n}$ tương đương đối với *𝒜*$^{n}$ gọi là *tương đương afin*.
-
-Mọi bất biến của nhóm afin là các *bất biến afin*; hình học của nhóm *𝒜*$^{n}$ trên $\mathcal{A} ^{n}$ gọi là *hình học afin n chiều*.
-
-Trong đó: mục tiêu afin là hệ $n+1$ điểm độc lập; đơn hình m chiều xác định bởi $m+1$ điểm độc lập là mở rộng của tứ diện trong không gian 3 chiều; hình hộp m chiều là mở rộng của hình hộp trong không gian 3 chiều.
+<Definition id="def-s7-6" title="Các tính chất affine và khái niệm affine tiêu biểu">
+- **Tính độc lập của hệ điểm:** Tính chất độc lập hay phụ thuộc (không độc lập) của một hệ điểm là tính chất affine, vì mọi phép biến đổi affine đều biến hệ điểm độc lập thành hệ điểm độc lập và biến hệ điểm không độc lập thành hệ điểm không độc lập.
+- **Vị trí tương đối của hai cái phẳng:** Tính chất song song, cắt nhau hay chéo nhau của hai <GlossaryTerm termId="m-phang">cái phẳng</GlossaryTerm> là tính chất affine, vì các quan hệ này không thay đổi qua phép biến đổi affine (chẳng hạn nếu phẳng $\alpha \parallel \beta$ thì qua $f \in \mathscr{A}$ ta cũng có $f(\alpha) \parallel f(\beta)$).
+- **Khái niệm affine:** Các khái niệm hình học được xây dựng thuần túy từ các bất biến affine được gọi là các **khái niệm affine**.
+  - *Thí dụ là khái niệm affine:* Hình tam giác, đường trung tuyến trong một tam giác, hình bình hành, $m$-phẳng, tỉ số đơn của hệ ba điểm thẳng hàng, <GlossaryTerm termId="tam-ti-cu">tâm tỉ cự</GlossaryTerm>, <GlossaryTerm termId="tap-loi">tập lồi</GlossaryTerm>...
+  - *Thí dụ không phải khái niệm affine:* Hình vuông, hình tam giác đều, hình lập phương, đường tròn... không phải là những khái niệm affine vì các hình này bị biến dạng (mất tính bằng nhau của cạnh hoặc góc vuông) qua phép biến đổi affine tổng quát.
 </Definition>
 
-<Remark title="Chú ý">
-Chú ý.
+<Example id="ex-s7-7" title="Đối chiếu tính chất bất biến affine và tính chất không bất biến affine">
+Xét phép biến đổi affine $f(x_1, x_2) = (2x_1 + x_2,\; 3x_2)$ trên $\R^2$ (trang bị thêm chuẩn Euclide thông thường để so sánh):
 
-Các khái niệm liên quan đến độ dài đoạn thẳng và độ lớn của góc (đường cao của tam giác, đường trung trực của đoạn thẳng, đường phân giác của một góc, hình tứ diện đều, hình cầu,…) không phải là khái niệm afin nên không được nghiên cứu trong hình học afin.
+- **Bất biến affine được giữ nguyên:** Hai đường thẳng song song $x_2 = 0$ và $x_2 = 1$ biến thành $x'_2 = 0$ và $x'_2 = 3$, vẫn song song với nhau. Trung điểm $I\left(\dfrac{1}{2}, 0\right)$ của đoạn $AB$ (với $A(0, 0), B(1, 0)$) biến thành $I'(1, 0)$, vẫn là trung điểm của đoạn ảnh $A'B'$ (với $A'(0, 0), B'(2, 0)$).
+- **Đại lượng Euclide bị thay đổi:** Khoảng cách $AB = 1$ biến thành $A'B' = 2$, còn góc vuông $\widehat{BAC} = 90^\circ$ (với $C(0, 1)$) biến thành góc nhọn giữa hai vectơ $\overrightarrow{A'B'} = (2, 0)$ và $\overrightarrow{A'C'} = (1, 3)$ (có tích vô hướng $2 \neq 0$). Do đó độ dài và số đo góc không phải là bất biến affine.
+</Example>
 
-Tuy nhiên: hình vuông tương đương afin với một hình bình hành nào đó, tứ diện đều tương đương afin với một tứ diện bất kì, hình lập phương tương đương afin với một hình hộp xiên bất kì.
+## 3. Hình học Affine theo Quan điểm của Nhóm Biến đổi
 
-Nhận ra tính chất afin của một hình giúp xác định bài toán nào thuộc hình học afin và dùng công cụ phù hợp.
+<Definition id="def-s7-8" title="Hình học của một nhóm các phép biến đổi (Chương trình Erlangen)">
+Môn học nghiên cứu mọi bất biến đối với nhóm các phép biến đổi $F$ của không gian $M$ được gọi là **hình học của nhóm $F$ trên không gian $M$**.
+
+Nếu trên cùng một không gian $M$ có nhiều nhóm các phép biến đổi khác nhau thì trên $M$ có nhiều thứ hình học khác nhau. Giả sử $F$ là một nhóm các phép biến đổi của $M$ và $F'$ là một nhóm con của $F$ ($F' \subset F$). Khi đó mọi phép biến đổi $f \in F'$ đều thuộc $F$; do đó nếu một tính chất không đổi qua mọi phép biến đổi của $F$ thì nó cũng không đổi qua mọi phép biến đổi của $F'$, tức là **mọi bất biến của nhóm lớn $F$ đều là bất biến của nhóm con $F'$** *(đính chính lỗi in tr. 45: bản gốc gõ ngược thứ tự chữ $F'$ và $F$ ở câu này)*.
+
+Nói cách khác, **hình học của nhóm $F$ là một bộ phận của hình học của nhóm con $F'$**; hình học của nhóm con $F'$ phong phú hơn (có nhiều bất biến hơn) hình học của nhóm lớn $F$.
+</Definition>
+
+<Definition id="def-s7-9" title="Hình học affine n chiều">
+Áp dụng cho không gian affine $n$ chiều $\mathcal{A}^n$ với nhóm các phép biến đổi affine $\mathscr{A}^n$ (hay $\Aff(\mathcal{A}^n)$):
+
+- Hai hình $H_1$ và $H_2$ của $\mathcal{A}^n$ tương đương đối với nhóm $\mathscr{A}^n$ được gọi là **tương đương affine**.
+- Mọi bất biến của nhóm $\mathscr{A}^n$ là các **bất biến affine**, và các khái niệm định nghĩa thông qua các bất biến affine là các **khái niệm affine**.
+- Hình học của nhóm $\mathscr{A}^n$ trên không gian affine $\mathcal{A}^n$ được gọi là **hình học affine $n$ chiều**.
+
+Một số khái niệm affine tiêu biểu trong hình học affine $n$ chiều gồm:
+
+1. **<GlossaryTerm termId="muc-tieu-afin">Mục tiêu affine</GlossaryTerm>:** Một hệ có thứ tự gồm $n + 1$ điểm độc lập.
+2. **Đơn hình $m$ chiều:** Xác định bởi $m + 1$ điểm độc lập (sự mở rộng của khái niệm tứ diện trong không gian $3$ chiều).
+3. **Hình hộp $m$ chiều:** Xác định bởi $m + 1$ điểm độc lập (sự mở rộng của khái niệm hình hộp trong không gian $3$ chiều).
+</Definition>
+
+<Remark title="Ý nghĩa phương pháp luận của sự tương đương affine">
+Các khái niệm hình học liên quan đến độ dài đoạn thẳng và độ lớn của góc — như đường cao của tam giác, đường trung trực của đoạn thẳng, đường phân giác của một góc, hình tứ diện đều, hình cầu... — đều **không phải là khái niệm affine**, nên không thuộc đối tượng nghiên cứu của hình học affine.
+
+Tuy nhiên, trong không gian thực (khi nhúng thêm cấu trúc Euclide): **hình vuông** tương đương affine với một hình bình hành bất kỳ, **hình tứ diện đều** tương đương affine với một hình tứ diện bất kỳ, **hình lập phương** tương đương affine với một hình hộp xiên bất kỳ... Nhờ nhận diện đúng bản chất affine của bài toán, ta có thể chọn mục tiêu affine thích hợp (hoặc dùng phép biến đổi affine đưa hình tổng quát về hình chuẩn tắc đơn giản) để chứng minh gọn nhẹ các định lí hình học affine.
 </Remark>
 
-<Example id="ex-s7-10" title="Ví dụ">
-Với $f(x,y) = (2x + y, 3y)$, hình vuông đơn vị (0,0), (1,0), (1,1), (0,1) biến thành (0,0), (2,0), (3,3), (1,3), một hình bình hành (vì $(2,0) + (1,3) = (3,3) + (0,0))$.
-
-Vậy hình vuông tương đương afin với hình bình hành này, và mọi chứng minh chỉ dùng tính chất afin (song song, trung điểm, tỉ số đơn) của hình vuông đều đúng cho hình bình hành bất kì.
+<Example id="ex-s7-10" title="Tương đương affine giữa hình vuông đơn vị và hình bình hành">
+Qua phép biến đổi affine $f(x_1, x_2) = (2x_1 + x_2,\; 3x_2)$, hình vuông đơn vị có $4$ đỉnh $(0, 0), (1, 0), (1, 1), (0, 1)$ biến thành hình bình hành có $4$ đỉnh $(0, 0), (2, 0), (3, 3), (1, 3)$. Mọi tính chất thuần túy affine được kiểm chứng dễ dàng trên hình vuông đơn vị (chẳng hạn hai đường chéo cắt nhau tại trung điểm mỗi đường, đoạn nối trung điểm hai cạnh đối song song với hai cạnh kia...) lập tức đúng cho mọi hình bình hành thông qua phép biến đổi affine $f$.
 </Example>
 
-## Bài tập vận dụng và củng cố
+## 4. Bài tập Vận dụng và Củng cố
 
-<Exercise id="exr-s7-1" title="Nhóm afin và bất biến afin (§7)">
-Phép afin f của A²: x' = 2x + y, y' = x + y. Với A(0,0), B(1,1), C(3,3), so sánh tỉ số đơn (CAB) và độ dài AB với (C'A'B') và A'B'. Kết luận gì?
-
+<Exercise id="exr-s7-50" title="Bài tập 1.50 — Tập hợp các phép tịnh tiến trong A^n làm thành một nhóm">
+Chứng minh rằng tập hợp các phép tịnh tiến trong không gian affine $\mathcal{A}^n$ làm thành một nhóm.
 
 <Hint>
-Tính ảnh A', B', C' rồi so sánh.
+Gọi $\mathcal{T} = \{\, t_{\vec{u}} \mid \vec{u} \in V^n \,\}$ là tập các phép tịnh tiến của $\mathcal{A}^n$. Kiểm tra $\mathcal{T} \neq \varnothing$ và hai điều kiện đóng với phép hợp thành, phép nghịch đảo trong <Ref to="def-s7-2" />.
 </Hint>
 
 <Solution>
-A' = (0,0), B' = (3,2), C' = (9,6).
+Gọi $V^n = \overrightarrow{\mathcal{A}^n}$ là không gian vectơ liên kết của $\mathcal{A}^n$ và $\mathcal{T} = \{\, t_{\vec{u}} \mid \vec{u} \in V^n \,\}$ là tập hợp mọi phép tịnh tiến của $\mathcal{A}^n$ (trong đó $M' = t_{\vec{u}}(M) \iff \overrightarrow{MM'} = \vec{u}$).
 
-(CAB) = 3/2 vì CA = -3·(1,1), CB = -2·(1,1); C'A' = (-9,-6), C'B' = (-6,-4) cho (C'A'B') = 3/2.
+1. **Tính khác rỗng:** Với $\vec{u} = \vec{0} \in V^n$, phép tịnh tiến $t_{\vec{0}} = \id_{\mathcal{A}^n}$ thuộc $\mathcal{T}$, nên $\mathcal{T} \neq \varnothing$.
+2. **Đóng với tích (hợp thành) hai phép biến đổi:** Lấy hai phép tịnh tiến bất kỳ $t_{\vec{u}}, t_{\vec{v}} \in \mathcal{T}$. Với mọi điểm $M \in \mathcal{A}^n$, đặt $M_1 = t_{\vec{v}}(M)$ và $M_2 = t_{\vec{u}}(M_1) = (t_{\vec{u}} \circ t_{\vec{v}})(M)$. Theo quy tắc Chasles:
 
-AB = √2 còn A'B' = √13.
+$$
+\overrightarrow{MM_2} = \overrightarrow{MM_1} + \overrightarrow{M_1M_2} = \vec{v} + \vec{u} = \vec{u} + \vec{v}.
+$$
 
-**Đáp án:** Tỉ số đơn được bảo toàn (= 3/2) nên là bất biến afin; độ dài thay đổi (√2 thành √13) nên không phải bất biến afin.
+   Do đó $t_{\vec{u}} \circ t_{\vec{v}} = t_{\vec{u} + \vec{v}} \in \mathcal{T}$ (vì $\vec{u} + \vec{v} \in V^n$).
+3. **Đóng với phép nghịch đảo:** Với mọi $t_{\vec{u}} \in \mathcal{T}$, xét $t_{-\vec{u}} \in \mathcal{T}$. Theo công thức tích vừa chứng minh:
+
+$$
+t_{\vec{u}} \circ t_{-\vec{u}} = t_{-\vec{u}} \circ t_{\vec{u}} = t_{\vec{0}} = \id_{\mathcal{A}^n},
+$$
+
+   nên $(t_{\vec{u}})^{-1} = t_{-\vec{u}} \in \mathcal{T}$.
+
+Theo <Ref to="def-s7-2" />, $\mathcal{T}$ lập thành một nhóm các phép biến đổi của $\mathcal{A}^n$ (hơn nữa đây là nhóm giao hoán, đẳng cấu với nhóm cộng $(V^n, +)$ và là nhóm con của nhóm affine $\mathscr{A}^n$).
+</Solution>
+</Exercise>
+
+<Exercise id="exr-s7-51" title="Bài tập 1.51 — Định lí Menelaus trong không gian affine">
+Trong không gian affine thực $\mathcal{A}^n$, cho tam giác $ABC$ và các điểm $P, Q, R$ lần lượt nằm trên các đường thẳng $BC, CA, AB$ *(khác với các đỉnh $A, B, C$)*. Chứng minh điều kiện cần và đủ để ba điểm $P, Q, R$ thẳng hàng là:
+
+$$
+(PBC) \cdot (QCA) \cdot (RAB) = 1 \qquad \text{(định lí Menelaus)}.
+$$
+
+<Hint>
+Vì tam giác $ABC$ xác định một $2$-phẳng chứa toàn bộ cấu hình và tỉ số đơn cùng tính thẳng hàng đều là bất biến affine, hãy chọn mục tiêu affine $\{A; B, C\}$ trên mặt phẳng $(ABC)$ và tính tọa độ của $P, Q, R$ theo $x = (PBC), y = (QCA), z = (RAB)$.
+</Hint>
+
+<Solution>
+Ba đỉnh không thẳng hàng $A, B, C$ xác định duy nhất một $2$-phẳng $\pi \subset \mathcal{A}^n$ chứa các đường thẳng $BC, CA, AB$ và ba điểm $P, Q, R$. Trong mặt phẳng affine $\pi$, ta chọn mục tiêu affine $\{A; B, C\}$, khi đó $A(0, 0)$, $B(1, 0)$, $C(0, 1)$.
+
+Vì $P, Q, R$ khác các đỉnh $A, B, C$, các tỉ số đơn $x = (PBC)$, $y = (QCA)$, $z = (RAB)$ đều xác định hữu hạn và thuộc $\R \setminus \{0, 1\}$. Theo định nghĩa tỉ số đơn ($\overrightarrow{MP} = k\overrightarrow{MQ}$):
+
+- $\overrightarrow{PB} = x\overrightarrow{PC} \iff (1 - p_1, -p_2) = x(-p_1, 1 - p_2) \implies P\left(\dfrac{1}{1 - x},\; \dfrac{-x}{1 - x}\right)$.
+- $\overrightarrow{QC} = y\overrightarrow{QA} \iff (-q_1, 1 - q_2) = y(-q_1, -q_2) \implies Q\left(0,\; \dfrac{1}{1 - y}\right)$.
+- $\overrightarrow{RA} = z\overrightarrow{RB} \iff (-r_1, -r_2) = z(1 - r_1, -r_2) \implies R\left(\dfrac{-z}{1 - z},\; 0\right)$.
+
+Ta tính hai vectơ nối từ $Q$ đến $R$ và từ $Q$ đến $P$:
+
+$$
+\overrightarrow{QR} = \left(\frac{-z}{1 - z},\; \frac{-1}{1 - y}\right),
+\qquad
+\overrightarrow{QP} = \left(\frac{1}{1 - x},\; \frac{-x}{1 - x} - \frac{1}{1 - y}\right) = \left(\frac{1}{1 - x},\; \frac{xy - 1}{(1 - x)(1 - y)}\right).
+$$
+
+Ba điểm $P, Q, R$ thẳng hàng khi và chỉ khi hai vectơ $\overrightarrow{QR}$ và $\overrightarrow{QP}$ phụ thuộc tuyến tính (định thức cấp $2$ bằng $0$):
+
+$$
+\det \begin{bmatrix}
+\dfrac{-z}{1 - z} & \dfrac{-1}{1 - y} \\[8pt]
+\dfrac{1}{1 - x} & \dfrac{xy - 1}{(1 - x)(1 - y)}
+\end{bmatrix} = 0
+\iff \frac{-z(xy - 1) + (1 - z)}{(1 - x)(1 - y)(1 - z)} = 0
+\iff 1 - xyz = 0 \iff xyz = 1.
+$$
+
+Vậy $P, Q, R$ thẳng hàng khi và chỉ khi $(PBC) \cdot (QCA) \cdot (RAB) = 1$.
+</Solution>
+</Exercise>
+
+<Exercise id="exr-s7-52" title="Bài tập 1.52 — Định lí Ceva trong không gian affine">
+Trong không gian affine thực $\mathcal{A}^n$, cho tam giác $ABC$ và các điểm $A', B', C'$ lần lượt thuộc các cạnh $BC, CA, AB$ *(khác với các đỉnh $A, B, C$)*. Chứng minh rằng điều kiện cần và đủ để ba đường thẳng $AA', BB', CC'$ đồng quy là:
+
+$$
+(A'BC) \cdot (B'CA) \cdot (C'AB) = -1 \qquad \text{(định lí Ceva)}.
+$$
+
+<Hint>
+Chọn mục tiêu affine $\{A; B, C\}$ trên $2$-phẳng $(ABC)$. Vì $A', B', C'$ nằm ở giữa hai đầu mút của các cạnh $BC, CA, AB$ nên $u = (A'BC) < 0$, $v = (B'CA) < 0$, $w = (C'AB) < 0$; lập phương trình tổng quát của ba đường thẳng $AA', BB', CC'$ để xét sự đồng quy.
+</Hint>
+
+<Solution>
+Trên mặt phẳng affine $\pi = (ABC)$, chọn mục tiêu affine $\{A; B, C\}$ với $A(0, 0), B(1, 0), C(0, 1)$. Đặt $u = (A'BC)$, $v = (B'CA)$, $w = (C'AB)$. Vì $A', B', C'$ nằm bên trong các đoạn thẳng cạnh $BC, CA, AB$ (khác các đỉnh) nên $u < 0$, $v < 0$, $w < 0$. Tương tự <Ref to="exr-s7-51" />, tọa độ của $A', B', C'$ đối với $\{A; B, C\}$ là:
+
+$$
+A'\left(\frac{1}{1 - u},\; \frac{-u}{1 - u}\right), \qquad
+B'\left(0,\; \frac{1}{1 - v}\right), \qquad
+C'\left(\frac{-w}{1 - w},\; 0\right).
+$$
+
+Phương trình của ba đường thẳng $AA', BB', CC'$ lần lượt là:
+
+- $AA'$ đi qua $A(0, 0)$ và $A'\left(\dfrac{1}{1 - u}, \dfrac{-u}{1 - u}\right)$: $u x_1 + x_2 = 0$.
+- $BB'$ đi qua $B(1, 0)$ và $B'\left(0, \dfrac{1}{1 - v}\right)$: $x_1 + (1 - v)x_2 - 1 = 0$.
+- $CC'$ đi qua $C(0, 1)$ và $C'\left(\dfrac{-w}{1 - w}, 0\right)$: $(1 - w)x_1 - w x_2 + w = 0$.
+
+Xét giao của hai đường thẳng $AA'$ và $BB'$: từ $x_2 = -u x_1$ thế vào phương trình của $BB'$ được $\bigl[1 - u(1 - v)\bigr]x_1 = 1$. Vì $u < 0$ và $1 - v > 1 > 0$ nên $1 - u(1 - v) > 1 \neq 0$, chứng tỏ $AA'$ và $BB'$ luôn cắt nhau tại điểm duy nhất:
+
+$$
+S\left(\frac{1}{1 - u + uv},\; \frac{-u}{1 - u + uv}\right).
+$$
+
+Ba đường thẳng $AA', BB', CC'$ đồng quy khi và chỉ khi giao điểm $S$ cũng thuộc đường thẳng $CC'$:
+
+$$
+(1 - w)\frac{1}{1 - u + uv} - w\frac{-u}{1 - u + uv} + w = 0
+\iff (1 - w) + uw + w(1 - u + uv) = 0
+\iff 1 + uvw = 0 \iff uvw = -1.
+$$
+
+Vậy $AA', BB', CC'$ đồng quy khi và chỉ khi $(A'BC) \cdot (B'CA) \cdot (C'AB) = -1$. *(Chú ý mở rộng: nếu cho $A', B', C'$ nằm tùy ý trên các đường thẳng chứa cạnh $BC, CA, AB$ khác các đỉnh thì hệ thức $uvw = -1$ là điều kiện cần và đủ để $AA', BB', CC'$ đồng quy hoặc đôi một song song — trong đó trường hợp song song ứng với $1 - u + uv = 0$).*
+</Solution>
+</Exercise>
+
+<Exercise id="exr-s7-53" title="Bài tập 1.53 — Trọng tâm của đơn hình m chiều và sự đồng quy của các đường nối trọng tâm hai mặt đối diện">
+Cho đơn hình $m$ chiều $A_0 A_1 \dots A_m$ (tức $S(A_0, A_1, \dots, A_m)$ trong $\mathcal{A}^n$ thực). Điểm $G$ được gọi là **trọng tâm** của đơn hình đó nếu:
+
+$$
+\sum_{i=0}^{m} \overrightarrow{GA_i} = \vec{0}.
+$$
+
+a) Chứng tỏ trọng tâm của đơn hình là một khái niệm affine.
+
+b) Chứng minh rằng điều kiện cần và đủ để $G$ là trọng tâm của đơn hình $A_0 A_1 \dots A_m$ là với mọi điểm $O$ ta đều có:
+
+$$
+\overrightarrow{OG} = \frac{1}{m + 1}\sum_{i=0}^{m} \overrightarrow{OA_i}.
+$$
+
+c) Chứng minh rằng trong một đơn hình ($m \ge 2$), các đường thẳng nối hai trọng tâm của hai mặt bên đối diện luôn luôn đi qua một điểm. Phát biểu kết quả đối với trường hợp đơn hình hai chiều và ba chiều.
+
+<Hint>
+Ở câu a, kiểm tra ảnh $f(G)$ qua phép biến đổi affine $f$ chính là trọng tâm của đơn hình ảnh $S(f(A_0), \dots, f(A_m))$. Ở câu c, phân hoạch tập đỉnh $\{A_0, \dots, A_m\} = U \sqcup W$ thành hai tập con khác rỗng rời nhau để xác định hai mặt bên đối diện và dùng tính chất kết hợp của tâm tỉ cự (§4, Bài 1.30).
+</Hint>
+
+<Solution>
+- **a) Trọng tâm của đơn hình là khái niệm affine:**
+  Qua một phép biến đổi affine bất kỳ $f \in \mathscr{A}^n$ (liên kết với tự đẳng cấu tuyến tính $\varphi$), đơn hình $S = S(A_0, \dots, A_m)$ biến thành đơn hình $S' = f(S) = S(A'_0, \dots, A'_m)$ với $A'_i = f(A_i)$ (Định lí 7a, §6). Nếu $G$ thỏa mãn $\sum_{i=0}^{m} \overrightarrow{GA_i} = \vec{0}$ thì ảnh $G' = f(G)$ thỏa mãn:
+
+$$
+\sum_{i=0}^{m} \overrightarrow{G'A'_i} = \sum_{i=0}^{m} \varphi(\overrightarrow{GA_i}) = \varphi\left(\sum_{i=0}^{m} \overrightarrow{GA_i}\right) = \varphi(\vec{0}) = \vec{0}.
+$$
+
+  Do tính duy nhất của tâm tỉ cự (với tổng hệ số $m + 1 \neq 0$), $f(G)$ chính là trọng tâm của đơn hình ảnh $f(S)$. Như vậy khái niệm trọng tâm đơn hình được bảo toàn qua mọi phép biến đổi affine, nên là một khái niệm affine.
+
+- **b) Biểu thức qua điểm gốc $O$ tùy ý:**
+  Với mọi điểm $O \in \mathcal{A}^n$, thay $\overrightarrow{GA_i} = \overrightarrow{OA_i} - \overrightarrow{OG}$ ($i = 0, 1, \dots, m$), ta có chuỗi tương đương:
+
+$$
+\sum_{i=0}^{m} \overrightarrow{GA_i} = \vec{0}
+\iff \sum_{i=0}^{m} (\overrightarrow{OA_i} - \overrightarrow{OG}) = \vec{0}
+\iff (m + 1)\overrightarrow{OG} = \sum_{i=0}^{m} \overrightarrow{OA_i}
+\iff \overrightarrow{OG} = \frac{1}{m + 1}\sum_{i=0}^{m} \overrightarrow{OA_i}.
+$$
+
+- **c) Các đường thẳng nối trọng tâm hai mặt bên đối diện đồng quy tại $G$:**
+  Hai mặt bên của $m$-đơn hình $S(A_0, \dots, A_m)$ được gọi là **đối diện nhau** nếu tập hợp các đỉnh của chúng là hai tập con khác rỗng bù nhau $U$ (gồm $p + 1$ đỉnh, xác định mặt bên $p$ chiều) và $W = \{A_0, \dots, A_m\} \setminus U$ (gồm $m - p$ đỉnh, xác định mặt bên $(m - p - 1)$ chiều, với $0 \le p \le m - 1$).
+
+  Gọi $G_U$ và $G_W$ lần lượt là trọng tâm của hai mặt bên đối diện đó. Theo câu b với gốc $O = G$:
+
+$$
+\sum_{A_i \in U} \overrightarrow{GA_i} = (p + 1)\overrightarrow{GG_U} \qquad \text{và} \qquad \sum_{A_j \in W} \overrightarrow{GA_j} = (m - p)\overrightarrow{GG_W}.
+$$
+
+  Cộng hai vế (hoặc áp dụng tính chất kết hợp tâm tỉ cự), ta được:
+
+$$
+(p + 1)\overrightarrow{GG_U} + (m - p)\overrightarrow{GG_W} = \sum_{i=0}^{m} \overrightarrow{GA_i} = \vec{0} \implies \overrightarrow{GG_U} = -\frac{m - p}{p + 1}\overrightarrow{GG_W}.
+$$
+
+  Vì $G_U \neq G_W$ (hai phẳng chứa hai mặt đối diện chéo nhau, xem Bài 1.20 ở §3), ba điểm $G_U, G, G_W$ thẳng hàng, tức đường thẳng $G_U G_W$ luôn đi qua điểm cố định $G$ (trọng tâm của toàn đơn hình) đối với mọi cặp mặt đối diện!
+
+  - **Phát biểu cho đơn hình $2$ chiều (tam giác $A_0 A_1 A_2$):** Mỗi đỉnh đối diện với cạnh còn lại ($p = 0, m - p = 2$), nên **trong một tam giác, ba đường trung tuyến (nối mỗi đỉnh với trung điểm cạnh đối diện) đồng quy tại trọng tâm $G$ của tam giác** ($\overrightarrow{GA_i} + 2\overrightarrow{GM_i} = \vec{0}$).
+  - **Phát biểu cho đơn hình $3$ chiều (tứ diện $A_0 A_1 A_2 A_3$):** Có hai loại cặp mặt đối diện cùng đi qua trọng tâm $G$ của tứ diện:
+    1. *(Đỉnh và mặt tam giác đối diện, $1 + 3$):* **Bốn đường trọng tuyến nối mỗi đỉnh của tứ diện với trọng tâm mặt tam giác đối diện đồng quy tại trọng tâm $G$** ($\overrightarrow{GA_i} + 3\overrightarrow{GG_i} = \vec{0}$).
+    2. *(Hai cạnh chéo nhau đối diện, $2 + 2$):* **Ba đường thẳng nối trung điểm các cặp cạnh đối diện của tứ diện cũng đồng quy tại chính trọng tâm $G$** (và nhận $G$ làm trung điểm chung vì $2\overrightarrow{GI} + 2\overrightarrow{GJ} = \vec{0} \iff \overrightarrow{GI} + \overrightarrow{GJ} = \vec{0}$).
+</Solution>
+</Exercise>
+
+<Exercise id="exr-s7-54" title="Bài tập 1.54 — Ảnh của một tập lồi qua ánh xạ affine là một tập lồi">
+Chứng minh rằng ảnh của một tập lồi qua ánh xạ affine *(giữa hai không gian affine thực)* là một tập lồi.
+
+<Hint>
+Lấy $P', Q' \in f(X)$ với $P' = f(P), Q' = f(Q)$ ($P, Q \in X$); biểu diễn điểm $M'$ trên đoạn $P'Q'$ qua $\overrightarrow{Q'M'} = \lambda\overrightarrow{Q'P'}$ ($0 \le \lambda \le 1$) để chỉ ra $M' = f(M)$ với $M$ thuộc đoạn $PQ \subset X$.
+</Hint>
+
+<Solution>
+Cho ánh xạ affine $f: \mathcal{A} \to \mathcal{A}'$ giữa hai không gian affine thực $\mathcal{A}, \mathcal{A}'$ có ánh xạ tuyến tính liên kết $\varphi: \overrightarrow{\mathcal{A}} \to \overrightarrow{\mathcal{A}'}$, và cho $X \subset \mathcal{A}$ là một tập lồi.
+
+Lấy hai điểm phân biệt bất kỳ $P', Q' \in f(X)$ *(nếu $f(X)$ rỗng hoặc chỉ có $1$ điểm thì hiển nhiên $f(X)$ lồi)*. Khi đó tồn tại hai điểm $P, Q \in X$ ($P \neq Q$) sao cho $P' = f(P)$ và $Q' = f(Q)$.
+
+Xét một điểm $M'$ bất kỳ thuộc đoạn thẳng $P'Q'$ trong $\mathcal{A}'$. Theo định nghĩa đoạn thẳng ở §5 (chọn gốc tại $Q'$), tồn tại $\lambda \in [0, 1]$ sao cho:
+
+$$
+\overrightarrow{Q'M'} = \lambda\overrightarrow{Q'P'}.
+$$
+
+Trong $\mathcal{A}$, gọi $M$ là điểm xác định bởi $\overrightarrow{QM} = \lambda\overrightarrow{QP}$ ($0 \le \lambda \le 1$). Khi đó $M$ thuộc đoạn thẳng $PQ$; vì $P, Q \in X$ và $X$ là tập lồi nên $M \in X$. Tính ảnh $f(M)$ qua ánh xạ tuyến tính liên kết $\varphi$:
+
+$$
+\overrightarrow{Q'f(M)} = \overrightarrow{f(Q)f(M)} = \varphi(\overrightarrow{QM}) = \varphi(\lambda\overrightarrow{QP}) = \lambda\varphi(\overrightarrow{QP}) = \lambda\overrightarrow{Q'P'} = \overrightarrow{Q'M'}.
+$$
+
+Suy ra $M' = f(M) \in f(X)$. Vậy toàn bộ đoạn thẳng $P'Q'$ nằm trong $f(X)$, chứng tỏ $f(X)$ là một tập lồi.
+</Solution>
+</Exercise>
+
+<Exercise id="exr-s7-55" title="Bài tập 1.55 — Nhóm biến đổi lớn nhất trên không gian affine và hình học tương ứng">
+Nhóm biến đổi lớn nhất của không gian affine $\mathcal{A}$ là nhóm nào? Hình học của nhóm đó nghiên cứu những tính chất gì của không gian affine $\mathcal{A}$?
+
+<Hint>
+Đối chiếu <Ref to="def-s7-1" /> (nhóm mọi song ánh trên tập nền) và <Ref to="def-s7-8" /> để xác định điều kiện hai tập con $H_1, H_2 \subset \mathcal{A}$ tương đương qua một song ánh tùy ý.
+</Hint>
+
+<Solution>
+1. **Nhóm biến đổi lớn nhất của không gian $\mathcal{A}$:**
+   Theo <Ref to="def-s7-1" />, xét $\mathcal{A}$ như một không gian hình học (tập hợp khác rỗng các điểm), nhóm tất cả các phép biến đổi lớn nhất của $\mathcal{A}$ chính là **nhóm đối xứng $\operatorname{Sym}(\mathcal{A})$ gồm toàn bộ các song ánh $f: \mathcal{A} \to \mathcal{A}$** của tập $\mathcal{A}$ lên chính nó (nhóm affine $\mathscr{A}$ chỉ là một nhóm con của $\operatorname{Sym}(\mathcal{A})$).
+2. **Hình học của nhóm $\operatorname{Sym}(\mathcal{A})$ nghiên cứu những tính chất gì?**
+   Hai hình $H_1, H_2 \subset \mathcal{A}$ tương đương đối với nhóm $\operatorname{Sym}(\mathcal{A})$ khi và chỉ khi tồn tại một song ánh $f: \mathcal{A} \to \mathcal{A}$ sao cho $f(H_1) = H_2$ (tức đồng thời biến phần bù $\mathcal{A} \setminus H_1$ thành $\mathcal{A} \setminus H_2$), điều này tương đương với việc $H_1$ cùng lực lượng (bản số) với $H_2$ và $\mathcal{A} \setminus H_1$ cùng lực lượng với $\mathcal{A} \setminus H_2$.
+
+   Do nhóm $\operatorname{Sym}(\mathcal{A})$ quá rộng (làm phá vỡ cả tính thẳng hàng lẫn tính song song), hình học của nó nghèo bất biến nhất và chỉ còn nghiên cứu **các tính chất thuần túy tập hợp (lực lượng / số phần tử của hình và của phần bù của nó: tính rỗng, hữu hạn $k$ điểm, đếm được hay lực lượng continuum...)**. *(Lưu ý thêm: nếu chỉ xét trong phạm vi các phép biến đổi bảo toàn cấu trúc không gian affine của $\mathcal{A}$ thì nhóm lớn nhất là nhóm affine $\mathscr{A}$, nghiên cứu các bất biến affine như Mục 3b).*
+</Solution>
+</Exercise>
+
+<Exercise id="exr-s7-56" title="Bài tập 1.56 — Hai hình bình hành bất kỳ trong mặt phẳng affine luôn tương đương affine">
+Trong mặt phẳng affine $\mathcal{A}^2$, hai hình bình hành bất kỳ có tương đương affine hay không? Vì sao?
+
+<Hint>
+Mỗi hình bình hành $ABCD$ (không suy biến) hoàn toàn được xác định bởi ba đỉnh độc lập $A, B, D$ thông qua quy tắc hình bình hành $\overrightarrow{AC} = \overrightarrow{AB} + \overrightarrow{AD}$ (hay như $2$-hộp $H(A, B, D)$).
+</Hint>
+
+<Solution>
+**Có — hai hình bình hành (không suy biến) bất kỳ trong mặt phẳng affine $\mathcal{A}^2$ luôn tương đương affine với nhau.**
+
+*Chứng minh:* Xét hai hình bình hành bất kỳ $H_1 = ABCD$ (với $\overrightarrow{AC} = \overrightarrow{AB} + \overrightarrow{AD}$) và $H_2 = A'B'C'D'$ (với $\overrightarrow{A'C'} = \overrightarrow{A'B'} + \overrightarrow{A'D'}$) trong $\mathcal{A}^2$. Vì các đỉnh kề nhau không thẳng hàng nên $\{A, B, D\}$ và $\{A', B', D'\}$ là hai hệ gồm $3$ điểm độc lập trong không gian $2$ chiều $\mathcal{A}^2$.
+
+Theo Định lí 4b (§6), tồn tại duy nhất một phép biến đổi affine $f \in \mathscr{A}^2$ (liên kết với tự đẳng cấu tuyến tính $\varphi$) sao cho:
+
+$$
+f(A) = A', \qquad f(B) = B', \qquad f(D) = D'.
+$$
+
+Khi đó đối với đỉnh thứ tư $C$:
+
+$$
+\overrightarrow{A'f(C)} = \varphi(\overrightarrow{AC}) = \varphi(\overrightarrow{AB} + \overrightarrow{AD}) = \varphi(\overrightarrow{AB}) + \varphi(\overrightarrow{AD}) = \overrightarrow{A'B'} + \overrightarrow{A'D'} = \overrightarrow{A'C'},
+$$
+
+suy ra $f(C) = C'$. Vì $f$ bảo toàn đoạn thẳng (và biến $2$-hộp $H(A, B, D)$ thành $2$-hộp $H(A', B', D')$ theo Định lí 7b ở §6), $f$ biến bốn cạnh cùng toàn bộ miền hình bình hành $ABCD$ thành đúng hình bình hành $A'B'C'D'$, nghĩa là $H_1 \overset{(\mathscr{A}^2)}{\sim} H_2$.
+</Solution>
+</Exercise>
+
+<Exercise id="exr-s7-57" title="Bài tập 1.57 — Điều kiện cần và đủ để hai hình thang tương đương affine trong A^2">
+Tìm điều kiện để hai hình thang tương đương affine trong mặt phẳng affine thực $\mathcal{A}^2$.
+
+<Hint>
+Biểu diễn vectơ hai đáy song song của hình thang lồi thứ nhất bởi $\overrightarrow{DC} = k\overrightarrow{AB}$ ($k > 0$) và của hình thang lồi thứ hai bởi $\overrightarrow{D'C'} = k'\overrightarrow{A'B'}$ ($k' > 0$). Chú ý phép biến đổi affine bảo toàn tính song song nên phải biến cặp đáy song song thành cặp đáy song song (giữ nguyên thứ tự hai đáy hoặc hoán đổi hai đáy).
+</Hint>
+
+<Solution>
+Xét hai hình thang (lồi, không suy biến) $H = ABCD$ có hai đáy $AB \parallel CD$ thỏa mãn $\overrightarrow{DC} = k\overrightarrow{AB}$ ($k > 0$), và $H' = A'B'C'D'$ có hai đáy $A'B' \parallel C'D'$ thỏa mãn $\overrightarrow{D'C'} = k'\overrightarrow{A'B'}$ ($k' > 0$).
+
+**Điều kiện cần và đủ để $H$ và $H'$ tương đương affine là tỉ số giữa hai đáy của chúng bằng nhau** (theo thứ tự đáy nhỏ so với đáy lớn), tức là:
+
+$$
+k' = k \qquad \text{hoặc} \qquad k' = \frac{1}{k}.
+$$
+
+1. **Điều kiện cần:** Giả sử tồn tại $f \in \mathscr{A}^2$ (liên kết với $\varphi$) sao cho $f(H) = H'$; khi đó $f$ biến tập $4$ đỉnh và $4$ cạnh của $H$ thành $4$ đỉnh và $4$ cạnh của $H'$, đồng thời bảo toàn quan hệ song song.
+   - Nếu $k = 1$, $H$ là hình bình hành nên $H' = f(H)$ cũng phải là hình bình hành, suy ra $k' = 1 = k$.
+   - Nếu $k \neq 1$, $H$ có duy nhất một cặp cạnh đối song song là $\{AB, CD\}$, nên cặp ảnh $\{f(AB), f(CD)\}$ phải trùng với cặp cạnh đối song song duy nhất $\{A'B', C'D'\}$ của $H'$:
+     - *Khả năng 1 ($f$ biến $AB$ thành $A'B'$ và $CD$ thành $C'D'$):* Do bảo toàn tính lồi (thứ tự đỉnh trên chu vi), hoặc $(A, B, C, D) \mapsto (A', B', C', D')$ cho $\overrightarrow{D'C'} = \varphi(\overrightarrow{DC}) = k\varphi(\overrightarrow{AB}) = k\overrightarrow{A'B'} \implies k' = k$, hoặc $(A, B, C, D) \mapsto (B', A', D', C')$ cho $\overrightarrow{C'D'} = k\overrightarrow{B'A'} \iff \overrightarrow{D'C'} = k\overrightarrow{A'B'} \implies k' = k$.
+     - *Khả năng 2 ($f$ biến $AB$ thành $C'D'$ và $CD$ thành $A'B'$):* Tương tự, $\overrightarrow{A'B'} = k\overrightarrow{D'C'} \implies \overrightarrow{D'C'} = \dfrac{1}{k}\overrightarrow{A'B'} \implies k' = \dfrac{1}{k}$.
+
+2. **Điều kiện đủ:**
+   - Nếu $k' = k$: Vì $\{A, B, D\}$ và $\{A', B', D'\}$ là hai hệ $3$ điểm độc lập trong $\mathcal{A}^2$, gọi $f \in \mathscr{A}^2$ là phép biến đổi affine duy nhất biến $(A, B, D) \mapsto (A', B', D')$. Khi đó $\overrightarrow{D'f(C)} = \varphi(\overrightarrow{DC}) = k\varphi(\overrightarrow{AB}) = k\overrightarrow{A'B'} = k'\overrightarrow{A'B'} = \overrightarrow{D'C'} \implies f(C) = C'$, nên $f(H) = H'$.
+   - Nếu $k' = \dfrac{1}{k}$: Đổi vai trò hai đáy của $H$ (ta có $\overrightarrow{AB} = \dfrac{1}{k}\overrightarrow{DC} = k'\overrightarrow{DC}$); phép biến đổi affine duy nhất $g \in \mathscr{A}^2$ biến $(D, C, A) \mapsto (A', B', D')$ sẽ biến $B \mapsto C'$ vì $\overrightarrow{D'g(B)} = \varphi(\overrightarrow{AB}) = k'\varphi(\overrightarrow{DC}) = k'\overrightarrow{A'B'} = \overrightarrow{D'C'}$, nên $g(H) = H'$.
+</Solution>
+</Exercise>
+
+<Exercise id="exr-s7-58" title="Bài tập 1.58 — Phân loại các định lí thuộc và không thuộc hình học affine">
+Mặt phẳng Ơclit là mặt phẳng affine. Trong những định lí sau đây, định lí nào thuộc hình học affine?
+
+a) Trong một tam giác, ba đường trung tuyến đồng quy.
+
+b) Trong một tam giác, ba đường phân giác trong đồng quy.
+
+c) Trong một hình bình hành, hai đường chéo cắt nhau tại trung điểm của mỗi đường.
+
+d) Hai đường chéo của một hình thoi vuông góc với nhau tại trung điểm của mỗi đường.
+
+<Hint>
+Kiểm tra xem mọi khái niệm và quan hệ xuất hiện trong phát biểu của từng định lí có được xây dựng hoàn toàn từ các bất biến affine (thẳng hàng, song song, cắt nhau, trung điểm / tỉ số đơn) hay phụ thuộc vào độ dài và góc Euclide.
+</Hint>
+
+<Solution>
+Theo <Ref to="def-s7-6" /> và chú ý ở Mục 3:
+
+- **a) "Trong một tam giác, ba đường trung tuyến đồng quy" — THUỘC hình học affine.**
+  *Giải thích:* Hình tam giác ($2$-đơn hình), trung điểm của cạnh (tỉ số đơn bằng $-1$), đường thẳng nối hai điểm và quan hệ đồng quy (cắt nhau tại một điểm chung) đều là các khái niệm và bất biến affine.
+
+- **b) "Trong một tam giác, ba đường phân giác trong đồng quy" — KHÔNG thuộc hình học affine.**
+  *Giải thích:* Đường phân giác trong được định nghĩa là tia chia đôi số đo góc của tam giác. Khái niệm độ lớn của góc không bất biến đối với nhóm biến đổi affine (ảnh của đường phân giác qua một phép biến đổi affine tổng quát không còn là đường phân giác của tam giác ảnh).
+
+- **c) "Trong một hình bình hành, hai đường chéo cắt nhau tại trung điểm của mỗi đường" — THUỘC hình học affine.**
+  *Giải thích:* Hình bình hành ($2$-hộp, xác định bởi các cặp cạnh đối song song), đường chéo, giao điểm của hai đường thẳng và trung điểm đoạn thẳng đều là các khái niệm và tính chất bất biến affine.
+
+- **d) "Hai đường chéo của một hình thoi vuông góc với nhau tại trung điểm của mỗi đường" — KHÔNG thuộc hình học affine.**
+  *Giải thích:* Cả giả thiết *hình thoi* (hình bình hành có các cạnh kề bằng nhau về độ dài) lẫn kết luận *vuông góc* (góc bằng $90^\circ$) đều phụ thuộc trực tiếp vào độ dài đoạn thẳng và số đo góc của hình học Ơclit, không phải là khái niệm affine.
+
+**Kết luận:** Chỉ có hai định lí **a)** và **c)** thuộc hình học affine.
 </Solution>
 </Exercise>
 
 <KeyTakeaways>
-- Tập hợp các phép biến đổi affine của một không gian affine lập thành một nhóm đối với phép hợp thành.
-- Theo quan điểm Klein, hình học affine là khoa học nghiên cứu các tính chất bất biến đối với nhóm affine.
+- Tập hợp $\mathscr{A}^n = \Aff(\mathcal{A}^n)$ tất cả các phép biến đổi affine của $\mathcal{A}^n$ lập thành một nhóm biến đổi (<Ref to="def-s7-2" />), phân hoạch các hình trong $\mathcal{A}^n$ thành các lớp tương đương affine (<Ref to="def-s7-3" />).
+- Theo chương trình Erlangen của Felix Klein, hình học affine $n$ chiều nghiên cứu các tính chất và khái niệm bất biến đối với nhóm $\mathscr{A}^n$ (<Ref to="def-s7-8" />, <Ref to="def-s7-9" />); nếu $F' \subset F$ là nhóm con thì mọi bất biến của nhóm lớn $F$ đều là bất biến của nhóm con $F'$, nên hình học của $F'$ phong phú hơn hình học của $F$.
+- Tính độc lập của hệ điểm, quan hệ song song/cắt nhau/chéo nhau, tỉ số đơn (kéo theo các định lí Menelaus <Ref to="exr-s7-51" /> và Ceva <Ref to="exr-s7-52" />), trọng tâm đơn hình (<Ref to="exr-s7-53" />) và tính lồi (<Ref to="exr-s7-54" />) là các bất biến affine cốt lõi; trong khi độ dài và góc không thuộc hình học affine.
 </KeyTakeaways>
