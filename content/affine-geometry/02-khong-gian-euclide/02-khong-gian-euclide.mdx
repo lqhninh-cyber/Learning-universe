@@ -1,17 +1,19 @@
 ---
 id: khong-gian-euclide
-title: "Không gian Ơclit"
-description: "Định nghĩa không gian Ơclit thông qua không gian vectơ Euclid nền, khoảng cách giữa hai điểm."
+title: 'Không gian Ơclit'
+description: 'Định nghĩa không gian Ơclit, các mô hình mẫu, cấu trúc Ơclit cảm sinh trên phẳng con và các hệ thức hình học nền tảng.'
 estimatedMinutes: 45
 level: basic
-prerequisites: []
+prerequisites:
+  - bo-sung-ve-cac-phep-toan-tren-khong-gian-vecto
 tags:
-  - "không gian Ơclit"
-  - "tích vô hướng"
-  - "khoảng cách"
+  - 'không gian Ơclit'
+  - 'tích vô hướng'
+  - 'phẳng con Ơclit'
+  - 'đẳng thức Euler'
 sources:
   - source: gt-hhcc-nmh-2004
-    pages: '88-95'
+    pages: '87-88'
     sections: '§2'
 status: published
 version: 1.0.0
@@ -24,81 +26,199 @@ authoring:
 
 ## 1. Định nghĩa
 
-<Definition id="def-e2-1" title="Định nghĩa">
-*Không gian Ơclit* là một loại không gian afin liên kết với không gian vectơ Ơclit hữu hạn chiều.
+<Definition id="def-e2-1" title="Định nghĩa không gian Ơclit">
+<GlossaryTerm termId="khong-gian-euclide">Không gian Ơclit</GlossaryTerm> là một loại không gian affine liên kết với một không gian vectơ Ơclit hữu hạn chiều.
 
-Không gian Ơclit thường kí hiệu là $\mathbb{E}$; không gian vectơ Ơclit liên kết kí hiệu là $V _{E}$ hoặc **Ē**.
-
-Không gian Ơclit gọi là *n chiều*, kí hiệu $\mathbb{E} ^{n}$, nếu không gian vectơ Ơclit liên kết có số chiều bằng n.
+- Không gian Ơclit thường được kí hiệu là $\mathcal{E}$ *(trong bản in gốc kí hiệu bằng chữ in đậm $E$, một số tài liệu kí hiệu $\mathbb{E}$)*.
+- Không gian vectơ Ơclit liên kết với $\mathcal{E}$ được kí hiệu là $V_E$ hoặc $\overrightarrow{\mathcal{E}}$.
+- Không gian Ơclit được gọi là *$n$ chiều*, kí hiệu là $\mathcal{E}^n$, nếu không gian vectơ Ơclit liên kết với nó có số chiều bằng $n$ ($\dim \overrightarrow{\mathcal{E}^n} = n$, kí hiệu $V_E^n$ hoặc $\overrightarrow{\mathcal{E}^n}$).
 </Definition>
 
 ## 2. Các thí dụ
 
-a) Không gian Ơclit ba chiều thông thường được học trong chương trình toán ở bậc phổ thông được kí hiệu là $\mathbb{E} ^{3}$.
+<Example id="ex-e2-a" title="a) Không gian Ơclit ba chiều và mặt phẳng Ơclit phổ thông">
+Không gian Ơclit ba chiều thông thường được học trong chương trình toán ở bậc phổ thông được kí hiệu là $\mathcal{E}^3$. Trong không gian này, mặt phẳng Ơclit là không gian Ơclit hai chiều và được kí hiệu là $\mathcal{E}^2$.
 
-Trong không gian này, mặt phẳng Ơclit là không gian Ơclit hai chiều và được kí hiệu là $\mathbb{E} ^{2}$.
-
-Các không gian vectơ **Ē**$^{3}$ và **Ē**$^{2}$ là không gian các vectơ tự do ba chiều và hai chiều.
-
-Tích vô hướng trong **Ē**$^{3}$ và **Ē**$^{2}$ được định nghĩa như sau: $\vec{a}·\vec{b} = |\vec{a}||\vec{b}|cos(\vec{a},\vec{b})$, trong đó $|\vec{a}|, |\vec{b}|$ là độ dài các vectơ $\vec{a}$, $\vec{b}$ còn $(\vec{a},\vec{b})$ là góc giữa hai vectơ $\vec{a}$, $\vec{b}$.
-
-b) Trong mô hình số thực $V ^{n}$, nếu định nghĩa tích vô hướng của $\vec{a} = (a_{1}, \dots ,a_{n})$ và $\vec{b} = (b_{1}, \dots ,b_{n})$ là $a_{1}b_{1} + \dots + a_{n}b_{n}$ thì mô hình đó trở thành không gian vectơ Ơclit n chiều, và không gian afin liên kết là không gian $\mathbb{E} ^{n}$.
-
-c) Nếu $\mathbb{E} ^{n}$ là không gian Ơclit thì mỗi phẳng α của nó cũng là một không gian Ơclit liên kết với ᾱ$_{E}$, mà tích vô hướng trong ᾱ$_{E}$ được cảm sinh bởi tích vô hướng của **Ē**$^{n}$.
-
-<Remark title="Chú ý">
-Chú ý.
-
-Theo định nghĩa, không gian Ơclit là một không gian afin nên có các khái niệm và tính chất afin.
-
-Ngoài ra còn có các khái niệm vuông góc của các phẳng, độ dài các đoạn thẳng, độ lớn của góc,… mà không gian afin không có; chúng liên quan đến tích vô hướng.
-</Remark>
-
-<Example id="ex-e2-2" title="Ví dụ">
-Mặt phẳng $\alpha : z = 0$ trong $\mathbb{E}^{3} = \R^{3}$ có phương $\overline{\alpha} = {(x,y,0)}$.
-
-Tích vô hướng cảm sinh: $(1,1,0)·(1,-1,0) = 1 - 1 = 0$, nên trong α hai vectơ này vuông góc; $|(1,1,0)| = \sqrt{2}. \alpha$ là $\mathbb{E} ^{2}$.
+Các không gian vectơ liên kết $\overrightarrow{\mathcal{E}^3}$ và $\overrightarrow{\mathcal{E}^2}$ lần lượt là không gian các vectơ tự do ba chiều và hai chiều. Tích vô hướng trong $\overrightarrow{\mathcal{E}^3}$ và $\overrightarrow{\mathcal{E}^2}$ được định nghĩa bởi:
+$$
+\vec{a} \cdot \vec{b} = |\vec{a}|\,|\vec{b}|\cos\widehat{(\vec{a}, \vec{b})},
+$$
+trong đó $|\vec{a}|, |\vec{b}|$ là độ dài của các vectơ $\vec{a}, \vec{b}$ còn $\widehat{(\vec{a}, \vec{b})}$ là góc giữa hai vectơ $\vec{a}, \vec{b}$ *(với quy ước $\vec{a} \cdot \vec{b} = 0$ nếu một trong hai vectơ bằng $\vec{0}$)*.
 </Example>
 
-## Bài tập vận dụng và củng cố
+<Example id="ex-e2-b" title="b) Mô hình số thực của không gian Ơclit n chiều">
+Trong mô hình số thực $V^n = \mathbb{R}^n$, với hai vectơ $\vec{a} = (a_1, a_2, \dots, a_n)$ và $\vec{b} = (b_1, b_2, \dots, b_n)$, nếu ta định nghĩa tích vô hướng của chúng là số thực:
+$$
+\vec{a} \cdot \vec{b} = a_1 b_1 + a_2 b_2 + \dots + a_n b_n = \sum_{i=1}^n a_i b_i
+$$
+thì phép toán này thỏa mãn đầy đủ $4$ tiên đề của tích vô hướng:
+1. $\vec{a} \cdot \vec{b} = \sum_{i=1}^n a_i b_i = \sum_{i=1}^n b_i a_i = \vec{b} \cdot \vec{a}$;
+2. $\vec{a} \cdot (\vec{b} + \vec{c}) = \sum_{i=1}^n a_i(b_i + c_i) = \sum_{i=1}^n a_i b_i + \sum_{i=1}^n a_i c_i = \vec{a} \cdot \vec{b} + \vec{a} \cdot \vec{c}$;
+3. $(\lambda\vec{a}) \cdot \vec{b} = \sum_{i=1}^n (\lambda a_i)b_i = \lambda \sum_{i=1}^n a_i b_i = \lambda(\vec{a} \cdot \vec{b})$;
+4. $\vec{a} \cdot \vec{a} = \sum_{i=1}^n a_i^2 \ge 0$, và dấu $"="$ xảy ra khi và chỉ khi $a_1 = a_2 = \dots = a_n = 0 \iff \vec{a} = \vec{0}$.
 
-<Exercise id="exr-e2-1" title="Không gian Ơclit Eⁿ và phẳng trong Eⁿ (§2)">
-Trong E³ (tích vô hướng chuẩn), phẳng  $ alpha$ : x + y + z = 0 có là không gian Ơclit không? Cho biết số chiều và một cơ sở của không gian vectơ liên kết.
+Do đó $V^n$ trở thành một không gian vectơ Ơclit $n$ chiều $V_E^n$. Khi đó không gian affine số thực liên kết với $V_E^n$ (tập điểm $\mathbb{R}^n$ cùng ánh xạ $\varphi(M, N) = \overrightarrow{MN} = (y_1 - x_1, \dots, y_n - x_n)$ với $M = (x_i), N = (y_i)$) chính là mô hình số thực của không gian Ơclit $n$ chiều $\mathcal{E}^n$.
+</Example>
 
+<Proposition id="prop-e2-c" title="c) Cấu trúc không gian Ơclit cảm sinh trên mỗi phẳng con">
+Nếu $\mathcal{E}^n$ là không gian Ơclit liên kết với không gian vectơ Ơclit $\overrightarrow{\mathcal{E}^n}$ thì mỗi $m$-phẳng $\alpha$ của $\mathcal{E}^n$ ($0 \le m \le n$) cũng là một không gian Ơclit $m$ chiều liên kết với không gian vectơ Ơclit $\overrightarrow{\alpha}_E$, trong đó tích vô hướng trong $\overrightarrow{\alpha}_E$ được cảm sinh (thu hẹp) bởi tích vô hướng của $\overrightarrow{\mathcal{E}^n}$.
+</Proposition>
+
+<Proof>
+Theo lý thuyết không gian affine ở Chương I, mỗi $m$-phẳng $\alpha \subset \mathcal{E}^n$ bản thân nó là một không gian affine $m$ chiều liên kết với không gian vectơ con hữu hạn chiều $\overrightarrow{\alpha} \subset \overrightarrow{\mathcal{E}^n}$ ($\dim \overrightarrow{\alpha} = m$).
+
+Xét phép toán thu hẹp tích vô hướng của $\overrightarrow{\mathcal{E}^n}$ xuống cặp vectơ thuộc $\overrightarrow{\alpha} \times \overrightarrow{\alpha}$. Vì mọi vectơ $\vec{u}, \vec{v}, \vec{w} \in \overrightarrow{\alpha}$ đều thuộc $\overrightarrow{\mathcal{E}^n}$ và $\overrightarrow{\alpha}$ đóng kín với phép cộng vectơ cùng phép nhân số thực, nên cả $4$ tiên đề đối xứng, phân phối, kết hợp với số thực và xác định dương ($\vec{u} \cdot \vec{u} \ge 0$, dấu $"="$ khi và chỉ khi $\vec{u} = \vec{0}$) đều tự động nghiệm đúng trên $\overrightarrow{\alpha}$. Như vậy $\overrightarrow{\alpha}$ với tích vô hướng cảm sinh trở thành không gian vectơ Ơclit $m$ chiều $\overrightarrow{\alpha}_E$, kéo theo $\alpha$ là một không gian Ơclit $m$ chiều.
+</Proof>
+
+<Remark id="rem-e2-1" title="Chú ý (tr. 88)">
+Theo định nghĩa, không gian Ơclit cũng là một không gian affine nên trong không gian Ơclit vẫn có các khái niệm và các tính chất của không gian affine (như sự thẳng hàng, đồng phẳng, giao và tổng các phẳng, tỉ số đơn, tâm tỉ cự, tập lồi, ánh xạ affine...).
+
+Mặt khác, trong không gian Ơclit còn có thêm các tính chất và khái niệm không có trong không gian affine thuần túy, như *sự vuông góc của các phẳng*, *độ dài các đoạn thẳng* ($d(A, B) = |\overrightarrow{AB}|$), *độ lớn của góc*, *thể tích*... Các khái niệm và tính chất mới này liên quan mật thiết đến tích vô hướng được trang bị thêm trong không gian vectơ Ơclit $\overrightarrow{\mathcal{E}^n}$ liên kết với không gian affine đó.
+</Remark>
+
+<Example id="ex-e2-2" title="Ví dụ minh họa phẳng con trong mô hình số thực">
+Trong mô hình số thực $\mathcal{E}^3$ (trang bị tích vô hướng chính tắc $\vec{x} \cdot \vec{y} = x_1 y_1 + x_2 y_2 + x_3 y_3$), xét mặt phẳng:
+$$
+\alpha: x_1 + x_2 + x_3 - 1 = 0.
+$$
+Mặt phẳng $\alpha$ đi qua điểm $A(1, 0, 0)$ và có phương là không gian vectơ con hai chiều:
+$$
+\overrightarrow{\alpha} = \{(u_1, u_2, u_3) \in \mathbb{R}^3 \mid u_1 + u_2 + u_3 = 0\}.
+$$
+Hai vectơ $\vec{u} = (1, -1, 0)$ và $\vec{v} = (1, 1, -2)$ độc lập tuyến tính nên lập thành một cơ sở của $\overrightarrow{\alpha}$. Theo tích vô hướng cảm sinh từ $\overrightarrow{\mathcal{E}^3}$, ta có:
+$$
+\vec{u} \cdot \vec{v} = 1 \cdot 1 + (-1) \cdot 1 + 0 \cdot (-2) = 0, \qquad |\vec{u}| = \sqrt{2}, \qquad |\vec{v}| = \sqrt{6}.
+$$
+Vậy $\vec{u} \perp \vec{v}$ ngay trong $\overrightarrow{\alpha}_E$, và $\alpha$ mang cấu trúc của một không gian Ơclit hai chiều.
+</Example>
+
+## Bài tập
+
+*(Các bài tập hình học không phụ thuộc hệ tọa độ trực chuẩn trích từ cụm bài tập §1, §2, §3 cuối Chương II, trang 136–137).*
+
+<Exercise id="exr-e2-1" title="Bài tập 2.14 (Thể tích tứ diện có hai cạnh đối trượt trên hai đường thẳng chéo nhau — tr. 136–137)">
+Cho hai đoạn thẳng $AB$ và $CD$ có độ dài không đổi lần lượt nằm trên hai đường thẳng chéo nhau $d_1$ và $d_2$ trong không gian $\mathcal{E}^3$. Chứng minh rằng thể tích của tứ diện $ABCD$ không phụ thuộc vào vị trí của các đoạn thẳng $AB$ và $CD$ trên $d_1$ và $d_2$.
 
 <Hint>
-Phẳng  $ alpha$  của Eⁿ cũng là không gian Ơclit với tích vô hướng cảm sinh từ không gian vectơ liên kết.
+Cố định một điểm $A_0 \in d_1$ và một điểm $C_0 \in d_2$, dùng quy tắc Chasles tách $\overrightarrow{AC} = \overrightarrow{AA_0} + \overrightarrow{A_0C_0} + \overrightarrow{C_0C}$ và đưa thể tích tứ diện về tích hỗn hợp $V_{ABCD} = \dfrac{1}{6}\bigl|(\overrightarrow{AB}, \overrightarrow{AC}, \overrightarrow{AD})\bigr|$.
 </Hint>
 
 <Solution>
-Không gian vectơ liên kết ᾱ = \{u : u₁ + u₂ + u₃ = 0\} là không gian con 2 chiều của R³.
+Gọi $\ell_1 = |\overrightarrow{AB}| > 0$ và $\ell_2 = |\overrightarrow{CD}| > 0$ là độ dài không đổi của hai đoạn thẳng, đồng thời chọn hai vectơ chỉ phương đơn vị cố định $\vec{u}_1$ của $d_1$ và $\vec{u}_2$ của $d_2$ ($|\vec{u}_1| = |\vec{u}_2| = 1$). Vì $AB \subset d_1$ và $CD \subset d_2$, ta có $\overrightarrow{AB} = \varepsilon_1 \ell_1 \vec{u}_1$ và $\overrightarrow{CD} = \varepsilon_2 \ell_2 \vec{u}_2$ với $\varepsilon_1, \varepsilon_2 \in \{-1, 1\}$.
 
-Cơ sở: (1,-1,0), (0,1,-1); tích vô hướng cảm sinh từ R³ làm  $ alpha$  thành không gian Ơclit.
-
-**Đáp án:** Có, là không gian Ơclit hai chiều với cơ sở (1,-1,0), (0,1,-1)
+Chọn cố định một điểm $A_0 \in d_1$ và một điểm $C_0 \in d_2$. Khi $AB$ trượt trên $d_1$ và $CD$ trượt trên $d_2$, tồn tại các số thực $\lambda, \mu \in \mathbb{R}$ sao cho $\overrightarrow{AA_0} = \lambda\vec{u}_1$ và $\overrightarrow{C_0C} = \mu\vec{u}_2$. Theo quy tắc Chasles trong không gian affine nền của $\mathcal{E}^3$:
+$$
+\overrightarrow{AC} = \overrightarrow{AA_0} + \overrightarrow{A_0C_0} + \overrightarrow{C_0C} = \lambda\vec{u}_1 + \overrightarrow{A_0C_0} + \mu\vec{u}_2, \qquad \overrightarrow{AD} = \overrightarrow{AC} + \overrightarrow{CD}.
+$$
+Thể tích khối tứ diện $ABCD$ bằng $\dfrac{1}{6}$ thể tích hình hộp dựng trên ba vectơ $\overrightarrow{AB}, \overrightarrow{AC}, \overrightarrow{AD}$. Theo ý nghĩa hình học và tính chất hoán vị vòng quanh của tích hỗn hợp (§1, Mục 4), ta biến đổi:
+$$
+\begin{aligned}
+(\overrightarrow{AB}, \overrightarrow{AC}, \overrightarrow{AD})
+&= (\overrightarrow{AB} \wedge \overrightarrow{AC}) \cdot (\overrightarrow{AC} + \overrightarrow{CD}) \\
+&= (\overrightarrow{AB} \wedge \overrightarrow{AC}) \cdot \overrightarrow{AC} + (\overrightarrow{AB} \wedge \overrightarrow{AC}) \cdot \overrightarrow{CD} \\
+&= 0 - (\overrightarrow{AB} \wedge \overrightarrow{CD}) \cdot \overrightarrow{AC}.
+\end{aligned}
+$$
+Chú ý rằng vectơ $\overrightarrow{AB} \wedge \overrightarrow{CD} = \varepsilon_1 \varepsilon_2 \ell_1 \ell_2 (\vec{u}_1 \wedge \vec{u}_2)$ vuông góc với cả $\vec{u}_1$ và $\vec{u}_2$, nên $(\vec{u}_1 \wedge \vec{u}_2) \cdot \vec{u}_1 = 0$ và $(\vec{u}_1 \wedge \vec{u}_2) \cdot \vec{u}_2 = 0$. Thay $\overrightarrow{AC} = \lambda\vec{u}_1 + \overrightarrow{A_0C_0} + \mu\vec{u}_2$ vào biểu thức trên, các số hạng chứa $\lambda$ và $\mu$ đều triệt tiêu:
+$$
+\bigl|(\overrightarrow{AB}, \overrightarrow{AC}, \overrightarrow{AD})\bigr| = \ell_1 \ell_2 \bigl|(\vec{u}_1 \wedge \vec{u}_2) \cdot (\lambda\vec{u}_1 + \overrightarrow{A_0C_0} + \mu\vec{u}_2)\bigr| = \ell_1 \ell_2 \bigl|(\vec{u}_1 \wedge \vec{u}_2) \cdot \overrightarrow{A_0C_0}\bigr|.
+$$
+Do đó thể tích tứ diện (với $d_1, d_2$ chéo nhau) là:
+$$
+V_{ABCD} = \frac{1}{6}\ell_1 \ell_2 \bigl|(\vec{u}_1 \wedge \vec{u}_2) \cdot \overrightarrow{A_0C_0}\bigr| > 0,
+$$
+chỉ phụ thuộc vào độ dài $\ell_1, \ell_2$ và hai đường thẳng cố định $d_1, d_2$, hoàn toàn không phụ thuộc vào vị trí của $AB$ trên $d_1$ và $CD$ trên $d_2$.
 </Solution>
 </Exercise>
 
-<Exercise id="exr-e2-2" title="Tích vô hướng tổng quát (§1, §2)">
-Trên R² xét a·b = a₁b₁ + 2a₂b₂. Chứng minh a·a  $ ge$  0 với dấu "=" khi và chỉ khi a = 0; với a = (1,1), b = (2,-1) tính a·b, |a| và cho biết a  $ perp$  b không (theo tích vô hướng này).
-
+<Exercise id="exr-e2-2" title="Bài tập 2.15 (Đẳng thức bốn điểm Euler và các hệ quả hình học — tr. 137)">
+Trong không gian Ơclit $\mathcal{E}^3$ cho bốn điểm $A, B, C, D$ tùy ý. Chứng minh rằng:
+$$
+\overrightarrow{AB} \cdot \overrightarrow{CD} + \overrightarrow{AC} \cdot \overrightarrow{DB} + \overrightarrow{AD} \cdot \overrightarrow{BC} = 0.
+$$
+Từ đẳng thức trên hãy suy ra một vài mệnh đề quen biết trong hình học.
 
 <Hint>
-Kiểm tra 4 tiên đề (đối xứng, tuyến tính, dương xác định); a  $ perp$  b khi a·b = 0.
+Dùng quy tắc Chasles biểu diễn $\overrightarrow{CD} = \overrightarrow{AD} - \overrightarrow{AC}$, $\overrightarrow{DB} = \overrightarrow{AB} - \overrightarrow{AD}$, $\overrightarrow{BC} = \overrightarrow{AC} - \overrightarrow{AB}$ rồi khai triển theo tính chất phân phối của tích vô hướng. Để suy ra hệ quả, xét điều kiện vuông góc $\vec{u} \cdot \vec{v} = 0$ trong mặt phẳng tam giác và trong tứ diện.
 </Hint>
 
 <Solution>
-a·a = a₁² + 2a₂²  $ ge$  0 và bằng 0 khi a₁ = a₂ = 0.
+**1. Chứng minh đẳng thức *(đúng tổng quát trong mọi không gian Ơclit $\mathcal{E}^n$)*:**
 
-a·b = 1·2 + 2·1·(-1) = 0; |a| = √(1 + 2) = √3.
+Áp dụng quy tắc Chasles với gốc tại điểm $A$:
+$$
+\overrightarrow{CD} = \overrightarrow{AD} - \overrightarrow{AC}, \qquad \overrightarrow{DB} = \overrightarrow{AB} - \overrightarrow{AD}, \qquad \overrightarrow{BC} = \overrightarrow{AC} - \overrightarrow{AB}.
+$$
+Thay vào vế trái của đẳng thức và áp dụng tính chất phân phối, đối xứng của tích vô hướng:
+$$
+\begin{aligned}
+\overrightarrow{AB} \cdot \overrightarrow{CD} + \overrightarrow{AC} \cdot \overrightarrow{DB} + \overrightarrow{AD} \cdot \overrightarrow{BC}
+&= \overrightarrow{AB} \cdot (\overrightarrow{AD} - \overrightarrow{AC}) + \overrightarrow{AC} \cdot (\overrightarrow{AB} - \overrightarrow{AD}) + \overrightarrow{AD} \cdot (\overrightarrow{AC} - \overrightarrow{AB}) \\
+&= \overrightarrow{AB} \cdot \overrightarrow{AD} - \overrightarrow{AB} \cdot \overrightarrow{AC} + \overrightarrow{AC} \cdot \overrightarrow{AB} - \overrightarrow{AC} \cdot \overrightarrow{AD} + \overrightarrow{AD} \cdot \overrightarrow{AC} - \overrightarrow{AD} \cdot \overrightarrow{AB} \\
+&= 0.
+\end{aligned}
+$$
 
-a·b = 0 nên a  $ perp$  b (theo tích vô hướng chuẩn thì a·b = 2 - 1 = 1  $ neq$  0).
+**2. Một số mệnh đề hình học quen biết suy ra từ đẳng thức trên:**
 
-**Đáp án:** a·b = 0, |a| = √3, a  $ perp$  b theo tích vô hướng đã cho
+- **Mệnh đề 1 (Định lí ba đường cao của một tam giác đồng quy):** Trong mặt phẳng Ơclit $\mathcal{E}^2 \subset \mathcal{E}^3$, cho tam giác $ABC$. Gọi $H$ là giao điểm của đường cao kẻ từ $B$ (vuông góc với $AC$) và đường cao kẻ từ $C$ (vuông góc với $AB$). Áp dụng đẳng thức trên cho bốn điểm $A, B, C, H$:
+  $$
+  \overrightarrow{AB} \cdot \overrightarrow{CH} + \overrightarrow{AC} \cdot \overrightarrow{HB} + \overrightarrow{AH} \cdot \overrightarrow{BC} = 0.
+  $$
+  Vì $CH \perp AB$ và $BH \perp AC$ nên $\overrightarrow{AB} \cdot \overrightarrow{CH} = 0$ và $\overrightarrow{AC} \cdot \overrightarrow{HB} = 0$. Đẳng thức rút gọn thành $\overrightarrow{AH} \cdot \overrightarrow{BC} = 0 \implies AH \perp BC$, chứng tỏ đường cao kẻ từ $A$ cũng đi qua trực tâm $H$.
+
+- **Mệnh đề 2 (Tính chất tứ diện trực tâm trong $\mathcal{E}^3$):** Trong một tứ diện $ABCD$, nếu hai cặp cạnh đối vuông góc với nhau — chẳng hạn $AB \perp CD$ và $AC \perp BD$ — thì $\overrightarrow{AB} \cdot \overrightarrow{CD} = 0$ và $\overrightarrow{AC} \cdot \overrightarrow{DB} = 0$; từ đẳng thức bốn điểm suy ra ngay $\overrightarrow{AD} \cdot \overrightarrow{BC} = 0$, tức cặp cạnh đối thứ ba $AD$ và $BC$ cũng vuông góc với nhau.
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e2-3" title="Bài tập 2.16 (Bất đẳng thức độ dài cho bốn điểm bất kì trong không gian Ơclit — tr. 137)">
+Chứng minh rằng với bốn điểm bất kì $A, B, C, D$ của không gian Ơclit $\mathcal{E}^n$ ta đều có:
+$$
+d(A, B) + d(C, D) + d(A, C) + d(B, D) \ge d(A, D) + d(B, C),
+$$
+trong đó $d(M, N) = |\overrightarrow{MN}|$ là độ dài đoạn thẳng nối $M$ và $N$ *(bản in gốc tr. 137 viết tắt là $d(AB) + d(CD) + d(AC) + d(BD) \ge d(AD) + d(BC)$)*.
+
+<Hint>
+Áp dụng bất đẳng thức tam giác $|\vec{u} + \vec{v}| \le |\vec{u}| + |\vec{v}|$ cho các cách phân tích Chasles của $\overrightarrow{AD}$ (qua $B$ và qua $C$) cũng như của $\overrightarrow{BC}$ (qua $A$ và qua $D$), rồi lấy trung bình cộng.
+</Hint>
+
+<Solution>
+Với mọi cặp điểm $M, N \in \mathcal{E}^n$, ta có $d(M, N) = |\overrightarrow{MN}| = |\overrightarrow{NM}| = d(N, M)$. Từ bất đẳng thức tam giác của chuẩn vectơ $|\vec{u} + \vec{v}| \le |\vec{u}| + |\vec{v}|$ (đã chứng minh từ bất đẳng thức Cauchy–Bunyakovsky–Schwarz ở Bài 2.1) và quy tắc Chasles, ta viết được bốn đánh giá sau:
+
+1. Phân tích $\overrightarrow{AD}$ qua $B$ và qua $C$:
+   $$
+   d(A, D) = |\overrightarrow{AB} + \overrightarrow{BD}| \le |\overrightarrow{AB}| + |\overrightarrow{BD}| = d(A, B) + d(B, D),
+   $$
+   $$
+   d(A, D) = |\overrightarrow{AC} + \overrightarrow{CD}| \le |\overrightarrow{AC}| + |\overrightarrow{CD}| = d(A, C) + d(C, D).
+   $$
+   Cộng từng vế hai bất đẳng thức trên được:
+   $$
+   2d(A, D) \le d(A, B) + d(C, D) + d(A, C) + d(B, D). \tag{1}
+   $$
+
+2. Tương tự, phân tích $\overrightarrow{BC}$ qua $A$ và qua $D$:
+   $$
+   d(B, C) = |\overrightarrow{BA} + \overrightarrow{AC}| \le |\overrightarrow{BA}| + |\overrightarrow{AC}| = d(A, B) + d(A, C),
+   $$
+   $$
+   d(B, C) = |\overrightarrow{BD} + \overrightarrow{DC}| \le |\overrightarrow{BD}| + |\overrightarrow{DC}| = d(B, D) + d(C, D).
+   $$
+   Cộng từng vế hai bất đẳng thức này được:
+   $$
+   2d(B, C) \le d(A, B) + d(C, D) + d(A, C) + d(B, D). \tag{2}
+   $$
+
+Cộng từng vế $(1)$ và $(2)$ rồi chia hai vế cho $2 > 0$, ta thu được bất đẳng thức cần chứng minh:
+$$
+d(A, D) + d(B, C) \le d(A, B) + d(C, D) + d(A, C) + d(B, D).
+$$
+*(Dấu $"="$ xảy ra chẳng hạn khi $A \equiv B$ và $C \equiv D$, hoặc $A \equiv C$ và $B \equiv D$).*
 </Solution>
 </Exercise>
 
 <KeyTakeaways>
-- Không gian Ơclit là không gian affine mà không gian vectơ liên kết được trang bị tích vô hướng xác định dương.
-- Khoảng cách giữa hai điểm được định nghĩa bằng độ dài của vectơ nối hai điểm đó.
+- Không gian Ơclit $\mathcal{E}^n$ là không gian affine liên kết với không gian vectơ Ơclit $n$ chiều $\overrightarrow{\mathcal{E}^n}$ (hay $V_E^n$).
+- Mỗi $m$-phẳng con $\alpha \subset \mathcal{E}^n$ tự nhiên kế thừa cấu trúc không gian Ơclit $m$ chiều thông qua tích vô hướng cảm sinh trên phương $\overrightarrow{\alpha}_E$.
+- Sự kết hợp giữa quy tắc Chasles của không gian affine và tích vô hướng của $\overrightarrow{\mathcal{E}^n}$ cho phép chứng minh ngắn gọn các định lí độ dài, góc, trực giao và thể tích mà không phụ thuộc vào cách chọn hệ tọa độ.
 </KeyTakeaways>

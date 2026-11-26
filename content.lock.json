@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-26T15:30:19.125Z",
+  "updatedAt": "2026-11-26T15:54:37.144Z",
   "lessons": {
     "tap-hop-anh-xa-va-cong-cu-so-hoc": {
       "path": "content/algebraic-structures/00-ngon-ngu-va-cong-cu-dai-so/01-tap-hop-anh-xa-va-cong-cu-so-hoc.mdx",
@@ -948,31 +948,39 @@
       "path": "content/affine-geometry/02-khong-gian-euclide/01-bo-sung-ve-cac-phep-toan-tren-khong-gian-vecto.mdx",
       "status": "published",
       "version": "1.0.0",
-      "sha256": "eca27e92943414e2874fb27cbdc069f7b316d9bba59247cf26c72a15ccaa7f94",
+      "sha256": "6dbf0ea763c88c868d528df6f6f427d456969e1965c39637e706d50af69653bb",
       "numberedBlocks": {
         "def-e1-1": "2.1.1",
+        "thm-e1-cbs": "2.1.2",
+        "def-e1-2": "2.1.3",
         "ex-e1-2": "2.1.1",
-        "def-e1-3": "2.1.2",
-        "thm-e1-4": "2.1.3",
+        "def-e1-3": "2.1.4",
+        "thm-e1-4": "2.1.5",
         "ex-e1-5": "2.1.2",
-        "def-e1-6": "2.1.4",
-        "def-e1-7": "2.1.5",
+        "def-e1-6": "2.1.6",
+        "def-e1-7": "2.1.7",
+        "cor-e1-7": "2.1.8",
         "ex-e1-8": "2.1.3",
         "exr-e1-1": "2.1.1",
         "exr-e1-2": "2.1.2",
-        "exr-e1-3": "2.1.3"
+        "exr-e1-3": "2.1.3",
+        "exr-e1-4": "2.1.4"
       }
     },
     "khong-gian-euclide": {
       "path": "content/affine-geometry/02-khong-gian-euclide/02-khong-gian-euclide.mdx",
       "status": "published",
       "version": "1.0.0",
-      "sha256": "d92baf2f131ecc50337519446595f7f959067e7646f96d4fa16ce5c71fc09dd1",
+      "sha256": "4e279981566429453f8b9bf5bf88986b11e08284c9e770bc23311159372ab47c",
       "numberedBlocks": {
         "def-e2-1": "2.2.1",
-        "ex-e2-2": "2.2.1",
+        "ex-e2-a": "2.2.1",
+        "ex-e2-b": "2.2.2",
+        "prop-e2-c": "2.2.2",
+        "ex-e2-2": "2.2.3",
         "exr-e2-1": "2.2.1",
-        "exr-e2-2": "2.2.2"
+        "exr-e2-2": "2.2.2",
+        "exr-e2-3": "2.2.3"
       }
     },
     "muc-tieu-truc-chuan-toa-do-truc-chuan": {

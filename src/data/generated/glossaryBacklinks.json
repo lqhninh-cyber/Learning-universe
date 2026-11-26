@@ -2,9 +2,9 @@
   "stats": {
     "totalLessons": 122,
     "totalTerms": 67,
-    "totalBacklinks": 502,
+    "totalBacklinks": 506,
     "termsWithBacklinks": 67,
-    "lessonsWithBacklinks": 115
+    "lessonsWithBacklinks": 116
   },
   "byTerm": {
     "dang-cau": [
@@ -2207,20 +2207,20 @@
         "count": 13
       },
       {
+        "lessonId": "khong-gian-euclide",
+        "lessonCode": "HHAVE 2.2",
+        "lessonTitle": "Không gian Ơclit",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/khong-gian-euclide",
+        "count": 11
+      },
+      {
         "lessonId": "tam-ti-cu-cua-mot-he-diem",
         "lessonCode": "HHAVE 1.4",
         "lessonTitle": "Tâm Tỉ Cự của một Hệ Điểm",
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/tam-ti-cu-cua-mot-he-diem",
         "count": 6
-      },
-      {
-        "lessonId": "khong-gian-euclide",
-        "lessonCode": "HHAVE 2.2",
-        "lessonTitle": "Không gian Ơclit",
-        "subjectId": "hinh-hoc-affine",
-        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/khong-gian-euclide",
-        "count": 5
       },
       {
         "lessonId": "toa-do-afin-va-muc-tieu-afin",
@@ -2531,6 +2531,14 @@
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/anh-xa-afin-va-phep-bien-doi-afin",
         "count": 1
+      },
+      {
+        "lessonId": "khong-gian-euclide",
+        "lessonCode": "HHAVE 2.2",
+        "lessonTitle": "Không gian Ơclit",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/khong-gian-euclide",
+        "count": 1
       }
     ],
     "tap-loi": [
@@ -2549,6 +2557,14 @@
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/nhom-cac-phep-bien-doi-afin-va-hinh-hoc-afin",
         "count": 8
+      },
+      {
+        "lessonId": "khong-gian-euclide",
+        "lessonCode": "HHAVE 2.2",
+        "lessonTitle": "Không gian Ơclit",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/khong-gian-euclide",
+        "count": 1
       },
       {
         "lessonId": "sieu-cau-trong-khong-gian-euclide",
@@ -2575,6 +2591,14 @@
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/nhom-cac-phep-bien-doi-afin-va-hinh-hoc-afin",
         "count": 3
+      },
+      {
+        "lessonId": "khong-gian-euclide",
+        "lessonCode": "HHAVE 2.2",
+        "lessonTitle": "Không gian Ơclit",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/khong-gian-euclide",
+        "count": 1
       },
       {
         "lessonId": "anh-xa-dang-cu-va-phep-bien-doi-dang-cu",
@@ -2708,7 +2732,7 @@
         "lessonTitle": "Không gian Ơclit",
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/khong-gian-euclide",
-        "count": 18
+        "count": 27
       },
       {
         "lessonId": "mo-hinh-xa-anh-cua-khong-gian-euclide",
@@ -2815,6 +2839,14 @@
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/cac-phang-trong-khong-gian-euclide",
         "count": 2
+      },
+      {
+        "lessonId": "bo-sung-ve-cac-phep-toan-tren-khong-gian-vecto",
+        "lessonCode": "HHAVE 2.1",
+        "lessonTitle": "Bổ sung về các Phép toán trên Không gian Vectơ",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/bo-sung-ve-cac-phep-toan-tren-khong-gian-vecto",
+        "count": 1
       },
       {
         "lessonId": "sieu-cau-trong-khong-gian-euclide",
@@ -4530,10 +4562,15 @@
       "muc-tieu-afin",
       "phep-bien-doi-afin"
     ],
-    "bo-sung-ve-cac-phep-toan-tren-khong-gian-vecto": [],
+    "bo-sung-ve-cac-phep-toan-tren-khong-gian-vecto": [
+      "muc-tieu-truc-chuan"
+    ],
     "khong-gian-euclide": [
       "khong-gian-euclide",
-      "khong-gian-afin"
+      "khong-gian-afin",
+      "anh-xa-afin",
+      "tam-ti-cu",
+      "tap-loi"
     ],
     "muc-tieu-truc-chuan-toa-do-truc-chuan": [
       "muc-tieu-truc-chuan",

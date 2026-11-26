@@ -1,17 +1,19 @@
 ---
 id: bo-sung-ve-cac-phep-toan-tren-khong-gian-vecto
-title: "Bổ sung về các Phép toán trên Không gian Vectơ"
-description: "Tích vectơ, tích hỗn hợp, định thức Gram và thể tích định hướng trong không gian vectơ."
-estimatedMinutes: 45
+title: 'Bổ sung về các Phép toán trên Không gian Vectơ'
+description: 'Tích vô hướng, không gian vectơ Ơclit, tích có hướng, tích hỗn hợp, định thức Gram và hệ cơ sở đối ngẫu.'
+estimatedMinutes: 55
 level: basic
 prerequisites: []
 tags:
-  - "tích vectơ"
-  - "tích hỗn hợp"
-  - "định thức Gram"
+  - 'tích vô hướng'
+  - 'không gian vectơ Ơclit'
+  - 'tích có hướng'
+  - 'tích hỗn hợp'
+  - 'định thức Gram'
 sources:
   - source: gt-hhcc-nmh-2004
-    pages: '80-87'
+    pages: '84-87'
     sections: '§1'
 status: published
 version: 1.0.0
@@ -24,148 +26,376 @@ authoring:
 
 ## 1. Tích vô hướng
 
-<Definition id="def-e1-1" title="Định nghĩa">
-Cho $V$ là không gian vectơ trên trường số thực.
+<Definition id="def-e1-1" title="Định nghĩa tích vô hướng">
+Cho $V$ là không gian vectơ trên trường số thực $\mathbb{R}$, trên đó xác định một phép toán $f$ sao cho với mỗi cặp vectơ có thứ tự $\vec{a}, \vec{b} \in V$ ta đặt tương ứng với một số thực xác định gọi là *tích vô hướng của hai vectơ* $\vec{a}, \vec{b}$, kí hiệu là $\vec{a} \cdot \vec{b}$ (hay $\vec{a}\vec{b}$), nếu nó thỏa mãn $4$ tiên đề sau đây:
 
-Phép toán gán cho mỗi cặp vectơ có thứ tự $\vec{a}$, $\vec{b}$ một số thực, gọi là *tích vô hướng* của hai vectơ, kí hiệu $\vec{a}·\vec{b}$ (hay $\vec{a} \vec{b}$), nếu thỏa 4 tiên đề:
-
-1) $\vec{a}·\vec{b} = \vec{b}·\vec{a}$;
-
-2) $\vec{a}·(\vec{b} + \vec{c}) = \vec{a}·\vec{b} + \vec{a}·\vec{c}$;
-
-3) $( \lambda \vec{a})·\vec{b} = \lambda (\vec{a}·\vec{b}), \lambda \in \R$;
-
-4) $\vec{a}·\vec{a} \ge 0$, dấu $"="$ xảy ra khi và chỉ khi $\vec{a} = \vec{0}$.
+1. $\vec{a} \cdot \vec{b} = \vec{b} \cdot \vec{a}$ với mọi $\vec{a}, \vec{b} \in V$ *(tính đối xứng)*;
+2. $\vec{a} \cdot (\vec{b} + \vec{c}) = \vec{a} \cdot \vec{b} + \vec{a} \cdot \vec{c}$ với mọi $\vec{a}, \vec{b}, \vec{c} \in V$ *(tính phân phối đối với phép cộng vectơ)*;
+3. $(\lambda\vec{a}) \cdot \vec{b} = \lambda(\vec{a} \cdot \vec{b})$ với mọi $\lambda \in \mathbb{R}$ và mọi $\vec{a}, \vec{b} \in V$ *(tính kết hợp đối với phép nhân số thực)*;
+4. $\vec{a} \cdot \vec{a} \ge 0$ với mọi $\vec{a} \in V$; dấu $"="$ xảy ra khi và chỉ khi $\vec{a} = \vec{0}$ *(tính xác định dương)*.
 </Definition>
 
-<Remark title="Chú ý">
-Chú ý.
-
-Không gian vectơ được trang bị thêm tích vô hướng gọi là *không gian vectơ Ơclit*; số chiều n được kí hiệu $V ^{n} _{E}$ hoặc **Ē**$^{n}$.
+<Remark id="rem-e1-1" title="Chú ý">
+Tương ứng $f$ nói trên là một ánh xạ $f: V \times V \to \mathbb{R}$ (một dạng song tuyến tính đối xứng xác định dương trên $V$) thỏa mãn $4$ điều kiện nêu trên. Một không gian vectơ được trang bị thêm tích vô hướng đối với mọi cặp vectơ bất kì của nó sẽ trở thành một *không gian vectơ Ơclit*. Không gian vectơ Ơclit $n$ chiều được kí hiệu là $V_E^n$ hoặc $\overrightarrow{\mathcal{E}^n}$ *(trong bản in gốc kí hiệu là $V_E^n$ hoặc $\overrightarrow{E^n}$)*.
 </Remark>
 
-## 2. Các định nghĩa liên quan đến tích vô hướng
+<Theorem id="thm-e1-cbs" title="Tính chất song tuyến tính và bất đẳng thức Cauchy–Bunyakovsky–Schwarz">
+Trong không gian vectơ Ơclit $V$, với mọi $\vec{a}, \vec{b}, \vec{c} \in V$ và mọi $\lambda \in \mathbb{R}$, ta có:
 
-$\vec{a}·\vec{b} = |\vec{a}|·|\vec{b}|·cos(\vec{a},\vec{b}); |\vec{a}|^{2} = \vec{a}^{2}$ nên $|\vec{a}| = \sqrt{\vec{a}^{2}}; \vec{a} \perp \vec{b} \iff \vec{a}·\vec{b} = 0$.
-
-<Example id="ex-e1-2" title="Ví dụ">
-Trên $\R ^{2}$ đặt $(x_{1},x_{2})·(y_{1},y_{2}) = x_{1}y_{1} + x_{2}y_{2}$.Với $\vec{a} = (1,2), \vec{b} = (3,-1)$: 
-
-$$
-\vec{a}·\vec{b} = 3 - 2 = 1 = \vec{b}·\vec{a}; \vec{a}·\vec{a} = 5 > 0, |\vec{a}| = \sqrt{5}.
-$$
-
- Còn $(1,2)·(2,-1) = 0$ nên hai vectơ này vuông góc.
-</Example>
-
-## 3. Tích có hướng của hai vectơ trong V3E
-
-<Definition id="def-e1-3" title="a) Định nghĩa">
-Tích có hướng của $\vec{a}$ và $\vec{b}$ là một vectơ $\vec{c}$ thỏa:
-
-i) $\vec{c} \perp \vec{a}$ và $\vec{c} \perp \vec{b}$;
-
-ii) $|\vec{c}| = |\vec{a}|·|\vec{b}|·sin(\vec{a},\vec{b}) =$ diện tích hình bình hành dựng trên $\vec{a}$, $\vec{b}$;
-
-iii) tam diện ($\vec{a}$, $\vec{b}$, $\vec{c}$) là tam diện *thuận* (nếu vặn nút chai theo chiều từ $\vec{a}$ đến $\vec{b}$ thì nút chai chuyển động theo hướng $\vec{c}$).
-
-Kí hiệu $\vec{a} ∧ \vec{b} = \vec{c}$.
-</Definition>
-
-<Theorem id="thm-e1-4" title="b) Tính chất">
-1) $\vec{a} ∧ \vec{b} = -\vec{b} ∧ \vec{a}$ (phản giao hoán);
-
-2) $p(\vec{a} ∧ \vec{b}) = p\vec{a} ∧ \vec{b} = \vec{a} ∧ p\vec{b}, p \in \R$;
-
-3) $(\vec{a} + \vec{b}) ∧ \vec{c} = \vec{a} ∧ \vec{c} + \vec{b} ∧ \vec{c}$ và $\vec{a} ∧ (\vec{b} + \vec{c}) = \vec{a} ∧ \vec{b} + \vec{a} ∧ \vec{c}$.
+1. $(\vec{a} + \vec{b}) \cdot \vec{c} = \vec{a} \cdot \vec{c} + \vec{b} \cdot \vec{c}$, $\vec{a} \cdot (\lambda\vec{b}) = \lambda(\vec{a} \cdot \vec{b})$, và $\vec{a} \cdot \vec{0} = \vec{0} \cdot \vec{a} = 0$.
+2. **Bất đẳng thức Cauchy–Bunyakovsky–Schwarz:**
+   $$
+   (\vec{a} \cdot \vec{b})^2 \le (\vec{a} \cdot \vec{a})(\vec{b} \cdot \vec{b}),
+   $$
+   dấu $"="$ xảy ra khi và chỉ khi hai vectơ $\vec{a}, \vec{b}$ phụ thuộc tuyến tính.
 </Theorem>
 
-<Example id="ex-e1-5" title="Ví dụ">
-Với $\vec{a} = (1,0,0), \vec{b} = (0,1,0): \vec{a} ∧ \vec{b} = (0,0,1)$; độ dài $1 = 1·1·sin 90°$, vuông góc với cả hai, và $(\vec{a},\vec{b},\vec{c})$ là tam diện thuận.
+<Proof>
+1. Nhờ tiên đề (1), (2), (3), ta có:
+   $$
+   (\vec{a} + \vec{b}) \cdot \vec{c} = \vec{c} \cdot (\vec{a} + \vec{b}) = \vec{c} \cdot \vec{a} + \vec{c} \cdot \vec{b} = \vec{a} \cdot \vec{c} + \vec{b} \cdot \vec{c},
+   $$
+   $$
+   \vec{a} \cdot (\lambda\vec{b}) = (\lambda\vec{b}) \cdot \vec{a} = \lambda(\vec{b} \cdot \vec{a}) = \lambda(\vec{a} \cdot \vec{b}).
+   $$
+   Thay $\lambda = 0$ vào tiên đề (3) với $\vec{0} = 0\vec{a}$ được $\vec{0} \cdot \vec{a} = 0(\vec{a} \cdot \vec{a}) = 0 = \vec{a} \cdot \vec{0}$.
 
-Theo tính chất $1), \vec{b} ∧ \vec{a} = (0,0,-1)$.
-</Example>
+2. Nếu $\vec{a} = \vec{0}$ thì cả hai vế của bất đẳng thức đều bằng $0$ và hệ $\{\vec{0}, \vec{b}\}$ phụ thuộc tuyến tính, nên mệnh đề đúng.
 
-## 4. Tích hỗn hợp của ba vectơ trong V3E
+   Giả sử $\vec{a} \neq \vec{0}$, theo tiên đề (4) ta có $\vec{a} \cdot \vec{a} > 0$. Với mọi số thực $t \in \mathbb{R}$, xét tích vô hướng của vectơ $t\vec{a} + \vec{b}$ với chính nó:
+   $$
+   P(t) = (t\vec{a} + \vec{b}) \cdot (t\vec{a} + \vec{b}) = (\vec{a} \cdot \vec{a})t^2 + 2(\vec{a} \cdot \vec{b})t + (\vec{b} \cdot \vec{b}).
+   $$
+   Theo tiên đề (4), tam thức bậc hai $P(t)$ có hệ số bậc hai $\vec{a} \cdot \vec{a} > 0$ và nhận giá trị không âm với mọi $t \in \mathbb{R}$, do đó biệt thức thu gọn $\Delta'$ của nó phải không dương:
+   $$
+   \Delta' = (\vec{a} \cdot \vec{b})^2 - (\vec{a} \cdot \vec{a})(\vec{b} \cdot \vec{b}) \le 0 \iff (\vec{a} \cdot \vec{b})^2 \le (\vec{a} \cdot \vec{a})(\vec{b} \cdot \vec{b}).
+   $$
+   Dấu $"="$ xảy ra khi và chỉ khi $\Delta' = 0$, tức tồn tại $t_0 \in \mathbb{R}$ sao cho $P(t_0) = 0 \iff t_0\vec{a} + \vec{b} = \vec{0} \iff \vec{b} = -t_0\vec{a}$ (kết hợp với trường hợp $\vec{a} = \vec{0}$ chính là điều kiện $\vec{a}, \vec{b}$ phụ thuộc tuyến tính).
+</Proof>
 
-<Definition id="def-e1-6" title="a) Định nghĩa">
-*Tích hỗn hợp* của ba vectơ $\vec{a}$, $\vec{b}$, $\vec{c}$ là số $(\vec{a}, \vec{b}, \vec{c}) = (\vec{a} ∧ \vec{b})·\vec{c}$.
+## 2. Các định nghĩa có liên quan đến tích vô hướng của hai vectơ
+
+<Definition id="def-e1-2" title="Độ dài vectơ, góc giữa hai vectơ và sự trực giao">
+Trong không gian vectơ Ơclit $V$, kí hiệu $\vec{a}^2 = \vec{a} \cdot \vec{a} \ge 0$. Khi đó ta định nghĩa:
+
+1. **Độ dài (chuẩn hay mô-đun) của vectơ:** Độ dài của vectơ $\vec{a}$, kí hiệu $|\vec{a}|$, là số thực không âm xác định bởi:
+   $$
+   |\vec{a}|^2 = \vec{a}^2 \implies |\vec{a}| = \sqrt{\vec{a}^2}.
+   $$
+   Từ bất đẳng thức Cauchy–Bunyakovsky–Schwarz $|\vec{a} \cdot \vec{b}| \le |\vec{a}|\,|\vec{b}|$, ta suy ra $|\vec{a} + \vec{b}|^2 = |\vec{a}|^2 + 2(\vec{a} \cdot \vec{b}) + |\vec{b}|^2 \le (|\vec{a}| + |\vec{b}|)^2$, tức là bất đẳng thức tam giác $|\vec{a} + \vec{b}| \le |\vec{a}| + |\vec{b}|$.
+
+2. **Góc giữa hai vectơ:** Với hai vectơ khác vectơ-không $\vec{a}, \vec{b} \in V$, vì $-1 \le \dfrac{\vec{a} \cdot \vec{b}}{|\vec{a}|\,|\vec{b}|} \le 1$ nên tồn tại duy nhất góc $\widehat{(\vec{a}, \vec{b})} \in [0, \pi]$ thỏa mãn:
+   $$
+   \vec{a} \cdot \vec{b} = |\vec{a}|\,|\vec{b}|\cos\widehat{(\vec{a}, \vec{b})} \iff \cos\widehat{(\vec{a}, \vec{b})} = \frac{\vec{a} \cdot \vec{b}}{|\vec{a}|\,|\vec{b}|}.
+   $$
+
+3. **Hai vectơ vuông góc (trực giao):** Hai vectơ $\vec{a}, \vec{b} \in V$ được gọi là *vuông góc* (hay *trực giao*) với nhau, kí hiệu $\vec{a} \perp \vec{b}$, khi và chỉ khi:
+   $$
+   \vec{a} \perp \vec{b} \iff \vec{a} \cdot \vec{b} = 0.
+   $$
+   *(Theo định nghĩa này, vectơ $\vec{0}$ vuông góc với mọi vectơ trong $V$).*
 </Definition>
 
-<Definition id="def-e1-7" title="b) Ý nghĩa hình học">
-Với ba vectơ không đồng phẳng, gọi V là thể tích hình hộp dựng trên chúng, S là diện tích đáy (dựng trên $\vec{a}$, $\vec{b}$), h là chiều cao, $\vec{g} = \vec{a} ∧ \vec{b} (|\vec{g}| = S)$.
+<Example id="ex-e1-2" title="Ví dụ trên không gian vectơ thực hai chiều">
+1. Trên $V = \mathbb{R}^2$, phép toán $\vec{x} \cdot \vec{y} = x_1 y_1 + x_2 y_2$ với $\vec{x} = (x_1, x_2), \vec{y} = (y_1, y_2)$ là một tích vô hướng. Với $\vec{a} = (1, 2)$ và $\vec{b} = (3, -1)$, ta có:
+   $$
+   \vec{a} \cdot \vec{b} = 1 \cdot 3 + 2 \cdot (-1) = 1, \qquad |\vec{a}| = \sqrt{1^2 + 2^2} = \sqrt{5}, \qquad |\vec{b}| = \sqrt{3^2 + (-1)^2} = \sqrt{10},
+   $$
+   do đó $\cos\widehat{(\vec{a}, \vec{b})} = \dfrac{1}{\sqrt{50}} = \dfrac{\sqrt{2}}{10}$. Với $\vec{c} = (2, -1)$ thì $\vec{a} \cdot \vec{c} = 1 \cdot 2 + 2 \cdot (-1) = 0$ nên $\vec{a} \perp \vec{c}$.
 
-Nếu $\varphi = (\vec{g},\vec{c}) < \frac{π}{2}$ (tam diện thuận) thì $(\vec{a},\vec{b},\vec{c}) = \vec{g}·\vec{c} = S·h = V$; nếu $\varphi > \frac{π}{2}$ (tam diện nghịch) thì $h = -|\vec{c}|cos \varphi$ và $(\vec{a},\vec{b},\vec{c}) = -V$.
-
-**Kết luận.** Tích hỗn hợp của ba vectơ không đồng phẳng có giá trị tuyệt đối bằng thể tích hình hộp dựng trên ba vectơ ấy; dương nếu ba vectơ tạo nên tam diện thuận, âm nếu nghịch.
-
-**Chú ý.** $(\vec{a} ∧ \vec{b})·\vec{c} = (\vec{b} ∧ \vec{c})·\vec{a} = (\vec{c} ∧ \vec{a})·\vec{b}$.
-
-**Hệ quả.** Ba vectơ đồng phẳng $\iff$ tích hỗn hợp của chúng bằng $0 \iff ba$ vectơ phụ thuộc tuyến tính.
-</Definition>
-
-<Example id="ex-e1-8" title="Ví dụ">
-$\vec{a} = (1,0,0), \vec{b} = (0,2,0), \vec{c} = (0,0,3): \vec{a} ∧ \vec{b} = (0,0,2)$ nên $(\vec{a},\vec{b},\vec{c}) = 6 = 1·2·3$, thể tích hình hộp chữ nhật, dương vì tam diện thuận.
-
-Đổi chỗ: 
-
-$$
-(\vec{a},\vec{c},\vec{b}) = -6.
-$$
-
- Còn $\vec{a} = (1,0,0), \vec{b} = (0,1,0), \vec{c} = (2,3,0)$ đồng phẳng nên tích hỗn hợp $= (0,0,1)·(2,3,0) = 0.$
+2. Trên cùng không gian vectơ $\mathbb{R}^2$, ta cũng có thể trang bị một tích vô hướng khác bởi công thức:
+   $$
+   \langle \vec{x}, \vec{y} \rangle = 2x_1 y_1 + x_1 y_2 + x_2 y_1 + 3x_2 y_2.
+   $$
+   Thật vậy, tính đối xứng và tuyến tính theo từng biến là hiển nhiên, còn với mọi $\vec{x} = (x_1, x_2)$ ta có:
+   $$
+   \langle \vec{x}, \vec{x} \rangle = 2x_1^2 + 2x_1 x_2 + 3x_2^2 = 2\left(x_1 + \frac{1}{2}x_2\right)^2 + \frac{5}{2}x_2^2 \ge 0,
+   $$
+   dấu $"="$ chỉ xảy ra khi $x_2 = 0$ và $x_1 + \frac{1}{2}x_2 = 0 \iff x_1 = x_2 = 0$. Theo tích vô hướng mới này, hai vectơ $\vec{u} = (1, -1)$ và $\vec{v} = (2, 1)$ thỏa mãn $\langle \vec{u}, \vec{v} \rangle = 2(2) + 1(1) + (-1)(2) + 3(-1)(1) = 0$ nên $\vec{u} \perp \vec{v}$, đồng thời độ dài của $\vec{u}$ bằng $\sqrt{\langle \vec{u}, \vec{u} \rangle} = \sqrt{3}$.
 </Example>
 
-## Bài tập vận dụng và củng cố
+## 3. Tích có hướng của hai vectơ trong không gian vectơ Ơclit ba chiều
 
-<Exercise id="exr-e1-1" title="Tích vô hướng (§1) và công thức tọa độ (§3, mục 5)">
-Trong E³ với hệ trực chuẩn, cho a = (1,2,2), b = (3,0,4). Tính cos(a, b).
+<Definition id="def-e1-3" title="a) Định nghĩa tích có hướng">
+Trong không gian vectơ Ơclit ba chiều $V_E^3$ (đã định hướng), *tích có hướng* của hai vectơ $\vec{a}$ và $\vec{b}$ là một vectơ $\vec{c}$ thỏa mãn các điều kiện sau đây:
 
+1. $\vec{c} \perp \vec{a}$ và $\vec{c} \perp \vec{b}$;
+2. $|\vec{c}| = |\vec{a}|\,|\vec{b}|\sin\widehat{(\vec{a}, \vec{b})}$, bằng diện tích hình bình hành dựng trên hai vectơ $\vec{a}, \vec{b}$ *(khi $\vec{a}, \vec{b}$ cộng tuyến, bao gồm trường hợp $\vec{a} = \vec{0}$ hoặc $\vec{b} = \vec{0}$, điều kiện này cho $|\vec{c}| = 0$, tức $\vec{c} = \vec{0}$)*;
+3. Khi $\vec{a}, \vec{b}$ không cộng tuyến, tam diện tạo bởi ba vectơ $(\vec{a}, \vec{b}, \vec{c})$ là *tam diện thuận* (theo quy tắc cái vặn nút chai: nếu vặn nút chai theo chiều từ $\vec{a}$ đến $\vec{b}$ qua góc nhỏ hơn $\pi$ thì nút chai chuyển động theo hướng của vectơ $\vec{c}$).
+
+Ta thường kí hiệu tích có hướng của hai vectơ $\vec{a}$ và $\vec{b}$ là:
+$$
+\vec{a} \wedge \vec{b} = \vec{c}.
+$$
+</Definition>
+
+<Theorem id="thm-e1-4" title="b) Tính chất của tích có hướng">
+Với mọi vectơ $\vec{a}, \vec{b}, \vec{c} \in V_E^3$ và mọi số thực $p \in \mathbb{R}$, tích có hướng có các tính chất:
+
+1. $\vec{a} \wedge \vec{b} = -\vec{b} \wedge \vec{a}$ *(tính phản giao hoán)*;
+2. $p(\vec{a} \wedge \vec{b}) = (p\vec{a}) \wedge \vec{b} = \vec{a} \wedge (p\vec{b})$;
+3. $(\vec{a} + \vec{b}) \wedge \vec{c} = \vec{a} \wedge \vec{c} + \vec{b} \wedge \vec{c}$ và $\vec{a} \wedge (\vec{b} + \vec{c}) = \vec{a} \wedge \vec{b} + \vec{a} \wedge \vec{c}$ *(tính phân phối đối với phép cộng vectơ)*.
+</Theorem>
+
+<Proof>
+1. Nếu $\vec{a}, \vec{b}$ cộng tuyến thì $\vec{a} \wedge \vec{b} = \vec{0} = -\vec{b} \wedge \vec{a}$. Nếu $\vec{a}, \vec{b}$ không cộng tuyến thì hai vectơ $\vec{a} \wedge \vec{b}$ và $\vec{b} \wedge \vec{a}$ cùng vuông góc với mặt phẳng sinh bởi $\{\vec{a}, \vec{b}\}$ và có cùng độ dài $|\vec{a}|\,|\vec{b}|\sin\widehat{(\vec{a}, \vec{b})}$; tuy nhiên chiều quay từ $\vec{b}$ đến $\vec{a}$ ngược với chiều quay từ $\vec{a}$ đến $\vec{b}$ nên quy tắc vặn nút chai cho hai vectơ ngược hướng nhau, suy ra $\vec{a} \wedge \vec{b} = -\vec{b} \wedge \vec{a}$.
+
+2. Nếu $p = 0$ hoặc $\vec{a}, \vec{b}$ cộng tuyến thì cả ba vế đều bằng $\vec{0}$. Giả sử $\vec{a}, \vec{b}$ không cộng tuyến:
+   - Nếu $p > 0$: góc $\widehat{(p\vec{a}, \vec{b})} = \widehat{(\vec{a}, \vec{b})}$, độ dài $|(p\vec{a}) \wedge \vec{b}| = |p\vec{a}|\,|\vec{b}|\sin\widehat{(\vec{a}, \vec{b})} = p|\vec{a} \wedge \vec{b}| = |p(\vec{a} \wedge \vec{b})|$, và tam diện $(p\vec{a}, \vec{b}, p(\vec{a} \wedge \vec{b}))$ vẫn là tam diện thuận, nên $(p\vec{a}) \wedge \vec{b} = p(\vec{a} \wedge \vec{b})$.
+   - Nếu $p < 0$: vectơ $p\vec{a}$ ngược hướng với $\vec{a}$ nên $\widehat{(p\vec{a}, \vec{b})} = \pi - \widehat{(\vec{a}, \vec{b})}$, do đó $\sin\widehat{(p\vec{a}, \vec{b})} = \sin\widehat{(\vec{a}, \vec{b})}$ và $|(p\vec{a}) \wedge \vec{b}| = |p|\,|\vec{a} \wedge \vec{b}| = |p(\vec{a} \wedge \vec{b})|$. Vì $p\vec{a}$ đổi hướng so với $\vec{a}$ nên tích có hướng $(p\vec{a}) \wedge \vec{b}$ đổi hướng so với $\vec{a} \wedge \vec{b}$, trùng với hướng của $p(\vec{a} \wedge \vec{b})$ (do $p < 0$). Vậy $(p\vec{a}) \wedge \vec{b} = p(\vec{a} \wedge \vec{b})$.
+
+   Kết hợp với tính phản giao hoán (1): $\vec{a} \wedge (p\vec{b}) = -(p\vec{b}) \wedge \vec{a} = -p(\vec{b} \wedge \vec{a}) = p(\vec{a} \wedge \vec{b})$.
+
+3. Nếu $\vec{c} = \vec{0}$ thì đẳng thức hiển nhiên đúng. Với $\vec{c} \neq \vec{0}$, gọi $\Pi$ là không gian vectơ con hai chiều vuông góc với $\vec{c}$. Mọi vectơ $\vec{u} \in V_E^3$ đều phân tích duy nhất thành $\vec{u} = \vec{u}_{\parallel} + \vec{u}_{\perp}$ với $\vec{u}_{\parallel}$ cùng phương $\vec{c}$ và $\vec{u}_{\perp} \in \Pi$ là hình chiếu vuông góc của $\vec{u}$ lên $\Pi$. Gọi $\alpha = \widehat{(\vec{u}, \vec{c})}$, ta có $|\vec{u}_{\perp}| = |\vec{u}|\sin\alpha$; hơn nữa nếu $\vec{u}_{\perp} \neq \vec{0}$ thì $\vec{u}_{\perp} \perp \vec{c}$ và tam diện $(\vec{u}_{\perp}, \vec{c}, \vec{u} \wedge \vec{c})$ thuận, có $|\vec{u}_{\perp} \wedge \vec{c}| = |\vec{u}_{\perp}|\,|\vec{c}|\sin\frac{\pi}{2} = |\vec{u}|\,|\vec{c}|\sin\alpha = |\vec{u} \wedge \vec{c}|$, nên $\vec{u} \wedge \vec{c} = \vec{u}_{\perp} \wedge \vec{c}$.
+
+   Như vậy ánh xạ $T(\vec{u}) = \vec{u} \wedge \vec{c}$ chính là hợp thành của: (i) phép chiếu vuông góc $\vec{u} \mapsto \vec{u}_{\perp}$ lên $\Pi$, (ii) phép quay trong mặt phẳng $\Pi$ một góc $\frac{\pi}{2}$ quanh trục định hướng $\vec{c}$ (theo chiều làm cho $(\vec{u}_{\perp}, \vec{c}, T(\vec{u}))$ thuận), và (iii) phép vị tự tỉ số $|\vec{c}|$. Cả ba phép biến hình này đều bảo toàn phép cộng vectơ, nên $T(\vec{a} + \vec{b}) = T(\vec{a}) + T(\vec{b})$, tức là $(\vec{a} + \vec{b}) \wedge \vec{c} = \vec{a} \wedge \vec{c} + \vec{b} \wedge \vec{c}$. Đẳng thức thứ hai suy ra ngay từ đẳng thức thứ nhất và tính chất (1):
+   $$
+   \vec{a} \wedge (\vec{b} + \vec{c}) = -(\vec{b} + \vec{c}) \wedge \vec{a} = -(\vec{b} \wedge \vec{a} + \vec{c} \wedge \vec{a}) = \vec{a} \wedge \vec{b} + \vec{a} \wedge \vec{c}.
+   $$
+</Proof>
+
+<Example id="ex-e1-5" title="Ví dụ minh họa tích có hướng">
+Trong $V_E^3$, giả sử $\{\vec{e}_1, \vec{e}_2, \vec{e}_3\}$ là bộ ba vectơ đơn vị đôi một vuông góc tạo thành một tam diện thuận. Khi đó $\widehat{(\vec{e}_1, \vec{e}_2)} = \dfrac{\pi}{2}$, $|\vec{e}_1|\,|\vec{e}_2|\sin\dfrac{\pi}{2} = 1$, và $\vec{e}_3$ vuông góc với cả $\vec{e}_1, \vec{e}_2$ theo chiều thuận nên:
+$$
+\vec{e}_1 \wedge \vec{e}_2 = \vec{e}_3, \qquad \vec{e}_2 \wedge \vec{e}_3 = \vec{e}_1, \qquad \vec{e}_3 \wedge \vec{e}_1 = \vec{e}_2.
+$$
+Theo tính chất phản giao hoán và tính phân phối, với $\vec{a} = 2\vec{e}_1 - \vec{e}_2$ và $\vec{b} = \vec{e}_2 + 3\vec{e}_3$, ta tính được ngay mà chưa cần lập công thức định thức:
+$$
+\vec{a} \wedge \vec{b} = (2\vec{e}_1 - \vec{e}_2) \wedge (\vec{e}_2 + 3\vec{e}_3) = 2(\vec{e}_1 \wedge \vec{e}_2) + 6(\vec{e}_1 \wedge \vec{e}_3) - (\vec{e}_2 \wedge \vec{e}_2) - 3(\vec{e}_2 \wedge \vec{e}_3) = -3\vec{e}_1 - 6\vec{e}_2 + 2\vec{e}_3.
+$$
+</Example>
+
+## 4. Tích hỗn hợp của ba vectơ trong không gian vectơ Ơclit ba chiều
+
+<Definition id="def-e1-6" title="a) Định nghĩa tích hỗn hợp">
+*Tích hỗn hợp* của ba vectơ $\vec{a}, \vec{b}, \vec{c}$ trong $V_E^3$ là một số thực thu được bằng cách nhân có hướng hai vectơ $\vec{a}, \vec{b}$ thành $\vec{a} \wedge \vec{b}$ rồi nhân vô hướng vectơ ấy với $\vec{c}$. Tích hỗn hợp của ba vectơ $\vec{a}, \vec{b}, \vec{c}$ được kí hiệu là:
+$$
+(\vec{a}, \vec{b}, \vec{c}) = (\vec{a} \wedge \vec{b}) \cdot \vec{c}.
+$$
+</Definition>
+
+<Theorem id="def-e1-7" title="b) Ý nghĩa hình học của tích hỗn hợp">
+Tích hỗn hợp $(\vec{a}, \vec{b}, \vec{c})$ của ba vectơ $\vec{a}, \vec{b}, \vec{c}$ không đồng phẳng trong $V_E^3$ là một số thực khác $0$, có giá trị tuyệt đối bằng thể tích $V$ của hình hộp dựng trên ba vectơ $\vec{a}, \vec{b}, \vec{c}$:
+- $(\vec{a}, \vec{b}, \vec{c}) = V > 0$ nếu ba vectơ $(\vec{a}, \vec{b}, \vec{c})$ tạo nên một tam diện thuận;
+- $(\vec{a}, \vec{b}, \vec{c}) = -V < 0$ nếu ba vectơ $(\vec{a}, \vec{b}, \vec{c})$ tạo nên một tam diện nghịch.
+</Theorem>
+
+<Proof>
+Cho ba vectơ $\vec{a}, \vec{b}, \vec{c}$ không đồng phẳng và dựng hình hộp trên ba vectơ đó từ cùng một đỉnh gốc $O$. Gọi $V$ là thể tích của hình hộp, $S$ là diện tích hình bình hành mặt đáy dựng trên hai vectơ $\vec{a}, \vec{b}$, còn $h$ là chiều cao của hình hộp hạ từ đầu mút của $\vec{c}$ xuống mặt phẳng đáy. Khi đó $V = S \cdot h$.
+
+Đặt $\vec{g} = \vec{a} \wedge \vec{b}$. Theo định nghĩa tích có hướng, $|\vec{g}| = S > 0$, vectơ $\vec{g}$ vuông góc với mặt phẳng đáy sinh bởi $\vec{a}, \vec{b}$, và bộ ba $(\vec{a}, \vec{b}, \vec{g})$ tạo thành một tam diện thuận. Đặt $\varphi = \widehat{(\vec{g}, \vec{c})}$; vì $\vec{c}$ không nằm trong mặt phẳng đáy nên $\varphi \neq \dfrac{\pi}{2}$. *(Đính chính diễn đạt bản in gốc tr. 86: khi đặt chung gốc tại đỉnh đáy, vị trí của $\vec{c}$ và $\vec{g}$ đối với mặt phẳng đáy tách thành hai trường hợp cùng phía hoặc khác phía tương ứng với $\varphi < \frac{\pi}{2}$ và $\varphi > \frac{\pi}{2}$ dưới đây).*
+
+- **Trường hợp 1:** $\varphi < \dfrac{\pi}{2}$ (hai vectơ $\vec{c}$ và $\vec{g}$ nằm về cùng một phía đối với mặt phẳng đáy, nghĩa là ba vectơ $\vec{a}, \vec{b}, \vec{c}$ tạo nên một *tam diện thuận*). Khi đó $\cos\varphi > 0$, nên hình chiếu của $\vec{c}$ lên phương vuông góc với đáy cho chiều cao $h = |\vec{c}|\cos\varphi$. Suy ra:
+  $$
+  (\vec{a}, \vec{b}, \vec{c}) = (\vec{a} \wedge \vec{b}) \cdot \vec{c} = \vec{g} \cdot \vec{c} = |\vec{g}|\,|\vec{c}|\cos\varphi = S \cdot h = V.
+  $$
+- **Trường hợp 2:** $\varphi > \dfrac{\pi}{2}$ (hai vectơ $\vec{c}$ và $\vec{g}$ nằm khác phía đối với mặt phẳng đáy, nghĩa là ba vectơ $\vec{a}, \vec{b}, \vec{c}$ tạo nên một *tam diện nghịch*). Khi đó $\cos\varphi < 0$, nên chiều cao hình hộp là $h = |\vec{c}|\cos(\pi - \varphi) = -|\vec{c}|\cos\varphi$, hay $|\vec{c}|\cos\varphi = -h$. Suy ra:
+  $$
+  (\vec{a}, \vec{b}, \vec{c}) = \vec{g} \cdot \vec{c} = |\vec{g}|\,|\vec{c}|\cos\varphi = -S \cdot h = -V.
+  $$
+
+Trong cả hai trường hợp, $|(\vec{a}, \vec{b}, \vec{c})| = V$, dấu của tích hỗn hợp dương khi $(\vec{a}, \vec{b}, \vec{c})$ thuận và âm khi $(\vec{a}, \vec{b}, \vec{c})$ nghịch.
+</Proof>
+
+<Remark id="rem-e1-7" title="Chú ý về hoán vị vòng quanh">
+Nếu ba vectơ $\vec{a}, \vec{b}, \vec{c}$ tạo nên một tam diện thuận (hoặc nghịch) thì các hoán vị vòng quanh $(\vec{b}, \vec{c}, \vec{a})$ và $(\vec{c}, \vec{a}, \vec{b})$ cũng tạo nên những tam diện thuận (hoặc nghịch) dựng cùng một hình hộp có thể tích $V$ (và khi đồng phẳng thì tất cả đều bằng $0$). Do đó với mọi $\vec{a}, \vec{b}, \vec{c} \in V_E^3$:
+$$
+(\vec{a} \wedge \vec{b}) \cdot \vec{c} = (\vec{b} \wedge \vec{c}) \cdot \vec{a} = (\vec{c} \wedge \vec{a}) \cdot \vec{b},
+$$
+tức là $(\vec{a}, \vec{b}, \vec{c}) = (\vec{b}, \vec{c}, \vec{a}) = (\vec{c}, \vec{a}, \vec{b})$. Ngược lại, nếu đổi chỗ hai trong ba vectơ thì tích hỗn hợp đổi dấu: $(\vec{b}, \vec{a}, \vec{c}) = -(\vec{a}, \vec{b}, \vec{c})$.
+</Remark>
+
+<Corollary id="cor-e1-7" title="Hệ quả (Điều kiện đồng phẳng và phụ thuộc tuyến tính)">
+Trong không gian vectơ Ơclit ba chiều $V_E^3$:
+
+1. Điều kiện cần và đủ để ba vectơ $\vec{a}, \vec{b}, \vec{c}$ đồng phẳng là tích hỗn hợp của chúng bằng $0$: $(\vec{a}, \vec{b}, \vec{c}) = 0$.
+2. Điều kiện cần và đủ để ba vectơ $\vec{a}, \vec{b}, \vec{c}$ phụ thuộc tuyến tính là tích hỗn hợp của chúng bằng $0$: $(\vec{a}, \vec{b}, \vec{c}) = 0$.
+</Corollary>
+
+<Proof>
+1. Nếu $\vec{a}, \vec{b}$ cộng tuyến thì $\vec{a} \wedge \vec{b} = \vec{0}$, hệ ba vectơ luôn đồng phẳng và $(\vec{a}, \vec{b}, \vec{c}) = \vec{0} \cdot \vec{c} = 0$. Nếu $\vec{a}, \vec{b}$ không cộng tuyến thì chúng sinh ra một mặt phẳng vectơ $\Pi$ nhận $\vec{g} = \vec{a} \wedge \vec{b} \neq \vec{0}$ làm vectơ vuông góc; khi đó $\vec{a}, \vec{b}, \vec{c}$ đồng phẳng khi và chỉ khi $\vec{c} \in \Pi \iff \vec{c} \perp \vec{g} \iff \vec{g} \cdot \vec{c} = 0 \iff (\vec{a}, \vec{b}, \vec{c}) = 0$.
+2. Trong không gian vectơ ba chiều $V_E^3$, ba vectơ đồng phẳng (cùng nằm trong một không gian vectơ con có số chiều không vượt quá $2$) khi và chỉ khi chúng phụ thuộc tuyến tính. Từ (1) suy ra ngay điều phải chứng minh.
+</Proof>
+
+<Example id="ex-e1-8" title="Ví dụ minh họa tích hỗn hợp">
+Giả sử $\{\vec{e}_1, \vec{e}_2, \vec{e}_3\}$ là ba vectơ đơn vị đôi một vuông góc tạo thành tam diện thuận trong $V_E^3$.
+
+1. Xét $\vec{a} = \vec{e}_1$, $\vec{b} = \vec{e}_1 + 2\vec{e}_2$, $\vec{c} = \vec{e}_1 + \vec{e}_2 + 3\vec{e}_3$. Ta có:
+   $$
+   \vec{a} \wedge \vec{b} = \vec{e}_1 \wedge (\vec{e}_1 + 2\vec{e}_2) = 2(\vec{e}_1 \wedge \vec{e}_2) = 2\vec{e}_3,
+   $$
+   suy ra $(\vec{a}, \vec{b}, \vec{c}) = (2\vec{e}_3) \cdot (\vec{e}_1 + \vec{e}_2 + 3\vec{e}_3) = 6 > 0$. Vậy $(\vec{a}, \vec{b}, \vec{c})$ là một tam diện thuận và hình hộp dựng trên chúng có thể tích $V = 6$; nếu đổi chỗ $\vec{b}, \vec{c}$ thì $(\vec{a}, \vec{c}, \vec{b}) = -6$.
+2. Với $\vec{d} = 2\vec{a} - 3\vec{b}$, ba vectơ $\vec{a}, \vec{b}, \vec{d}$ phụ thuộc tuyến tính nên tích hỗn hợp của chúng bằng $(\vec{a} \wedge \vec{b}) \cdot \vec{d} = (2\vec{e}_3) \cdot (-\vec{e}_1 - 6\vec{e}_2) = 0$.
+</Example>
+
+## Bài tập
+
+*(Các bài tập thuộc phạm vi §1 trích từ cụm bài tập §1, §2, §3 cuối Chương II, trang 134–136; các bài tập tính toán theo mục tiêu trực chuẩn sẽ được giải quyết trọn vẹn ở Bài 2.3).*
+
+<Exercise id="exr-e1-1" title="Bài tập 2.1 (Ma trận Gram và tiêu chuẩn độc lập tuyến tính — tr. 134)">
+Trong không gian vectơ Ơclit $V_E^n$, ta thành lập ma trận Gram từ hệ vectơ $\{\vec{a}_1, \vec{a}_2, \dots, \vec{a}_n\}$ như sau:
+$$
+G = \begin{bmatrix}
+\vec{a}_1^2 & \vec{a}_1 \cdot \vec{a}_2 & \dots & \vec{a}_1 \cdot \vec{a}_n \\
+\vec{a}_2 \cdot \vec{a}_1 & \vec{a}_2^2 & \dots & \vec{a}_2 \cdot \vec{a}_n \\
+\vdots & \vdots & \ddots & \vdots \\
+\vec{a}_n \cdot \vec{a}_1 & \vec{a}_n \cdot \vec{a}_2 & \dots & \vec{a}_n^2
+\end{bmatrix}.
+$$
+
+a) Chứng minh hệ vectơ đã cho độc lập tuyến tính khi và chỉ khi $\det G > 0$.
+
+b) Hãy tính $\det G$ trong $V_E^2$ với tích vô hướng được định nghĩa theo cách hiểu thông thường:
+$$
+\vec{a}_1 \cdot \vec{a}_2 = |\vec{a}_1|\,|\vec{a}_2|\cos\widehat{(\vec{a}_1, \vec{a}_2)}.
+$$
 
 <Hint>
-cos = (a·b)/(|a||b|), a·b = Σ[i=1|n]aᵢbᵢ.
+Câu a: Chiều ngược ($\det G > 0 \implies$ độc lập tuyến tính), nhân vô hướng đẳng thức $\sum_{j=1}^n x_j\vec{a}_j = \vec{0}$ với từng $\vec{a}_i$ để thu được hệ phương trình thuần nhất $GX = 0$. Chiều thuận, trực giao hóa hệ $\{\vec{a}_1, \dots, \vec{a}_n\}$ bằng quy trình Gram–Schmidt tam giác trên đơn vị để phân tích $G = U^T D U$. Câu b: Khai triển định thức cấp $2$ và dùng hệ thức $1 - \cos^2\varphi = \sin^2\varphi$.
 </Hint>
 
 <Solution>
-a·b = 3 + 0 + 8 = 11.
+**a) Chứng minh $\{\vec{a}_1, \dots, \vec{a}_n\}$ độc lập tuyến tính $\iff \det G > 0$:**
 
-|a| = 3 và |b| = 5.
+- **Chiều ngược ($\det G > 0 \implies$ độc lập tuyến tính):** Giả sử $\det G > 0$ (suy ra $\det G \neq 0$) và xét tổ hợp tuyến tính:
+  $$
+  x_1\vec{a}_1 + x_2\vec{a}_2 + \dots + x_n\vec{a}_n = \vec{0} \quad (x_1, \dots, x_n \in \mathbb{R}).
+  $$
+  Nhân vô hướng hai vế lần lượt với $\vec{a}_i$ ($i = 1, 2, \dots, n$), theo tính chất phân phối của tích vô hướng ta thu được hệ $n$ phương trình tuyến tính thuần nhất đối với $X = (x_1, x_2, \dots, x_n)^T$:
+  $$
+  \sum_{j=1}^n (\vec{a}_i \cdot \vec{a}_j) x_j = \vec{a}_i \cdot \vec{0} = 0 \quad (i = 1, 2, \dots, n), \quad \text{hay } GX = 0.
+  $$
+  Vì $\det G \neq 0$, hệ thuần nhất $GX = 0$ chỉ có nghiệm tầm thường $x_1 = x_2 = \dots = x_n = 0$. Vậy hệ $\{\vec{a}_1, \dots, \vec{a}_n\}$ độc lập tuyến tính.
 
-**Đáp án:** 11/15
+- **Chiều thuận (Độc lập tuyến tính $\implies \det G > 0$):** Giả sử $\{\vec{a}_1, \dots, \vec{a}_n\}$ độc lập tuyến tính. Ta xây dựng quy nạp hệ trực giao $\{\vec{v}_1, \dots, \vec{v}_n\}$ theo công thức Gram–Schmidt:
+  $$
+  \vec{v}_1 = \vec{a}_1, \qquad \vec{v}_k = \vec{a}_k - \sum_{m=1}^{k-1} \frac{\vec{a}_k \cdot \vec{v}_m}{\vec{v}_m^2}\,\vec{v}_m \quad (k = 2, \dots, n).
+  $$
+  Do $\{\vec{a}_1, \dots, \vec{a}_n\}$ độc lập tuyến tính nên bằng quy nạp theo $k$, các vectơ $\vec{v}_1, \dots, \vec{v}_{k-1}$ đôi một vuông góc ($\vec{v}_r \cdot \vec{v}_s = 0$ khi $r \neq s$), cùng sinh ra không gian con $\operatorname{span}\{\vec{a}_1, \dots, \vec{a}_{k-1}\}$, và vì $\vec{a}_k \notin \operatorname{span}\{\vec{a}_1, \dots, \vec{a}_{k-1}\}$ nên $\vec{v}_k \neq \vec{0}$, suy ra $\vec{v}_k^2 > 0$ theo tiên đề (4) với mọi $k = 1, \dots, n$. Hơn nữa, đặt $u_{mk} = \dfrac{\vec{a}_k \cdot \vec{v}_m}{\vec{v}_m^2}$ ($m < k$), $u_{kk} = 1$, và $u_{mk} = 0$ ($m > k$), ta viết được:
+  $$
+  \vec{a}_j = \sum_{m=1}^n u_{mj}\vec{v}_m \quad (j = 1, \dots, n),
+  $$
+  trong đó $U = [u_{mj}]$ là ma trận tam giác trên có các phần tử trên đường chéo chính đều bằng $1$ ($\det U = 1$). Khi đó phần tử $(i, j)$ của ma trận Gram là:
+  $$
+  \vec{a}_i \cdot \vec{a}_j = \left(\sum_{r=1}^n u_{ri}\vec{v}_r\right) \cdot \left(\sum_{s=1}^n u_{sj}\vec{v}_s\right) = \sum_{r=1}^n u_{ri}\,\vec{v}_r^2\,u_{rj}.
+  $$
+  Đặt ma trận đường chéo $D = \operatorname{diag}(\vec{v}_1^2, \vec{v}_2^2, \dots, \vec{v}_n^2)$, đẳng thức trên viết dưới dạng ma trận là $G = U^T D U$. Lấy định thức hai vế:
+  $$
+  \det G = (\det U)^2 \det D = 1^2 \cdot \vec{v}_1^2 \vec{v}_2^2 \cdots \vec{v}_n^2 > 0.
+  $$
+  *(Chú ý thêm: nếu hệ phụ thuộc tuyến tính thì tồn tại $X \neq 0$ sao cho $\sum_{j=1}^n x_j\vec{a}_j = \vec{0} \implies GX = 0 \implies \det G = 0$; do đó trong mọi trường hợp $\det G \ge 0$, và $\det G > 0 \iff$ hệ độc lập tuyến tính).*
+
+**b) Tính $\det G$ trong $V_E^2$:**
+
+Với $n = 2$, ta có ma trận Gram cấp $2$:
+$$
+G = \begin{bmatrix}
+\vec{a}_1^2 & \vec{a}_1 \cdot \vec{a}_2 \\
+\vec{a}_2 \cdot \vec{a}_1 & \vec{a}_2^2
+\end{bmatrix}.
+$$
+Nếu $\vec{a}_1 = \vec{0}$ hoặc $\vec{a}_2 = \vec{0}$ thì $\det G = 0$. Với $\vec{a}_1 \neq \vec{0}, \vec{a}_2 \neq \vec{0}$, đặt $\varphi = \widehat{(\vec{a}_1, \vec{a}_2)}$ thì $\vec{a}_1^2 = |\vec{a}_1|^2$, $\vec{a}_2^2 = |\vec{a}_2|^2$ và $\vec{a}_1 \cdot \vec{a}_2 = |\vec{a}_1|\,|\vec{a}_2|\cos\varphi$. Do đó:
+$$
+\det G = |\vec{a}_1|^2 |\vec{a}_2|^2 - \bigl(|\vec{a}_1|\,|\vec{a}_2|\cos\varphi\bigr)^2 = |\vec{a}_1|^2 |\vec{a}_2|^2(1 - \cos^2\varphi) = |\vec{a}_1|^2 |\vec{a}_2|^2 \sin^2\widehat{(\vec{a}_1, \vec{a}_2)},
+$$
+chính bằng bình phương diện tích hình bình hành dựng trên hai vectơ $\vec{a}_1, \vec{a}_2$.
 </Solution>
 </Exercise>
 
-<Exercise id="exr-e1-2" title="Tích có hướng của hai vectơ (§1, §3 mục 6)">
-Tính a ∧ b với a = (1,2,3), b = (4,5,6).
-
+<Exercise id="exr-e1-2" title="Bài tập 2.7 (Đẳng thức Lagrange trong không gian vectơ Ơclit ba chiều — tr. 135)">
+Trong không gian vectơ Ơclit ba chiều $V_E^3$, chứng minh rằng với mọi cặp vectơ $\vec{a}, \vec{b}$ ta luôn có:
+$$
+(\vec{a} \wedge \vec{b})^2 + (\vec{a} \cdot \vec{b})^2 = \vec{a}^2 \cdot \vec{b}^2.
+$$
 
 <Hint>
-Các định thức cấp 2: |a₂ a₃; b₂ b₃|, |a₃ a₁; b₃ b₁|, |a₁ a₂; b₁ b₂|.
+Xét riêng trường hợp một trong hai vectơ bằng $\vec{0}$; khi $\vec{a} \neq \vec{0}$ và $\vec{b} \neq \vec{0}$, biểu diễn $|\vec{a} \wedge \vec{b}|^2$ và $(\vec{a} \cdot \vec{b})^2$ theo góc $\varphi = \widehat{(\vec{a}, \vec{b})}$.
 </Hint>
 
 <Solution>
-2·6 - 3·5 = -3; 3·4 - 1·6 = 6; 1·5 - 2·4 = -3.
-
-**Đáp án:** (-3, 6, -3)
+- Nếu $\vec{a} = \vec{0}$ hoặc $\vec{b} = \vec{0}$ thì $\vec{a} \wedge \vec{b} = \vec{0}$, $\vec{a} \cdot \vec{b} = 0$ và $\vec{a}^2 \cdot \vec{b}^2 = 0$, nên hai vế đều bằng $0$.
+- Giả sử $\vec{a} \neq \vec{0}$ và $\vec{b} \neq \vec{0}$. Đặt $\varphi = \widehat{(\vec{a}, \vec{b})} \in [0, \pi]$. Theo định nghĩa độ dài vectơ, tích vô hướng và tích có hướng, ta có:
+  $$
+  (\vec{a} \wedge \vec{b})^2 = |\vec{a} \wedge \vec{b}|^2 = \bigl(|\vec{a}|\,|\vec{b}|\sin\varphi\bigr)^2 = |\vec{a}|^2 |\vec{b}|^2 \sin^2\varphi,
+  $$
+  $$
+  (\vec{a} \cdot \vec{b})^2 = \bigl(|\vec{a}|\,|\vec{b}|\cos\varphi\bigr)^2 = |\vec{a}|^2 |\vec{b}|^2 \cos^2\varphi.
+  $$
+  Cộng từng vế hai đẳng thức trên và chú ý $|\vec{a}|^2 = \vec{a}^2$, $|\vec{b}|^2 = \vec{b}^2$, ta được:
+  $$
+  (\vec{a} \wedge \vec{b})^2 + (\vec{a} \cdot \vec{b})^2 = |\vec{a}|^2 |\vec{b}|^2 (\sin^2\varphi + \cos^2\varphi) = |\vec{a}|^2 |\vec{b}|^2 = \vec{a}^2 \cdot \vec{b}^2.
+  $$
 </Solution>
 </Exercise>
 
-<Exercise id="exr-e1-3" title="Tích hỗn hợp và thể tích hình hộp (§1, mục 4)">
-Tính thể tích hình hộp dựng trên a = (1,0,0), b = (1,2,0), c = (1,1,3).
-
+<Exercise id="exr-e1-3" title="Bài tập 2.9 (Phương trình tích có hướng — tr. 136)">
+Trong $V_E^3$, cho $\vec{a} \wedge \vec{c} = \vec{b} \wedge \vec{c}$ với $\vec{c} \neq \vec{0}$. Có thể suy ra $\vec{a} = \vec{b}$ hay không?
 
 <Hint>
-V = |(a,b,c)|, tích hỗn hợp bằng định thức ba hàng.
+Đưa về $(\vec{a} - \vec{b}) \wedge \vec{c} = \vec{0}$ dựa vào tính phân phối của tích có hướng và xét điều kiện hai vectơ cộng tuyến.
 </Hint>
 
 <Solution>
-Ma trận có dạng tam giác nên định thức bằng 1·2·3 = 6.
+**Trả lời:** **Không thể** suy ra $\vec{a} = \vec{b}$.
 
-**Đáp án:** V = 6
+**Giải thích và tìm điều kiện tổng quát:** Áp dụng tính chất kết hợp số thực và phân phối của tích có hướng:
+$$
+\vec{a} \wedge \vec{c} = \vec{b} \wedge \vec{c} \iff \vec{a} \wedge \vec{c} - \vec{b} \wedge \vec{c} = \vec{0} \iff (\vec{a} - \vec{b}) \wedge \vec{c} = \vec{0}.
+$$
+Vì $\vec{c} \neq \vec{0}$, theo định nghĩa tích có hướng, tích $(\vec{a} - \vec{b}) \wedge \vec{c}$ bằng $\vec{0}$ khi và chỉ khi vectơ $\vec{a} - \vec{b}$ cộng tuyến (cùng phương) với $\vec{c}$, nghĩa là tồn tại $k \in \mathbb{R}$ sao cho:
+$$
+\vec{a} - \vec{b} = k\vec{c} \iff \vec{a} = \vec{b} + k\vec{c}.
+$$
+**Phản ví dụ cụ thể:** Chọn $\vec{b} = \vec{0}$ và $\vec{a} = \vec{c} \neq \vec{0}$ (ứng với $k = 1$). Khi đó $\vec{a} \wedge \vec{c} = \vec{c} \wedge \vec{c} = \vec{0} = \vec{0} \wedge \vec{c} = \vec{b} \wedge \vec{c}$, nhưng $\vec{a} \neq \vec{b}$.
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e1-4" title="Bài tập 2.12 (Hệ cơ sở đối ngẫu trong không gian vectơ Ơclit n chiều — tr. 136)">
+Trong không gian vectơ Ơclit $n$ chiều $V_E^n$ cho một hệ vectơ độc lập tuyến tính $\{\vec{a}_1, \vec{a}_2, \dots, \vec{a}_n\}$.
+
+a) Chứng minh rằng tồn tại một hệ vectơ duy nhất $\{\vec{b}_1, \vec{b}_2, \dots, \vec{b}_n\}$ sao cho:
+$$
+\vec{a}_i \cdot \vec{b}_j = \delta_{ij} = \begin{cases} 1, & i = j, \\ 0, & i \neq j \end{cases} \quad (i, j = 1, 2, \dots, n).
+$$
+
+b) Chứng minh rằng nếu vectơ $\vec{x}$ có tọa độ $(x_1, x_2, \dots, x_n)$ đối với cơ sở $\{\vec{a}_i\}$ còn vectơ $\vec{y}$ có tọa độ $(y_1, y_2, \dots, y_n)$ đối với cơ sở $\{\vec{b}_i\}$ thì:
+$$
+\vec{x} \cdot \vec{y} = x_1 y_1 + x_2 y_2 + \dots + x_n y_n.
+$$
+
+<Hint>
+Vì $\dim V_E^n = n$, hệ độc lập tuyến tính $\{\vec{a}_1, \dots, \vec{a}_n\}$ là một cơ sở của $V_E^n$ và ma trận Gram $G = [\vec{a}_i \cdot \vec{a}_k]$ khả nghịch ($\det G > 0$ theo Bài tập 2.1). Biểu diễn $\vec{b}_j = \sum_{k=1}^n c_{kj}\vec{a}_k$ rồi giải điều kiện $GC = I_n$.
+</Hint>
+
+<Solution>
+**a) Chứng minh sự tồn tại duy nhất của hệ $\{\vec{b}_1, \dots, \vec{b}_n\}$ và tính chất cơ sở:**
+
+Vì $\{\vec{a}_1, \vec{a}_2, \dots, \vec{a}_n\}$ gồm $n$ vectơ độc lập tuyến tính trong không gian $n$ chiều $V_E^n$ nên nó là một cơ sở của $V_E^n$. Do đó mỗi vectơ $\vec{b}_j \in V_E^n$ ($j = 1, \dots, n$) được biểu diễn duy nhất dưới dạng:
+$$
+\vec{b}_j = \sum_{k=1}^n c_{kj}\vec{a}_k \quad (c_{kj} \in \mathbb{R}).
+$$
+Thay biểu thức này vào điều kiện $\vec{a}_i \cdot \vec{b}_j = \delta_{ij}$ với mọi $i, j \in \{1, \dots, n\}$:
+$$
+\delta_{ij} = \vec{a}_i \cdot \left(\sum_{k=1}^n c_{kj}\vec{a}_k\right) = \sum_{k=1}^n (\vec{a}_i \cdot \vec{a}_k)c_{kj}.
+$$
+Gọi $G = [\vec{a}_i \cdot \vec{a}_k]_{n \times n}$ là ma trận Gram của cơ sở $\{\vec{a}_i\}$, $C = [c_{kj}]_{n \times n}$ là ma trận các hệ số tọa độ và $I_n = [\delta_{ij}]_{n \times n}$ là ma trận đơn vị cấp $n$. Hệ điều kiện trên tương đương với phương trình ma trận:
+$$
+G C = I_n.
+$$
+Theo Bài tập 2.1a, vì $\{\vec{a}_1, \dots, \vec{a}_n\}$ độc lập tuyến tính nên $\det G > 0$, tức ma trận $G$ khả nghịch. Do đó phương trình $GC = I_n$ có nghiệm duy nhất $C = G^{-1}$. Như vậy tồn tại duy nhất hệ vectơ $\{\vec{b}_1, \dots, \vec{b}_n\}$ thỏa mãn $\vec{a}_i \cdot \vec{b}_j = \delta_{ij}$. Hơn nữa, vì $\det C = (\det G)^{-1} \neq 0$ nên $C$ là ma trận chuyển cơ sở không suy biến, suy ra $\{\vec{b}_1, \dots, \vec{b}_n\}$ cũng là một cơ sở của $V_E^n$ *(gọi là cơ sở đối ngẫu hay cơ sở tương hỗ của $\{\vec{a}_i\}$)*.
+
+**b) Biểu thức tích vô hướng theo cặp cơ sở đối ngẫu:**
+
+Giả sử $\vec{x} = \sum_{i=1}^n x_i\vec{a}_i$ và $\vec{y} = \sum_{j=1}^n y_j\vec{b}_j$. Sử dụng tính chất song tuyến tính của tích vô hướng và hệ thức $\vec{a}_i \cdot \vec{b}_j = \delta_{ij}$:
+$$
+\vec{x} \cdot \vec{y} = \left(\sum_{i=1}^n x_i\vec{a}_i\right) \cdot \left(\sum_{j=1}^n y_j\vec{b}_j\right) = \sum_{i=1}^n \sum_{j=1}^n x_i y_j (\vec{a}_i \cdot \vec{b}_j) = \sum_{i=1}^n \sum_{j=1}^n x_i y_j \delta_{ij} = \sum_{i=1}^n x_i y_i = x_1 y_1 + x_2 y_2 + \dots + x_n y_n.
+$$
 </Solution>
 </Exercise>
 
 <KeyTakeaways>
-- Tích vectơ trong không gian 3 chiều tạo ra vectơ vuông góc với cả hai vectơ nhân tử.
-- Định thức Gram là công cụ hữu hiệu để kiểm tra tính độc lập tuyến tính và tính thể tích khối hộp.
+- Tích vô hướng là dạng song tuyến tính đối xứng xác định dương trên không gian vectơ thực, cho phép định nghĩa chuẩn $|\vec{a}| = \sqrt{\vec{a}^2}$, góc $\widehat{(\vec{a}, \vec{b})}$ và quan hệ trực giao $\vec{a} \perp \vec{b}$.
+- Trong $V_E^3$, tích có hướng $\vec{a} \wedge \vec{b}$ có tính phản giao hoán, phân phối đối với phép cộng vectơ, và thỏa mãn đẳng thức Lagrange $(\vec{a} \wedge \vec{b})^2 + (\vec{a} \cdot \vec{b})^2 = \vec{a}^2 \cdot \vec{b}^2$.
+- Tích hỗn hợp $(\vec{a}, \vec{b}, \vec{c}) = (\vec{a} \wedge \vec{b}) \cdot \vec{c}$ đo thể tích định hướng của hình hộp dựng trên ba vectơ và triệt tiêu khi và chỉ khi ba vectơ đồng phẳng (phụ thuộc tuyến tính).
+- Hệ $n$ vectơ trong $V_E^n$ độc lập tuyến tính khi và chỉ khi định thức Gram $\det G > 0$, từ đó xác định duy nhất hệ cơ sở đối ngẫu $\{\vec{b}_j\}$ thỏa mãn $\vec{a}_i \cdot \vec{b}_j = \delta_{ij}$.
 </KeyTakeaways>
