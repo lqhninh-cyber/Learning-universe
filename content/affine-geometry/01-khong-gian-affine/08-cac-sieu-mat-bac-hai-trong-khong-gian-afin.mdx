@@ -411,282 +411,674 @@ $$
    Thay tọa độ tâm $O(1, 1, -1)$ vào phương trình siêu phẳng kính: $7(1) + 8(1) + 5(-1) - 10 = 7 + 8 - 5 - 10 = 0$, chứng tỏ siêu phẳng kính liên hợp với phương $\vec{c}$ đi qua tâm $O$ của $(S)$.
 </Example>
 
-## 8. Dạng chuẩn tắc của siêu mặt bậc hai trong An
+## 8. Dạng Chuẩn tắc của Siêu mặt Bậc hai trong $\mathcal{A}^n$
 
-**a) Đặt vấn đề.**
+### a) Đặt vấn đề
 
-Phương trình tổng quát $(1)$ có thể chứa $½(n+1)(n+2)$ hệ số $(n(n+1)/2$ hệ số a$_{ij}$, n hệ số a$_{i}$ và a$_{0}$), nên khó nghiên cứu; ta tìm một mục tiêu khác để phương trình đơn giản hơn.
-
-**b) Phép đổi.**
-
-$\sum_{i,j=1}^{n}$a$_{ij}$x$_{i}$x$_{j}$ là một dạng toàn phương đối với cơ sở ${\vect{e_{i}}} (\vect{e_{i}} = \vect{E_{0}E_{i}})$.
-
-Trong đại số tuyến tính, có cơ sở mới \{$\vect{e'_{i}}$\} để dạng toàn phương trở thành chuẩn tắc $\sum_{i=1}^{r}$ε$_{i}$x′$^{2} _{i}$ với $ε_{i} = \pm 1$ hoặc $ε_{i} = 0$.
-
-Giữ nguyên gốc và đổi cơ sở theo $x_{i} = \sum_{j=1}^{n} \alpha _{ij}x'_{j} (2)$, phương trình thành $\sum_{i=1}^{r}ε_{i}x'^{2}_{i} + 2\sum_{i=1}^{n}a'_{i}x'_{i} + a'_{0} = 0 (3)$.
-
-Vì các a$_{ij}$ không đồng thời bằng 0 nên có $ε_{i} \neq 0$; giả sử $ε_{i} \neq 0$ với $i = 1..r (1 \le r \le n)$ và $ε_{j} = 0$ với $j = r+1..n$ (luôn giả thiết được bằng cách hoán vị chỉ số).
-
-Dùng phép tịnh tiến mục tiêu $X_{i} = x'_{i} + ε_{i}a'_{i} (i \le r), X_{j} = x'_{j} (j > r)$ (hoàn thành bình phương), $(3)$ trở thành
- 
+Trong không gian affine $\mathcal{A}^n$ với mục tiêu affine $\{O; \vec{e}_1, \vec{e}_2, \dots, \vec{e}_n\}$, phương trình tổng quát $(1)$ của siêu mặt bậc hai $(S)$:
 
 $$
-\sum_{i=1}^{r} ε_{i}X^{2}_{i} + 2\sum_{j=r+1}^{n} a'_{j}X_{j} + a″_{0} = 0. (4)
+\sum_{i,j=1}^{n} a_{ij}x_i x_j + 2\sum_{i=1}^{n} a_i x_i + a_0 = 0 \qquad (a_{ij} = a_{ji})
 $$
 
- 
-**i)** Nếu $a'_{r+1} = \dots = a'_{n} = 0$ và $a″_{0} \neq 0$: đặt $\lambda _{i} = \frac{ε_{i}}{-a″_{0}}$ (chia hai vế cho $-a″_{0})$ rồi đổi $X'_{i} = √| \lambda _{i}|·X_{i} (i \le r)$ được $\sum_{i=1}^{r}ε'_{i}X'^{2}_{i} = 1$ với $ε'_{i} = \pm 1$ là dấu của λ$_{i}$.  $(6)$
+nếu có mặt đầy đủ mọi yếu tố sẽ gồm $\dfrac{n^2 + n}{2}$ hệ số $a_{ij}$, $n$ hệ số $a_i$ và $1$ số hạng tự do $a_0$, tổng cộng tới $\dfrac{1}{2}(n + 1)(n + 2)$ tham số. Để thuận lợi cho việc nghiên cứu và phân loại, ta tìm một mục tiêu affine mới sao cho phương trình của $(S)$ trở nên đơn giản nhất (dạng chuẩn tắc).
 
-**ii)** Nếu $a'_{r+1} = \dots = a'_{n} = 0$ và $a″_{0} = 0: \sum_{i=1}^{r}ε_{i}X^{2}_{i} = 0$.  $(7)$
+### b) Phép biến đổi đưa về dạng chuẩn tắc
 
-**iii)** Nếu có ít nhất một $a'_{j} \neq 0$ (chẳng hạn $a'_{r+1} \neq 0)$: đặt $X'_{r+1} = -\sum_{j=r+1}^{n}a'_{j}X_{j} - a″_{0}/2$ và $X'_{i} = X_{i} (i \neq r+1)$ thì $\sum_{i=1}^{r}ε_{i}X'^{2}_{i} = 2X'_{r+1}, 1 \le r \le n-1$.  $(8)$
+Gọi $\overrightarrow{\mathcal{A}^n}$ là không gian vectơ liên kết của $\mathcal{A}^n$ với cơ sở nền $\{\vec{e}_i\} = \{\overrightarrow{E_0E_i}\}$ ($i = 1, 2, \dots, n$). Vì tọa độ $(x_1, \dots, x_n)$ của điểm $X \in \mathcal{A}^n$ đối với $\{E_0; E_i\}$ cũng là tọa độ của vectơ $\overrightarrow{E_0X}$ đối với cơ sở $\{\vec{e}_i\}$, biểu thức $\sum_{i,j=1}^{n} a_{ij}x_i x_j$ là một dạng toàn phương trên $\overrightarrow{\mathcal{A}^n}$.
 
-<Theorem id="thm-s8-19" title="c) Định lí">
-Bằng cách chọn mục tiêu tọa độ thích hợp, mọi siêu mặt bậc hai (S) trong $\mathcal{A} ^{n}$ đều có phương trình thuộc một trong ba dạng *chuẩn tắc*:
+1. **Bước 1 — Chéo hóa dạng toàn phương (đổi cơ sở, giữ nguyên gốc):**
+   Theo đại số tuyến tính, tồn tại cơ sở mới $\{\vec{e}'_1, \vec{e}'_2, \dots, \vec{e}'_n\}$ (với $\overrightarrow{E_0E'_i} = \vec{e}'_i$) cùng phép đổi cơ sở $x_i = \sum_{j=1}^{n} \alpha_{ij}x'_j$ ($i = 1, \dots, n$, gọi là phép đổi $(2)$) đưa dạng toàn phương về dạng chính tắc $\sum_{i=1}^{n} \varepsilon_i x'^2_i$ với $\varepsilon_i \in \{-1, 0, 1\}$. Khi đó phương trình của $(S)$ đối với mục tiêu mới có dạng:
 
-**(I)** $\sum_{i=1}^{r} ε_{i}x^{2}_{i} = 1$,  $1 \le r \le n$;
+$$
+\sum_{i=1}^{n} \varepsilon_i x'^2_i + 2\sum_{i=1}^{n} a'_i x'_i + a'_0 = 0. \tag{10}
+$$
 
-**(II)** $\sum_{i=1}^{r} ε_{i}x^{2}_{i} = 0$,  $1 \le r \le n$;
+   Vì các $a_{ij}$ không đồng thời bằng $0$ nên có ít nhất một $\varepsilon_i \neq 0$. Bằng phép đổi thứ tự các trục tọa độ nếu cần (hoán vị các chỉ số biến), ta luôn có thể giả thiết $\varepsilon_i = \pm 1$ với $i = 1, 2, \dots, r$ ($1 \le r \le n$) và $\varepsilon_j = 0$ với $j = r + 1, \dots, n$.
 
-**(III)** $\sum_{i=1}^{r} ε_{i}x^{2}_{i} = 2x_{r+1}$,  $1 \le r \le n-1$;  $(ε_{i} = \pm 1)$.
+2. **Bước 2 — Khử các số hạng bậc nhất của biến bậc hai (hoàn thành bình phương):**
+   Thực hiện phép tịnh tiến mục tiêu *(đính chính lỗi in tr. 60 gõ thiếu dấu phẩy ở $a'_i$)*:
 
-Viết cụ thể: Dạng $(I): -x^{2}_{1} - \dots - x^{2}_{k} + x^{2}_{k+1} + \dots + x^{2}_{r} = 1 (1 \le r \le n, 0 \le k \le r)$.
+$$
+\begin{cases}
+X_i = x'_i + \varepsilon_i a'_i & (i = 1, 2, \dots, r) \\
+X_j = x'_j & (j = r + 1, \dots, n).
+\end{cases}
+$$
 
-Dạng (II): cùng vế trái $= 0$, với $0 \le k \le \frac{r}{2}$ (nếu $k > \frac{r}{2}$ thì nhân hai vế với $-1)$.
+   Vì $\varepsilon_i^2 = 1$, ta có $\varepsilon_i X_i^2 = \varepsilon_i x'^2_i + 2a'_i x'_i + \varepsilon_i (a'_i)^2$, nên $(10)$ rút gọn thành:
 
-Dạng (III): cùng vế trái $= 2x_{r+1}$ với $1 \le r \le n-1, 0 \le k \le \frac{r}{2}$ (cùng lí do).
+$$
+\sum_{i=1}^{r} \varepsilon_i X_i^2 + 2\sum_{j=r+1}^{n} a'_j X_j + a''_0 = 0 \qquad (\varepsilon_i = \pm 1,\; 1 \le r \le n), \tag{11}
+$$
+
+   với $a''_0 = a'_0 - \sum_{i=1}^{r} \varepsilon_i (a'_i)^2$.
+
+3. **Bước 3 — Chia ba trường hợp theo phần tuyến tính và hằng số tự do:**
+   - **Trường hợp (i): $a'_{r+1} = a'_{r+2} = \dots = a'_n = 0$ và $a''_0 \neq 0$.**
+     Chia hai vế của $(11)$ cho $-a''_0 \neq 0$ và đặt $\lambda_i = -\dfrac{\varepsilon_i}{a''_0} \neq 0$ ($i = 1, \dots, r$) *(đính chính lỗi in cuối tr. 60 gõ thiếu dấu trừ thành $\frac{\varepsilon_i}{a''_0}$)*, ta được $\sum_{i=1}^{r} \lambda_i X_i^2 = 1$. Dùng phép đổi tỉ lệ mục tiêu *(đính chính lỗi in đầu tr. 61 ở cận trên $r < k \le n$)*:
+
+$$
+\begin{cases}
+X'_i = \sqrt{\lambda_i}\, X_i & \text{nếu } \lambda_i > 0 \;\; (1 \le i \le r) \\
+X'_j = \sqrt{-\lambda_j}\, X_j & \text{nếu } \lambda_j < 0 \;\; (1 \le j \le r) \\
+X'_k = X_k & \text{nếu } r < k \le n,
+\end{cases}
+$$
+
+     ta đưa được phương trình về dạng:
+
+$$
+\sum_{i=1}^{r} \varepsilon'_i X'^2_i = 1 \qquad (\varepsilon'_i = \operatorname{sgn}(\lambda_i) = \pm 1,\; 1 \le r \le n).
+$$
+
+   - **Trường hợp (ii): $a'_{r+1} = a'_{r+2} = \dots = a'_n = 0$ và $a''_0 = 0$.**
+     Phương trình $(11)$ có ngay dạng:
+
+$$
+\sum_{i=1}^{r} \varepsilon_i X_i^2 = 0 \qquad (\varepsilon_i = \pm 1,\; 1 \le r \le n).
+$$
+
+   - **Trường hợp (iii): Có ít nhất một hệ số $a'_j \neq 0$ ($r + 1 \le j \le n$, kéo theo $r \le n - 1$).**
+     Không mất tính tổng quát (hoán vị chỉ số từ $r + 1$ đến $n$ nếu cần), giả sử $a'_{r+1} \neq 0$. Thực hiện phép đổi mục tiêu không suy biến *(đính chính lỗi in giữa tr. 61 gõ nhầm hằng số $a''_0$ thành $b$)*:
+
+$$
+\begin{cases}
+X'_{r+1} = -\displaystyle\sum_{j=r+1}^{n} a'_j X_j - \frac{a''_0}{2} \\
+X'_i = X_i \qquad (i \neq r + 1),
+\end{cases}
+$$
+
+     ta đưa phương trình $(11)$ về dạng:
+
+$$
+\sum_{i=1}^{r} \varepsilon_i X'^2_i = 2X'_{r+1} \qquad (\varepsilon_i = \pm 1,\; 1 \le r \le n - 1).
+$$
+
+### c) Định lí về phương trình chuẩn tắc
+
+<Theorem id="thm-s8-19" title="Ba dạng chuẩn tắc affine của siêu mặt bậc hai trong A^n">
+Bằng cách chọn mục tiêu tọa độ affine thích hợp, mọi siêu mặt bậc hai $(S)$ trong không gian affine thực $\mathcal{A}^n$ đều có phương trình thuộc một trong ba **dạng chuẩn tắc** sau đây (với $\varepsilon_i = \pm 1$):
+
+$$
+\begin{aligned}
+\text{(I)} \quad &: \quad \sum_{i=1}^{r} \varepsilon_i x_i^2 = 1 && (1 \le r \le n), \\
+\text{(II)} \quad &: \quad \sum_{i=1}^{r} \varepsilon_i x_i^2 = 0 && (1 \le r \le n), \\
+\text{(III)} \quad &: \quad \sum_{i=1}^{r} \varepsilon_i x_i^2 = 2x_{r+1} && (1 \le r \le n - 1).
+\end{aligned}
+$$
+
+Sắp xếp các dấu âm đứng trước (gọi $k$ là số dấu trừ), ba dạng chuẩn tắc được viết tường minh là:
+
+- **Dạng (I):** $-x_1^2 - x_2^2 - \dots - x_k^2 + x_{k+1}^2 + \dots + x_r^2 = 1$, với $1 \le r \le n$ và $0 \le k \le r$.
+- **Dạng (II):** $-x_1^2 - x_2^2 - \dots - x_k^2 + x_{k+1}^2 + \dots + x_r^2 = 0$, với $1 \le r \le n$ và $0 \le k \le \dfrac{r}{2}$ *(nếu $k > \dfrac{r}{2}$ thì nhân hai vế với $-1$ để đưa số dấu trừ về $r - k < \dfrac{r}{2}$)*.
+- **Dạng (III):** $-x_1^2 - x_2^2 - \dots - x_k^2 + x_{k+1}^2 + \dots + x_r^2 = 2x_{r+1}$, với $1 \le r \le n - 1$ và $0 \le k \le \dfrac{r}{2}$ *(cùng lí do: nhân hai vế với $-1$ và đổi dấu $x_{r+1} \mapsto -x_{r+1}$ nếu $k > \dfrac{r}{2}$)*.
 </Theorem>
 
-<Example id="ex-s8-20" title="Ví dụ">
-Trong $\mathcal{A} ^{2}$: 
-
-$$
-x^{2} + 4y^{2} - 2x + 8y + 1 = 0 \iff (x-1)^{2} + 4(y+1)^{2} = 4.
-$$
-
- Đặt $X_{1} = \frac{x-1}{2}, X_{2} = y + 1$ (phép đổi mục tiêu không suy biến) được $X^{2}_{1} + X^{2}_{2} = 1$: dạng (I) với $r = 2, k = 0$.
-
-Còn $y^{2} + 4y - 2x + 6 = 0 \iff (y+2)^{2} = 2(x-1)$; đặt $X_{1} = y + 2, X_{2} = x - 1$ được $X^{2}_{1} = 2X_{2}$: dạng (III) với $r = 1, k = 0$.
+<Example id="ex-s8-20" title="Ví dụ: Đưa đường bậc hai trong A^2 về dạng chuẩn tắc">
+- Đường bậc hai $x^2 + 4y^2 - 2x + 8y + 1 = 0 \iff (x - 1)^2 + 4(y + 1)^2 = 4$. Đặt $X_1 = \dfrac{x - 1}{2},\; X_2 = y + 1$ (phép đổi mục tiêu không suy biến), ta được $X_1^2 + X_2^2 = 1$: dạng **(I)** với $r = 2, k = 0$ (đường elip).
+- Đường bậc hai $y^2 + 4y - 2x + 6 = 0 \iff (y + 2)^2 = 2(x - 1)$. Đặt $X_1 = y + 2,\; X_2 = x - 1$, ta được $X_1^2 = 2X_2$: dạng **(III)** với $r = 1, k = 0$ (đường parabol).
 </Example>
 
-## 9. Sự phân loại afin các siêu mặt bậc hai
+## 9. Sự Phân loại Affine các Siêu mặt Bậc hai
 
-<Definition id="def-s8-21" title="a) Định nghĩa">
-Hai siêu mặt bậc hai trong $\mathcal{A} ^{n}$ gọi là *cùng loại* nếu phương trình chuẩn tắc của chúng có cùng một dạng (I, II hoặc III) cùng với một giá trị k và r như nhau.
+<Definition id="def-s8-21" title="Hai siêu mặt bậc hai cùng loại">
+Hai siêu mặt bậc hai trong $\mathcal{A}^n$ được gọi là **cùng loại** nếu phương trình chuẩn tắc của chúng có cùng một dạng (dạng I, II hoặc III) đồng thời có cùng các giá trị $r$ và $k$ như nhau — nói cách khác, phương trình chuẩn tắc của chúng hoàn toàn giống nhau.
 </Definition>
 
-**b) Nhận xét.**
+<Remark title="Tính xác định duy nhất của loại chuẩn tắc">
+Một siêu mặt bậc hai $(S)$ không thể đồng thời thuộc hai loại khác nhau:
 
-Một siêu mặt bậc hai không thể thuộc hai loại khác nhau: nếu có dạng (I) thì tâm của (S) không thuộc (S); nếu có dạng (II) thì mọi tâm của (S) đều thuộc (S); nếu có dạng (III) thì (S) không có tâm.
-
-Hai phương trình cùng dạng chuẩn tắc nhưng khác r hoặc k cũng không cùng là phương trình chuẩn tắc của một siêu mặt: r là hạng của dạng toàn phương, còn k là chỉ số âm quán tính, cả hai bất biến qua phép đổi tọa độ.
-
-<Theorem id="thm-s8-22" title="c) Định lí">
-Hai siêu mặt bậc hai (S), (S′) *tương đương afin* (có phép afin biến (S) thành (S′)) khi và chỉ khi chúng cùng loại.
-
-Nói cách khác, đây là một sự phân loại afin.
-</Theorem>
-
-<Proof of="thm-s8-22">
-(⇐) Nếu cùng loại thì có mục tiêu \{E$_{0}$; E$_{i}$\} và \{E′$_{0}$; E′$_{i}$\} sao cho phương trình của (S) và (S′) trong hai mục tiêu ấy hoàn toàn giống nhau.
-
-Phép afin *f* với $f(E_{i}) = E'_{i}$ biến (S) thành (S′).
-
-$( \implies )$ Ngược lại, nếu $f(S) = (S')$ thì lấy mục tiêu \{E$_{0}$; E$_{i}$\} làm phương trình (S) chuẩn tắc và $E'_{i} = f(E_{i})$; phương trình (S′) đối với mục tiêu \{E′$_{0}$; E′$_{i}$\} cũng giống hệt, nên (S), (S′) cùng loại.
-</Proof>
-
-**d) Phân loại afin trong $\mathcal{A} ^{2}$** (đường bậc hai), có 9 loại:
-
-**e) Phân loại afin trong $\mathcal{A} ^{3}$** (mặt bậc hai), có 17 loại:
-
-<Example id="ex-s8-24" title="Ví dụ">
-Đường cong $xy = 1$ trong $\mathcal{A} ^{2}$: đặt $x = u + v, y = u - v$ (phép đổi tọa độ không suy biến) thì $xy = u^{2} - v^{2}$, nên $u^{2} - v^{2} = 1$, tức $-v^{2} + u^{2} = 1$, dạng (I) với $r = 2, k = 1$: loại 2), đường hypebol.
-
-Mặt $x^{2} + y^{2} - z^{2} = 0$ (mặt nón, ví dụ ở mục 6) đổi chỗ các biến được $-z^{2} + x^{2} + y^{2} = 0$, dạng (II) với $r = 3, k = 1 \le \frac{r}{2}$: loại 6), mặt nón.
-</Example>
-
-## 10. Mặt kẻ bậc hai trong A3
-
-<Definition id="def-s8-25" title="a) Định nghĩa">
-Một mặt bậc hai gọi là *mặt kẻ* nếu qua mỗi điểm của nó có ít nhất một đường thẳng nằm hoàn toàn trên mặt đó.
-
-Mặt kẻ là mặt tạo nên bởi một tập hợp các đường thẳng; mỗi đường thẳng ấy gọi là một *đường sinh thẳng* của mặt kẻ.
-</Definition>
-
-Từ định nghĩa, các mặt nón bậc hai, các mặt trụ bậc hai và các cặp mặt phẳng là những mặt kẻ bậc hai.
-
-Ngoài ra, mặt hypeboloit một tầng (phương trình chuẩn tắc $-x^{2}_{1} + x^{2}_{2} + x^{2}_{3} = 1)$ và mặt paraboloit hypebolic $(-x^{2}_{1} + x^{2}_{2} = 2x_{3})$ cũng là mặt kẻ bậc hai; đây là hai mặt kẻ đặc biệt.
-
-Việc đổi chỗ các tọa độ trong phương trình chuẩn tắc không làm thay đổi tính chất cơ bản của chúng.
-
-<Theorem id="thm-s8-26" title="b) Mặt kẻ hypeboloit một tầng">
-Phương trình $-x^{2}_{1} + x^{2}_{2} + x^{2}_{3} = 1 (1) \iff x^{2}_{2} - x^{2}_{1} = 1 - x^{2}_{3} \iff (x_{2} + x_{1})(x_{2} - x_{1}) = (1 + x_{3})(1 - x_{3})$.
-
-Xét hai họ đường thẳng
- 
-
-$$
-\begin{cases} d: p(x_{2} + x_{1}) = q(1 + x_{3}) \\ q(x_{2} - x_{1}) = p(1 - x_{3}); \end{cases}(2)
-$$
-
- 
- 
-
-$$
-\begin{cases} d': p'(x_{2} + x_{1}) = q'(1 - x_{3}) \\ q'(x_{2} - x_{1}) = p'(1 + x_{3}). \end{cases}(3)
-$$
-
- 
-Nhân hai phương trình xác định d (hay d′) ta được phương trình $(1)$, với mọi p, q (p′, q′) không đồng thời bằng 0.
-
-Do đó mọi điểm thỏa d hay d′ đều thuộc hypeboloit.
-
-Cho p, q, p′, q′ nhận mọi giá trị có thể, ta được tất cả các đường sinh thẳng của hypeboloit một tầng; mỗi cặp $(p,q)$ hoặc $(p',q')$ cho một đường sinh thẳng.
-</Theorem>
-
-<Example id="ex-s8-27" title="Thí dụ (sách, tr. 67)">
-Lập phương trình đường sinh thẳng của hypeboloit một tầng đi qua $M_{0}(1, -1, 1)$.
-
-Thay M$_{0}$ vào $(2): p(-1+1) = q(1+1)$ và $q(-1-1) = p(1-1)$ cho $q = 0$, tức $(p,q) = (1,0)$; đường d$_{0}$: 
-
-$$
-\begin{cases} x_{2} + x_{1} = 0 \\ 1 - x_{3} = 0. \end{cases}
-$$
-
- Thay vào $(3): p'(0) = q'(0)$ và $q'(-2) = p'(2)$ cho $(p',q') = (1,-1)$; đường d′$_{0}$: 
-
-$$
-\begin{cases} x_{1} + x_{2} - x_{3} + 1 = 0 \\ x_{1} - x_{2} - x_{3} - 1 = 0. \end{cases}
-$$
-
- Vậy qua M$_{0}$ có hai đường sinh thẳng, mỗi đường thuộc một họ.
-
-Kiểm tra: M$_{0}$ thỏa cả hai hệ $(1 - 1 - 1 + 1 = 0$ và $1 + 1 - 1 - 1 = 0)$, và thỏa $(1)$: 
-
-$$
--1 + 1 + 1 = 1.
-$$
-</Example>
-
-<Theorem id="thm-s8-28" title="c) Mặt kẻ paraboloit hypebolic">
-(mặt yên ngựa).
-
-Phương trình chuẩn tắc $-x^{2}_{1} + x^{2}_{2} = 2x_{3} (4) \iff (x_{2} + x_{1})(x_{2} - x_{1}) = 2x_{3}$.
-
-Lập luận tương tự, có hai họ đường sinh thẳng:
- 
-
-$$
-\begin{cases} d: p(x_{2} + x_{1}) = qx_{3} \\ q(x_{2} - x_{1}) = 2p; \end{cases}(5)
-$$
-
- 
- 
-
-$$
-\begin{cases} d': p'(x_{2} + x_{1}) = 2q' \\ q'(x_{2} - x_{1}) = p'x_{3}. \end{cases}(6)
-$$
-</Theorem>
-
-<Example id="ex-s8-29" title="Thí dụ (sách, tr. 68)">
-Lập phương trình đường sinh thẳng của mặt $-x^{2}_{1} + x^{2}_{2} = 2x_{3}$ đi qua $N_{0}(0,2,2)$.
-
-Thay vào $(5): p(2) = 2q$ và $q(2) = 2p$ cho $(p,q) = (1,1)$; đường d$_{0}$: 
-
-$$
-\begin{cases} x_{1} + x_{2} - x_{3} = 0 \\ x_{1} - x_{2} + 2 = 0. \end{cases}
-$$
-
- Thay vào $(6): p'(2) = 2q'$ và $q'(2) = 2p'$ cho $(p',q') = (1,1)$; đường d′$_{0}$: 
-
-$$
-\begin{cases} x_{1} + x_{2} - 2 = 0 \\ x_{1} - x_{2} + x_{3} = 0. \end{cases}
-$$
-
- Vậy mặt có hai đường sinh thẳng đi qua N$_{0}$.
-
-Kiểm tra: N$_{0}$ thỏa $(4): -0 + 4 = 4 = 2·2$, và thỏa cả hai hệ $(0 + 2 - 2 = 0, 0 - 2 + 2 = 0; 0 + 2 - 2 = 0, 0 - 2 + 2 = 0)$.
-</Example>
-
-<Remark title="Chú ý">
-Trong kĩ thuật xây dựng, người ta dùng các kiến thức về các đường sinh thẳng của mặt hypeboloit để xây các tháp nước, tháp vô tuyến truyền hình hoặc giá đỡ các vật nặng.
+1. **Phân biệt giữa ba dạng (I), (II), (III):**
+   - Nếu $(S)$ có dạng **(I)** thì hệ tìm tâm $A[x] + [a] = 0$ có nghiệm $(0, \dots, 0, x_{r+1}, \dots, x_n)$ không thuộc $(S)$ ($0 \neq 1$), tức **tâm của $(S)$ không thuộc $(S)$**.
+   - Nếu $(S)$ có dạng **(II)** thì mọi nghiệm tâm $(0, \dots, 0, x_{r+1}, \dots, x_n)$ đều thỏa phương trình ($0 = 0$), tức **mọi tâm của $(S)$ đều thuộc $(S)$** (đều là điểm kì dị).
+   - Nếu $(S)$ có dạng **(III)** thì phương trình tìm tâm ứng với biến $x_{r+1}$ là $0 \cdot x_{r+1} - 1 = 0$ (vô nghiệm), tức **$(S)$ không có tâm**.
+2. **Phân biệt cặp chỉ số $(r, k)$ trong cùng một dạng:** Trong dạng toàn phương của phương trình, $r$ chính là **hạng** và $k$ là **chỉ số âm quán tính** (đã chuẩn hóa $k \le \frac{r}{2}$ với dạng II, III). Theo định lí quán tính Sylvester của đại số tuyến tính, cặp $(r, k)$ là bất biến qua mọi phép đổi tọa độ không suy biến (không đổi dấu ở dạng I; và bất biến tập $\{k, r - k\}$ ở dạng II, III).
 </Remark>
 
-## Bài tập vận dụng và củng cố
+<Theorem id="thm-s8-22" title="Phân loại affine các siêu mặt bậc hai">
+Hai siêu mặt bậc hai $(S)$ và $(S')$ trong $\mathcal{A}^n$ **tương đương affine** (tồn tại phép biến đổi affine $f$ sao cho $f(S) = (S')$) khi và chỉ khi chúng **cùng loại**. Nói cách khác, phép chia loại theo <Ref to="def-s8-21" /> là một **sự phân loại affine**.
+</Theorem>
 
-<Exercise id="exr-s8-1" title="Dạng chuẩn tắc và phân loại siêu mặt bậc hai afin (§8)">
-Đưa đường bậc hai x² + 4y² - 2x + 8y + 1 = 0 về dạng chuẩn tắc afin và cho biết loại.
+<Proof of="thm-s8-22" defaultOpen={true}>
+- **Điều kiện đủ ($\Longleftarrow$):** Giả sử $(S)$ và $(S')$ cùng loại. Khi đó tồn tại hai mục tiêu affine $\{E_0; E_i\}$ và $\{E'_0; E'_i\}$ sao cho phương trình của $(S)$ đối với $\{E_0; E_i\}$ và phương trình của $(S')$ đối với $\{E'_0; E'_i\}$ là hai phương trình chuẩn tắc hoàn toàn giống nhau. Gọi $f: \mathcal{A}^n \to \mathcal{A}^n$ là phép biến đổi affine duy nhất biến $E_i \mapsto E'_i$ ($i = 0, 1, \dots, n$), liên kết với tự đẳng cấu tuyến tính $\varphi: \overrightarrow{\mathcal{A}^n} \to \overrightarrow{\mathcal{A}^n}$ biến cơ sở $\{\overrightarrow{E_0E_i}\}$ thành cơ sở $\{\overrightarrow{E'_0E'_i}\}$. Khi đó mọi điểm $X$ có tọa độ $(x_1, \dots, x_n)$ đối với $\{E_0; E_i\}$ đều có ảnh $f(X)$ nhận đúng $(x_1, \dots, x_n)$ làm tọa độ đối với $\{E'_0; E'_i\}$. Do đó phương trình của $f(S)$ đối với $\{E'_0; E'_i\}$ trùng khít phương trình của $(S)$ đối với $\{E_0; E_i\}$, cũng là phương trình của $(S')$ đối với $\{E'_0; E'_i\}$. Vậy $f(S) = (S')$.
+- **Điều kiện cần ($\Longrightarrow$):** Ngược lại, giả sử $(S)$ và $(S')$ tương đương affine, tức có phép biến đổi affine $f$ để $f(S) = (S')$. Gọi $\{E_0; E_i\}$ là mục tiêu sao cho đối với nó phương trình của $(S)$ có dạng chuẩn tắc, và đặt $E'_i = f(E_i)$ ($i = 0, 1, \dots, n$). Khi đó $\{E'_0; E'_i\}$ là một mục tiêu affine và phương trình của $(S') = f(S)$ đối với $\{E'_0; E'_i\}$ hoàn toàn giống phương trình chuẩn tắc của $(S)$ đối với $\{E_0; E_i\}$. Vậy $(S)$ và $(S')$ cùng loại.
+</Proof>
 
+### d) Phân loại affine các đường bậc hai trong $\mathcal{A}^2$ (9 loại)
+
+Trong $\mathcal{A}^2$, phương trình tổng quát của đường bậc hai là $a_{11}x_1^2 + a_{22}x_2^2 + 2a_{12}x_1 x_2 + 2a_1 x_1 + 2a_2 x_2 + a_0 = 0$. Dựa vào ba dạng chuẩn tắc, có đúng **9 loại đường bậc hai** khác nhau trong $\mathcal{A}^2$:
+
+| STT | Phương trình chuẩn tắc | Dạng / $(r, k)$ | Tên gọi |
+| :-: | :--------------------- | :-------------: | :------ |
+| 1 | $x_1^2 + x_2^2 = 1$ | (I), $(2, 0)$ | Đường elip |
+| 2 | $-x_1^2 + x_2^2 = 1$ | (I), $(2, 1)$ | Đường hypebol |
+| 3 | $-x_1^2 - x_2^2 = 1$ | (I), $(2, 2)$ | Đường elip ảo |
+| 4 | $x_1^2 + x_2^2 = 0$ | (II), $(2, 0)$ | Cặp đường thẳng ảo cắt nhau |
+| 5 | $-x_1^2 + x_2^2 = 0$ | (II), $(2, 1)$ | Cặp đường thẳng cắt nhau |
+| 6 | $x_1^2 = 2x_2$ | (III), $(1, 0)$ | Đường parabol |
+| 7 | $x_1^2 = 1$ | (I), $(1, 0)$ | Cặp đường thẳng song song |
+| 8 | $-x_1^2 = 1$ | (I), $(1, 1)$ | Cặp đường thẳng ảo song song |
+| 9 | $x_1^2 = 0$ | (II), $(1, 0)$ | Cặp đường thẳng trùng nhau |
+
+### e) Phân loại affine các mặt bậc hai trong $\mathcal{A}^3$ (17 loại)
+
+Trong $\mathcal{A}^3$, phương trình tổng quát của mặt bậc hai là $a_{11}x_1^2 + a_{22}x_2^2 + a_{33}x_3^2 + 2a_{12}x_1 x_2 + 2a_{13}x_1 x_3 + 2a_{23}x_2 x_3 + 2a_1 x_1 + 2a_2 x_2 + 2a_3 x_3 + a_0 = 0$. Có đúng **17 loại mặt bậc hai** khác nhau trong $\mathcal{A}^3$:
+
+| STT | Phương trình chuẩn tắc | Dạng / $(r, k)$ | Tên gọi |
+| :-: | :--------------------- | :-------------: | :------ |
+| 1 | $x_1^2 + x_2^2 + x_3^2 = 1$ | (I), $(3, 0)$ | Mặt elipxoit |
+| 2 | $-x_1^2 + x_2^2 + x_3^2 = 1$ | (I), $(3, 1)$ | Mặt hypeboloit một tầng |
+| 3 | $-x_1^2 - x_2^2 + x_3^2 = 1$ | (I), $(3, 2)$ | Mặt hypeboloit hai tầng |
+| 4 | $-x_1^2 - x_2^2 - x_3^2 = 1$ | (I), $(3, 3)$ | Mặt elipxoit ảo |
+| 5 | $x_1^2 + x_2^2 + x_3^2 = 0$ | (II), $(3, 0)$ | Mặt nón ảo |
+| 6 | $-x_1^2 + x_2^2 + x_3^2 = 0$ | (II), $(3, 1)$ | Mặt nón |
+| 7 | $x_1^2 + x_2^2 - 2x_3 = 0$ | (III), $(2, 0)$ | Mặt paraboloit eliptic |
+| 8 | $-x_1^2 + x_2^2 - 2x_3 = 0$ | (III), $(2, 1)$ | Mặt paraboloit hypebolic (mặt yên ngựa) |
+| 9 | $x_1^2 + x_2^2 = 1$ | (I), $(2, 0)$ | Mặt trụ eliptic |
+| 10 | $-x_1^2 + x_2^2 = 1$ | (I), $(2, 1)$ | Mặt trụ hypebolic |
+| 11 | $-x_1^2 - x_2^2 = 1$ | (I), $(2, 2)$ | Mặt trụ eliptic ảo |
+| 12 | $x_1^2 + x_2^2 = 0$ | (II), $(2, 0)$ | Cặp mặt phẳng ảo cắt nhau |
+| 13 | $-x_1^2 + x_2^2 = 0$ | (II), $(2, 1)$ | Cặp mặt phẳng cắt nhau |
+| 14 | $x_1^2 - 2x_2 = 0$ | (III), $(1, 0)$ | Mặt trụ parabolic |
+| 15 | $x_1^2 = 1$ | (I), $(1, 0)$ | Cặp mặt phẳng song song |
+| 16 | $-x_1^2 = 1$ | (I), $(1, 1)$ | Cặp mặt phẳng ảo song song |
+| 17 | $x_1^2 = 0$ | (II), $(1, 0)$ | Cặp mặt phẳng trùng nhau |
+
+<Example id="ex-s8-24" title="Ví dụ: Nhận diện loại affine của đường hypebol và mặt nón">
+- Đường cong $xy = 1$ trong $\mathcal{A}^2$: đặt $x = u + v,\; y = u - v$ (phép đổi tọa độ không suy biến có định thức $-2 \neq 0$) thì $xy = u^2 - v^2$, suy ra $-v^2 + u^2 = 1$ — dạng **(I)** với $r = 2, k = 1$, tức loại **2)** (đường hypebol).
+- Mặt $x^2 + y^2 - z^2 = 0$ trong $\mathcal{A}^3$: hoán vị biến được $-z^2 + x^2 + y^2 = 0$ — dạng **(II)** với $r = 3, k = 1 \le \dfrac{3}{2}$, tức loại **6)** (mặt nón).
+</Example>
+
+## 10. Mặt Kẻ Bậc hai trong $\mathcal{A}^3$
+
+<Definition id="def-s8-25" title="Mặt kẻ và đường sinh thẳng">
+Trong không gian affine $\mathcal{A}^3$ *(đính chính lỗi in tr. 65–66 gõ nhầm ba chỗ thành $\mathcal{A}^2$)*, một mặt bậc hai được gọi là **mặt kẻ** nếu qua bất kỳ điểm nào của mặt cũng có ít nhất một đường thẳng nằm hoàn toàn trên mặt đó.
+
+Như vậy mặt kẻ là mặt được tạo nên bởi một họ các đường thẳng; mỗi đường thẳng nằm hoàn toàn trên mặt đó gọi là một **đường sinh thẳng** của mặt kẻ.
+</Definition>
+
+Từ <Ref to="def-s8-25" />, ta thấy ngay các mặt nón bậc hai, các mặt trụ bậc hai và các cặp mặt phẳng đều là những mặt kẻ bậc hai. Ngoài ra, **mặt hypeboloit một tầng** ($-x_1^2 + x_2^2 + x_3^2 = 1$) và **mặt paraboloit hypebolic** ($-x_1^2 + x_2^2 = 2x_3$) là hai mặt kẻ bậc hai đặc biệt (có hai họ đường sinh thẳng). Cần chú ý rằng việc đổi chỗ vai trò các tọa độ $x_1, x_2, x_3$ trong phương trình chuẩn tắc không làm thay đổi tính chất cơ bản của hai mặt kẻ đó.
+
+<Theorem id="thm-s8-26" title="Hai họ đường sinh thẳng của mặt kẻ hypeboloit một tầng">
+Mặt hypeboloit một tầng có phương trình chuẩn tắc:
+
+$$
+-x_1^2 + x_2^2 + x_3^2 = 1 \iff x_2^2 - x_1^2 = 1 - x_3^2 \iff (x_2 + x_1)(x_2 - x_1) = (1 + x_3)(1 - x_3) \tag{12}
+$$
+
+chứa hai họ đường sinh thẳng $d$ và $d'$ phụ thuộc các cặp tham số $(p, q) \neq (0, 0)$ và $(p', q') \neq (0, 0)$:
+
+$$
+d: \begin{cases} p(x_2 + x_1) = q(1 + x_3) \\ q(x_2 - x_1) = p(1 - x_3), \end{cases}
+\qquad
+d': \begin{cases} p'(x_2 + x_1) = q'(1 - x_3) \\ q'(x_2 - x_1) = p'(1 + x_3). \end{cases}
+$$
+
+Thật vậy, nhân vế theo vế hai phương trình xác định $d$ (hoặc $d'$) cho $pq(x_2 + x_1)(x_2 - x_1) = pq(1 + x_3)(1 - x_3)$ (khi $p, q \neq 0$, rút gọn cho $pq$ được $(12)$; khi một trong hai tham số bằng $0$ thì vế trái và vế phải của $(12)$ cùng bằng $0$), nên mọi điểm thuộc $d$ hoặc $d'$ đều nằm trên hypeboloit một tầng. Khi $(p, q)$ và $(p', q')$ quét mọi cặp tỉ số khác $(0, 0)$, ta thu được hai họ đầy đủ các đường sinh thẳng; qua mỗi điểm thuộc mặt có đúng hai đường sinh thẳng (mỗi họ một đường).
+</Theorem>
+
+<Example id="ex-s8-27" title="Thí dụ: Lập phương trình hai đường sinh thẳng của hypeboloit một tầng qua M_0(1, -1, 1)">
+Lập phương trình các đường sinh thẳng của mặt hypeboloit một tầng $-x_1^2 + x_2^2 + x_3^2 = 1$ đi qua điểm $M_0(1, -1, 1)$ thuộc mặt đó (kiểm tra: $-1 + 1 + 1 = 1$).
+
+- **Họ thứ nhất ($d$):** Thay $M_0(1, -1, 1)$ vào hệ phương trình của $d$:
+
+$$
+\begin{cases} p(-1 + 1) = q(1 + 1) \\ q(-1 - 1) = p(1 - 1) \end{cases} \iff \begin{cases} 0 = 2q \\ -2q = 0 \end{cases} \implies q = 0.
+$$
+
+  Chọn $(p, q) = (1, 0)$ (sai khác nhân tử tỉ lệ khác $0$), ta được đường sinh $d_0$:
+
+$$
+d_0: \begin{cases} x_1 + x_2 = 0 \\ 1 - x_3 = 0. \end{cases}
+$$
+
+- **Họ thứ hai ($d'$):** Thay $M_0(1, -1, 1)$ vào hệ phương trình của $d'$:
+
+$$
+\begin{cases} p'(-1 + 1) = q'(1 - 1) \\ q'(-1 - 1) = p'(1 + 1) \end{cases} \iff -2q' = 2p' \iff q' = -p'.
+$$
+
+  Chọn $(p', q') = (1, -1)$, ta được đường sinh $d'_0$:
+
+$$
+d'_0: \begin{cases} x_2 + x_1 = -1 + x_3 \\ -x_2 + x_1 = 1 + x_3 \end{cases}
+\iff
+\begin{cases} x_1 + x_2 - x_3 + 1 = 0 \\ x_1 - x_2 - x_3 - 1 = 0. \end{cases}
+$$
+</Example>
+
+<Theorem id="thm-s8-28" title="Hai họ đường sinh thẳng của mặt kẻ paraboloit hypebolic (mặt yên ngựa)">
+Mặt paraboloit hypebolic có phương trình chuẩn tắc:
+
+$$
+-x_1^2 + x_2^2 = 2x_3 \iff (x_2 + x_1)(x_2 - x_1) = 2x_3 \tag{13}
+$$
+
+chứa hai họ đường sinh thẳng $d$ và $d'$ phụ thuộc các cặp tham số $(p, q) \neq (0, 0)$ và $(p', q') \neq (0, 0)$ *(đính chính lỗi in tr. 68 thiếu dấu phẩy ở $p'$ trong phương trình đầu của $d'$)*:
+
+$$
+d: \begin{cases} p(x_2 + x_1) = q x_3 \\ q(x_2 - x_1) = 2p, \end{cases}
+\qquad
+d': \begin{cases} p'(x_2 + x_1) = 2q' \\ q'(x_2 - x_1) = p' x_3. \end{cases}
+$$
+</Theorem>
+
+<Example id="ex-s8-29" title="Thí dụ: Lập phương trình hai đường sinh thẳng của mặt yên ngựa qua N_0(0, 2, 2)">
+Lập phương trình các đường sinh thẳng của mặt paraboloit hypebolic $-x_1^2 + x_2^2 = 2x_3$ đi qua điểm $N_0(0, 2, 2)$ (kiểm tra: $-0 + 4 = 2 \cdot 2$).
+
+- **Họ thứ nhất ($d$):** Thay $N_0(0, 2, 2)$ vào hệ của $d$: $2p = 2q$ và $2q = 2p \implies$ chọn $(p, q) = (1, 1)$, được:
+
+$$
+d_0: \begin{cases} x_2 + x_1 = x_3 \\ x_2 - x_1 = 2 \end{cases}
+\iff
+\begin{cases} x_1 + x_2 - x_3 = 0 \\ x_1 - x_2 + 2 = 0. \end{cases}
+$$
+
+- **Họ thứ hai ($d'$):** Thay $N_0(0, 2, 2)$ vào hệ của $d'$ *(đính chính lỗi in tr. 69 thiếu dấu phẩy ở nhãn $d', d'_0$)*: $2p' = 2q'$ và $2q' = 2p' \implies$ chọn $(p', q') = (1, 1)$, được:
+
+$$
+d'_0: \begin{cases} x_2 + x_1 = 2 \\ x_2 - x_1 = x_3 \end{cases}
+\iff
+\begin{cases} x_1 + x_2 - 2 = 0 \\ x_1 - x_2 + x_3 = 0. \end{cases}
+$$
+</Example>
+
+<Remark title="Ứng dụng thực tiễn của mặt kẻ bậc hai">
+Trong kỹ thuật xây dựng và kiến trúc, tính chất chứa hai họ đường sinh thẳng của mặt hypeboloit một tầng (và mặt paraboloit hypebolic) cho phép chế tạo các kết cấu cong siêu bền bằng hệ dầm thép thẳng đan chéo, ứng dụng rộng rãi khi xây dựng tháp nước, tháp làm mát, tháp vô tuyến truyền hình hoặc mái vòm, giá đỡ tải trọng lớn.
+</Remark>
+
+## 11. Bài tập Vận dụng và Củng cố
+
+<Exercise id="exr-s8-59" title="Bài tập 1.59 — Vị trí tương đối của đường thẳng và siêu mặt bậc hai trong A^4">
+Trong không gian affine $\mathcal{A}^4$ với mục tiêu affine cho trước, hãy xét vị trí tương đối của đường thẳng $(d)$ đi qua hai điểm $A(0, 0, 3, -3)$, $B(0, 0, 11, -11)$ và siêu mặt bậc hai $(S)$ có phương trình:
+
+$$
+x_1^2 + x_2^2 - 2x_1 x_2 - 3x_1 x_3 + 4x_2 x_4 + x_3 + x_4 = 0.
+$$
 
 <Hint>
-Hoàn thành bình phương rồi đổi mục tiêu afin.
+Viết phương trình tham số của đường thẳng $(d)$ qua $A(0, 0, 3, -3)$ với vectơ chỉ phương rút gọn $\vec{c} = (0, 0, 1, -1)$ rồi thay vào phương trình của $(S)$ để đối chiếu với 4 trường hợp ở <Ref to="def-s8-6" />.
 </Hint>
 
 <Solution>
-(x - 1)² + 4(y + 1)² = 4.
+Ta có $\overrightarrow{AB} = (0, 0, 8, -8) = 8(0, 0, 1, -1)$, nên chọn vectơ chỉ phương $\vec{c} = (0, 0, 1, -1)$ và điểm đi qua $A(0, 0, 3, -3)$. Phương trình tham số của đường thẳng $(d)$ là:
 
-Đặt X₁ = (x - 1)/2, X₂ = y + 1 thì X₁² + X₂² = 1.
+$$
+x_1 = 0, \qquad x_2 = 0, \qquad x_3 = 3 + t, \qquad x_4 = -3 - t \qquad (t \in \R).
+$$
 
-**Đáp án:** X₁² + X₂² = 1: đường elip, tâm (1, -1)
+Thay phương trình tham số của $(d)$ vào phương trình của $(S)$ (tương ứng thiết lập phương trình $(6)$: $([c]^* A [c])t^2 + 2Pt + Q = 0$):
+
+$$
+0^2 + 0^2 - 2(0)(0) - 3(0)(3 + t) + 4(0)(-3 - t) + (3 + t) + (-3 - t) = 0 \iff 0\cdot t^2 + 0\cdot t + 0 = 0.
+$$
+
+Ta thấy $[c]^* A [c] = 0$, $P = 0$ và $Q = 0$, phương trình nghiệm đúng với mọi $t \in \R$. Theo trường hợp thứ tư của <Ref to="def-s8-6" />, **toàn bộ đường thẳng $(d)$ nằm trên siêu mặt bậc hai $(S)$** ($(d) \subset (S)$).
 </Solution>
 </Exercise>
 
-<Exercise id="exr-s8-2" title="Tâm và phương tiệm cận của siêu mặt bậc hai (§8, mục 5, 7)">
-Cho đường bậc hai (S): 3x² - 2xy + 3y² + 2x - 4y + 1 = 0 trong A². Tìm tâm của (S) và cho biết (S) có phương tiệm cận không.
+<Exercise id="exr-s8-60" title="Bài tập 1.60 — Tìm phương tiệm cận và tâm của đường bậc hai trong A^2">
+Trong $\mathcal{A}^2$ với mục tiêu đã chọn, cho đường bậc hai có phương trình:
 
+$$
+x_1^2 - 3x_1 x_2 + 2x_2^2 - 5x_1 + 2x_2 - 3 = 0.
+$$
+
+a) Tìm phương tiệm cận của đường bậc hai đã cho.
+
+b) Tìm tâm của đường bậc hai đó.
 
 <Hint>
-Tâm: giải A[x] + [a] = 0. Phương tiệm cận: [c]ᵀA[c] = 0.
+Xác định ma trận $A = \begin{bmatrix} 1 & -3/2 \\ -3/2 & 2 \end{bmatrix}$ và cột $[a] = \begin{bmatrix} -5/2 \\ 1 \end{bmatrix}$. Giải $[c]^* A [c] = 0$ cho câu a và hệ $A[x] + [a] = 0$ cho câu b.
 </Hint>
 
 <Solution>
-A = [[3,-1],[-1,3]], [a] = (1, -2).
+Đường bậc hai đã cho có ma trận phần bậc hai và cột hệ số bậc nhất là:
 
-Hệ 3x - y + 1 = 0, -x + 3y - 2 = 0 cho x = -1/8, y = 5/8.
+$$
+A = \begin{bmatrix} 1 & -3/2 \\ -3/2 & 2 \end{bmatrix}, \qquad [a] = \begin{bmatrix} -5/2 \\ 1 \end{bmatrix}, \qquad a_0 = -3.
+$$
 
-Phần bậc hai 3c₁² - 2c₁c₂ + 3c₂² = 0 có biệt thức 4 - 36 &lt; 0 nên không có nghiệm thực.
+- **a) Phương tiệm cận:** Vectơ $\vec{c}(c_1, c_2) \neq \vec{0}$ là phương tiệm cận khi và chỉ khi:
 
-**Đáp án:** Tâm (-1/8, 5/8); không có phương tiệm cận (đường elip).
+$$
+[c]^* A [c] = c_1^2 - 3c_1 c_2 + 2c_2^2 = 0 \iff (c_1 - c_2)(c_1 - 2c_2) = 0 \iff c_1 = c_2 \;\text{ hoặc }\; c_1 = 2c_2.
+$$
+
+  Vậy đường bậc hai có **hai phương tiệm cận** sinh bởi các vectơ chỉ phương $\vec{c}_1 = (1, 1)$ và $\vec{c}_2 = (2, 1)$ *(đây là đường hypebol)*.
+
+- **b) Tâm của đường bậc hai:** Ta có $\det A = 1 \cdot 2 - \left(-\dfrac{3}{2}\right)^2 = 2 - \dfrac{9}{4} = -\dfrac{1}{4} \neq 0$, nên đường bậc hai có tâm duy nhất là nghiệm của hệ $(8)$: $A[x] + [a] = 0$:
+
+$$
+\begin{cases}
+x_1 - \dfrac{3}{2}x_2 - \dfrac{5}{2} = 0 \\[6pt]
+-\dfrac{3}{2}x_1 + 2x_2 + 1 = 0
+\end{cases}
+\iff
+\begin{cases}
+2x_1 - 3x_2 = 5 \\
+-3x_1 + 4x_2 = -2
+\end{cases}
+\iff
+\begin{cases}
+x_1 = -14 \\
+x_2 = -11.
+\end{cases}
+$$
+
+  Vậy tâm duy nhất của đường bậc hai là $O(-14, -11)$.
 </Solution>
 </Exercise>
 
-<Exercise id="exr-s8-3" title="Dạng chuẩn tắc afin: hypebol (§8, mục 8)">
-Đưa đường bậc hai x² - 4y² - 2x - 8y - 7 = 0 về dạng chuẩn tắc afin và cho biết loại, tâm.
-
+<Exercise id="exr-s8-61" title="Bài tập 1.61 — Phân tích giao của một siêu mặt bậc hai với một m-phẳng trong A^n">
+Tìm (biện luận) giao của một siêu mặt bậc hai $(S)$ với một $m$-phẳng $\mathcal{A}^m$ trong không gian affine thực $\mathcal{A}^n$ ($1 \le m \le n - 1$).
 
 <Hint>
-Hoàn thành bình phương theo từng biến rồi đổi mục tiêu.
+Chọn mục tiêu affine $\{E_0; E_1, \dots, E_m, E_{m+1}, \dots, E_n\}$ thích hợp sao cho $E_0, E_1, \dots, E_m \in \mathcal{A}^m$ (tức $\mathcal{A}^m$ có hệ phương trình $x_{m+1} = \dots = x_n = 0$), rồi thay vào phương trình $(1)$ của $(S)$ và biện luận bậc của đa thức còn lại theo $(x_1, \dots, x_m)$.
 </Hint>
 
 <Solution>
-(x - 1)² - 4(y + 1)² - 1 + 4 - 7 = 0 nên (x - 1)² - 4(y + 1)² = 4.
+Chọn trong $\mathcal{A}^m$ một hệ $m + 1$ điểm độc lập $E_0, E_1, \dots, E_m$ rồi bổ sung $n - m$ điểm $E_{m+1}, \dots, E_n$ để lập thành một mục tiêu affine $\{E_0; E_1, \dots, E_n\}$ của $\mathcal{A}^n$. Khi đó $m$-phẳng $\mathcal{A}^m$ có hệ phương trình tổng quát $x_{m+1} = x_{m+2} = \dots = x_n = 0$, và $(x_1, \dots, x_m)$ chính là tọa độ affine của điểm $X \in \mathcal{A}^m$ đối với mục tiêu $\{E_0; E_1, \dots, E_m\}$ của không gian $m$ chiều $\mathcal{A}^m$.
 
-Đặt X₁ = (x - 1)/2, X₂ = y + 1: X₁² - X₂² = 1.
+Đối với mục tiêu $\{E_0; E_1, \dots, E_n\}$, giả sử siêu mặt bậc hai $(S)$ có phương trình $\sum_{i,j=1}^{n} a_{ij}x_i x_j + 2\sum_{i=1}^{n} a_i x_i + a_0 = 0$. Điểm $X \in (S) \cap \mathcal{A}^m$ khi và chỉ khi $x_{m+1} = \dots = x_n = 0$ và tọa độ $(x_1, \dots, x_m)$ trong $\mathcal{A}^m$ thỏa mãn:
 
-**Đáp án:** X₁² - X₂² = 1: đường hypebol, tâm (1, -1)
+$$
+\sum_{i,j=1}^{m} a_{ij}x_i x_j + 2\sum_{i=1}^{m} a_i x_i + a_0 = 0. \tag{*}
+$$
+
+Đặt ma trận đối xứng cấp $m$ là $\widetilde{A} = [a_{ij}]_{1 \le i, j \le m}$ và cột $[\tilde{a}] = (a_1, \dots, a_m)^{\mathsf{T}}$. Giao $(S) \cap \mathcal{A}^m$ xảy ra đúng một trong các trường hợp sau:
+
+1. **Nếu $\widetilde{A} \neq 0$** (các $a_{ij}$ với $1 \le i, j \le m$ không đồng thời bằng $0$): Phương trình $(*)$ là phương trình bậc hai trong $\mathcal{A}^m$, nên $(S) \cap \mathcal{A}^m$ là **một siêu mặt bậc hai của không gian affine $m$ chiều $\mathcal{A}^m$** (có thể là siêu mặt bậc hai ảo nếu vô nghiệm thực; riêng với $m = 1$ thì gồm $2$ điểm phân biệt, $1$ điểm kép hoặc rỗng).
+2. **Nếu $\widetilde{A} = 0$ và $[\tilde{a}] \neq [0]$:** Phương trình $(*)$ trở thành $2\sum_{i=1}^{m} a_i x_i + a_0 = 0$ (phương trình bậc nhất không tầm thường), nên $(S) \cap \mathcal{A}^m$ là **một siêu phẳng ($(m - 1)$-phẳng) của $\mathcal{A}^m$**.
+3. **Nếu $\widetilde{A} = 0$, $[\tilde{a}] = [0]$ và $a_0 \neq 0$:** Phương trình $(*)$ vô nghiệm, nên **$(S) \cap \mathcal{A}^m = \varnothing$** (phẳng $\mathcal{A}^m$ không cắt $(S)$).
+4. **Nếu $\widetilde{A} = 0$, $[\tilde{a}] = [0]$ và $a_0 = 0$:** Phương trình $(*)$ nghiệm đúng với mọi $(x_1, \dots, x_m)$, tức **toàn bộ $m$-phẳng $\mathcal{A}^m$ nằm trên $(S)$** ($\mathcal{A}^m \subset (S)$).
 </Solution>
 </Exercise>
 
-<Exercise id="exr-s8-4" title="Mặt kẻ bậc hai và đường sinh thẳng (§8, mục 9)">
-Chứng minh mặt x² + y² - z² = 1 trong A³ chứa đường thẳng (x,y,z) = (1, t, t). Tìm hai đường thẳng của mặt đi qua điểm (0,1,0).
+<Exercise id="exr-s8-62" title="Bài tập 1.62 — Tìm tâm và đường kính liên hợp của đường bậc hai trong A^2">
+Trong $\mathcal{A}^2$ với mục tiêu đã chọn, cho đường bậc hai có phương trình:
 
+$$
+25x_1^2 + 2x_1 x_2 + 13x_2^2 - 18x_1 - 18x_2 - 27 = 0.
+$$
+
+Tìm tâm và đường kính liên hợp với phương $\vec{c}(1, -1)$.
 
 <Hint>
-Đường thẳng qua (a,b,0) với a² + b² = 1 và phương (-b, a, ±1) nằm trên mặt.
+Lập ma trận $A = \begin{bmatrix} 25 & 1 \\ 1 & 13 \end{bmatrix}$ và cột $[a] = \begin{bmatrix} -9 \\ -9 \end{bmatrix}$. Giải $A[x] + [a] = 0$ để tìm tâm, rồi dùng công thức $(9)$: $[c]^*(A[x] + [a]) = 0$ để viết phương trình đường kính liên hợp.
 </Hint>
 
 <Solution>
-Thay (1, t, t): 1 + t² - t² = 1.
+Phương trình đường bậc hai ứng với $A = \begin{bmatrix} 25 & 1 \\ 1 & 13 \end{bmatrix}$, $[a] = \begin{bmatrix} -9 \\ -9 \end{bmatrix}$ và $a_0 = -27$.
 
-Qua (a, b, 0) với phương (-b, a, ±1): (a - bt)² + (b + at)² - t² = a² + b² + t²(a² + b² - 1) = 1.
+1. **Tìm tâm:** Ta có $\det A = 25 \cdot 13 - 1^2 = 325 - 1 = 324 \neq 0$, nên đường bậc hai có tâm duy nhất thỏa mãn hệ $A[x] + [a] = 0$:
 
-Với (a, b) = (0, 1): phương (-1, 0, ±1).
+$$
+\begin{cases}
+25x_1 + x_2 - 9 = 0 \\
+x_1 + 13x_2 - 9 = 0.
+\end{cases}
+$$
 
-**Đáp án:** (x,y,z) = (-t, 1, t) và (x,y,z) = (-t, 1, -t)
+   Trừ hai phương trình cho $24x_1 - 12x_2 = 0 \iff x_2 = 2x_1$. Thay vào phương trình đầu được $27x_1 = 9 \iff x_1 = \dfrac{1}{3}$, suy ra $x_2 = \dfrac{2}{3}$. Vậy tâm của đường bậc hai là $O\left(\dfrac{1}{3},\; \dfrac{2}{3}\right)$.
+
+2. **Tìm đường kính liên hợp với phương $\vec{c}(1, -1)$:**
+   Kiểm tra $[c]^* A [c] = 25(1)^2 + 2(1)(-1) + 13(-1)^2 = 36 \neq 0$, nên $\vec{c}$ không phải là phương tiệm cận. Áp dụng công thức $(9)$ trong <Ref to="thm-s8-15" />:
+
+$$
+\begin{bmatrix} 1 & -1 \end{bmatrix}
+\left(\begin{bmatrix} 25 & 1 \\ 1 & 13 \end{bmatrix}\begin{bmatrix} x_1 \\ x_2 \end{bmatrix} + \begin{bmatrix} -9 \\ -9 \end{bmatrix}\right) = 0
+\iff
+\begin{bmatrix} 24 & -12 \end{bmatrix}\begin{bmatrix} x_1 \\ x_2 \end{bmatrix} + 0 = 0
+\iff 2x_1 - x_2 = 0.
+$$
+
+   Vậy đường kính liên hợp với phương $\vec{c}(1, -1)$ có phương trình $2x_1 - x_2 = 0$ *(kiểm tra đi qua tâm $O$: $2\cdot\dfrac{1}{3} - \dfrac{2}{3} = 0$)*.
+</Solution>
+</Exercise>
+
+<Exercise id="exr-s8-63" title="Bài tập 1.63 — Siêu nón bậc hai hạng r, đường sinh và phẳng đỉnh trong A^n">
+Một siêu mặt bậc hai $(S)$ của không gian affine $\mathcal{A}^n$ gọi là một **siêu nón bậc hai** nếu có thể tìm được một mục tiêu $\{E_0; E_i\}$ sao cho đối với nó $(S)$ có phương trình:
+
+$$
+[x]^* A [x] = 0, \qquad \text{trong đó } \operatorname{rank} A = r > 0.
+$$
+
+Hạng $r$ của $A$ cũng gọi là **hạng** của siêu nón $(S)$.
+
+a) Chứng tỏ rằng siêu nón hạng $r$ là một khái niệm affine.
+
+b) Chứng minh rằng nếu điểm $X \in (S)$ ($X \neq E_0$) thì đường thẳng $E_0 X$ nằm hoàn toàn trên $(S)$. Đường thẳng đó gọi là *đường sinh* của siêu nón $(S)$.
+
+c) Chứng minh rằng với mọi siêu nón $(S)$ luôn có một $m$-phẳng $P$ với $0 \le m \le n - 1$ *(đính chính lỗi in cuối tr. 82 ghi thiếu dấu bằng thành $0 < m \le n - 1$: khi $r = n$ thì $m = n - r = 0$, phẳng đỉnh suy biến thành một điểm duy nhất)* nằm trên $(S)$, sao cho nếu $M \in (S)$ thì phẳng nhỏ nhất đi qua $P$ và $M$ cũng nằm trên $(S)$. Ta gọi $m$-phẳng $P$ là **đỉnh** của siêu nón $(S)$.
+
+<Hint>
+Ở câu a, xét mục tiêu ảnh $E'_i = f(E_i)$ qua phép affine $f$. Ở câu b, mọi điểm trên $E_0 X$ có cột tọa độ $t[x_0]$ ($t \in \R$). Ở câu c, lấy $P = \{\, X \in \mathcal{A}^n \mid A[x] = 0 \,\}$ (tập mọi điểm kì dị của siêu nón, có số chiều $m = n - r$).
+</Hint>
+
+<Solution>
+- **a) Siêu nón hạng $r$ là khái niệm affine:**
+  Giả sử $(S)$ là siêu nón hạng $r$, có mục tiêu $\{E_0; E_i\}$ làm phương trình của $(S)$ là $[x]^* A [x] = 0$ với $\operatorname{rank} A = r$. Xét phép biến đổi affine bất kỳ $f: \mathcal{A}^n \to \mathcal{A}^n$ và đặt $E'_i = f(E_i)$ ($i = 0, 1, \dots, n$). Khi đó $\{E'_0; E'_i\}$ là một mục tiêu affine của $\mathcal{A}^n$, và phương trình của ảnh $(S') = f(S)$ đối với mục tiêu $\{E'_0; E'_i\}$ vẫn là $[x']^* A [x'] = 0$ với cùng ma trận $A$ hạng $r$ *(hoặc biểu diễn trong mục tiêu cũ theo <Ref to="thm-s8-3" />, ma trận phần bậc hai $A' = B^* A B$ bảo toàn hạng $r$)*. Vậy ảnh của siêu nón hạng $r$ qua mọi phép affine vẫn là siêu nón hạng $r$.
+
+- **b) Đường thẳng $E_0 X$ là đường sinh nằm hoàn toàn trên $(S)$:**
+  Giả sử $X([x_0]) \in (S)$ ($X \neq E_0$), nghĩa là $[x_0]^* A [x_0] = 0$. Vì $E_0$ có tọa độ $[0]$, mọi điểm $Y$ trên đường thẳng $E_0 X$ đều có cột tọa độ $[y] = t[x_0]$ với $t \in \R$. Thay vào phương trình của $(S)$:
+
+$$
+[y]^* A [y] = (t[x_0])^* A (t[x_0]) = t^2\bigl([x_0]^* A [x_0]\bigr) = t^2 \cdot 0 = 0.
+$$
+
+  Vậy mọi điểm $Y$ thuộc đường thẳng $E_0 X$ đều thuộc $(S)$, tức $E_0 X \subset (S)$.
+
+- **c) Phẳng đỉnh $P$ của siêu nón $(S)$:**
+  Xét tập hợp các điểm kì dị (tập nghiệm hệ tìm tâm) của $(S)$:
+
+$$
+P = \{\, X \in \mathcal{A}^n \mid A[x] = 0 \,\}.
+$$
+
+  Vì $\operatorname{rank} A = r$ ($1 \le r \le n$), hệ thuần nhất $A[x] = 0$ xác định một $m$-phẳng $P$ đi qua gốc $E_0$ có số chiều $m = n - r$, thỏa mãn $0 \le m \le n - 1$ (khi $r = n$ thì $P = \{E_0\}$ là $0$-phẳng; khi $1 \le r \le n - 1$ thì $1 \le m \le n - 1$).
+  - Với mọi $X([p]) \in P$, ta có $A[p] = 0 \implies [p]^* A [p] = 0 \implies X \in (S)$, nên $P \subset (S)$.
+  - Giả sử $M([u]) \in (S)$, tức $[u]^* A [u] = 0$. Mọi điểm $Y$ nằm trên cái phẳng nhỏ nhất đi qua $P$ và $M$ đều có cột tọa độ dạng $[y] = [p] + t[u]$ với $A[p] = 0$ (kéo theo $[p]^* A = (A^*[p])^* = (A[p])^* = 0$) và $t \in \R$. Khi đó:
+
+$$
+[y]^* A [y] = \bigl([p] + t[u]\bigr)^* A \bigl([p] + t[u]\bigr) = [p]^* A [p] + 2t[p]^* A [u] + t^2 [u]^* A [u] = 0 + 0 + 0 = 0.
+$$
+
+  Do đó $Y \in (S)$, chứng tỏ toàn bộ cái phẳng đi qua $P$ và $M$ nằm trên $(S)$.
+</Solution>
+</Exercise>
+
+<Exercise id="exr-s8-64" title="Bài tập 1.64 — Siêu mặt trụ bậc hai, đáy, phẳng sinh và phép chiếu song song trong A^n">
+Một siêu mặt bậc hai $(S)$ của không gian affine $\mathcal{A}^n$ gọi là một **siêu mặt trụ** nếu có thể chọn một mục tiêu $\{E_0; E_i\}$ sao cho đối với nó phương trình của $(S)$ có dạng:
+
+$$
+f(x_1, x_2, \dots, x_m) = 0, \qquad m < n, \tag{*}
+$$
+
+trong đó $f$ là một đa thức bậc hai đối với $x_1, x_2, \dots, x_m$.
+
+a) Chứng tỏ rằng siêu mặt trụ là một khái niệm affine.
+
+b) Trong $m$-phẳng $\mathcal{A}^m$ đi qua các điểm $E_0, E_1, \dots, E_m$, chọn mục tiêu tọa độ là $\{E_0; E_1, \dots, E_m\}$. Chứng tỏ rằng giao $(S') = (S) \cap \mathcal{A}^m$ là một siêu mặt bậc hai của không gian affine $m$ chiều $\mathcal{A}^m$ có phương trình chính là $(*)$ *(gọi là **đáy** của siêu mặt trụ $(S)$)*.
+
+c) Gọi $V^{n-m}$ là không gian vectơ con có cơ sở $\{\overrightarrow{E_0E_i}\}$ ($i = m + 1, \dots, n$). Chứng minh rằng nếu $M \in (S)$ thì $(n - m)$-phẳng đi qua $M$ có phương $V^{n-m}$ nằm hoàn toàn trên $(S)$ *(gọi là **phẳng sinh** của mặt trụ)*.
+
+d) Chứng minh rằng nếu $p: \mathcal{A}^n \to \mathcal{A}^m$ là phép chiếu lên $\mathcal{A}^m$ theo phương $V^{n-m}$ thì $p(S) = (S')$.
+
+<Hint>
+Tọa độ trong mục tiêu $\{E_0; E_i\}$ tách làm hai khối: $(x_1, \dots, x_m)$ xác định hình chiếu $p(X) \in \mathcal{A}^m$ và $(x_{m+1}, \dots, x_n)$ chạy tự do theo phương $V^{n-m}$ mà không làm thay đổi giá trị của $f(x_1, \dots, x_m)$.
+</Hint>
+
+<Solution>
+- **a) Siêu mặt trụ là khái niệm affine:**
+  Cho siêu mặt trụ $(S)$ có phương trình $f(x_1, \dots, x_m) = 0$ ($m < n$) đối với mục tiêu $\{E_0; E_i\}$ và phép biến đổi affine bất kỳ $g: \mathcal{A}^n \to \mathcal{A}^n$. Đặt $E'_i = g(E_i)$ ($i = 0, \dots, n$); khi đó $\{E'_0; E'_i\}$ là một mục tiêu affine của $\mathcal{A}^n$, và phương trình của ảnh $g(S)$ đối với $\{E'_0; E'_i\}$ vẫn là $f(x'_1, \dots, x'_m) = 0$ ($m < n$). Vậy $g(S)$ cũng là một siêu mặt trụ.
+
+- **b) Đáy $(S') = (S) \cap \mathcal{A}^m$:**
+  Đối với mục tiêu $\{E_0; E_i\}$, $m$-phẳng $\mathcal{A}^m$ đi qua $E_0, E_1, \dots, E_m$ có hệ phương trình $x_{m+1} = \dots = x_n = 0$, và tọa độ của mỗi điểm $X \in \mathcal{A}^m$ đối với $\{E_0; E_1, \dots, E_m\}$ chính là $(x_1, \dots, x_m)$. Vì $X \in (S) \cap \mathcal{A}^m \iff x_{m+1} = \dots = x_n = 0$ và $f(x_1, \dots, x_m) = 0$, tập giao $(S') = (S) \cap \mathcal{A}^m$ chính là siêu mặt bậc hai trong $\mathcal{A}^m$ xác định bởi phương trình $(*)$.
+
+- **c) Phẳng sinh qua điểm $M \in (S)$:**
+  Giả sử $M(x_1^0, \dots, x_m^0, x_{m+1}^0, \dots, x_n^0) \in (S)$, tức $f(x_1^0, \dots, x_m^0) = 0$. Mọi điểm $Y$ thuộc $(n - m)$-phẳng $\beta_M$ đi qua $M$ có phương $V^{n-m} = \operatorname{span}\{\overrightarrow{E_0E_{m+1}}, \dots, \overrightarrow{E_0E_n}\}$ đều có dạng tọa độ:
+
+$$
+Y = (x_1^0, \dots, x_m^0,\; x_{m+1}^0 + t_{m+1}, \dots, x_n^0 + t_n) \qquad (t_{m+1}, \dots, t_n \in \R).
+$$
+
+  Do $f$ không chứa các biến $x_{m+1}, \dots, x_n$, ta có $f(x_1^0, \dots, x_m^0) = 0$, nên $Y \in (S)$. Vậy toàn bộ $(n - m)$-phẳng sinh $\beta_M$ nằm trên $(S)$.
+
+- **d) Hình chiếu $p(S) = (S')$:**
+  Với mục tiêu $\{E_0; E_i\}$, $\overrightarrow{\mathcal{A}^m} \oplus V^{n-m} = \overrightarrow{\mathcal{A}^n}$, nên phép chiếu song song $p: \mathcal{A}^n \to \mathcal{A}^m$ theo phương $V^{n-m}$ gửi mỗi điểm $X(x_1, \dots, x_m, x_{m+1}, \dots, x_n)$ về $p(X) = (x_1, \dots, x_m, 0, \dots, 0) \in \mathcal{A}^m$.
+  - Nếu $X \in (S)$ thì $f(x_1, \dots, x_m) = 0 \implies p(X) \in (S')$, nên $p(S) \subset (S')$.
+  - Ngược lại, nếu $Y(x_1, \dots, x_m, 0, \dots, 0) \in (S')$ thì $f(x_1, \dots, x_m) = 0$, suy ra $Y \in (S)$ và $Y = p(Y) \in p(S)$, nên $(S') \subset p(S)$.
+  Vậy $p(S) = (S')$.
+</Solution>
+</Exercise>
+
+<Exercise id="exr-s8-65" title="Bài tập 1.65 — Đưa mặt bậc hai trong A^3 về phương trình chuẩn tắc">
+Trong $\mathcal{A}^3$, tìm phương trình chuẩn tắc (và gọi tên loại affine) của siêu mặt bậc hai $(S)$ có phương trình đối với một hệ tọa độ affine đã cho là:
+
+$$
+x_1^2 + 5x_2^2 + x_3^2 + 2x_1 x_2 + 6x_2 x_3 + 2x_3 x_1 - 2x_1 + 6x_2 + 2x_3 = 0.
+$$
+
+<Hint>
+Dùng phương pháp Lagrange nhóm các số hạng chứa $x_1$ thành bình phương $(x_1 + x_2 + x_3)^2$, sau đó nhóm phần còn lại chứa $x_2$ thành $(2x_2 + x_3)^2$, rồi đổi biến sang $(u_1, u_2, u_3)$ và hoàn thành bình phương phần bậc nhất.
+</Hint>
+
+<Solution>
+1. **Chéo hóa phần bậc hai theo phương pháp Lagrange:**
+   Gom mọi số hạng chứa $x_1$ vào bình phương $(x_1 + x_2 + x_3)^2$:
+
+$$
+\begin{aligned}
+x_1^2 + 5x_2^2 + x_3^2 + 2x_1 x_2 + 6x_2 x_3 + 2x_3 x_1
+&= (x_1 + x_2 + x_3)^2 - (x_2 + x_3)^2 + 5x_2^2 + x_3^2 + 6x_2 x_3 \\
+&= (x_1 + x_2 + x_3)^2 + 4x_2^2 + 4x_2 x_3 \\
+&= (x_1 + x_2 + x_3)^2 + (2x_2 + x_3)^2 - x_3^2.
+\end{aligned}
+$$
+
+2. **Đổi cơ sở (phép đổi tuyến tính không suy biến):**
+   Đặt:
+
+$$
+\begin{cases}
+u_1 = x_1 + x_2 + x_3 \\
+u_2 = 2x_2 + x_3 \\
+u_3 = x_3
+\end{cases}
+\iff
+\begin{cases}
+x_3 = u_3 \\
+x_2 = \dfrac{1}{2}(u_2 - u_3) \\[4pt]
+x_1 = u_1 - \dfrac{1}{2}u_2 - \dfrac{1}{2}u_3,
+\end{cases}
+$$
+
+   (định thức ma trận đổi biến bằng $2 \neq 0$). Biểu diễn phần bậc nhất theo $(u_1, u_2, u_3)$:
+
+$$
+-2x_1 + 6x_2 + 2x_3 = -2\left(u_1 - \frac{1}{2}u_2 - \frac{1}{2}u_3\right) + 3(u_2 - u_3) + 2u_3 = -2u_1 + 4u_2.
+$$
+
+   Phương trình của $(S)$ trở thành:
+
+$$
+u_1^2 + u_2^2 - u_3^2 - 2u_1 + 4u_2 = 0
+\iff (u_1 - 1)^2 + (u_2 + 2)^2 - u_3^2 = 5.
+$$
+
+3. **Tịnh tiến, đổi tỉ lệ và sắp xếp dấu chuẩn tắc:**
+   Thực hiện phép đổi mục tiêu affine không suy biến:
+
+$$
+X_1 = \frac{u_3}{\sqrt{5}} = \frac{x_3}{\sqrt{5}}, \qquad
+X_2 = \frac{u_1 - 1}{\sqrt{5}} = \frac{x_1 + x_2 + x_3 - 1}{\sqrt{5}}, \qquad
+X_3 = \frac{u_2 + 2}{\sqrt{5}} = \frac{2x_2 + x_3 + 2}{\sqrt{5}}.
+$$
+
+   Ta thu được **phương trình chuẩn tắc** của siêu mặt bậc hai $(S)$:
+
+$$
+-X_1^2 + X_2^2 + X_3^2 = 1.
+$$
+
+   Đây là dạng **(I)** với $r = 3, k = 1$ (loại 2 trong $\mathcal{A}^3$): **mặt hypeboloit một tầng** *(có tâm duy nhất ứng với $u_1 = 1, u_2 = -2, u_3 = 0$, tức $O(2, -1, 0)$)*.
+</Solution>
+</Exercise>
+
+<Exercise id="exr-s8-66" title="Bài tập 1.66 — Tìm hai đường sinh thẳng đi qua một điểm trên mặt kẻ trong A^3">
+Trong $\mathcal{A}^3$, tìm các đường sinh thẳng của các mặt bậc hai sau đây:
+
+a) $(S_1): \dfrac{x^2}{9} + \dfrac{y^2}{4} - z^2 = 1$ đi qua điểm $M(3, 2, 1)$.
+
+b) $(S_2): \dfrac{x^2}{9} - \dfrac{y^2}{16} = 2z$ đi qua điểm $N(3, -4, 0)$.
+
+<Hint>
+Phân tích thành tích theo <Ref to="thm-s8-26" /> và <Ref to="thm-s8-28" />: với $(S_1)$ viết $\left(\dfrac{x}{3} + z\right)\left(\dfrac{x}{3} - z\right) = \left(1 + \dfrac{y}{2}\right)\left(1 - \dfrac{y}{2}\right)$; với $(S_2)$ viết $\left(\dfrac{x}{3} + \dfrac{y}{4}\right)\left(\dfrac{x}{3} - \dfrac{y}{4}\right) = 2z$.
+</Hint>
+
+<Solution>
+- **a) Đường sinh thẳng của mặt hypeboloit một tầng $(S_1)$ qua $M(3, 2, 1)$:**
+  Kiểm tra $M \in (S_1)$: $\dfrac{9}{9} + \dfrac{4}{4} - 1 = 1$. Viết lại phương trình $(S_1)$ dưới dạng tích:
+
+$$
+\frac{x^2}{9} - z^2 = 1 - \frac{y^2}{4} \iff \left(\frac{x}{3} + z\right)\left(\frac{x}{3} - z\right) = \left(1 + \frac{y}{2}\right)\left(1 - \frac{y}{2}\right).
+$$
+
+  Hai họ đường sinh thẳng của $(S_1)$ (với $(p, q) \neq (0, 0)$ và $(p', q') \neq (0, 0)$) là:
+
+$$
+d: \begin{cases} p\left(\dfrac{x}{3} + z\right) = q\left(1 + \dfrac{y}{2}\right) \\[6pt] q\left(\dfrac{x}{3} - z\right) = p\left(1 - \dfrac{y}{2}\right), \end{cases}
+\qquad
+d': \begin{cases} p'\left(\dfrac{x}{3} + z\right) = q'\left(1 - \dfrac{y}{2}\right) \\[6pt] q'\left(\dfrac{x}{3} - z\right) = p'\left(1 + \dfrac{y}{2}\right). \end{cases}
+$$
+
+  - *Thay $M(3, 2, 1)$ vào họ $d$:* $p(1 + 1) = q(1 + 1)$ và $q(1 - 1) = p(1 - 1) \iff p = q$. Chọn $(p, q) = (1, 1)$, ta được hệ $\dfrac{x}{3} + z = 1 + \dfrac{y}{2}$ và $\dfrac{x}{3} - z = 1 - \dfrac{y}{2}$; cộng và trừ hai phương trình cho:
+
+$$
+d_0: \begin{cases} x = 3 \\ y - 2z = 0 \end{cases} \qquad \bigl(\text{dạng tham số: } (3,\; 2t,\; t)\bigr).
+$$
+
+  - *Thay $M(3, 2, 1)$ vào họ $d'$:* $p'(2) = q'(0)$ và $q'(0) = p'(2) \iff p' = 0$. Chọn $(p', q') = (0, 1)$, ta được:
+
+$$
+d'_0: \begin{cases} 1 - \dfrac{y}{2} = 0 \\[4pt] \dfrac{x}{3} - z = 0 \end{cases}
+\iff
+\begin{cases} y = 2 \\ x - 3z = 0 \end{cases} \qquad \bigl(\text{dạng tham số: } (3t,\; 2,\; t)\bigr).
+$$
+
+- **b) Đường sinh thẳng của mặt paraboloit hypebolic $(S_2)$ qua $N(3, -4, 0)$:**
+  Kiểm tra $N \in (S_2)$: $\dfrac{9}{9} - \dfrac{16}{16} = 0 = 2 \cdot 0$. Viết lại $(S_2)$ dưới dạng tích:
+
+$$
+\left(\frac{x}{3} + \frac{y}{4}\right)\left(\frac{x}{3} - \frac{y}{4}\right) = 2z.
+$$
+
+  Hai họ đường sinh thẳng của $(S_2)$ là:
+
+$$
+d: \begin{cases} p\left(\dfrac{x}{3} + \dfrac{y}{4}\right) = q z \\[6pt] q\left(\dfrac{x}{3} - \dfrac{y}{4}\right) = 2p, \end{cases}
+\qquad
+d': \begin{cases} p'\left(\dfrac{x}{3} + \dfrac{y}{4}\right) = 2q' \\[6pt] q'\left(\dfrac{x}{3} - \dfrac{y}{4}\right) = p' z. \end{cases}
+$$
+
+  - *Thay $N(3, -4, 0)$ vào họ $d$:* $p(1 - 1) = 0$ và $q(1 + 1) = 2p \iff q = p$. Chọn $(p, q) = (1, 1)$ và quy đồng khử mẫu, ta được:
+
+$$
+d_0: \begin{cases} 4x + 3y - 12z = 0 \\ 4x - 3y - 24 = 0 \end{cases} \qquad \bigl(\text{dạng tham số: } (3 + 6t,\; -4 + 8t,\; 4t)\bigr).
+$$
+
+  - *Thay $N(3, -4, 0)$ vào họ $d'$:* $p'(0) = 2q'$ và $q'(2) = 0 \iff q' = 0$. Chọn $(p', q') = (1, 0)$, ta được:
+
+$$
+d'_0: \begin{cases} 4x + 3y = 0 \\ z = 0 \end{cases} \qquad \bigl(\text{dạng tham số: } (3t,\; -4t,\; 0)\bigr).
+$$
 </Solution>
 </Exercise>
 
 <KeyTakeaways>
-- Siêu mặt bậc hai là tập hợp các điểm có tọa độ thỏa mãn một phương trình đại số bậc hai.
-- Phân loại affine dựa trên dấu và hạng của các ma trận hệ số trong phương trình chính tắc.
+- Siêu mặt bậc hai $(S)$ trong $\mathcal{A}^n$ biểu diễn bằng dạng ma trận $[x]^* A [x] + 2[a]^* [x] + a_0 = 0$ ($A = A^*, \operatorname{rank} A \ge 1$) và là bất biến qua nhóm affine (<Ref to="def-s8-1" />, <Ref to="thm-s8-3" />); tâm là nghiệm của $A[x] + [a] = 0$ (<Ref to="thm-s8-9" />), phương tiệm cận thỏa $[c]^* A [c] = 0$ và siêu phẳng kính liên hợp với phương không tiệm cận $\vec{c}$ có phương trình $[c]^*(A[x] + [a]) = 0$ (<Ref to="thm-s8-15" />).
+- Mọi siêu mặt bậc hai trong $\mathcal{A}^n$ đều đưa được về đúng một trong ba dạng chuẩn tắc (I), (II), (III) với cặp bất biến $(r, k)$ (<Ref to="thm-s8-19" />); hai siêu mặt bậc hai tương đương affine khi và chỉ khi cùng loại (<Ref to="thm-s8-22" />), cho đúng $9$ loại đường bậc hai trong $\mathcal{A}^2$ và $17$ loại mặt bậc hai trong $\mathcal{A}^3$.
+- Trong $\mathcal{A}^3$, ngoài mặt nón, mặt trụ và cặp mặt phẳng, hypeboloit một tầng (<Ref to="thm-s8-26" />) và paraboloit hypebolic (<Ref to="thm-s8-28" />) là hai mặt kẻ đặc biệt chứa hai họ đường sinh thẳng.
 </KeyTakeaways>

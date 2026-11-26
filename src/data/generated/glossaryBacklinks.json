@@ -2183,6 +2183,14 @@
         "count": 19
       },
       {
+        "lessonId": "cac-sieu-mat-bac-hai-trong-khong-gian-afin",
+        "lessonCode": "HHAVE 1.8",
+        "lessonTitle": "Các Siêu mặt Bậc hai trong Không gian Affine",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/cac-sieu-mat-bac-hai-trong-khong-gian-afin",
+        "count": 16
+      },
+      {
         "lessonId": "nhom-cac-phep-bien-doi-afin-va-hinh-hoc-afin",
         "lessonCode": "HHAVE 1.7",
         "lessonTitle": "Nhóm các Phép Biến đổi Affine và Hình học Affine",
@@ -2197,14 +2205,6 @@
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-xa-anh/mo-hinh-xa-anh-cua-khong-gian-afin",
         "count": 13
-      },
-      {
-        "lessonId": "cac-sieu-mat-bac-hai-trong-khong-gian-afin",
-        "lessonCode": "HHAVE 1.8",
-        "lessonTitle": "Các Siêu mặt Bậc hai trong Không gian Affine",
-        "subjectId": "hinh-hoc-affine",
-        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/cac-sieu-mat-bac-hai-trong-khong-gian-afin",
-        "count": 7
       },
       {
         "lessonId": "tam-ti-cu-cua-mot-he-diem",
@@ -2297,6 +2297,14 @@
         "count": 12
       },
       {
+        "lessonId": "cac-sieu-mat-bac-hai-trong-khong-gian-afin",
+        "lessonCode": "HHAVE 1.8",
+        "lessonTitle": "Các Siêu mặt Bậc hai trong Không gian Affine",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/cac-sieu-mat-bac-hai-trong-khong-gian-afin",
+        "count": 11
+      },
+      {
         "lessonId": "mo-hinh-xa-anh-cua-khong-gian-afin",
         "lessonCode": "HHAVE 3.6",
         "lessonTitle": "Mô hình Xạ ảnh của Không gian Affine",
@@ -2334,14 +2342,6 @@
         "lessonTitle": "Tập Lồi trong Không gian Affine Thực",
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/tap-loi-trong-khong-gian-afin-thuc",
-        "count": 2
-      },
-      {
-        "lessonId": "cac-sieu-mat-bac-hai-trong-khong-gian-afin",
-        "lessonCode": "HHAVE 1.8",
-        "lessonTitle": "Các Siêu mặt Bậc hai trong Không gian Affine",
-        "subjectId": "hinh-hoc-affine",
-        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/cac-sieu-mat-bac-hai-trong-khong-gian-afin",
         "count": 2
       },
       {
@@ -2403,19 +2403,19 @@
         "count": 19
       },
       {
-        "lessonId": "tap-loi-trong-khong-gian-afin-thuc",
-        "lessonCode": "HHAVE 1.5",
-        "lessonTitle": "Tập Lồi trong Không gian Affine Thực",
-        "subjectId": "hinh-hoc-affine",
-        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/tap-loi-trong-khong-gian-afin-thuc",
-        "count": 16
-      },
-      {
         "lessonId": "cac-sieu-mat-bac-hai-trong-khong-gian-afin",
         "lessonCode": "HHAVE 1.8",
         "lessonTitle": "Các Siêu mặt Bậc hai trong Không gian Affine",
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/cac-sieu-mat-bac-hai-trong-khong-gian-afin",
+        "count": 18
+      },
+      {
+        "lessonId": "tap-loi-trong-khong-gian-afin-thuc",
+        "lessonCode": "HHAVE 1.5",
+        "lessonTitle": "Tập Lồi trong Không gian Affine Thực",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/tap-loi-trong-khong-gian-afin-thuc",
         "count": 16
       },
       {
@@ -2603,20 +2603,20 @@
         "count": 25
       },
       {
+        "lessonId": "cac-sieu-mat-bac-hai-trong-khong-gian-afin",
+        "lessonCode": "HHAVE 1.8",
+        "lessonTitle": "Các Siêu mặt Bậc hai trong Không gian Affine",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/cac-sieu-mat-bac-hai-trong-khong-gian-afin",
+        "count": 11
+      },
+      {
         "lessonId": "mo-hinh-xa-anh-cua-khong-gian-afin",
         "lessonCode": "HHAVE 3.6",
         "lessonTitle": "Mô hình Xạ ảnh của Không gian Affine",
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-xa-anh/mo-hinh-xa-anh-cua-khong-gian-afin",
         "count": 7
-      },
-      {
-        "lessonId": "cac-sieu-mat-bac-hai-trong-khong-gian-afin",
-        "lessonCode": "HHAVE 1.8",
-        "lessonTitle": "Các Siêu mặt Bậc hai trong Không gian Affine",
-        "subjectId": "hinh-hoc-affine",
-        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/cac-sieu-mat-bac-hai-trong-khong-gian-afin",
-        "count": 6
       },
       {
         "lessonId": "hinh-hoc-euclide",
@@ -2658,7 +2658,7 @@
         "lessonTitle": "Các Siêu mặt Bậc hai trong Không gian Affine",
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/cac-sieu-mat-bac-hai-trong-khong-gian-afin",
-        "count": 52
+        "count": 70
       },
       {
         "lessonId": "sieu-mat-bac-hai-trong-khong-gian-xa-anh",
@@ -4527,8 +4527,8 @@
       "sieu-mat-bac-hai",
       "sieu-phang",
       "khong-gian-afin",
-      "phep-bien-doi-afin",
-      "muc-tieu-afin"
+      "muc-tieu-afin",
+      "phep-bien-doi-afin"
     ],
     "bo-sung-ve-cac-phep-toan-tren-khong-gian-vecto": [],
     "khong-gian-euclide": [

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-26T15:11:36.124Z",
+  "updatedAt": "2026-11-26T15:30:19.125Z",
   "lessons": {
     "tap-hop-anh-xa-va-cong-cu-so-hoc": {
       "path": "content/algebraic-structures/00-ngon-ngu-va-cong-cu-dai-so/01-tap-hop-anh-xa-va-cong-cu-so-hoc.mdx",
@@ -906,7 +906,7 @@
       "path": "content/affine-geometry/01-khong-gian-affine/08-cac-sieu-mat-bac-hai-trong-khong-gian-afin.mdx",
       "status": "published",
       "version": "1.0.0",
-      "sha256": "9168d018164f4bacff41c92c7150734a99dab6743bee32f3b04120809744d3d2",
+      "sha256": "664ea7192834319d5e617519272f10f752ad6e0d9fa4a61c965548d18a679d3a",
       "numberedBlocks": {
         "def-s8-1": "1.8.1",
         "ex-s8-2": "1.8.1",
@@ -934,10 +934,14 @@
         "ex-s8-27": "1.8.10",
         "thm-s8-28": "1.8.15",
         "ex-s8-29": "1.8.11",
-        "exr-s8-1": "1.8.1",
-        "exr-s8-2": "1.8.2",
-        "exr-s8-3": "1.8.3",
-        "exr-s8-4": "1.8.4"
+        "exr-s8-59": "1.8.1",
+        "exr-s8-60": "1.8.2",
+        "exr-s8-61": "1.8.3",
+        "exr-s8-62": "1.8.4",
+        "exr-s8-63": "1.8.5",
+        "exr-s8-64": "1.8.6",
+        "exr-s8-65": "1.8.7",
+        "exr-s8-66": "1.8.8"
       }
     },
     "bo-sung-ve-cac-phep-toan-tren-khong-gian-vecto": {
