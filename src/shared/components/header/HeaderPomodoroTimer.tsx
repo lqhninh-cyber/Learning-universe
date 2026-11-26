@@ -127,7 +127,8 @@ export const HeaderPomodoroTimer: FC<HeaderPomodoroTimerProps> = ({
             : 'Nhịp học tập (Pomodoro)'
         }
         className={cn(
-          'cursor-pointer transition-all duration-200 focus-visible:ring-2 focus-visible:ring-[var(--accent-heritage)] focus-visible:outline-none active:scale-[0.98]',
+          'cursor-pointer focus-visible:ring-2 focus-visible:ring-[var(--accent-heritage)] focus-visible:outline-none',
+          isRail ? 'lu-rail-util' : 'transition-all duration-200 active:scale-[0.98]',
           isRail
             ? collapsed
               ? cn(
@@ -157,7 +158,7 @@ export const HeaderPomodoroTimer: FC<HeaderPomodoroTimerProps> = ({
         {isRail ? (
           collapsed ? (
             <>
-              <Hourglass className="h-4 w-4 shrink-0" aria-hidden="true" />
+              <Hourglass className="lu-rail-util-icon h-4 w-4 shrink-0" aria-hidden="true" />
               {isActive && (
                 <span
                   aria-hidden="true"
@@ -173,7 +174,7 @@ export const HeaderPomodoroTimer: FC<HeaderPomodoroTimerProps> = ({
               <span className="flex min-w-0 items-center gap-2.5">
                 <Hourglass
                   className={cn(
-                    'h-4 w-4 shrink-0',
+                    'lu-rail-util-icon h-4 w-4 shrink-0',
                     isActive ? 'text-[var(--accent-heritage)]' : 'text-[var(--text-muted)]',
                   )}
                   aria-hidden="true"

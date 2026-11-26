@@ -1638,3 +1638,189 @@
     page-break-inside: avoid;
   }
 }
+
+/* ==========================================================================
+   LEFT RAIL — Tactile hover micro-interactions (GPU-only: transform/opacity)
+   Ceramic Light (mực / xanh rừng) & Obsidian Studio (trắng ngọc)
+   ========================================================================== */
+:root {
+  --rail-ease-tactile: cubic-bezier(0.22, 1, 0.36, 1);
+  --rail-hover-pill: color-mix(in srgb, var(--accent-os) 6%, transparent);
+}
+
+.dark,
+[data-theme='dark'] {
+  --rail-hover-pill: color-mix(in srgb, var(--text-main) 7%, transparent);
+}
+
+/* Nền trượt đuổi theo con trỏ (vị trí cập nhật bằng translate3d trong RailNavList) */
+.lu-rail-pill {
+  background-color: var(--rail-hover-pill);
+  opacity: 0;
+  will-change: transform, opacity;
+  transition:
+    transform 220ms var(--rail-ease-tactile),
+    opacity 160ms ease;
+}
+
+.lu-rail-pill[data-visible='true'] {
+  opacity: 1;
+}
+
+/* Mục điều hướng chính */
+.lu-rail-item {
+  transition:
+    color 200ms var(--rail-ease-tactile),
+    transform 100ms ease-out;
+}
+
+.lu-rail-item:active {
+  transform: scale(0.985);
+}
+
+.lu-rail-icon,
+.lu-rail-label {
+  transition:
+    color 200ms var(--rail-ease-tactile),
+    transform 200ms var(--rail-ease-tactile);
+}
+
+/* Vạch cạnh trái: ẩn (scaleY 0) → xem trước khi hover (0.5, 40%) → active (1, 100%) */
+.lu-rail-edge {
+  position: absolute;
+  top: 0.375rem;
+  bottom: 0.375rem;
+  left: 0;
+  width: 3px;
+  border-radius: 0 9999px 9999px 0;
+  background-color: var(--accent-os);
+  opacity: 0;
+  transform: scaleY(0);
+  transform-origin: center;
+  pointer-events: none;
+  transition:
+    transform 200ms var(--rail-ease-tactile),
+    opacity 160ms ease;
+}
+
+.lu-rail-item[data-active='true'] .lu-rail-edge {
+  opacity: 1;
+  transform: scaleY(1);
+}
+
+/* Phản hồi bàn phím (Tab) luôn bật, không phụ thuộc thiết bị trỏ */
+.lu-rail-item[data-active='false']:focus-visible {
+  color: var(--text-main);
+}
+
+.lu-rail-item[data-active='false']:focus-visible .lu-rail-icon {
+  color: var(--accent-os);
+  transform: scale(1.08);
+}
+
+.lu-rail-item[data-active='false']:focus-visible .lu-rail-label {
+  transform: translateX(2px);
+}
+
+.lu-rail-item[data-active='false']:focus-visible .lu-rail-edge {
+  opacity: 0.4;
+  transform: scaleY(0.5);
+}
+
+/* Cụm tiện ích đáy Rail: Nhịp học tập · Chế độ Tối · Hồ sơ học tập */
+.lu-rail-util {
+  transition:
+    color 200ms var(--rail-ease-tactile),
+    background-color 200ms var(--rail-ease-tactile),
+    border-color 200ms var(--rail-ease-tactile),
+    transform 100ms ease-out;
+}
+
+.lu-rail-util:active {
+  transform: scale(0.985);
+}
+
+.lu-rail-util-icon {
+  transition:
+    color 200ms var(--rail-ease-tactile),
+    transform 200ms var(--rail-ease-tactile);
+}
+
+/* Hover chỉ dành cho thiết bị trỏ chính xác (không kích hoạt trên cảm ứng) */
+@media (hover: hover) and (pointer: fine) {
+  .lu-rail-item[data-active='false']:hover {
+    color: var(--text-main);
+  }
+
+  .lu-rail-item[data-active='false']:hover .lu-rail-icon {
+    color: var(--accent-os);
+    transform: scale(1.08);
+  }
+
+  .lu-rail-item[data-active='false']:hover .lu-rail-label {
+    transform: translateX(2px);
+  }
+
+  .lu-rail-item[data-active='false']:hover .lu-rail-edge {
+    opacity: 0.4;
+    transform: scaleY(0.5);
+  }
+
+  .lu-rail-util:hover .lu-rail-util-icon {
+    transform: scale(1.08);
+  }
+
+  .lu-rail-util:hover .lu-rail-util-icon:not([class*='accent-heritage']) {
+    color: var(--accent-os);
+  }
+
+  .lu-rail-util--theme:hover .lu-rail-util-icon {
+    transform: rotate(12deg) scale(1.08);
+  }
+}
+
+/* Thu gọn (icon-only): giữ icon chính giữa — tắt dịch nhãn */
+[data-collapsed='true'] .lu-rail-label {
+  transform: none !important;
+}
+
+/* Giảm chuyển động: đổi màu/opacity tức thì, bỏ toàn bộ translate/scale/rotate */
+@media (prefers-reduced-motion: reduce) {
+  .lu-rail-pill,
+  .lu-rail-item,
+  .lu-rail-icon,
+  .lu-rail-label,
+  .lu-rail-edge,
+  .lu-rail-util,
+  .lu-rail-util-icon {
+    transition: none !important;
+  }
+
+  .lu-rail-item,
+  .lu-rail-item:active,
+  .lu-rail-icon,
+  .lu-rail-label,
+  .lu-rail-util,
+  .lu-rail-util:active,
+  .lu-rail-util-icon {
+    transform: none !important;
+  }
+
+  .lu-rail-edge {
+    transform: none !important;
+  }
+
+  .lu-rail-item[data-active='false'] .lu-rail-edge {
+    opacity: 0;
+  }
+
+  .lu-rail-item[data-active='false']:focus-visible .lu-rail-edge {
+    opacity: 0.4;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .lu-rail-item[data-active='false']:hover .lu-rail-edge {
+      opacity: 0.4;
+    }
+  }
+}

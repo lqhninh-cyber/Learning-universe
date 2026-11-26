@@ -16,6 +16,7 @@ import { type FC, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router';
 import { BrandLogo } from '@/components/common/BrandLogo';
 import { preloadCommandPalette } from '@/components/layout/command-palette-loader';
+import { type RailNavItem, RailNavList } from '@/components/layout/RailNavList';
 import { getLessonById, type LessonLocation } from '@/content-runtime/manifest';
 import {
   fontScaleToReadingSize,
@@ -158,14 +159,44 @@ export const LeftRail: FC<LeftRailProps> = ({ hiddenInZen = false }) => {
     await signOut();
   };
 
-  const navItemClass = (active: boolean) =>
-    cn(
-      'group relative flex h-9 items-center rounded-lg border text-[13px] transition-all duration-150 ease-[cubic-bezier(0.16,1,0.3,1)] focus-visible:ring-2 focus-visible:ring-[var(--accent-os)] focus-visible:outline-none',
-      isRailCollapsed ? 'mx-auto w-9 justify-center px-0' : 'w-full gap-2.5 px-2.5',
-      active
-        ? 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] font-medium text-[var(--accent-os)] shadow-2xs'
-        : 'border-transparent font-normal text-[var(--text-secondary)] hover:bg-[var(--bg-workspace)]/65 hover:text-[var(--text-main)]',
-    );
+  const navItems: readonly RailNavItem[] = [
+    { to: ROUTES.home, label: 'Tổng quan', icon: Compass, active: isHomeActive },
+    {
+      to: ROUTES.learningSpace,
+      label: 'Không gian học tập',
+      icon: BookOpen,
+      active: isLearningSpaceActive,
+      trailing: activeSubject ? (
+        <span
+          data-testid="island-subject-badge"
+          className="inline-flex shrink-0 items-center gap-1 rounded border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-1.5 py-0.5 font-mono text-[10px] font-semibold text-[var(--text-secondary)]"
+        >
+          <span
+            className="h-1.5 w-1.5 rounded-full"
+            style={{ backgroundColor: activeSubject.accentColor }}
+            aria-hidden="true"
+          />
+          {activeSubject.code}
+        </span>
+      ) : undefined,
+    },
+    { to: ROUTES.glossary, label: 'Kho Thuật ngữ', icon: BookMarked, active: isGlossaryActive },
+    { to: ROUTES.examBuilder, label: 'Soạn đề', icon: FilePenLine, active: isExamBuilderActive },
+    {
+      to: ROUTES.mathInk,
+      label: 'Bảng viết',
+      collapsedTitle: 'Bảng viết (Ink & 3D & Đồ thị)',
+      icon: PenTool,
+      active: isMathInkActive,
+    },
+    {
+      to: ROUTES.sanctuaryTab('di-san'),
+      label: 'Sảnh Thư giãn',
+      collapsedTitle: 'Sảnh Thư giãn (Di sản & Bida)',
+      icon: Sparkles,
+      active: isLoungeActive,
+    },
+  ];
 
   if (hiddenInZen) {
     return null;
@@ -256,129 +287,12 @@ export const LeftRail: FC<LeftRailProps> = ({ hiddenInZen = false }) => {
         </button>
       </div>
 
-      {/* 4 MỤC ĐIỀU HƯỚNG CHÍNH */}
+      {/* 6 MỤC ĐIỀU HƯỚNG CHÍNH (nền trượt + micro-interaction cô lập trong RailNavList) */}
       <nav
         aria-label="Điều hướng chính"
-        className={cn('flex-1 space-y-1 overflow-y-auto py-2', isRailCollapsed ? 'px-2' : 'px-3')}
+        className={cn('flex-1 overflow-y-auto py-2', isRailCollapsed ? 'px-2' : 'px-3')}
       >
-        <Link
-          to={ROUTES.home}
-          aria-label="Tổng quan"
-          title={isRailCollapsed ? 'Tổng quan' : undefined}
-          aria-current={isHomeActive ? 'page' : undefined}
-          className={navItemClass(isHomeActive)}
-        >
-          {isHomeActive && (
-            <span
-              aria-hidden="true"
-              className="absolute top-1.5 bottom-1.5 left-0 w-[2px] rounded-r bg-[var(--accent-os)]"
-            />
-          )}
-          <Compass className="h-4 w-4 shrink-0" aria-hidden="true" />
-          {!isRailCollapsed && <span className="truncate">Tổng quan</span>}
-        </Link>
-
-        <Link
-          to={ROUTES.learningSpace}
-          aria-label="Không gian học tập"
-          title={isRailCollapsed ? 'Không gian học tập' : undefined}
-          aria-current={isLearningSpaceActive ? 'page' : undefined}
-          className={navItemClass(isLearningSpaceActive)}
-        >
-          {isLearningSpaceActive && (
-            <span
-              aria-hidden="true"
-              className="absolute top-1.5 bottom-1.5 left-0 w-[2px] rounded-r bg-[var(--accent-os)]"
-            />
-          )}
-          <BookOpen className="h-4 w-4 shrink-0" aria-hidden="true" />
-          {!isRailCollapsed && (
-            <span className="flex min-w-0 flex-1 items-center justify-between gap-1.5">
-              <span className="truncate">Không gian học tập</span>
-              {activeSubject && (
-                <span
-                  data-testid="island-subject-badge"
-                  className="inline-flex shrink-0 items-center gap-1 rounded border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-1.5 py-0.5 font-mono text-[10px] font-semibold text-[var(--text-secondary)]"
-                >
-                  <span
-                    className="h-1.5 w-1.5 rounded-full"
-                    style={{ backgroundColor: activeSubject.accentColor }}
-                    aria-hidden="true"
-                  />
-                  {activeSubject.code}
-                </span>
-              )}
-            </span>
-          )}
-        </Link>
-
-        <Link
-          to={ROUTES.glossary}
-          aria-label="Kho Thuật ngữ"
-          title={isRailCollapsed ? 'Kho Thuật ngữ' : undefined}
-          aria-current={isGlossaryActive ? 'page' : undefined}
-          className={navItemClass(isGlossaryActive)}
-        >
-          {isGlossaryActive && (
-            <span
-              aria-hidden="true"
-              className="absolute top-1.5 bottom-1.5 left-0 w-[2px] rounded-r bg-[var(--accent-os)]"
-            />
-          )}
-          <BookMarked className="h-4 w-4 shrink-0" aria-hidden="true" />
-          {!isRailCollapsed && <span className="truncate">Kho Thuật ngữ</span>}
-        </Link>
-
-        <Link
-          to={ROUTES.examBuilder}
-          aria-label="Soạn đề"
-          title={isRailCollapsed ? 'Soạn đề' : undefined}
-          aria-current={isExamBuilderActive ? 'page' : undefined}
-          className={navItemClass(isExamBuilderActive)}
-        >
-          {isExamBuilderActive && (
-            <span
-              aria-hidden="true"
-              className="absolute top-1.5 bottom-1.5 left-0 w-[2px] rounded-r bg-[var(--accent-os)]"
-            />
-          )}
-          <FilePenLine className="h-4 w-4 shrink-0" aria-hidden="true" />
-          {!isRailCollapsed && <span className="truncate">Soạn đề</span>}
-        </Link>
-
-        <Link
-          to={ROUTES.mathInk}
-          aria-label="Bảng viết"
-          title={isRailCollapsed ? 'Bảng viết (Ink & 3D & Đồ thị)' : undefined}
-          aria-current={isMathInkActive ? 'page' : undefined}
-          className={navItemClass(isMathInkActive)}
-        >
-          {isMathInkActive && (
-            <span
-              aria-hidden="true"
-              className="absolute top-1.5 bottom-1.5 left-0 w-[2px] rounded-r bg-[var(--accent-os)]"
-            />
-          )}
-          <PenTool className="h-4 w-4 shrink-0" aria-hidden="true" />
-          {!isRailCollapsed && <span className="truncate">Bảng viết</span>}
-        </Link>
-
-        <Link
-          to={ROUTES.sanctuaryTab('di-san')}
-          aria-label="Sảnh Thư giãn"
-          title={isRailCollapsed ? 'Sảnh Thư giãn (Di sản & Bida)' : undefined}
-          aria-current={isLoungeActive ? 'page' : undefined}
-          className={navItemClass(isLoungeActive)}
-        >
-          {isLoungeActive && (
-            <span
-              aria-hidden="true"
-              className="absolute top-1.5 bottom-1.5 left-0 w-[2px] rounded-r bg-[var(--accent-os)]"
-            />
-          )}
-          <Sparkles className="h-4 w-4 shrink-0" aria-hidden="true" />
-          {!isRailCollapsed && <span className="truncate">Sảnh Thư giãn</span>}
-        </Link>
+        <RailNavList collapsed={isRailCollapsed} items={navItems} />
       </nav>
 
       {/* ĐÁY RAIL: Học tiếp · Pomodoro · Sáng/Tối · Tài khoản */}
@@ -438,7 +352,7 @@ export const LeftRail: FC<LeftRailProps> = ({ hiddenInZen = false }) => {
           aria-label={isDark ? 'Chuyển sang chế độ Sáng' : 'Chuyển sang chế độ Tối'}
           title={isDark ? 'Ceramic Light (Sáng)' : 'Obsidian Studio (Tối)'}
           className={cn(
-            'flex cursor-pointer items-center rounded-lg border border-transparent text-[13px] font-medium text-[var(--text-secondary)] transition-colors hover:border-[var(--border-hairline)] hover:bg-[var(--bg-workspace)] hover:text-[var(--text-main)] focus-visible:ring-2 focus-visible:ring-[var(--accent-os)] focus-visible:outline-none active:scale-[0.98]',
+            'lu-rail-util lu-rail-util--theme flex cursor-pointer items-center rounded-lg border border-transparent text-[13px] font-medium text-[var(--text-secondary)] hover:border-[var(--border-hairline)] hover:bg-[var(--bg-workspace)] hover:text-[var(--text-main)] focus-visible:ring-2 focus-visible:ring-[var(--accent-os)] focus-visible:outline-none',
             isRailCollapsed
               ? 'mx-auto h-9 w-9 justify-center'
               : 'h-9 w-full justify-between gap-2 px-2.5',
@@ -446,20 +360,26 @@ export const LeftRail: FC<LeftRailProps> = ({ hiddenInZen = false }) => {
         >
           {isRailCollapsed ? (
             isDark ? (
-              <Sun className="h-4 w-4 text-[var(--accent-heritage)]" aria-hidden="true" />
+              <Sun
+                className="lu-rail-util-icon h-4 w-4 text-[var(--accent-heritage)]"
+                aria-hidden="true"
+              />
             ) : (
-              <Moon className="h-4 w-4" aria-hidden="true" />
+              <Moon className="lu-rail-util-icon h-4 w-4" aria-hidden="true" />
             )
           ) : (
             <>
               <span className="flex min-w-0 items-center gap-2.5">
                 {isDark ? (
                   <Sun
-                    className="h-4 w-4 shrink-0 text-[var(--accent-heritage)]"
+                    className="lu-rail-util-icon h-4 w-4 shrink-0 text-[var(--accent-heritage)]"
                     aria-hidden="true"
                   />
                 ) : (
-                  <Moon className="h-4 w-4 shrink-0 text-[var(--text-muted)]" aria-hidden="true" />
+                  <Moon
+                    className="lu-rail-util-icon h-4 w-4 shrink-0 text-[var(--text-muted)]"
+                    aria-hidden="true"
+                  />
                 )}
                 <span className="truncate">{isDark ? 'Chế độ Sáng' : 'Chế độ Tối'}</span>
               </span>

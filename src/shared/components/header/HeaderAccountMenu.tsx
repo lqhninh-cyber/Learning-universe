@@ -117,7 +117,8 @@ export const HeaderAccountMenu: FC<HeaderAccountMenuProps> = ({
         aria-label="Tài khoản và cài đặt giao diện"
         title="Tài khoản & Hồ sơ học tập"
         className={cn(
-          'cursor-pointer transition-all duration-200 focus-visible:ring-2 focus-visible:ring-[var(--accent-os)] focus-visible:outline-none active:scale-[0.98]',
+          'cursor-pointer focus-visible:ring-2 focus-visible:ring-[var(--accent-os)] focus-visible:outline-none',
+          isRail ? 'lu-rail-util' : 'transition-all duration-200 active:scale-[0.98]',
           isRail
             ? collapsed
               ? 'mx-auto flex h-9 w-9 items-center justify-center rounded-lg border border-transparent text-[var(--text-secondary)] hover:border-[var(--border-hairline)] hover:bg-[var(--bg-workspace)] hover:text-[var(--text-main)]'
@@ -133,7 +134,10 @@ export const HeaderAccountMenu: FC<HeaderAccountMenuProps> = ({
         {isRail && !collapsed ? (
           <>
             <span className="flex min-w-0 items-center gap-2.5">
-              <User className="h-4 w-4 shrink-0 text-[var(--text-muted)]" aria-hidden="true" />
+              <User
+                className="lu-rail-util-icon h-4 w-4 shrink-0 text-[var(--text-muted)]"
+                aria-hidden="true"
+              />
               <span className="truncate">{isUserLoggedIn ? 'Hồ sơ học tập' : 'Tài khoản'}</span>
             </span>
             {completedCount > 0 && (
@@ -143,7 +147,7 @@ export const HeaderAccountMenu: FC<HeaderAccountMenuProps> = ({
             )}
           </>
         ) : (
-          <User className="h-4 w-4" aria-hidden="true" />
+          <User className={cn('h-4 w-4', isRail && 'lu-rail-util-icon')} aria-hidden="true" />
         )}
       </button>
 
