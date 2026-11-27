@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-27T10:35:36.648Z",
+  "updatedAt": "2026-11-27T11:16:07.565Z",
   "lessons": {
     "tap-hop-anh-xa-va-cong-cu-so-hoc": {
       "path": "content/algebraic-structures/00-ngon-ngu-va-cong-cu-dai-so/01-tap-hop-anh-xa-va-cong-cu-so-hoc.mdx",
@@ -1018,7 +1018,7 @@
       "path": "content/affine-geometry/02-khong-gian-euclide/04-cac-phang-trong-khong-gian-euclide.mdx",
       "status": "published",
       "version": "1.0.0",
-      "sha256": "7d25239286a523f2a0abca8bd55b339c6eb009658930deb807541a65641dfc88",
+      "sha256": "aa2fc2214dd544e68f4c44a3754481c976c524195abe8fb1fb4f2cccba7977c1",
       "numberedBlocks": {
         "def-e4-1": "2.4.1",
         "thm-e4-2": "2.4.2",
@@ -1039,9 +1039,27 @@
         "ex-e4-19": "2.4.3",
         "ex-e4-20": "2.4.4",
         "ex-e4-21": "2.4.5",
-        "exr-e4-1": "2.4.1",
-        "exr-e4-2": "2.4.2",
-        "exr-e4-3": "2.4.3"
+        "exr-e4-17": "2.4.1",
+        "exr-e4-18": "2.4.2",
+        "exr-e4-19": "2.4.3",
+        "exr-e4-20": "2.4.4",
+        "exr-e4-21": "2.4.5",
+        "exr-e4-23": "2.4.6",
+        "exr-e4-24": "2.4.7",
+        "exr-e4-25": "2.4.8",
+        "exr-e4-26": "2.4.9",
+        "exr-e4-27": "2.4.10",
+        "exr-e4-28": "2.4.11",
+        "exr-e4-29": "2.4.12",
+        "exr-e4-31": "2.4.13",
+        "exr-e4-32": "2.4.14",
+        "exr-e4-33": "2.4.15",
+        "exr-e4-34": "2.4.16",
+        "exr-e4-36": "2.4.17",
+        "exr-e4-37": "2.4.18",
+        "exr-e4-38": "2.4.19",
+        "exr-e4-39": "2.4.20",
+        "exr-e4-40": "2.4.21"
       }
     },
     "goc-trong-khong-gian-euclide": {

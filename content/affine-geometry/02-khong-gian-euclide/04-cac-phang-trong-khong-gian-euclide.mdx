@@ -416,49 +416,829 @@ $$
 Hai cái phẳng hai chiều $\alpha$ và $\beta$ trong không gian Ơclit bốn chiều $\mathcal{E}^4$ chỉ có một điểm chung duy nhất khi $\alpha$ và $\beta$ bù vuông góc với nhau — đây là hiện tượng không xảy ra đối với hai mặt phẳng trong không gian Ơclit ba chiều thông thường $\mathcal{E}^3$. Cũng cần lưu ý rằng trong $\mathcal{E}^4$ có thể xảy ra trường hợp một đường thẳng ($1$-phẳng) và một mặt phẳng ($2$-phẳng) *chéo nhau* (khi chúng không có phương chung khác $\vec{0}$ và không có điểm chung).
 </Remark>
 
-## Bài tập vận dụng và củng cố
+## Bài tập
 
-<Exercise id="exr-e4-1" title="Khoảng cách từ điểm đến siêu phẳng (§4, mục 3)">
-Trong $\mathcal{E}^3$ với mục tiêu trực chuẩn, tính khoảng cách từ điểm $I(1, 2, 3)$ đến mặt phẳng $\alpha: 2x_1 - x_2 + 2x_3 - 4 = 0$.
+*(Trọn bộ $21$ bài tập thuộc §4 trong cụm bài tập §4, §5 cuối Chương II, trang 137–142; $4$ bài còn lại liên quan đến góc và cấu trúc trực chuẩn — Bài 2.22, 2.30, 2.35, 2.41 — sẽ được trình bày ở Bài 2.5).*
+
+<Exercise id="exr-e4-17" title="Bài tập 2.17 (Vectơ pháp tuyến và đường thẳng vuông góc với siêu phẳng — tr. 137)">
+Trong không gian Ơclit $\mathcal{E}^n$ với mục tiêu trực chuẩn cho trước, cho siêu phẳng $P$ có phương trình:
+$$
+a_1 x_1 + a_2 x_2 + \dots + a_n x_n + b = 0 \qquad \left(\sum_{i=1}^n a_i^2 > 0\right).
+$$
+
+a) Chứng minh rằng vectơ $\vec{a} = (a_1, a_2, \dots, a_n)$ vuông góc với phương của $P$. Vectơ $\vec{a}$ đó được gọi là *vectơ pháp tuyến* của siêu phẳng $P$.
+
+b) Viết phương trình tham số và tổng quát của đường thẳng $d$ đi qua điểm $M_0(x_1^0, x_2^0, \dots, x_n^0)$ và vuông góc với siêu phẳng $P$.
 
 <Hint>
-Áp dụng công thức $d(I, \alpha) = \dfrac{\left|\sum_{i=1}^n a_i x_i^0 + a_0\right|}{\sqrt{\sum_{i=1}^n a_i^2}}$.
+Câu a: Lấy hai điểm $X, Y \in P$ tùy ý và trừ hai phương trình để thấy $\vec{a} \cdot \overrightarrow{XY} = 0$. Câu b: Đường thẳng $d$ bù vuông góc với siêu phẳng $P$ nên nhận $\vec{a}$ làm vectơ chỉ phương; chọn một chỉ số $k$ có $a_k \neq 0$ để khử tham số $t$ sang hệ $n - 1$ phương trình tổng quát.
 </Hint>
 
 <Solution>
-Tử số bằng $|2 \cdot 1 - 1 \cdot 2 + 2 \cdot 3 - 4| = 2$, mẫu số bằng $\sqrt{2^2 + (-1)^2 + 2^2} = 3$.
+**a) Chứng minh $\vec{a} \perp \overrightarrow{P}$:**
 
-**Đáp án:** $d(I, \alpha) = \dfrac{2}{3}$.
+Lấy điểm cố định $Y(y_1, \dots, y_n) \in P$ và điểm tùy ý $X(x_1, \dots, x_n) \in P$. Vì mọi vectơ thuộc phương $\overrightarrow{P}$ đều viết được dưới dạng $\overrightarrow{YX} = (x_1 - y_1, \dots, x_n - y_n)$ với $X \in P$, từ hai đẳng thức $\sum_{i=1}^n a_i x_i + b = 0$ và $\sum_{i=1}^n a_i y_i + b = 0$, trừ từng vế ta thu được:
+$$
+\sum_{i=1}^n a_i(x_i - y_i) = 0 \iff \vec{a} \cdot \overrightarrow{YX} = 0.
+$$
+Do mục tiêu đã cho là trực chuẩn nên $\vec{a}$ trực giao với mọi vectơ của $\overrightarrow{P}$, tức $\vec{a} \perp \overrightarrow{P}$.
+
+**b) Phương trình tham số và tổng quát của đường thẳng $d$:**
+
+Vì $\dim \overrightarrow{P}^\perp = n - (n - 1) = 1$ và $\vec{a} \neq \vec{0}$ thuộc $\overrightarrow{P}^\perp$, đường thẳng $d$ đi qua $M_0(x_1^0, \dots, x_n^0)$ vuông góc với $P$ nhận $\vec{a} = (a_1, \dots, a_n)$ làm vectơ chỉ phương.
+
+- **Phương trình tham số của $d$:**
+  $$
+  \begin{cases}
+  x_1 = x_1^0 + a_1 t, \\
+  x_2 = x_2^0 + a_2 t, \\
+  \vdots \\
+  x_n = x_n^0 + a_n t
+  \end{cases}
+  \quad (t \in \mathbb{R}).
+  $$
+- **Phương trình tổng quát của $d$:** Vì $\vec{a} \neq \vec{0}$, tồn tại ít nhất một chỉ số $k \in \{1, \dots, n\}$ sao cho $a_k \neq 0$. Từ phương trình thứ $k$ rút được $t = \dfrac{x_k - x_k^0}{a_k}$; thế vào $n - 1$ phương trình còn lại ($i \neq k$), ta thu được hệ $n - 1$ phương trình tuyến tính độc lập xác định đường thẳng $d$:
+  $$
+  a_k(x_i - x_i^0) - a_i(x_k - x_k^0) = 0 \quad \bigl(i \in \{1, 2, \dots, n\} \setminus \{k\}\bigr).
+  $$
+  *(Trường hợp riêng khi mọi $a_i \neq 0$ với $i = 1, \dots, n$, có thể viết gọn dưới dạng chính tắc $\dfrac{x_1 - x_1^0}{a_1} = \dfrac{x_2 - x_2^0}{a_2} = \dots = \dfrac{x_n - x_n^0}{a_n}$).*
 </Solution>
 </Exercise>
 
-<Exercise id="exr-e4-2" title="Khoảng cách từ điểm đến đường thẳng (§4, thí dụ 1)">
-Trong $\mathcal{E}^3$ với mục tiêu trực chuẩn, tính khoảng cách từ điểm $M(0, 1, 2)$ đến đường thẳng $\Delta$ đi qua hai điểm $A(1, 0, 0)$ và $B(1, 1, 1)$.
+<Exercise id="exr-e4-18" title="Bài tập 2.18 (Phương bù vuông góc của một m-phẳng tổng quát — tr. 137–138)">
+Trong $\mathcal{E}^n$ với mục tiêu trực chuẩn cho trước, cho $m$-phẳng $P$ ($0 \le m < n$) có hệ phương trình tổng quát:
+$$
+\sum_{j=1}^n a_{ij} x_j + b_i = 0 \quad (i = 1, 2, \dots, n - m).
+$$
+
+a) Chứng tỏ rằng $n - m$ vectơ $\vec{a}_i = (a_{i1}, a_{i2}, \dots, a_{in})$ với $i = 1, 2, \dots, n - m$ độc lập tuyến tính và tạo nên một cơ sở của phương bù vuông góc với phương của phẳng $P$.
+
+b) Viết phương trình tham số của cái phẳng $Q$ đi qua điểm $C(c_1, c_2, \dots, c_n)$ và bù vuông góc với $m$-phẳng $P$ đã cho.
 
 <Hint>
-Sử dụng công thức $d(M, \Delta) = \dfrac{|\overrightarrow{AB} \wedge \overrightarrow{AM}|}{|\overrightarrow{AB}|}$ (diện tích hình bình hành chia cho độ dài cạnh đáy).
+Câu a: Dùng hạng của hệ phương trình xác định $m$-phẳng (bằng $n - m$) để suy ra tính độc lập tuyến tính của $\{\vec{a}_i\}$, sau đó kiểm tra $\vec{a}_i \perp \overrightarrow{P}$ và so sánh số chiều với $\dim \overrightarrow{P}^\perp = n - m$. Câu b: Sử dụng $\{\vec{a}_1, \dots, \vec{a}_{n-m}\}$ làm cơ sở phương của $Q$.
 </Hint>
 
 <Solution>
-Ta có $\overrightarrow{AB} = (0, 1, 1)$ và $\overrightarrow{AM} = (-1, 1, 2)$.
+**a) Chứng minh $\{\vec{a}_1, \dots, \vec{a}_{n-m}\}$ là cơ sở của $\overrightarrow{P}^\perp$:**
 
-Tích có hướng $\overrightarrow{AB} \wedge \overrightarrow{AM} = (1, -1, 1)$ có độ dài $\sqrt{3}$, còn $|\overrightarrow{AB}| = \sqrt{2}$, nên $d(M, \Delta) = \dfrac{\sqrt{3}}{\sqrt{2}} = \dfrac{\sqrt{6}}{2}$.
+Vì hệ gồm $n - m$ phương trình tuyến tính xác định một $m$-phẳng $P$ trong $\mathcal{E}^n$, không gian nghiệm của hệ thuần nhất liên kết $\sum_{j=1}^n a_{ij} u_j = 0$ ($i = 1, \dots, n - m$) chính là phương $\overrightarrow{P}$ có số chiều $\dim \overrightarrow{P} = m$. Theo định lí hạng – số chiều không gian nghiệm, ma trận hệ số $A = [a_{ij}]_{(n-m) \times n}$ có hạng bằng $n - m$. Do $A$ có đúng $n - m$ dòng nên $n - m$ vectơ dòng $\vec{a}_i = (a_{i1}, a_{i2}, \dots, a_{in})$ ($i = 1, \dots, n - m$) độc lập tuyến tính.
 
-**Đáp án:** $\dfrac{\sqrt{6}}{2}$.
+Mặt khác, với mọi vectơ $\vec{u} = (u_1, \dots, u_n) \in \overrightarrow{P}$, trong cơ sở trực chuẩn ta có:
+$$
+\vec{a}_i \cdot \vec{u} = \sum_{j=1}^n a_{ij} u_j = 0 \quad (i = 1, \dots, n - m),
+$$
+nên mỗi vectơ $\vec{a}_i$ đều thuộc phần bù trực giao $\overrightarrow{P}^\perp$ của phương $\overrightarrow{P}$. Vì $\dim \overrightarrow{P}^\perp = n - \dim \overrightarrow{P} = n - m$, hệ gồm $n - m$ vectơ độc lập tuyến tính $\{\vec{a}_1, \dots, \vec{a}_{n-m}\}$ nằm trong không gian $n - m$ chiều $\overrightarrow{P}^\perp$ lập thành một cơ sở của $\overrightarrow{P}^\perp$.
+
+**b) Phương trình tham số của phẳng $Q$:**
+
+Phẳng $Q$ đi qua điểm $C(c_1, \dots, c_n)$ và nhận $\overrightarrow{Q} = \overrightarrow{P}^\perp = \operatorname{span}\{\vec{a}_1, \dots, \vec{a}_{n-m}\}$ làm phương (nên $Q$ là một $(n - m)$-phẳng). Điểm $X(x_1, \dots, x_n) \in Q \iff \overrightarrow{CX} = \sum_{i=1}^{n-m} t_i \vec{a}_i$, cho hệ phương trình tham số:
+$$
+x_j = c_j + \sum_{i=1}^{n-m} a_{ij} t_i \quad (j = 1, 2, \dots, n;\; t_1, \dots, t_{n-m} \in \mathbb{R}).
+$$
 </Solution>
 </Exercise>
 
-<Exercise id="exr-e4-3" title="Khoảng cách giữa hai đường thẳng chéo nhau (§4, mục 2)">
-Trong $\mathcal{E}^3$ với mục tiêu trực chuẩn, cho đường thẳng $\Delta_1$ đi qua $M_1(0, 0, 0)$ với vectơ chỉ phương $\vec{a} = (1, 1, 0)$ và đường thẳng $\Delta_2$ đi qua $M_2(0, 0, 1)$ với vectơ chỉ phương $\vec{b} = (1, 0, 1)$. Tính khoảng cách giữa $\Delta_1$ và $\Delta_2$.
+<Exercise id="exr-e4-19" title="Bài tập 2.19 (Lập phẳng bé nhất và phẳng bù vuông góc trong không gian năm chiều — tr. 138)">
+Trong $\mathcal{E}^5$ với mục tiêu trực chuẩn cho trước:
+
+a) Lập phương trình tổng quát của phẳng $P$ có số chiều bé nhất chứa các điểm $A(1, 3, -1, 4, 5)$, $B(2, 3, -1, 4, 5)$ và chứa phương $\vec{p} = (0, 1, 0, 0, 0)$.
+
+b) Lập phương trình tổng quát của phẳng $Q$ đi qua điểm $A$ đã cho và bù vuông góc với phẳng $P$.
 
 <Hint>
-Áp dụng công thức $d(\Delta_1, \Delta_2) = \dfrac{|(\vec{a}, \vec{b}, \overrightarrow{M_1M_2})|}{|\vec{a} \wedge \vec{b}|}$ (chiều cao hình hộp dựng trên ba vectơ).
+Câu a: Mọi phẳng chứa $A, B$ và phương $\vec{p}$ đều đi qua $A$ và có phương chứa $\overrightarrow{AB}, \vec{p}$. Câu b: Tìm cơ sở của $\overrightarrow{P}^\perp$ rồi chuyển sang hệ phương trình tổng quát.
 </Hint>
 
 <Solution>
-Ta có $\vec{a} \wedge \vec{b} = (1, -1, -1)$ có độ dài $\sqrt{3}$, và $\overrightarrow{M_1M_2} = (0, 0, 1)$ nên tích hỗn hợp $(\vec{a}, \vec{b}, \overrightarrow{M_1M_2}) = -1$.
+**a) Lập phương trình tổng quát của phẳng $P$:**
 
-**Đáp án:** $d(\Delta_1, \Delta_2) = \dfrac{1}{\sqrt{3}} = \dfrac{\sqrt{3}}{3}$.
+Vì $P$ chứa hai điểm $A, B$ nên phương $\overrightarrow{P}$ phải chứa vectơ $\overrightarrow{AB} = (1, 0, 0, 0, 0)$, đồng thời theo giả thiết $\overrightarrow{P}$ chứa $\vec{p} = (0, 1, 0, 0, 0)$. Hai vectơ $\overrightarrow{AB} = \vec{e}_1$ và $\vec{p} = \vec{e}_2$ độc lập tuyến tính, do đó phẳng $P$ có số chiều bé nhất thỏa mãn đề bài là $2$-phẳng đi qua $A(1, 3, -1, 4, 5)$ và nhận $\{\vec{e}_1, \vec{e}_2\}$ làm cơ sở phương.
+
+Phương trình tham số của $P$ là $x_1 = 1 + u$, $x_2 = 3 + v$, $x_3 = -1$, $x_4 = 4$, $x_5 = 5$ ($u, v \in \mathbb{R}$). Khử $u, v$, ta thu được hệ phương trình tổng quát của $2$-phẳng $P$:
+$$
+\begin{cases}
+x_3 + 1 = 0, \\
+x_4 - 4 = 0, \\
+x_5 - 5 = 0.
+\end{cases}
+$$
+
+**b) Lập phương trình tổng quát của phẳng $Q$:**
+
+Theo Bài tập 2.18a, phương $\overrightarrow{Q} = \overrightarrow{P}^\perp$ của phẳng $Q$ bù vuông góc với $P$ có cơ sở gồm $5 - 2 = 3$ vectơ pháp tuyến của các phương trình xác định $P$, chính là $\{\vec{e}_3, \vec{e}_4, \vec{e}_5\}$ với $\vec{e}_3 = (0, 0, 1, 0, 0)$, $\vec{e}_4 = (0, 0, 0, 1, 0)$, $\vec{e}_5 = (0, 0, 0, 0, 1)$.
+
+Vì $Q$ đi qua $A(1, 3, -1, 4, 5)$, phương trình tham số của $3$-phẳng $Q$ là $x_1 = 1$, $x_2 = 3$, $x_3 = -1 + t_1$, $x_4 = 4 + t_2$, $x_5 = 5 + t_3$ ($t_1, t_2, t_3 \in \mathbb{R}$). Do đó hệ phương trình tổng quát của $Q$ là:
+$$
+\begin{cases}
+x_1 - 1 = 0, \\
+x_2 - 3 = 0.
+\end{cases}
+$$
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e4-20" title="Bài tập 2.20 (Xét vị trí tương đối của hai phẳng tham số trong không gian bốn chiều — tr. 138)">
+Trong $\mathcal{E}^4$ với mục tiêu trực chuẩn đã cho, xét vị trí tương đối của hai cái phẳng $P$ và $Q$ lần lượt cho bởi phương trình tham số của chúng như sau:
+$$
+P: \begin{cases}
+x_1 = 2 + v, \\
+x_2 = 1 + 4v + 3u, \\
+x_3 = 3v + u, \\
+x_4 = 5 + 11v + 3u,
+\end{cases}
+\qquad
+Q: \begin{cases}
+x_1 = 2t, \\
+x_2 = 3, \\
+x_3 = -1 + 3t, \\
+x_4 = 2 - t.
+\end{cases}
+$$
+
+<Hint>
+Xác định cơ sở phương của $P$ và $Q$, kiểm tra cả quan hệ affine (giao điểm $P \cap Q$, giao phương $\overrightarrow{P} \cap \overrightarrow{Q}$) lẫn quan hệ Ơclit (tích vô hướng giữa các vectơ cơ sở của hai phương).
+</Hint>
+
+<Solution>
+Phẳng $P$ đi qua điểm $P_0(2, 1, 0, 5)$ và có phương $\overrightarrow{P} = \operatorname{span}\{\vec{a}_1, \vec{a}_2\}$ với $\vec{a}_1 = (1, 4, 3, 11)$, $\vec{a}_2 = (0, 3, 1, 3)$ (độc lập tuyến tính nên $\dim P = 2$). Đường thẳng $Q$ đi qua điểm $Q_0(0, 3, -1, 2)$ và có phương $\overrightarrow{Q} = \operatorname{span}\{\vec{b}\}$ với $\vec{b} = (2, 0, 3, -1)$ ($\dim Q = 1$).
+
+**1. Kiểm tra quan hệ vuông góc:**
+
+Tính tích vô hướng của $\vec{b}$ với hai vectơ cơ sở của $\overrightarrow{P}$ trong mục tiêu trực chuẩn:
+$$
+\vec{a}_1 \cdot \vec{b} = 1 \cdot 2 + 4 \cdot 0 + 3 \cdot 3 + 11 \cdot (-1) = 2 + 0 + 9 - 11 = 0,
+$$
+$$
+\vec{a}_2 \cdot \vec{b} = 0 \cdot 2 + 3 \cdot 0 + 1 \cdot 3 + 3 \cdot (-1) = 0 + 0 + 3 - 3 = 0.
+$$
+Suy ra $\overrightarrow{P} \perp \overrightarrow{Q}$, nghĩa là hai phẳng $P$ và $Q$ **vuông góc hoàn toàn** với nhau ($P \perp Q$). Hơn nữa, vì $\overrightarrow{P} \perp \overrightarrow{Q}$ nên ngay lập tức $\overrightarrow{P} \cap \overrightarrow{Q} = \{\vec{0}\}$ (tuy nhiên $\dim P + \dim Q = 2 + 1 = 3 < 4$, nên $P$ và $Q$ *không* bù vuông góc).
+
+**2. Kiểm tra giao điểm $P \cap Q$:**
+
+Xét hệ phương trình $P_0 + v\vec{a}_1 + u\vec{a}_2 = Q_0 + t\vec{b}$:
+$$
+\begin{cases}
+2 + v = 2t, \\
+1 + 4v + 3u = 3, \\
+3v + u = -1 + 3t, \\
+5 + 11v + 3u = 2 - t.
+\end{cases}
+$$
+Khử lần lượt các tham số:
+- Từ phương trình thứ nhất: $v = 2t - 2$.
+- Từ phương trình thứ ba: $u = -1 + 3t - 3v = -1 + 3t - 3(2t - 2) = 5 - 3t$.
+- Thế $v = 2t - 2$ và $u = 5 - 3t$ vào phương trình thứ hai: $1 + 4(2t - 2) + 3(5 - 3t) = 8 - t = 3 \implies t = 5$, suy ra $v = 8$ và $u = -10$.
+- Thế bộ $(v, u, t) = (8, -10, 5)$ vào phương trình thứ tư: vế trái bằng $5 + 11 \cdot 8 + 3 \cdot (-10) = 63$, trong khi vế phải bằng $2 - 5 = -3$ ($63 \neq -3$, mâu thuẫn).
+
+Vậy $P \cap Q = \varnothing$ và $\overrightarrow{P} \cap \overrightarrow{Q} = \{\vec{0}\}$. **Kết luận:** Trong $\mathcal{E}^4$, mặt phẳng $P$ và đường thẳng $Q$ **chéo nhau hoàn toàn và vuông góc với nhau** ($P \perp Q$, không bù vuông góc).
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e4-21" title="Bài tập 2.21 (Xét vị trí tương đối của hai phẳng tổng quát trong không gian bốn chiều — tr. 138)">
+Trong $\mathcal{E}^4$ với mục tiêu trực chuẩn cho trước, xét vị trí tương đối của hai cái phẳng $R$ và $S$ lần lượt cho bởi phương trình tổng quát của chúng như sau:
+$$
+R: x_1 - x_2 + 3x_3 + x_4 - 3 = 0, \qquad
+S: \begin{cases}
+x_1 + x_2 = 3, \\
+4x_1 + x_2 - x_3 = 3, \\
+2x_1 + x_2 - x_4 = 0.
+\end{cases}
+$$
+
+<Hint>
+Tìm vectơ pháp tuyến của siêu phẳng $R$ và tham số hóa đường thẳng $S$ theo $x_1 = t$, so sánh vectơ chỉ phương của $S$ với vectơ pháp tuyến của $R$ rồi tìm giao điểm.
+</Hint>
+
+<Solution>
+Siêu phẳng $R$ ($\dim R = 3$) có vectơ pháp tuyến $\vec{n}_R = (1, -1, 3, 1)$, tức $\overrightarrow{R}^\perp = \operatorname{span}\{\vec{n}_R\}$.
+
+Đối với phẳng $S$, đặt $x_1 = t \in \mathbb{R}$, từ ba phương trình của $S$ ta rút được:
+$$
+\begin{cases}
+x_1 = t, \\
+x_2 = 3 - t, \\
+x_3 = 4x_1 + x_2 - 3 = 4t + (3 - t) - 3 = 3t, \\
+x_4 = 2x_1 + x_2 = 2t + (3 - t) = 3 + t.
+\end{cases}
+$$
+Như vậy $S$ là một đường thẳng ($\dim S = 1$) đi qua điểm $S_0(0, 3, 0, 3)$ và có vectơ chỉ phương $\vec{u}_S = (1, -1, 3, 1) = \vec{n}_R$.
+
+Vì $\overrightarrow{S} = \operatorname{span}\{\vec{u}_S\} = \overrightarrow{R}^\perp$ và $\dim R + \dim S = 3 + 1 = 4$, siêu phẳng $R$ và đường thẳng $S$ **bù vuông góc với nhau** trong $\mathcal{E}^4$. Theo Định lí 1b, chúng cắt nhau tại một giao điểm duy nhất $I$; thế phương trình tham số của $S$ vào phương trình của $R$:
+$$
+t - (3 - t) + 3(3t) + (3 + t) - 3 = 12t - 3 = 0 \implies t = \frac{1}{4}.
+$$
+Vậy $R$ và $S$ bù vuông góc với nhau và cắt nhau tại điểm duy nhất $I\left(\dfrac{1}{4}, \dfrac{11}{4}, \dfrac{3}{4}, \dfrac{13}{4}\right)$.
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e4-23" title="Bài tập 2.23 (Khoảng cách giữa hai siêu phẳng song song — tr. 139)">
+Hãy tìm công thức tính khoảng cách giữa hai siêu phẳng song song trong $\mathcal{E}^n$, sau đó hãy áp dụng công thức vừa tìm được để tính khoảng cách giữa hai mặt phẳng song song với nhau trong $\mathcal{E}^3$ và lần lượt có phương trình:
+$$
+P: 2x_1 - x_2 + 2x_3 + 2 = 0, \qquad P': 4x_1 - 2x_2 + 4x_3 - 21 = 0.
+$$
+
+<Hint>
+Đưa phương trình hai siêu phẳng song song về cùng một bộ hệ số pháp tuyến $(a_1, \dots, a_n)$, lấy một điểm tùy ý $M_0 \in P$ và áp dụng Hệ quả 2 (Mục 2d) $d(P, P') = d(M_0, P')$.
+</Hint>
+
+<Solution>
+**1. Công thức tổng quát trong $\mathcal{E}^n$:**
+
+Trong $\mathcal{E}^n$ với mục tiêu trực chuẩn, hai siêu phẳng $P$ và $P'$ song song (hoặc trùng nhau) có cùng phương $(n - 1)$ chiều, nên các vectơ pháp tuyến của chúng tỉ lệ với nhau. Chia phương trình cho hằng số tỉ lệ thích hợp, ta luôn viết được phương trình của $P$ và $P'$ với cùng một vectơ pháp tuyến $\vec{a} = (a_1, \dots, a_n) \neq \vec{0}$:
+$$
+P: \sum_{i=1}^n a_i x_i + b = 0, \qquad P': \sum_{i=1}^n a_i x_i + b' = 0 \quad (b \neq b').
+$$
+Lấy một điểm $M_0(x_1^0, \dots, x_n^0) \in P$ tùy ý, khi đó $\sum_{i=1}^n a_i x_i^0 = -b$. Theo Hệ quả 2 (Mục 2d) và công thức khoảng cách từ một điểm đến một siêu phẳng (Mục 3b), ta có:
+$$
+d(P, P') = d(M_0, P') = \frac{\left|\sum_{i=1}^n a_i x_i^0 + b'\right|}{\sqrt{\sum_{i=1}^n a_i^2}} = \frac{|b' - b|}{\sqrt{\sum_{i=1}^n a_i^2}}.
+$$
+
+**2. Áp dụng trong $\mathcal{E}^3$:**
+
+Chia hai vế phương trình của $P'$ cho $2$ để đồng nhất vectơ pháp tuyến $\vec{a} = (2, -1, 2)$ với $P$:
+$$
+P: 2x_1 - x_2 + 2x_3 + 2 = 0 \quad (b = 2), \qquad P': 2x_1 - x_2 + 2x_3 - \frac{21}{2} = 0 \quad \left(b' = -\frac{21}{2}\right).
+$$
+Áp dụng công thức vừa thiết lập với $\sqrt{2^2 + (-1)^2 + 2^2} = 3$:
+$$
+d(P, P') = \frac{\left|-\frac{21}{2} - 2\right|}{3} = \frac{\frac{25}{2}}{3} = \frac{25}{6}.
+$$
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e4-24" title="Bài tập 2.24 (Tìm điểm đối xứng qua mặt phẳng và qua đường thẳng trong không gian ba chiều — tr. 139)">
+Trong $\mathcal{E}^3$ (với mục tiêu trực chuẩn), tìm điểm đối xứng của điểm $M(1, 2, 3)$ đối với:
+
+a) Mặt phẳng $\alpha: 2x_1 - 2x_2 + 5x_3 - 68 = 0$.
+
+b) Đường thẳng $d: x_1 - 8 = \dfrac{x_2 - 11}{3} = -x_3 + 4$.
+
+<Hint>
+Trong cả hai câu, điểm đối xứng $M'$ của $M$ qua phẳng $\beta$ được xác định bởi công thức trung điểm $M' = 2H - M$ (tức $\overrightarrow{OM'} = 2\overrightarrow{OH} - \overrightarrow{OM}$), trong đó $H$ là hình chiếu vuông góc của $M$ trên $\beta$.
+</Hint>
+
+<Solution>
+**a) Điểm đối xứng $M'_1$ của $M(1, 2, 3)$ qua mặt phẳng $\alpha: 2x_1 - 2x_2 + 5x_3 - 68 = 0$:**
+
+Đường thẳng qua $M(1, 2, 3)$ vuông góc với $\alpha$ nhận $\vec{n} = (2, -2, 5)$ làm vectơ chỉ phương nên có phương trình tham số $x_1 = 1 + 2t$, $x_2 = 2 - 2t$, $x_3 = 3 + 5t$. Thay vào phương trình $\alpha$ để tìm hình chiếu vuông góc $H_1$:
+$$
+2(1 + 2t) - 2(2 - 2t) + 5(3 + 5t) - 68 = 33t - 55 = 0 \implies t = \frac{5}{3}.
+$$
+Suy ra $H_1 = \left(\dfrac{13}{3}, -\dfrac{4}{3}, \dfrac{34}{3}\right)$. Điểm đối xứng $M'_1$ nhận $H_1$ làm trung điểm của đoạn $MM'_1$ ($x'_i = 2x_{H_1, i} - x_{M, i}$, tức ứng với tham số $2t = \dfrac{10}{3}$):
+$$
+M'_1 = \left(\frac{23}{3}, -\frac{14}{3}, \frac{59}{3}\right).
+$$
+
+**b) Điểm đối xứng $M'_2$ của $M(1, 2, 3)$ qua đường thẳng $d$:**
+
+Đặt $s = x_1 - 8 = \dfrac{x_2 - 11}{3} = -x_3 + 4$, phương trình tham số của $d$ là:
+$$
+x_1 = 8 + s, \qquad x_2 = 11 + 3s, \qquad x_3 = 4 - s \quad (s \in \mathbb{R}),
+$$
+có vectơ chỉ phương $\vec{u} = (1, 3, -1)$. Với điểm $H_2(8 + s, 11 + 3s, 4 - s) \in d$, ta có $\overrightarrow{MH_2} = (7 + s, 9 + 3s, 1 - s)$. Điều kiện $H_2$ là hình chiếu vuông góc của $M$ trên $d$ là $\overrightarrow{MH_2} \cdot \vec{u} = 0$:
+$$
+1(7 + s) + 3(9 + 3s) - 1(1 - s) = 11s + 33 = 0 \implies s = -3.
+$$
+Thay $s = -3$ ta được hình chiếu vuông góc $H_2(5, 2, 7)$. Suy ra điểm đối xứng $M'_2$ thỏa $H_2$ là trung điểm $MM'_2$ là:
+$$
+M'_2 = (2 \cdot 5 - 1,\; 2 \cdot 2 - 2,\; 2 \cdot 7 - 3) = (9, 2, 11).
+$$
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e4-25" title="Bài tập 2.25 (Chiều cao của tứ diện trong không gian ba chiều — tr. 139)">
+Trong $\mathcal{E}^3$ cho một tứ diện $ABCD$. Các đỉnh có tọa độ trực chuẩn là:
+$$
+A = (0, 0, 2), \quad B = (3, 0, 5), \quad C = (1, 1, 0), \quad D = (4, 1, 2).
+$$
+Tính chiều cao của tứ diện hạ từ đỉnh $D$ tới mặt phẳng $(ABC)$.
+
+<Hint>
+Lập vectơ pháp tuyến $\vec{n} = \overrightarrow{AB} \wedge \overrightarrow{AC}$ để viết phương trình mặt phẳng $(ABC)$ rồi tính $d(D, (ABC))$ (hoặc dùng công thức chiều cao hình hộp $h_D = \dfrac{|(\overrightarrow{AB}, \overrightarrow{AC}, \overrightarrow{AD})|}{|\overrightarrow{AB} \wedge \overrightarrow{AC}|}$).
+</Hint>
+
+<Solution>
+Ta có $\overrightarrow{AB} = (3, 0, 3)$ và $\overrightarrow{AC} = (1, 1, -2)$. Tích có hướng của chúng là:
+$$
+\overrightarrow{AB} \wedge \overrightarrow{AC} = \left(
+\begin{vmatrix} 0 & 3 \\ 1 & -2 \end{vmatrix},
+\begin{vmatrix} 3 & 3 \\ -2 & 1 \end{vmatrix},
+\begin{vmatrix} 3 & 0 \\ 1 & 1 \end{vmatrix}
+\right) = (-3, 9, 3) = 3(-1, 3, 1).
+$$
+Chọn vectơ pháp tuyến thu gọn của mặt phẳng $(ABC)$ là $\vec{n} = (-1, 3, 1)$. Vì mặt phẳng $(ABC)$ đi qua $A(0, 0, 2)$ nên phương trình tổng quát của nó là:
+$$
+-1(x_1 - 0) + 3(x_2 - 0) + 1(x_3 - 2) = 0 \iff -x_1 + 3x_2 + x_3 - 2 = 0.
+$$
+Chiều cao $h_D$ của tứ diện hạ từ $D(4, 1, 2)$ tới mặt phẳng $(ABC)$ là:
+$$
+h_D = d\bigl(D, (ABC)\bigr) = \frac{|-4 + 3 \cdot 1 + 2 - 2|}{\sqrt{(-1)^2 + 3^2 + 1^2}} = \frac{|-1|}{\sqrt{11}} = \frac{1}{\sqrt{11}} = \frac{\sqrt{11}}{11}.
+$$
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e4-26" title="Bài tập 2.26 (Khoảng cách từ điểm tới đường thẳng giao của hai mặt phẳng — tr. 139)">
+Trong $\mathcal{E}^3$ (với mục tiêu trực chuẩn), tìm khoảng cách từ điểm $M(1, 3, 5)$ tới đường thẳng $d$ có phương trình:
+$$
+\begin{cases}
+2x_1 + x_2 + x_3 - 1 = 0, \\
+3x_1 + x_2 + 2x_3 - 3 = 0.
+\end{cases}
+$$
+
+<Hint>
+Tìm một điểm $M_0 \in d$ và vectơ chỉ phương $\vec{u} = \vec{n}_1 \wedge \vec{n}_2$ của $d$, sau đó áp dụng công thức $d(M, d) = \dfrac{|\overrightarrow{M_0M} \wedge \vec{u}|}{|\vec{u}|}$.
+</Hint>
+
+<Solution>
+Hai mặt phẳng xác định đường thẳng $d$ có các vectơ pháp tuyến $\vec{n}_1 = (2, 1, 1)$ và $\vec{n}_2 = (3, 1, 2)$. Vì $d$ vuông góc với cả $\vec{n}_1$ và $\vec{n}_2$, đường thẳng $d$ nhận tích có hướng của chúng làm vectơ chỉ phương:
+$$
+\vec{u} = \vec{n}_1 \wedge \vec{n}_2 = \left(
+\begin{vmatrix} 1 & 1 \\ 1 & 2 \end{vmatrix},
+\begin{vmatrix} 1 & 2 \\ 2 & 3 \end{vmatrix},
+\begin{vmatrix} 2 & 1 \\ 3 & 1 \end{vmatrix}
+\right) = (1, -1, -1), \qquad |\vec{u}| = \sqrt{1 + 1 + 1} = \sqrt{3}.
+$$
+Cho $x_2 = 0$ trong hệ phương trình của $d$, giải hệ $2x_1 + x_3 = 1$, $3x_1 + 2x_3 = 3$ được $x_1 = -1, x_3 = 3$, tức điểm $M_0(-1, 0, 3) \in d$. Khi đó $\overrightarrow{M_0M} = (2, 3, 2)$ và:
+$$
+\overrightarrow{M_0M} \wedge \vec{u} = \left(
+\begin{vmatrix} 3 & 2 \\ -1 & -1 \end{vmatrix},
+\begin{vmatrix} 2 & 2 \\ -1 & 1 \end{vmatrix},
+\begin{vmatrix} 2 & 3 \\ 1 & -1 \end{vmatrix}
+\right) = (-1, 4, -5).
+$$
+Vậy khoảng cách từ $M(1, 3, 5)$ tới đường thẳng $d$ là:
+$$
+d(M, d) = \frac{|\overrightarrow{M_0M} \wedge \vec{u}|}{|\vec{u}|} = \frac{\sqrt{(-1)^2 + 4^2 + (-5)^2}}{\sqrt{3}} = \frac{\sqrt{42}}{\sqrt{3}} = \sqrt{14}.
+$$
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e4-27" title="Bài tập 2.27 (Khoảng cách giữa các cặp đường thẳng trong không gian ba chiều — tr. 139)">
+Trong $\mathcal{E}^3$ (với mục tiêu trực chuẩn), tìm khoảng cách giữa các cặp đường thẳng lần lượt có phương trình:
+
+a) $d_1: \begin{cases} x_1 = 3 + t, \\ x_2 = 1 - t, \\ x_3 = 2 - 2t \end{cases}$ và $d_2: \begin{cases} x_1 = -u, \\ x_2 = 2 + 3u, \\ x_3 = 3u. \end{cases}$
+
+b) $m_1: \begin{cases} x_1 + 2x_2 - x_3 + 1 = 0, \\ 2x_1 - 3x_2 + x_3 - 4 = 0 \end{cases}$ và $m_2: \begin{cases} x_1 + x_2 + x_3 - 9 = 0, \\ 2x_1 - x_2 - x_3 = 0. \end{cases}$
+
+<Hint>
+Ở mỗi câu, xác định một điểm và một vectơ chỉ phương trên từng đường thẳng; kiểm tra $\vec{u}_1 \wedge \vec{u}_2 \neq \vec{0}$ rồi áp dụng công thức chiều cao hình hộp $d = \dfrac{|(\vec{u}_1, \vec{u}_2, \overrightarrow{P_1P_2})|}{|\vec{u}_1 \wedge \vec{u}_2|}$ (như Thí dụ 2 ở Mục 4).
+</Hint>
+
+<Solution>
+**a) Khoảng cách giữa $d_1$ và $d_2$:**
+
+Đường thẳng $d_1$ qua $P_1(3, 1, 2)$, có vectơ chỉ phương $\vec{u}_1 = (1, -1, -2)$; đường thẳng $d_2$ qua $P_2(0, 2, 0)$, có vectơ chỉ phương $\vec{u}_2 = (-1, 3, 3)$. Ta có $\overrightarrow{P_1P_2} = (-3, 1, -2)$ và:
+$$
+\vec{u}_1 \wedge \vec{u}_2 = \left(
+\begin{vmatrix} -1 & -2 \\ 3 & 3 \end{vmatrix},
+\begin{vmatrix} -2 & 1 \\ 3 & -1 \end{vmatrix},
+\begin{vmatrix} 1 & -1 \\ -1 & 3 \end{vmatrix}
+\right) = (3, -1, 2) \neq \vec{0}.
+$$
+Độ dài $|\vec{u}_1 \wedge \vec{u}_2| = \sqrt{9 + 1 + 4} = \sqrt{14}$, còn giá trị tuyệt đối của tích hỗn hợp là:
+$$
+\bigl|(\vec{u}_1 \wedge \vec{u}_2) \cdot \overrightarrow{P_1P_2}\bigr| = |3(-3) + (-1)(1) + 2(-2)| = |-14| = 14.
+$$
+Vậy $d_1, d_2$ chéo nhau và có khoảng cách là:
+$$
+d(d_1, d_2) = \frac{14}{\sqrt{14}} = \sqrt{14}.
+$$
+
+**b) Khoảng cách giữa $m_1$ và $m_2$:**
+
+- Đường thẳng $m_1$ có vectơ chỉ phương $\vec{v}_1 = (1, 2, -1) \wedge (2, -3, 1) = (-1, -3, -7)$ (hay đổi dấu $(1, 3, 7)$); chọn $x_2 = 0$ giải hệ $x_1 - x_3 = -1$, $2x_1 + x_3 = 4$ được điểm $Q_1(1, 0, 2) \in m_1$.
+- Đường thẳng $m_2$ có vectơ chỉ phương cùng phương với $(1, 1, 1) \wedge (2, -1, -1) = (0, 3, -3) = 3(0, 1, -1)$, chọn $\vec{v}_2 = (0, 1, -1)$; cộng hai phương trình của $m_2$ được $3x_1 - 9 = 0 \implies x_1 = 3$, lấy $x_2 = 0 \implies x_3 = 6$, được điểm $Q_2(3, 0, 6) \in m_2$.
+
+Với $\vec{v}_1 = (1, 3, 7)$, $\vec{v}_2 = (0, 1, -1)$ và $\overrightarrow{Q_1Q_2} = (2, 0, 4)$, ta có:
+$$
+\vec{v}_1 \wedge \vec{v}_2 = (-10, 1, 1), \qquad |\vec{v}_1 \wedge \vec{v}_2| = \sqrt{100 + 1 + 1} = \sqrt{102},
+$$
+$$
+\bigl|(\vec{v}_1 \wedge \vec{v}_2) \cdot \overrightarrow{Q_1Q_2}\bigr| = |-10 \cdot 2 + 1 \cdot 0 + 1 \cdot 4| = |-16| = 16.
+$$
+Vậy khoảng cách giữa $m_1$ và $m_2$ là:
+$$
+d(m_1, m_2) = \frac{16}{\sqrt{102}} = \frac{8\sqrt{102}}{51}.
+$$
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e4-28" title="Bài tập 2.28 (Đường vuông góc chung của mặt phẳng và đường thẳng chéo nhau trong E4 — tr. 140)">
+Trong $\mathcal{E}^4$ với mục tiêu trực chuẩn đã cho, cho mặt phẳng $P$ đi qua ba điểm $A(1, 1, 1, 1)$, $B(2, 2, 0, 0)$, $C(1, 2, 0, 1)$ và đường thẳng $d$ đi qua hai điểm $D(1, 1, 1, 2)$, $E(1, 1, 2, 1)$.
+
+a) Chứng minh $P$ và $d$ chéo nhau.
+
+b) Viết phương trình đường vuông góc chung và tính độ dài đoạn vuông góc chung.
+
+<Hint>
+Câu a: Xét định thức cấp $4$ lập từ các vectơ $\overrightarrow{AB}, \overrightarrow{AC}, \overrightarrow{DE}$ và $\overrightarrow{AD}$. Câu b: Tham số hóa điểm $I = A + s_1\overrightarrow{AB} + s_2\overrightarrow{AC} \in P$ và điểm $J = D + t\overrightarrow{DE} \in d$, giải hệ $3$ phương trình $\overrightarrow{IJ} \cdot \overrightarrow{AB} = \overrightarrow{IJ} \cdot \overrightarrow{AC} = \overrightarrow{IJ} \cdot \overrightarrow{DE} = 0$.
+</Hint>
+
+<Solution>
+**a) Chứng minh $P$ và $d$ chéo nhau:**
+
+Ta tính các vectơ chỉ phương và vectơ nối điểm:
+$$
+\vec{u}_1 = \overrightarrow{AB} = (1, 1, -1, -1), \quad \vec{u}_2 = \overrightarrow{AC} = (0, 1, -1, 0), \quad \vec{v} = \overrightarrow{DE} = (0, 0, 1, -1), \quad \overrightarrow{AD} = (0, 0, 0, 1).
+$$
+Hai vectơ $\vec{u}_1, \vec{u}_2$ không tỉ lệ nên mặt phẳng $P$ xác định ($2$-phẳng), và $\vec{v} \neq \vec{0}$ xác định đường thẳng $d$ ($1$-phẳng). Xét ma trận cấp $4$ có các dòng là $\vec{u}_1, \vec{u}_2, \vec{v}, \overrightarrow{AD}$:
+$$
+\det \begin{bmatrix}
+1 & 1 & -1 & -1 \\
+0 & 1 & -1 & 0 \\
+0 & 0 & 1 & -1 \\
+0 & 0 & 0 & 1
+\end{bmatrix} = 1 \cdot 1 \cdot 1 \cdot 1 = 1 \neq 0.
+$$
+Vì bốn vectơ $\vec{u}_1, \vec{u}_2, \vec{v}, \overrightarrow{AD}$ độc lập tuyến tính nên:
+1. Ba vectơ $\vec{u}_1, \vec{u}_2, \vec{v}$ độc lập tuyến tính, tức $\overrightarrow{P} \cap \overrightarrow{d} = \{\vec{0}\}$.
+2. Vectơ $\overrightarrow{AD} \notin \operatorname{span}\{\vec{u}_1, \vec{u}_2, \vec{v}\} = \overrightarrow{P} + \overrightarrow{d}$, suy ra $P \cap d = \varnothing$.
+
+Vậy mặt phẳng $P$ và đường thẳng $d$ chéo nhau hoàn toàn trong $\mathcal{E}^4$.
+
+**b) Phương trình đường vuông góc chung và độ dài đoạn vuông góc chung:**
+
+Gọi $I \in P$ và $J \in d$ là hai chân đường vuông góc chung $\Delta$ của $P$ và $d$. Khi đó tồn tại duy nhất bộ $(s_1, s_2, t) \in \mathbb{R}^3$ sao cho:
+$$
+I = A + s_1\vec{u}_1 + s_2\vec{u}_2, \qquad J = D + t\vec{v},
+$$
+$$
+\overrightarrow{IJ} = \overrightarrow{AD} + t\vec{v} - s_1\vec{u}_1 - s_2\vec{u}_2 = (-s_1,\; -s_1 - s_2,\; s_1 + s_2 + t,\; 1 + s_1 - t).
+$$
+Điều kiện $\Delta \perp P$ và $\Delta \perp d$ tương đương với hệ $\overrightarrow{IJ} \cdot \vec{u}_1 = 0$, $\overrightarrow{IJ} \cdot \vec{u}_2 = 0$, $\overrightarrow{IJ} \cdot \vec{v} = 0$:
+$$
+\begin{cases}
+(-s_1) + (-s_1 - s_2) - (s_1 + s_2 + t) - (1 + s_1 - t) = -4s_1 - 2s_2 - 1 = 0, \\
+(-s_1 - s_2) - (s_1 + s_2 + t) = -2s_1 - 2s_2 - t = 0, \\
+(s_1 + s_2 + t) - (1 + s_1 - t) = s_2 + 2t - 1 = 0.
+\end{cases}
+$$
+Từ phương trình thứ ba rút được $s_2 = 1 - 2t$; thế vào phương trình thứ hai:
+$$
+-2s_1 - 2(1 - 2t) - t = -2s_1 + 3t - 2 = 0 \implies s_1 = \frac{3t - 2}{2}.
+$$
+Thế $s_1 = \dfrac{3t - 2}{2}$ và $s_2 = 1 - 2t$ vào phương trình thứ nhất:
+$$
+-4\left(\frac{3t - 2}{2}\right) - 2(1 - 2t) - 1 = -6t + 4 - 2 + 4t - 1 = -2t + 1 = 0 \implies t = \frac{1}{2},
+$$
+suy ra $s_2 = 0$ và $s_1 = -\dfrac{1}{4}$.
+
+Tọa độ hai chân đường vuông góc chung là:
+$$
+I = \left(\frac{3}{4}, \frac{3}{4}, \frac{5}{4}, \frac{5}{4}\right), \qquad J = \left(1, 1, \frac{3}{2}, \frac{3}{2}\right), \qquad \overrightarrow{IJ} = \left(\frac{1}{4}, \frac{1}{4}, \frac{1}{4}, \frac{1}{4}\right).
+$$
+- **Phương trình tham số của đường vuông góc chung $\Delta$** (qua $J$ với vectơ chỉ phương $4\overrightarrow{IJ} = (1, 1, 1, 1)$):
+  $$
+  \Delta: \begin{cases}
+  x_1 = 1 + \tau, \\
+  x_2 = 1 + \tau, \\
+  x_3 = \frac{3}{2} + \tau, \\
+  x_4 = \frac{3}{2} + \tau
+  \end{cases}
+  \quad (\tau \in \mathbb{R}).
+  $$
+- **Độ dài đoạn vuông góc chung:**
+  $$
+  d(P, d) = |\overrightarrow{IJ}| = \sqrt{\left(\frac{1}{4}\right)^2 + \left(\frac{1}{4}\right)^2 + \left(\frac{1}{4}\right)^2 + \left(\frac{1}{4}\right)^2} = \frac{1}{2}.
+  $$
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e4-29" title="Bài tập 2.29 (Quỹ tích các điểm cách đều hai điểm và ba điểm trong En — tr. 140)">
+Trong không gian Ơclit $\mathcal{E}^n$, hãy tìm quỹ tích:
+
+a) Những điểm cách đều hai điểm $A, B$ phân biệt cho trước ($n \ge 1$).
+
+b) Những điểm cách đều ba điểm $A, B, C$ độc lập (không thẳng hàng) cho trước ($n \ge 2$).
+
+<Hint>
+Câu a: Gọi $I$ là trung điểm của đoạn $AB$, biến đổi $d(M, A)^2 - d(M, B)^2 = 0$ bằng hằng đẳng thức hiệu hai bình phương vô hướng. Câu b: Lấy giao của hai siêu phẳng trung trực ứng với $AB$ và $AC$.
+</Hint>
+
+<Solution>
+**a) Quỹ tích những điểm cách đều hai điểm $A, B$ phân biệt:**
+
+Gọi $I$ là trung điểm của đoạn thẳng $AB$ ($\overrightarrow{IA} + \overrightarrow{IB} = \vec{0}$ và $\overrightarrow{AB} \neq \vec{0}$). Với điểm $M \in \mathcal{E}^n$ bất kì:
+$$
+\begin{aligned}
+d(M, A) = d(M, B)
+&\iff \overrightarrow{MA}^2 - \overrightarrow{MB}^2 = 0 \\
+&\iff (\overrightarrow{MA} - \overrightarrow{MB}) \cdot (\overrightarrow{MA} + \overrightarrow{MB}) = 0 \\
+&\iff \overrightarrow{BA} \cdot (2\overrightarrow{MI}) = 0 \iff \overrightarrow{AB} \cdot \overrightarrow{IM} = 0.
+\end{aligned}
+$$
+Vì $\overrightarrow{AB} \neq \vec{0}$, tập hợp các vectơ $\vec{u} \in \overrightarrow{\mathcal{E}^n}$ thỏa mãn $\overrightarrow{AB} \cdot \vec{u} = 0$ là phần bù trực giao $(n - 1)$ chiều của đường thẳng $AB$. Vậy quỹ tích cần tìm là **siêu phẳng duy nhất** đi qua trung điểm $I$ của đoạn $AB$ và bù vuông góc với đường thẳng $AB$ *(gọi là siêu phẳng trung trực của đoạn thẳng $AB$)*.
+
+**b) Quỹ tích những điểm cách đều ba điểm $A, B, C$ độc lập ($n \ge 2$):**
+
+Điểm $M \in \mathcal{E}^n$ cách đều ba điểm $A, B, C$ khi và chỉ khi $d(M, A) = d(M, B)$ và $d(M, A) = d(M, C)$, nghĩa là $M$ thuộc giao $\gamma = \alpha_1 \cap \alpha_2$ của siêu phẳng trung trực $\alpha_1$ của đoạn $AB$ (có pháp tuyến $\overrightarrow{AB}$) và siêu phẳng trung trực $\alpha_2$ của đoạn $AC$ (có pháp tuyến $\overrightarrow{AC}$).
+
+Vì ba điểm $A, B, C$ độc lập (không thẳng hàng) nên hai vectơ $\overrightarrow{AB}, \overrightarrow{AC}$ độc lập tuyến tính và sinh ra phương của $2$-phẳng $(ABC)$. Trong không gian Ơclit $2$ chiều $(ABC)$, hai đường trung trực của tam giác $ABC$ không song song nên cắt nhau tại một điểm duy nhất $O_0 \in (ABC)$ (tâm đường tròn ngoại tiếp tam giác $ABC$), chứng tỏ $\gamma = \alpha_1 \cap \alpha_2 \neq \varnothing$. Mặt khác, theo Bài tập 2.18a, giao của hai siêu phẳng có hai vectơ pháp tuyến độc lập $\overrightarrow{AB}, \overrightarrow{AC}$ có phương là $\operatorname{span}\{\overrightarrow{AB}, \overrightarrow{AC}\}^\perp = \overrightarrow{(ABC)}^\perp$ với số chiều $n - 2$.
+
+Vậy quỹ tích cần tìm là **$(n - 2)$-phẳng duy nhất** đi qua tâm đường tròn ngoại tiếp $O_0$ của tam giác $ABC$ và bù vuông góc với $2$-phẳng $(ABC)$ *(khi $n = 2$ quỹ tích là đúng một điểm $O_0$; khi $n = 3$ quỹ tích là trục đường tròn ngoại tiếp tam giác $ABC$)*.
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e4-31" title="Bài tập 2.31 (Khoảng cách từ gốc tọa độ tới siêu phẳng chắn — tr. 140)">
+Trong $\mathcal{E}^n$ (với mục tiêu trực chuẩn $\{O; \vec{e}_1, \dots, \vec{e}_n\}$), cho siêu phẳng $\alpha$ đi qua $n$ điểm trên các trục tọa độ ($a_1, a_2, \dots, a_n \neq 0$):
+$$
+A_1 = (a_1, 0, \dots, 0), \quad A_2 = (0, a_2, \dots, 0), \quad \dots, \quad A_n = (0, 0, \dots, a_n).
+$$
+Hãy tính khoảng cách từ gốc tọa độ $O(0, 0, \dots, 0)$ tới siêu phẳng đó.
+
+<Hint>
+Viết phương trình đoạn chắn $\sum_{i=1}^n \dfrac{x_i}{a_i} - 1 = 0$ của siêu phẳng $\alpha$, sau đó áp dụng công thức khoảng cách từ gốc $O$ tới siêu phẳng (Mục 3b).
+</Hint>
+
+<Solution>
+Xét phương trình siêu phẳng bậc nhất:
+$$
+\frac{x_1}{a_1} + \frac{x_2}{a_2} + \dots + \frac{x_n}{a_n} - 1 = 0.
+$$
+Thay tọa độ từng điểm $A_i = (0, \dots, a_i, \dots, 0)$ ($i = 1, \dots, n$) vào phương trình trên đều cho $\dfrac{a_i}{a_i} - 1 = 0$, đồng thời $n$ điểm $A_1, \dots, A_n$ độc lập affine (do các vectơ $\overrightarrow{A_1A_k} = -a_1\vec{e}_1 + a_k\vec{e}_k$ với $k = 2, \dots, n$ độc lập tuyến tính khi $a_i \neq 0$), nên phương trình trên chính là phương trình tổng quát duy nhất của siêu phẳng $\alpha$.
+
+Áp dụng công thức khoảng cách từ gốc tọa độ $O(0, 0, \dots, 0)$ đến siêu phẳng $\alpha$ (Mục 3b):
+$$
+d(O, \alpha) = \frac{\left|\sum_{i=1}^n \frac{0}{a_i} - 1\right|}{\sqrt{\sum_{i=1}^n \frac{1}{a_i^2}}} = \frac{1}{\sqrt{\frac{1}{a_1^2} + \frac{1}{a_2^2} + \dots + \frac{1}{a_n^2}}}.
+$$
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e4-32" title="Bài tập 2.32 (Hai mục tiêu trực chuẩn có chung các điểm đơn vị — tr. 140)">
+Trong $\mathcal{E}^n$ cho hai mục tiêu trực chuẩn phân biệt $\{E_0; E_i\}$ và $\{E'_0; E_i\}$ ($i = 1, 2, \dots, n$; $E'_0 \neq E_0$). Chứng minh rằng đường thẳng $E_0 E'_0$ vuông góc với siêu phẳng chứa đơn hình $(E_1, E_2, \dots, E_n)$ tại trọng tâm của đơn hình và tính tọa độ điểm $E'_0$ đối với mục tiêu $\{E_0; E_i\}$.
+
+<Hint>
+Đặt $\vec{e}_i = \overrightarrow{E_0E_i}$ và gọi $(x_1, \dots, x_n)$ là tọa độ của $E'_0$ trong $\{E_0; \vec{e}_1, \dots, \vec{e}_n\}$. Khai thác hệ thức $|\overrightarrow{E'_0E_i}|^2 = (\vec{e}_i - \overrightarrow{E_0E'_0})^2 = 1$ với mọi $i = 1, \dots, n$ để tìm $x_1 = \dots = x_n = \dfrac{2}{n}$.
+</Hint>
+
+<Solution>
+Kí hiệu $\vec{e}_i = \overrightarrow{E_0E_i}$ ($i = 1, \dots, n$). Vì $\{E_0; E_i\}$ là mục tiêu trực chuẩn nên $\{\vec{e}_1, \dots, \vec{e}_n\}$ là cơ sở trực chuẩn của $\overrightarrow{\mathcal{E}^n}$ ($\vec{e}_i \cdot \vec{e}_j = \delta_{ij}$), trong đó $E_0$ có tọa độ $(0, \dots, 0)$ và mỗi điểm $E_i$ có tọa độ gồm số $1$ ở vị trí thứ $i$ và số $0$ ở các vị trí khác.
+
+**1. Tính tọa độ của điểm $E'_0$ đối với mục tiêu $\{E_0; E_i\}$:**
+
+Giả sử đối với mục tiêu $\{E_0; \vec{e}_1, \dots, \vec{e}_n\}$, điểm $E'_0 \neq E_0$ có tọa độ là $(x_1, x_2, \dots, x_n) \neq (0, \dots, 0)$, tức $\overrightarrow{E_0E'_0} = \sum_{k=1}^n x_k\vec{e}_k$. Khi đó:
+$$
+\overrightarrow{E'_0E_i} = \overrightarrow{E_0E_i} - \overrightarrow{E_0E'_0} = \vec{e}_i - \overrightarrow{E_0E'_0} \quad (i = 1, \dots, n).
+$$
+Vì $\{E'_0; E_i\}$ cũng là một mục tiêu trực chuẩn nên $|\overrightarrow{E'_0E_i}|^2 = 1$ với mọi $i = 1, \dots, n$:
+$$
+1 = (\vec{e}_i - \overrightarrow{E_0E'_0})^2 = \vec{e}_i^2 - 2(\vec{e}_i \cdot \overrightarrow{E_0E'_0}) + \overrightarrow{E_0E'_0}^2 = 1 - 2x_i + \sum_{k=1}^n x_k^2,
+$$
+suy ra $2x_i = \sum_{k=1}^n x_k^2$ với mọi $i = 1, 2, \dots, n$. Do vế phải không phụ thuộc vào $i$, tất cả các tọa độ $x_i$ phải bằng nhau: $x_1 = x_2 = \dots = x_n = c$. Thế vào đẳng thức trên được $2c = n c^2$; vì $E'_0 \neq E_0$ nên $c \neq 0$, suy ra $c = \dfrac{2}{n}$. *(Kiểm tra lại khi $i \neq j$: $\overrightarrow{E'_0E_i} \cdot \overrightarrow{E'_0E_j} = 0 - c - c + n c^2 = 0$, thỏa mãn điều kiện trực giao)*. Vậy tọa độ của $E'_0$ đối với $\{E_0; E_i\}$ là:
+$$
+E'_0 = \left(\frac{2}{n}, \frac{2}{n}, \dots, \frac{2}{n}\right).
+$$
+
+**2. Chứng minh $E_0E'_0$ vuông góc với siêu phẳng $(E_1\dots E_n)$ tại trọng tâm:**
+
+Siêu phẳng $\Pi$ đi qua $n$ đỉnh độc lập $E_1, \dots, E_n$ có phương trình đoạn chắn (theo Bài tập 2.31 với $a_1 = \dots = a_n = 1$):
+$$
+\Pi: x_1 + x_2 + \dots + x_n - 1 = 0,
+$$
+nhận vectơ $\vec{n} = (1, 1, \dots, 1)$ làm vectơ pháp tuyến. Vì $\overrightarrow{E_0E'_0} = \dfrac{2}{n}(1, 1, \dots, 1) = \dfrac{2}{n}\vec{n}$ cùng phương với $\vec{n}$, đường thẳng $E_0E'_0$ vuông góc với siêu phẳng $\Pi$.
+
+Mặt khác, gọi $G$ là trọng tâm của đơn hình $(E_1, E_2, \dots, E_n)$ (tâm tỉ cự của hệ $n$ điểm $E_1, \dots, E_n$ với các hệ số bằng nhau). Tọa độ của $G$ đối với $\{E_0; E_i\}$ là trung bình cộng tọa độ các đỉnh $E_1, \dots, E_n$:
+$$
+G = \left(\frac{1}{n}, \frac{1}{n}, \dots, \frac{1}{n}\right).
+$$
+Ta thấy $\overrightarrow{E_0G} = \dfrac{1}{2}\overrightarrow{E_0E'_0}$ nên $G$ thuộc đường thẳng $E_0E'_0$ (chính là trung điểm của $E_0E'_0$), đồng thời $G \in \Pi$ vì $\sum_{i=1}^n \dfrac{1}{n} - 1 = 0$. Vậy đường thẳng $E_0E'_0$ vuông góc với siêu phẳng $\Pi$ chứa đơn hình $(E_1, \dots, E_n)$ ngay tại trọng tâm $G$ của đơn hình đó.
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e4-33" title="Bài tập 2.33 (Hệ thức nghịch đảo bình phương đường cao trên góc mục tiêu trực chuẩn — tr. 140–141)">
+Trong $\mathcal{E}^n$ cho mục tiêu trực chuẩn $\{E_0; E_i\}$, $i = 1, 2, \dots, n$. Trên các đường thẳng $E_0 E_i$ ta lấy các điểm $A_i$ không trùng với gốc mục tiêu $E_0$.
+
+a) Chứng minh hệ $n$ điểm $A_1, A_2, \dots, A_n$ độc lập và lập phương trình siêu phẳng $P$ xác định bởi $n$ điểm $A_i$ độc lập đó.
+
+b) Gọi $h$ là khoảng cách từ $E_0$ tới siêu phẳng $P$ và gọi $a_i$ là các khoảng cách $d(E_0, A_i)$, $i = 1, 2, \dots, n$. Chứng minh hệ thức:
+$$
+\frac{1}{h^2} = \sum_{i=1}^n \frac{1}{a_i^2}.
+$$
+
+<Hint>
+Biểu diễn $\overrightarrow{E_0A_i} = c_i\vec{e}_i$ với $c_i \neq 0$ và $|c_i| = a_i > 0$. Dùng định nghĩa hệ điểm độc lập affine (hệ $n - 1$ vectơ $\overrightarrow{A_1A_k}$ độc lập tuyến tính) ở câu a, rồi áp dụng kết quả Bài tập 2.31 ở câu b.
+</Hint>
+
+<Solution>
+Đặt $\vec{e}_i = \overrightarrow{E_0E_i}$ ($i = 1, \dots, n$). Vì $A_i \in E_0E_i$ và $A_i \neq E_0$, tồn tại số thực $c_i \neq 0$ sao cho $\overrightarrow{E_0A_i} = c_i\vec{e}_i$, tức đối với mục tiêu trực chuẩn $\{E_0; \vec{e}_1, \dots, \vec{e}_n\}$, điểm $A_i$ có tọa độ $(0, \dots, c_i, \dots, 0)$ (số $c_i$ đứng ở vị trí thứ $i$). Khi đó $a_i = d(E_0, A_i) = |\overrightarrow{E_0A_i}| = |c_i| > 0$, suy ra $c_i^2 = a_i^2$.
+
+**a) Chứng minh $A_1, \dots, A_n$ độc lập và lập phương trình siêu phẳng $P$:**
+
+Khi $n = 1$, một điểm đơn lẻ $A_1$ luôn độc lập và $0$-phẳng $P = \{A_1\}$ có phương trình $\dfrac{x_1}{c_1} - 1 = 0$. Với $n \ge 2$, xét hệ $n - 1$ vectơ $\overrightarrow{A_1A_k} = \overrightarrow{E_0A_k} - \overrightarrow{E_0A_1} = -c_1\vec{e}_1 + c_k\vec{e}_k$ ($k = 2, \dots, n$). Nếu có tổ hợp tuyến tính:
+$$
+\sum_{k=2}^n \lambda_k \overrightarrow{A_1A_k} = \left(-\sum_{k=2}^n \lambda_k c_1\right)\vec{e}_1 + \sum_{k=2}^n (\lambda_k c_k)\vec{e}_k = \vec{0},
+$$
+thì do $\{\vec{e}_1, \dots, \vec{e}_n\}$ độc lập tuyến tính nên $\lambda_k c_k = 0$ với mọi $k = 2, \dots, n$. Vì $c_k \neq 0$ nên $\lambda_2 = \dots = \lambda_n = 0$. Vậy hệ $\{\overrightarrow{A_1A_2}, \dots, \overrightarrow{A_1A_n}\}$ độc lập tuyến tính, chứng tỏ $n$ điểm $A_1, \dots, A_n$ độc lập affine và xác định duy nhất siêu phẳng $P$ có phương trình đoạn chắn:
+$$
+P: \frac{x_1}{c_1} + \frac{x_2}{c_2} + \dots + \frac{x_n}{c_n} - 1 = 0.
+$$
+
+**b) Chứng minh hệ thức $\dfrac{1}{h^2} = \sum_{i=1}^n \dfrac{1}{a_i^2}$:**
+
+Áp dụng công thức khoảng cách từ gốc $E_0(0, \dots, 0)$ đến siêu phẳng $P$ (Bài tập 2.31):
+$$
+h = d(E_0, P) = \frac{|-1|}{\sqrt{\sum_{i=1}^n \frac{1}{c_i^2}}} = \frac{1}{\sqrt{\sum_{i=1}^n \frac{1}{a_i^2}}}.
+$$
+Bình phương hai vế dương và lấy nghịch đảo, ta thu được đẳng thức:
+$$
+\frac{1}{h^2} = \sum_{i=1}^n \frac{1}{a_i^2}.
+$$
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e4-34" title="Bài tập 2.34 (Phương trình đường vuông góc chung của đường thẳng và mặt phẳng trong E4 — tr. 141)">
+Viết phương trình đường vuông góc chung của đường thẳng $AB$ và mặt phẳng $(PQR)$ cho trước trong $\mathcal{E}^4$ (với mục tiêu trực chuẩn), biết rằng tọa độ các điểm đó lần lượt là:
+$$
+A(1, 1, 1, 1), \quad B(-2, -1, 1, 3) \qquad \text{và} \qquad P(2, 1, -1, 0), \quad Q(3, 1, 0, -1), \quad R(0, 0, -1, 1).
+$$
+
+<Hint>
+Tìm vectơ chỉ phương $\vec{u} = \overrightarrow{AB}$ của đường thẳng và cặp vectơ cơ sở $\vec{v}_1 = \overrightarrow{PQ}$, $\vec{v}_2 = \overrightarrow{PR}$ của mặt phẳng $(PQR)$; lấy điểm $I = A + t\vec{u}$ và $J = P + s_1\vec{v}_1 + s_2\vec{v}_2$, giải hệ $\overrightarrow{IJ} \cdot \vec{u} = \overrightarrow{IJ} \cdot \vec{v}_1 = \overrightarrow{IJ} \cdot \vec{v}_2 = 0$.
+</Hint>
+
+<Solution>
+Ta tính các vectơ chỉ phương và vectơ nối gốc:
+$$
+\vec{u} = \overrightarrow{AB} = (-3, -2, 0, 2), \quad \vec{v}_1 = \overrightarrow{PQ} = (1, 0, 1, -1), \quad \vec{v}_2 = \overrightarrow{PR} = (-2, -1, 0, 1), \quad \overrightarrow{AP} = (1, 0, -2, -1).
+$$
+Gọi $I \in AB$ và $J \in (PQR)$ là hai giao điểm của đường vuông góc chung $\Delta$ với $AB$ và $(PQR)$. Biểu diễn $I = A + t\vec{u}$ và $J = P + s_1\vec{v}_1 + s_2\vec{v}_2$ ($t, s_1, s_2 \in \mathbb{R}$), ta có:
+$$
+\overrightarrow{IJ} = \overrightarrow{AP} + s_1\vec{v}_1 + s_2\vec{v}_2 - t\vec{u} = (1 + s_1 - 2s_2 + 3t,\; -s_2 + 2t,\; -2 + s_1,\; -1 - s_1 + s_2 - 2t).
+$$
+Điều kiện $\overrightarrow{IJ} \perp \vec{u}$, $\overrightarrow{IJ} \perp \vec{v}_1$ và $\overrightarrow{IJ} \perp \vec{v}_2$ cho hệ ba phương trình tuyến tính:
+$$
+\begin{cases}
+-3(1 + s_1 - 2s_2 + 3t) - 2(-s_2 + 2t) + 2(-1 - s_1 + s_2 - 2t) = -5s_1 + 10s_2 - 17t - 5 = 0, \\
+(1 + s_1 - 2s_2 + 3t) + (-2 + s_1) - (-1 - s_1 + s_2 - 2t) = 3s_1 - 3s_2 + 5t = 0, \\
+-2(1 + s_1 - 2s_2 + 3t) - (-s_2 + 2t) + (-1 - s_1 + s_2 - 2t) = -3s_1 + 6s_2 - 10t - 3 = 0.
+\end{cases}
+$$
+Nhân phương trình thứ nhất với $3$, phương trình thứ ba với $-5$ rồi cộng lại để khử $s_1, s_2$:
+$$
+3(-5s_1 + 10s_2 - 17t - 5) - 5(-3s_1 + 6s_2 - 10t - 3) = (-51t + 50t) + (-15 + 15) = -t = 0 \implies t = 0.
+$$
+Thay $t = 0$ vào phương trình thứ hai được $3s_1 - 3s_2 = 0 \implies s_1 = s_2$, và thay vào phương trình thứ nhất được $-5s_1 + 10s_1 - 5 = 0 \implies s_1 = s_2 = 1$.
+
+Vậy hệ có nghiệm duy nhất $(t, s_1, s_2) = (0, 1, 1)$, cho hai chân đường vuông góc chung:
+$$
+I = A = (1, 1, 1, 1), \qquad J = P + \vec{v}_1 + \vec{v}_2 = (1, 0, 0, 0), \qquad \overrightarrow{IJ} = (0, -1, -1, -1) \neq \vec{0}
+$$
+(chứng tỏ đồng thời $AB$ và $(PQR)$ chéo nhau với khoảng cách $|\overrightarrow{IJ}| = \sqrt{3}$). Chọn vectơ chỉ phương của đường vuông góc chung $\Delta = IJ$ là $-\overrightarrow{IJ} = (0, 1, 1, 1)$ đi qua $J(1, 0, 0, 0)$, ta có:
+- **Phương trình tham số của $\Delta$:** $x_1 = 1$, $x_2 = \tau$, $x_3 = \tau$, $x_4 = \tau$ ($\tau \in \mathbb{R}$).
+- **Phương trình tổng quát của $\Delta$:**
+  $$
+  \begin{cases}
+  x_1 - 1 = 0, \\
+  x_2 - x_3 = 0, \\
+  x_3 - x_4 = 0.
+  \end{cases}
+  $$
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e4-36" title="Bài tập 2.36 (Điều kiện về số chiều để hai phẳng vuông góc trở thành bù vuông góc — tr. 141)">
+Trong $\mathcal{E}^n$ cho $m$-phẳng $\alpha$ và $k$-phẳng $\beta$ vuông góc với nhau. Chứng minh rằng $\alpha$ và $\beta$ bù vuông góc với nhau khi và chỉ khi $n = m + k$.
+
+<Hint>
+Chứng minh hai không gian con trực giao $\overrightarrow{\alpha} \perp \overrightarrow{\beta}$ luôn có giao bằng $\{\vec{0}\}$, do đó số chiều của tổng trực tiếp $\overrightarrow{\alpha} \oplus \overrightarrow{\beta}$ bằng $m + k$.
+</Hint>
+
+<Solution>
+Theo giả thiết, $\dim \overrightarrow{\alpha} = m$, $\dim \overrightarrow{\beta} = k$ và $\alpha \perp \beta$, nghĩa là $\overrightarrow{\alpha} \perp \overrightarrow{\beta}$.
+
+Lấy bất kì vectơ $\vec{w} \in \overrightarrow{\alpha} \cap \overrightarrow{\beta}$. Vì $\vec{w} \in \overrightarrow{\alpha}$, $\vec{w} \in \overrightarrow{\beta}$ và $\overrightarrow{\alpha} \perp \overrightarrow{\beta}$ nên $\vec{w} \cdot \vec{w} = 0$, suy ra $\vec{w} = \vec{0}$ theo tiên đề xác định dương của tích vô hướng. Do đó $\overrightarrow{\alpha} \cap \overrightarrow{\beta} = \{\vec{0}\}$, nghĩa là tổng $\overrightarrow{\alpha} + \overrightarrow{\beta} = \overrightarrow{\alpha} \oplus \overrightarrow{\beta}$ luôn là tổng trực tiếp trong $\overrightarrow{\mathcal{E}^n}$ với số chiều:
+$$
+\dim(\overrightarrow{\alpha} \oplus \overrightarrow{\beta}) = \dim \overrightarrow{\alpha} + \dim \overrightarrow{\beta} = m + k \le n.
+$$
+
+- **Chiều thuận:** Nếu $\alpha$ và $\beta$ bù vuông góc với nhau thì theo định nghĩa $\overrightarrow{\alpha} \oplus \overrightarrow{\beta} = \overrightarrow{\mathcal{E}^n}$, lấy số chiều hai vế được $m + k = n$.
+- **Chiều ngược:** Ngược lại, nếu $n = m + k$ thì không gian con $\overrightarrow{\alpha} \oplus \overrightarrow{\beta} \subset \overrightarrow{\mathcal{E}^n}$ có số chiều bằng $m + k = n = \dim \overrightarrow{\mathcal{E}^n}$, do đó $\overrightarrow{\alpha} \oplus \overrightarrow{\beta} = \overrightarrow{\mathcal{E}^n}$; kết hợp với $\overrightarrow{\alpha} \perp \overrightarrow{\beta}$, suy ra $\alpha$ và $\beta$ bù vuông góc với nhau.
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e4-37" title="Bài tập 2.37 (Tính chất khoảng cách của hai phẳng song song và hai phẳng chéo nhau — tr. 141)">
+Trong $\mathcal{E}^n$ cho hai cái phẳng $\alpha$ và $\beta$. Chứng minh rằng:
+
+a) Nếu $\alpha$ song song với $\beta$ và $\dim \alpha \le \dim \beta$ thì với mọi điểm $A$ thuộc $\alpha$ ta đều có $d(A, \beta) = d(\alpha, \beta)$.
+
+b) Nếu $\alpha$ và $\beta$ chéo nhau hoàn toàn ($\alpha \cap \beta = \varnothing$ và $\overrightarrow{\alpha} \cap \overrightarrow{\beta} = \{\vec{0}\}$ — *bản in gốc tr. 141 chỉ ghi vế sau trong ngoặc*) thì có một điểm duy nhất $A \in \alpha$ và một điểm duy nhất $B \in \beta$ sao cho đường thẳng $AB$ vừa vuông góc với $\alpha$ vừa vuông góc với $\beta$ và $d(A, B) = d(\alpha, \beta)$.
+
+<Hint>
+Câu a: Dùng điều kiện $\overrightarrow{\alpha} \subset \overrightarrow{\beta}$ để chứng minh đường thẳng qua $A$ vuông góc và cắt $\beta$ tại hình chiếu $A'$ cũng vuông góc với $\alpha$. Câu b: Vận dụng trực tiếp Định lí 2d và Định lí 2c.
+</Hint>
+
+<Solution>
+**a) Trường hợp $\alpha \parallel \beta$ và $\dim \alpha \le \dim \beta$:**
+
+Theo định nghĩa hai phẳng song song ở Chương I với $\dim \alpha \le \dim \beta$, phương của $\alpha$ chứa trong phương của $\beta$: $\overrightarrow{\alpha} \subset \overrightarrow{\beta}$.
+- Nếu $\alpha \subset \beta$ (hai phẳng song song không rời nhau) thì $A \in \alpha \subset \beta$, nên $d(A, \beta) = 0 = d(\alpha, \beta)$.
+- Nếu $\alpha \cap \beta = \varnothing$, lấy điểm $A \in \alpha$ tùy ý thì $A \notin \beta$. Theo Hệ quả 1 (Mục 2d), qua $A$ có đường thẳng duy nhất $\Delta_A$ vuông góc với $\beta$ và cắt $\beta$ tại hình chiếu vuông góc $A' \in \beta$, đồng thời $d(A, \beta) = d(A, A')$. Vì $\overrightarrow{\alpha} \subset \overrightarrow{\beta}$ và $\overrightarrow{\Delta_A} \perp \overrightarrow{\beta}$ nên $\overrightarrow{\Delta_A} \perp \overrightarrow{\alpha}$. Do $\Delta_A$ cắt $\alpha$ tại $A$ và cắt $\beta$ tại $A'$ nên $\Delta_A$ là một đường vuông góc chung của $\alpha$ và $\beta$. Áp dụng Định lí 2c suy ra $d(\alpha, \beta) = d(A, A') = d(A, \beta)$.
+
+**b) Trường hợp $\alpha$ và $\beta$ chéo nhau hoàn toàn ($\alpha \cap \beta = \varnothing$, $\overrightarrow{\alpha} \cap \overrightarrow{\beta} = \{\vec{0}\}$):**
+
+Theo Định lí 2d, hai phẳng chéo nhau $\alpha$ và $\beta$ có một đường vuông góc chung duy nhất $\Delta$. Vì $\Delta$ cắt $\alpha$ và $\beta$, đồng thời $\Delta \perp \alpha$ và $\Delta \perp \beta$, theo Định lí 1b hai phẳng vuông góc có không quá một điểm chung nên $\Delta$ cắt $\alpha$ tại một điểm duy nhất $A \in \alpha$ và cắt $\beta$ tại một điểm duy nhất $B \in \beta$ (với $A \neq B$ do $\alpha \cap \beta = \varnothing$).
+
+Ngược lại, nếu có bất kì cặp điểm $A_1 \in \alpha, B_1 \in \beta$ sao cho đường thẳng $A_1B_1$ vuông góc với cả $\alpha$ và $\beta$, thì đường thẳng $A_1B_1$ là đường vuông góc chung của $\alpha$ và $\beta$, do tính duy nhất của $\Delta$ suy ra $A_1B_1 \equiv \Delta$, kéo theo $A_1 = \Delta \cap \alpha \equiv A$ và $B_1 = \Delta \cap \beta \equiv B$. Cuối cùng, theo Định lí 2c, ta có $d(A, B) = d(\alpha, \beta)$.
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e4-38" title="Bài tập 2.38 (Công thức định thức Gram cho khoảng cách từ một điểm đến một m-phẳng — tr. 141)">
+Trong $\mathcal{E}^n$ cho một điểm $I$ và $m$-phẳng $\alpha$ không chứa $I$ ($1 \le m < n$) đi qua điểm $S$, có phương $\overrightarrow{\alpha}$ nhận hệ $m$ vectơ $\{\vec{u}_1, \vec{u}_2, \dots, \vec{u}_m\}$ làm cơ sở. Gọi $J$ là hình chiếu vuông góc của $I$ xuống $\alpha$. Chứng minh:
+$$
+d^2(I, \alpha) = \overrightarrow{JI}^2 = \frac{|G_r(\vec{u}_1, \vec{u}_2, \dots, \vec{u}_m, \overrightarrow{SI})|}{|G_r(\vec{u}_1, \vec{u}_2, \dots, \vec{u}_m)|},
+$$
+trong đó $|G_r(\dots)| = \det G_r(\dots)$ kí hiệu định thức của ma trận Gram lập từ hệ vectơ tương ứng.
+
+<Hint>
+Phân tích $\overrightarrow{SI} = \overrightarrow{SJ} + \overrightarrow{JI}$ với $\overrightarrow{SJ} = \sum_{k=1}^m c_k\vec{u}_k \in \overrightarrow{\alpha}$ và $\overrightarrow{JI} \perp \overrightarrow{\alpha}$, sau đó thực hiện phép biến đổi sơ cấp dòng trên dòng cuối của định thức $|G_r(\vec{u}_1, \dots, \vec{u}_m, \overrightarrow{SI})|$.
+</Hint>
+
+<Solution>
+Vì $\{\vec{u}_1, \dots, \vec{u}_m\}$ là cơ sở của $\overrightarrow{\alpha}$ nên hệ này độc lập tuyến tính; theo Bài tập 2.1a, định thức Gram ở mẫu số $|G_r(\vec{u}_1, \dots, \vec{u}_m)| > 0$.
+
+Gọi $J \in \alpha$ là hình chiếu vuông góc của $I$ xuống $\alpha$, khi đó $d(I, \alpha) = |\overrightarrow{JI}|$, $\overrightarrow{SJ} \in \overrightarrow{\alpha}$ và $\overrightarrow{JI} \perp \overrightarrow{\alpha}$ (tức $\overrightarrow{JI} \cdot \vec{u}_j = 0$ với mọi $j = 1, \dots, m$). Biểu diễn $\overrightarrow{SJ}$ theo cơ sở $\{\vec{u}_1, \dots, \vec{u}_m\}$:
+$$
+\overrightarrow{SJ} = \sum_{k=1}^m c_k\vec{u}_k \implies \overrightarrow{SI} = \overrightarrow{SJ} + \overrightarrow{JI} = \sum_{k=1}^m c_k\vec{u}_k + \overrightarrow{JI}.
+$$
+Xét các phần tử trên dòng thứ $m + 1$ của ma trận Gram cấp $m + 1$ là $G_r(\vec{u}_1, \dots, \vec{u}_m, \overrightarrow{SI})$:
+- Tại cột $j$ ($1 \le j \le m$): $\overrightarrow{SI} \cdot \vec{u}_j = \left(\sum_{k=1}^m c_k\vec{u}_k + \overrightarrow{JI}\right) \cdot \vec{u}_j = \sum_{k=1}^m c_k(\vec{u}_k \cdot \vec{u}_j) + 0$.
+- Tại cột $m + 1$: $\overrightarrow{SI} \cdot \overrightarrow{SI} = \left(\sum_{k=1}^m c_k\vec{u}_k + \overrightarrow{JI}\right) \cdot \overrightarrow{SI} = \sum_{k=1}^m c_k(\vec{u}_k \cdot \overrightarrow{SI}) + \overrightarrow{JI} \cdot (\overrightarrow{SJ} + \overrightarrow{JI}) = \sum_{k=1}^m c_k(\vec{u}_k \cdot \overrightarrow{SI}) + \overrightarrow{JI}^2$.
+
+Thực hiện phép biến đổi sơ cấp không làm đổi định thức: lấy dòng thứ $m + 1$ trừ đi tổ hợp tuyến tính của $m$ dòng đầu với các hệ số $c_1, c_2, \dots, c_m$. Khi đó dòng thứ $m + 1$ biến thành $(0, 0, \dots, 0, \overrightarrow{JI}^2)$:
+$$
+|G_r(\vec{u}_1, \dots, \vec{u}_m, \overrightarrow{SI})| = \det \begin{bmatrix}
+G_r(\vec{u}_1, \dots, \vec{u}_m) & * \\
+0 \;\; \dots \;\; 0 & \overrightarrow{JI}^2
+\end{bmatrix} = |G_r(\vec{u}_1, \dots, \vec{u}_m)| \cdot \overrightarrow{JI}^2.
+$$
+Chia hai vế cho $|G_r(\vec{u}_1, \dots, \vec{u}_m)| > 0$, ta thu được công thức cần chứng minh:
+$$
+d^2(I, \alpha) = \overrightarrow{JI}^2 = \frac{|G_r(\vec{u}_1, \vec{u}_2, \dots, \vec{u}_m, \overrightarrow{SI})|}{|G_r(\vec{u}_1, \vec{u}_2, \dots, \vec{u}_m)|}.
+$$
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e4-39" title="Bài tập 2.39 (Công thức định thức Gram cho khoảng cách giữa hai phẳng chéo nhau — tr. 142)">
+Trong $\mathcal{E}^n$ ($n > 1$) cho hai cái phẳng $\alpha$ và $\beta$ chéo nhau ($\alpha \cap \beta = \varnothing$ và $\overrightarrow{\alpha} \cap \overrightarrow{\beta} = \{\vec{0}\}$). Gọi $\{\vec{e}_1, \vec{e}_2, \dots, \vec{e}_m\}$ là một cơ sở của không gian vectơ tổng $\overrightarrow{\alpha} + \overrightarrow{\beta}$ ($m \ge 1$) và lấy điểm $A \in \alpha$, điểm $B \in \beta$. Chứng minh rằng:
+$$
+d^2(\alpha, \beta) = \frac{|G_r(\overrightarrow{AB}, \vec{e}_1, \vec{e}_2, \dots, \vec{e}_m)|}{|G_r(\vec{e}_1, \vec{e}_2, \dots, \vec{e}_m)|}.
+$$
+
+<Hint>
+Gọi $IJ$ là đoạn vuông góc chung duy nhất ($I \in \alpha, J \in \beta$), phân tích $\overrightarrow{AB} = (\overrightarrow{AI} + \overrightarrow{JB}) + \overrightarrow{IJ}$ với $\overrightarrow{AI} + \overrightarrow{JB} \in \overrightarrow{\alpha} + \overrightarrow{\beta} = \operatorname{span}\{\vec{e}_1, \dots, \vec{e}_m\}$ và $\overrightarrow{IJ} \perp \operatorname{span}\{\vec{e}_1, \dots, \vec{e}_m\}$, rồi khử dòng đầu tiên của định thức Gram.
+</Hint>
+
+<Solution>
+Vì $\{\vec{e}_1, \dots, \vec{e}_m\}$ là cơ sở của $\overrightarrow{\alpha} + \overrightarrow{\beta}$ nên nó độc lập tuyến tính và $|G_r(\vec{e}_1, \dots, \vec{e}_m)| > 0$.
+
+Theo Định lí 2d và 2c, hai phẳng chéo nhau $\alpha, \beta$ có đường vuông góc chung duy nhất cắt $\alpha$ tại $I \in \alpha$ và cắt $\beta$ tại $J \in \beta$, với $d(\alpha, \beta) = |\overrightarrow{IJ}|$ và $\overrightarrow{IJ} \perp (\overrightarrow{\alpha} + \overrightarrow{\beta})$ (tức $\overrightarrow{IJ} \cdot \vec{e}_k = 0$ với mọi $k = 1, \dots, m$). Theo quy tắc Chasles:
+$$
+\overrightarrow{AB} = \overrightarrow{AI} + \overrightarrow{IJ} + \overrightarrow{JB} = \vec{w} + \overrightarrow{IJ},
+$$
+trong đó $\vec{w} = \overrightarrow{AI} + \overrightarrow{JB} \in \overrightarrow{\alpha} + \overrightarrow{\beta}$ được biểu diễn duy nhất dưới dạng $\vec{w} = \sum_{k=1}^m c_k\vec{e}_k$.
+
+Xét dòng thứ nhất của ma trận Gram cấp $m + 1$ là $G_r(\overrightarrow{AB}, \vec{e}_1, \dots, \vec{e}_m)$ (trong đó dòng thứ $k + 1$ ứng với vectơ $\vec{e}_k$, $k = 1, \dots, m$):
+- Ở cột $1$: $\overrightarrow{AB}^2 = \left(\sum_{k=1}^m c_k\vec{e}_k + \overrightarrow{IJ}\right) \cdot \overrightarrow{AB} = \sum_{k=1}^m c_k(\vec{e}_k \cdot \overrightarrow{AB}) + \overrightarrow{IJ} \cdot (\vec{w} + \overrightarrow{IJ}) = \sum_{k=1}^m c_k(\vec{e}_k \cdot \overrightarrow{AB}) + \overrightarrow{IJ}^2$.
+- Ở cột $j + 1$ ($1 \le j \le m$): $\overrightarrow{AB} \cdot \vec{e}_j = \left(\sum_{k=1}^m c_k\vec{e}_k + \overrightarrow{IJ}\right) \cdot \vec{e}_j = \sum_{k=1}^m c_k(\vec{e}_k \cdot \vec{e}_j)$.
+
+Lấy dòng thứ nhất trừ đi tổ hợp tuyến tính của các dòng $2, 3, \dots, m + 1$ với các hệ số $c_1, c_2, \dots, c_m$, dòng thứ nhất trở thành $(\overrightarrow{IJ}^2, 0, 0, \dots, 0)$:
+$$
+|G_r(\overrightarrow{AB}, \vec{e}_1, \dots, \vec{e}_m)| = \det \begin{bmatrix}
+\overrightarrow{IJ}^2 & 0 \;\; \dots \;\; 0 \\
+* & G_r(\vec{e}_1, \dots, \vec{e}_m)
+\end{bmatrix} = \overrightarrow{IJ}^2 \cdot |G_r(\vec{e}_1, \dots, \vec{e}_m)|.
+$$
+Chia hai vế cho $|G_r(\vec{e}_1, \dots, \vec{e}_m)| > 0$, ta được:
+$$
+d^2(\alpha, \beta) = \overrightarrow{IJ}^2 = \frac{|G_r(\overrightarrow{AB}, \vec{e}_1, \vec{e}_2, \dots, \vec{e}_m)|}{|G_r(\vec{e}_1, \vec{e}_2, \dots, \vec{e}_m)|}.
+$$
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e4-40" title="Bài tập 2.40 (Tập hợp các điểm cách đều một siêu phẳng cho trước — tr. 142)">
+Trong $\mathcal{E}^n$ tìm tập hợp các điểm $M$ cách đều một siêu phẳng $\alpha$ cho trước một khoảng cách $h \ge 0$ cho trước.
+
+<Hint>
+Chọn một mục tiêu trực chuẩn trong $\mathcal{E}^n$, viết phương trình siêu phẳng $\alpha: \sum_{i=1}^n a_i x_i + a_0 = 0$ và giải phương trình $d(M, \alpha) = h$ theo công thức khoảng cách ở Mục 3b.
+</Hint>
+
+<Solution>
+Trong $\mathcal{E}^n$, chọn một mục tiêu trực chuẩn $\{O; \vec{e}_1, \dots, \vec{e}_n\}$. Giả sử siêu phẳng $\alpha$ có phương trình tổng quát:
+$$
+\sum_{i=1}^n a_i x_i + a_0 = 0 \qquad \left(\sum_{i=1}^n a_i^2 > 0\right).
+$$
+Theo công thức khoảng cách từ điểm $M(x_1, \dots, x_n)$ đến siêu phẳng $\alpha$ (Mục 3b), điều kiện $d(M, \alpha) = h$ tương đương với:
+$$
+\frac{\left|\sum_{i=1}^n a_i x_i + a_0\right|}{\sqrt{\sum_{i=1}^n a_i^2}} = h \iff \left|\sum_{i=1}^n a_i x_i + a_0\right| = h\sqrt{\sum_{i=1}^n a_i^2}.
+$$
+- Nếu $h = 0$: phương trình trở thành $\sum_{i=1}^n a_i x_i + a_0 = 0$, tức tập hợp cần tìm chính là siêu phẳng $\alpha$.
+- Nếu $h > 0$: phương trình tách thành hai phương trình bậc nhất độc lập:
+  $$
+  \alpha_1: \sum_{i=1}^n a_i x_i + a_0 - h\sqrt{\sum_{i=1}^n a_i^2} = 0, \qquad \alpha_2: \sum_{i=1}^n a_i x_i + a_0 + h\sqrt{\sum_{i=1}^n a_i^2} = 0.
+  $$
+  Vậy tập hợp các điểm $M$ cần tìm là hợp $\alpha_1 \cup \alpha_2$ của **hai siêu phẳng phân biệt cùng song song với $\alpha$**, nằm về hai phía đối xứng nhau qua $\alpha$ và mỗi siêu phẳng cách $\alpha$ một khoảng bằng $h$.
 </Solution>
 </Exercise>
 
