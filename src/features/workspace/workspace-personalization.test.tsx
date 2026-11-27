@@ -150,7 +150,9 @@ describe('Tính năng Cá nhân hóa Trang Tổng quan (Step 1)', () => {
     const heroConstellation = screen.getByTestId('active-chapter-constellation');
     expect(heroConstellation).toBeInTheDocument();
     expect(within(heroConstellation).getAllByRole('link').length).toBeGreaterThan(0);
-    expect(screen.getByTestId('dashboard-focus-wave')).toBeInTheDocument();
+    // Sóng điều hòa trang trí đã gỡ để thẻ chỉ số gọn hơn
+    expect(screen.queryByTestId('dashboard-focus-wave')).not.toBeInTheDocument();
+    expect(screen.getByTestId('hero-personal-greeting')).toBeInTheDocument();
     expect(screen.getByTestId('calendar-sundial-ornament')).toBeInTheDocument();
     expect(screen.getByTestId('hero-time-greeting')).toBeInTheDocument();
     const periodBadge = screen.getByTestId('hero-period-badge');
@@ -197,6 +199,12 @@ describe('Tính năng Cá nhân hóa Trang Tổng quan (Step 1)', () => {
     expect(todoItems).toHaveLength(1);
     expect(todoItems[0]).toHaveTextContent('Chứng minh Định lý đẳng cấu thứ nhất');
     expect(todoItems[0]).toHaveTextContent('20:30');
+
+    // Thẻ "Hôm nay" ở dock trên cùng phản chiếu việc đến hạn hôm nay
+    expect(screen.getAllByTestId('today-task-item')).toHaveLength(1);
+    expect(screen.getByTestId('today-task-item')).toHaveTextContent(
+      'Chứng minh Định lý đẳng cấu thứ nhất',
+    );
 
     // Sửa trực tiếp nhiệm vụ vừa thêm
     const editBtn = within(todoItems[0]!).getByRole('button', {

@@ -1,16 +1,13 @@
 import {
   ArrowRight,
-  ArrowUpRight,
   CalendarDays,
   Check,
   Compass,
-  FilePenLine,
-  Gamepad2,
+  Flame,
   Hourglass,
   Landmark,
   MoonStar,
   Pause,
-  PenTool,
   Pin,
   Play,
   RefreshCw,
@@ -37,7 +34,7 @@ import {
   SubjectMathCard,
   type SubjectMathCardRecentLesson,
 } from '@/components/home/SubjectMathCard';
-import { SANCTUARY_BANNER_ASSET } from '@/config/atmosphereAssets';
+import { TodayAgendaCard } from '@/components/home/TodayAgendaCard';
 import {
   getLessonById,
   getSubjects,
@@ -110,97 +107,6 @@ function DashboardPomodoroBar() {
 
   return (
     <div className="space-y-2.5">
-      {/* Mô hình Sóng Điều Hòa Nhịp Tập Trung lấp đầy chiều sâu thẻ kính mờ (cô lập 1Hz) */}
-      <div
-        data-testid="dashboard-focus-wave"
-        className="relative overflow-hidden rounded-[18px] border border-white/65 bg-gradient-to-r from-[#0F7656]/[0.06] via-white/60 to-[#D4AF6A]/[0.09] px-3.5 py-2.5 dark:border-white/10 dark:from-[#4AD1A3]/[0.08] dark:via-[#141E1B]/70 dark:to-[#D4AF6A]/[0.08]"
-      >
-        <div className="mb-1 flex items-center justify-between gap-2">
-          <span className="inline-flex items-center gap-1.5 font-mono text-[9.5px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
-            <span
-              className={cn(
-                'h-1.5 w-1.5 rounded-full',
-                isPomodoroRunning
-                  ? 'animate-ping bg-[#0F7656] dark:bg-[#4AD1A3]'
-                  : 'bg-[#0F7656]/70 dark:bg-[#4AD1A3]/70',
-              )}
-              aria-hidden="true"
-            />
-            <span>
-              {isPomodoroRunning ? 'Nhịp tập trung đang chạy' : 'Sóng điều hòa tập trung'}
-            </span>
-          </span>
-          <span className="font-mono text-[9.5px] font-semibold text-[#0F7656] dark:text-[#4AD1A3]">
-            {isPomodoroRunning ? 'ACTIVE' : '25m · 5m'}
-          </span>
-        </div>
-
-        <svg
-          viewBox="0 0 320 42"
-          fill="none"
-          aria-hidden="true"
-          className="h-9 w-full overflow-visible"
-        >
-          <defs>
-            <linearGradient id="focus-wave-fill" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stopColor="#0F7656" stopOpacity="0.06" />
-              <stop offset="50%" stopColor="#0F7656" stopOpacity="0.22" />
-              <stop offset="100%" stopColor="#D4AF6A" stopOpacity="0.16" />
-            </linearGradient>
-            <linearGradient id="focus-wave-stroke" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stopColor="#0F7656" stopOpacity="0.55" />
-              <stop offset="55%" stopColor="#16A073" stopOpacity="0.95" />
-              <stop offset="100%" stopColor="#C27824" stopOpacity="0.88" />
-            </linearGradient>
-          </defs>
-          {/* Đường chuẩn giữa */}
-          <line
-            x1="0"
-            y1="22"
-            x2="320"
-            y2="22"
-            stroke="currentColor"
-            strokeOpacity="0.14"
-            strokeDasharray="3 4"
-          />
-          {/* Dải sóng hậu cảnh trôi chậm */}
-          <path
-            d="M0 24C28 10 56 34 86 20C116 6 144 34 174 22C204 10 232 34 262 20C290 8 308 26 334 22L334 42L0 42Z"
-            fill="url(#focus-wave-fill)"
-            className="lu-wave-drift-slow"
-          />
-          <path
-            d="M0 26C32 36 62 12 94 24C126 36 156 12 188 22C220 32 250 12 282 22C302 28 318 18 334 20"
-            stroke="#D4AF6A"
-            strokeOpacity={isPomodoroRunning ? '0.78' : '0.45'}
-            strokeWidth="1.2"
-            strokeDasharray="4 4"
-            className="lu-wave-drift-slow"
-          />
-          {/* Sóng chính sắc nét */}
-          <path
-            d="M0 22C28 8 56 34 86 20C116 6 144 34 174 20C204 6 232 34 262 18C290 6 308 26 334 20"
-            stroke="url(#focus-wave-stroke)"
-            strokeWidth={isPomodoroRunning ? '2.1' : '1.7'}
-            strokeLinecap="round"
-            className="lu-wave-drift"
-          />
-          {/* 3 nút giao sóng phát sáng */}
-          <circle cx="86" cy="20" r="2.6" fill="#0F7656" />
-          <circle cx="174" cy="20" r="3" fill="#16A073" />
-          <circle
-            cx="174"
-            cy="20"
-            r="6.5"
-            stroke="#16A073"
-            strokeOpacity={isPomodoroRunning ? '0.65' : '0.35'}
-            strokeWidth="1"
-            className="lu-dg-pulse-ring"
-          />
-          <circle cx="262" cy="18" r="2.6" fill="#C27824" />
-        </svg>
-      </div>
-
       <div
         data-testid="dashboard-pomodoro-bar"
         className="flex flex-wrap items-center justify-between gap-2 rounded-[18px] border border-white/65 bg-white/75 px-3.5 py-2.5 dark:border-white/10 dark:bg-[#182320]/75"
@@ -269,10 +175,11 @@ function DashboardPomodoroBar() {
 /**
  * TRANG TỔNG QUAN (/): ACADEMIC OS PERSONALIZED WORKSPACE
  * - Khối A: Khung Hero thích ứng theo khung giờ (Sáng/Chiều/Tối/Đêm) + lời chào cá nhân hóa, KHÔNG lặp thanh tìm kiếm.
- * - Khối B: 3 thẻ tương phản chất liệu (Sứ Trắng | Kính Mờ xuyên ảnh thật | Xanh Than Đặc).
+ * - Khối B: 3 thẻ (Đang học dở | Chỉ số + Pomodoro | Việc hôm nay & mục tiêu tuần).
+ *   Lối tắt điều hướng (Không gian học tập, Bảng viết, Soạn đề, Thư giãn) đã có ở Rail trái nên không lặp lại.
  * - Khối C: 4 Thẻ Học Phần với đồ họa vector toán học siêu mảnh (SVG thuần, 0% ảnh phong cảnh) + bài học gần nhất theo môn.
  * - Khối D: Lịch biểu (Calendar) + Mốc kỳ thi + To-Do List cá nhân hóa theo tài khoản & Nhịp chuyên cần (Streak, Nhiệt đồ 28 ngày, Mục tiêu tuần).
- * - Khối E: Di sản trong ngày (kèm dòng liên hệ Toán học/Sư phạm 40/40) + Thuật ngữ KaTeX (có chế độ Flashcard) & Banner Sảnh Thư Giãn.
+ * - Khối E: Di sản trong ngày (kèm dòng liên hệ Toán học/Sư phạm 40/40) + Thuật ngữ KaTeX (có chế độ Flashcard).
  */
 export function HomePage() {
   const subjects = getSubjects();
@@ -291,7 +198,6 @@ export function HomePage() {
     getDaySeedIndex(HERITAGE_ARTWORKS.length),
   );
   const [failedHeritageId, setFailedHeritageId] = useState<string | null>(null);
-  const [sanctuaryImgFailed, setSanctuaryImgFailed] = useState(false);
   const [glossaryIndex, setGlossaryIndex] = useState(() =>
     getDaySeedIndex(Math.max(1, allGlossaryEntries.length)),
   );
@@ -408,7 +314,8 @@ export function HomePage() {
     });
 
     const total = cards.reduce((sum, card) => sum + card.lessonCount, 0);
-    const completed = Object.keys(completedLessons).length;
+    // Chỉ đếm bài còn tồn tại trong manifest (tránh % > 100 khi còn ID bài cũ trong store)
+    const completed = cards.reduce((sum, card) => sum + card.completedCount, 0);
     const overallPct = total > 0 ? Math.round((completed / total) * 100) : 0;
     return {
       totalLessons: total,
@@ -590,6 +497,13 @@ export function HomePage() {
 
                   {/* Khối câu tục ngữ chủ đạo kiểu ấn phẩm di sản + danh ngôn học thuật */}
                   <div className="max-w-2xl space-y-3.5">
+                    {/* Lời chào cá nhân hóa theo khung giờ + tên học viên */}
+                    <p
+                      data-testid="hero-personal-greeting"
+                      className="font-sans text-sm font-medium text-white/90 drop-shadow-[0_1px_8px_rgba(0,0,0,0.45)] sm:text-[15px]"
+                    >
+                      {timeGreeting.headline}
+                    </p>
                     <div className="relative pl-4 sm:pl-5">
                       {/* Thanh dọc ánh vàng đồng — ngọc bích tạo khung trích dẫn học thuật */}
                       <span
@@ -703,13 +617,6 @@ export function HomePage() {
                         className="h-3.5 w-3.5 transition-transform duration-150 group-hover/cta:translate-x-0.5"
                         aria-hidden="true"
                       />
-                    </Link>
-                    <Link
-                      to={ROUTES.learningSpace}
-                      className="inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-black/30 px-4 py-2.5 text-xs font-medium text-white/95 backdrop-blur-md transition-colors hover:bg-black/45"
-                    >
-                      <Compass className="h-3.5 w-3.5 text-[#D4AF6A]" aria-hidden="true" />
-                      <span>Bản đồ học phần</span>
                     </Link>
                     <a
                       href="#lich-bieu-hoc-tap"
@@ -987,155 +894,39 @@ export function HomePage() {
                   </div>
                 </div>
 
-                {/* Ô 3: Sắc Lam Ngọc — Kho Thuật ngữ + họa tiết la bàn chìm */}
-                <Link
-                  to={ROUTES.glossary}
-                  className="group relative overflow-hidden rounded-[18px] border border-[#C9DCE7]/75 bg-gradient-to-br from-[#F0F7FB]/90 via-white/80 to-[#E5F0F6]/75 p-2.5 transition-colors hover:border-[#1D4F6E]/50 dark:border-[#233845] dark:from-[#131F27]/85 dark:via-[#182320]/80 dark:to-[#111C24]/80"
+                {/* Ô 3: Sắc Hồng Ngọc — Chuỗi ngày học liên tiếp (thay số lượng thuật ngữ tĩnh) */}
+                <div
+                  data-testid="dashboard-streak-cell"
+                  title={`Kỷ lục: ${activityMetrics.bestStreak} ngày`}
+                  className="relative overflow-hidden rounded-[18px] border border-[#F0D9C4]/75 bg-gradient-to-br from-[#FDF4E7]/90 via-white/80 to-[#FBEBDD]/75 p-2.5 dark:border-[#3A2A1C] dark:from-[#261D12]/85 dark:via-[#182320]/80 dark:to-[#21170F]/80"
                 >
-                  <svg
-                    viewBox="0 0 48 48"
-                    fill="none"
+                  <Flame
+                    className="pointer-events-none absolute -right-1.5 -bottom-1.5 h-10 w-10 text-[#C27824]/15 dark:text-[#E5A95C]/20"
                     aria-hidden="true"
-                    className="pointer-events-none absolute -right-2 -bottom-2 h-11 w-11 text-[#1D4F6E]/15 dark:text-[#64A8D1]/20"
-                  >
-                    <circle cx="24" cy="24" r="14" stroke="currentColor" strokeWidth="2" />
-                    <polygon
-                      points="24,14 29,24 24,34 19,24"
-                      stroke="currentColor"
-                      strokeWidth="1.8"
-                    />
-                  </svg>
-                  <p className="font-mono text-[9.5px] font-semibold tracking-wider text-[#1D4F6E] uppercase dark:text-[#64A8D1]">
-                    Kho Thuật ngữ
+                  />
+                  <p className="font-mono text-[9.5px] font-semibold tracking-wider text-[#C27824] uppercase dark:text-[#E5A95C]">
+                    Chuỗi ngày
                   </p>
-                  <p className="mt-1.5 font-mono text-base font-bold text-[var(--text-main)] tabular-nums group-hover:text-[#1D4F6E] dark:group-hover:text-[#64A8D1]">
-                    {allGlossaryEntries.length}+
+                  <p className="mt-1.5 font-mono text-base font-bold text-[var(--text-main)] tabular-nums">
+                    {activityMetrics.currentStreak}
+                    <span className="text-[11px] font-normal text-[var(--text-muted)]">
+                      {' '}
+                      / {activityMetrics.bestStreak}
+                    </span>
                   </p>
-                </Link>
+                </div>
               </div>
 
               {/* Thanh khởi động nhanh Pomodoro (cô lập 1Hz re-render) */}
               <DashboardPomodoroBar />
             </div>
 
-            {/* THẺ 3 (3/12) — THẺ NHẤN NGỌC LỤC BẢO RỰC NÉT KIỂU QUIXOTIC: Điều phối nhanh */}
-            <div
-              data-testid="dashboard-quick-hub-card"
-              data-material="deep-emerald"
-              className="relative flex min-w-0 flex-col justify-between gap-3.5 overflow-hidden rounded-[26px] border border-white/15 bg-[#17332C] bg-gradient-to-br from-[#127D59] via-[#154C3B] to-[#17332C] p-5 text-white shadow-[0_20px_44px_-16px_rgba(15,82,58,0.42)] lg:col-span-3"
-            >
-              {/* Vòng sáng & mô hình la bàn thiên cầu kiến trúc trang trí nền thẻ Ngọc Lục Bảo */}
-              <div
-                aria-hidden="true"
-                className="pointer-events-none absolute -top-10 -right-10 h-36 w-36 rounded-full bg-[#4AD1A3]/18 blur-2xl"
-              />
-              <div
-                aria-hidden="true"
-                className="pointer-events-none absolute -bottom-10 -left-10 h-32 w-32 rounded-full bg-[#F0C87D]/12 blur-2xl"
-              />
-              <svg
-                viewBox="0 0 180 180"
-                fill="none"
-                aria-hidden="true"
-                className="pointer-events-none absolute -top-6 -right-8 h-40 w-40 opacity-25"
-              >
-                <g className="lu-orbit-ring">
-                  <circle
-                    cx="90"
-                    cy="90"
-                    r="64"
-                    stroke="#A7F3D0"
-                    strokeWidth="0.9"
-                    strokeDasharray="4 6"
-                  />
-                </g>
-                <circle
-                  cx="90"
-                  cy="90"
-                  r="44"
-                  stroke="#F0C87D"
-                  strokeWidth="0.85"
-                  strokeOpacity="0.8"
-                />
-                <path
-                  d="M90 18V162M18 90H162"
-                  stroke="#A7F3D0"
-                  strokeWidth="0.65"
-                  strokeOpacity="0.55"
-                />
-                <circle cx="134" cy="90" r="2.8" fill="#F0C87D" />
-              </svg>
-
-              <div className="relative z-10 space-y-1">
-                <p className="font-mono text-[10px] font-semibold tracking-[0.16em] text-[#A7F3D0] uppercase">
-                  ĐIỀU PHỐI NHANH
-                </p>
-                <h2 className="font-serif text-lg leading-snug font-semibold text-white">
-                  Bắt đầu phiên học sâu
-                </h2>
-              </div>
-
-              <div className="relative z-10 grid grid-cols-1 gap-1.5">
-                <Link
-                  to={ROUTES.learningSpace}
-                  className="group/q1 flex items-center justify-between gap-2 rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 text-xs font-medium text-white/95 backdrop-blur-xs transition-colors hover:bg-white/20"
-                >
-                  <span className="flex min-w-0 items-center gap-2">
-                    <Compass className="h-3.5 w-3.5 shrink-0 text-[#A7F3D0]" aria-hidden="true" />
-                    <span className="truncate">Không gian học tập</span>
-                  </span>
-                  <ArrowUpRight
-                    className="h-3.5 w-3.5 shrink-0 text-white/75 transition-transform duration-150 group-hover/q1:translate-x-0.5 group-hover/q1:-translate-y-0.5"
-                    aria-hidden="true"
-                  />
-                </Link>
-
-                <Link
-                  to={ROUTES.mathInk}
-                  className="group/qink flex items-center justify-between gap-2 rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 text-xs font-medium text-white/95 backdrop-blur-xs transition-colors hover:bg-white/20"
-                >
-                  <span className="flex min-w-0 items-center gap-2">
-                    <PenTool className="h-3.5 w-3.5 shrink-0 text-[#A7F3D0]" aria-hidden="true" />
-                    <span className="truncate">Bảng viết</span>
-                  </span>
-                  <ArrowUpRight
-                    className="h-3.5 w-3.5 shrink-0 text-white/75 transition-transform duration-150 group-hover/qink:translate-x-0.5 group-hover/qink:-translate-y-0.5"
-                    aria-hidden="true"
-                  />
-                </Link>
-
-                <Link
-                  to={ROUTES.examBuilder}
-                  className="group/qexam flex items-center justify-between gap-2 rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 text-xs font-medium text-white/95 backdrop-blur-xs transition-colors hover:bg-white/20"
-                >
-                  <span className="flex min-w-0 items-center gap-2">
-                    <FilePenLine
-                      className="h-3.5 w-3.5 shrink-0 text-[#F0C87D]"
-                      aria-hidden="true"
-                    />
-                    <span className="truncate">Soạn đề</span>
-                  </span>
-                  <ArrowUpRight
-                    className="h-3.5 w-3.5 shrink-0 text-white/75 transition-transform duration-150 group-hover/qexam:translate-x-0.5 group-hover/qexam:-translate-y-0.5"
-                    aria-hidden="true"
-                  />
-                </Link>
-
-                <Link
-                  to={ROUTES.sanctuaryTab('bida')}
-                  className="group/q2 flex items-center justify-between gap-2 rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 text-xs font-medium text-white/95 backdrop-blur-xs transition-colors hover:bg-white/20"
-                >
-                  <span className="flex min-w-0 items-center gap-2">
-                    <Gamepad2 className="h-3.5 w-3.5 shrink-0 text-[#F0C87D]" aria-hidden="true" />
-                    <span className="truncate">Sảnh Bida 8-Ball</span>
-                  </span>
-                  <ArrowUpRight
-                    className="h-3.5 w-3.5 shrink-0 text-white/75 transition-transform duration-150 group-hover/q2:translate-x-0.5 group-hover/q2:-translate-y-0.5"
-                    aria-hidden="true"
-                  />
-                </Link>
-              </div>
-            </div>
+            {/* THẺ 3 (3/12) — NGỌC LỤC BẢO: Việc hôm nay + mục tiêu tuần (thay lối tắt trùng Rail) */}
+            <TodayAgendaCard
+              tasks={workspaceBucket.tasks}
+              weekLessonsCount={activityMetrics.weekLessonsCount}
+              targetLessons={workspaceBucket.weeklyGoal.targetLessons}
+            />
           </section>
         </div>
 
@@ -1178,7 +969,7 @@ export function HomePage() {
                     ◆
                   </span>
                   <span className="hidden font-mono text-[10px] text-[var(--text-muted)] sm:inline">
-                    4 chuyên khảo · 122 bài giảng chuẩn LaTeX
+                    {subjectCards.length} học phần · {totalLessons} bài giảng
                   </span>
                 </div>
                 <p className="font-serif text-base font-semibold text-[var(--text-main)] sm:text-[17px]">
@@ -1255,12 +1046,6 @@ export function HomePage() {
               <span className="rounded-full border border-[#0F7656]/20 bg-[#EAF5F0]/80 px-3 py-1 font-medium shadow-2xs dark:border-[#4AD1A3]/20 dark:bg-[#132C24]">
                 <strong className="text-[#0F7656] dark:text-[#4AD1A3]">{pendingTasksCount}</strong>{' '}
                 việc đang chờ
-              </span>
-              <span className="rounded-full border border-[#D4AF6A]/35 bg-[#FDF8F1] px-3 py-1 font-medium shadow-2xs dark:border-[#D99B5E]/25 dark:bg-[#221A12]">
-                Chuỗi{' '}
-                <strong className="text-[#8C5828] dark:text-[#F5D078]">
-                  {activityMetrics.currentStreak} ngày
-                </strong>
               </span>
             </div>
           </div>
@@ -1403,111 +1188,6 @@ export function HomePage() {
             {currentGlossary && (
               <GlossaryFlashcardCard entry={currentGlossary} onShuffle={handleShuffleGlossary} />
             )}
-          </div>
-
-          {/* Hàng 2 — Banner Đáy Sảnh Thư Giãn Bo Tròn Mềm Ngọc Lục Bảo */}
-          <div
-            data-testid="dashboard-sanctuary-banner"
-            style={{ backgroundImage: SANCTUARY_BANNER_ASSET.fallbackGradient }}
-            className="relative min-h-[188px] overflow-hidden rounded-[28px] border border-white/10 bg-[#17332C] text-white shadow-[0_24px_56px_-22px_rgba(15,45,35,0.34)]"
-          >
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-y-0 left-0 w-full md:w-[52%]"
-            >
-              {!sanctuaryImgFailed && (
-                <img
-                  src={SANCTUARY_BANNER_ASSET.src}
-                  alt=""
-                  aria-hidden="true"
-                  loading="lazy"
-                  decoding="async"
-                  onError={() => setSanctuaryImgFailed(true)}
-                  className="h-full w-full object-cover opacity-35 md:opacity-90"
-                />
-              )}
-              <div
-                style={{
-                  background:
-                    'linear-gradient(90deg, rgba(18, 92, 68, 0.25) 0%, rgba(23, 51, 44, 0.78) 62%, #17332C 100%)',
-                }}
-                className="absolute inset-0"
-              />
-            </div>
-
-            {/* Mô hình quỹ đạo phản xạ bida & xoắn ốc tỷ lệ vàng bên phải Banner Sảnh Thư Giãn */}
-            <svg
-              viewBox="0 0 420 200"
-              fill="none"
-              aria-hidden="true"
-              className="pointer-events-none absolute top-0 right-0 hidden h-full w-[44%] opacity-28 lg:block"
-            >
-              <circle
-                cx="336"
-                cy="102"
-                r="76"
-                stroke="#A7F3D0"
-                strokeWidth="0.9"
-                strokeDasharray="4 6"
-                className="lu-orbit-ring"
-              />
-              <circle
-                cx="336"
-                cy="102"
-                r="46"
-                stroke="#F0C87D"
-                strokeWidth="0.9"
-                strokeOpacity="0.7"
-              />
-              <path
-                d="M40 166L172 44L290 132L374 58"
-                stroke="#6EE7B7"
-                strokeWidth="1.2"
-                strokeDasharray="5 6"
-                className="lu-dg-stream"
-              />
-              <circle cx="172" cy="44" r="5" fill="#F0C87D" fillOpacity="0.85" />
-              <circle cx="290" cy="132" r="4.5" fill="#FFFFFF" fillOpacity="0.9" />
-              <circle cx="374" cy="58" r="6" stroke="#A7F3D0" strokeWidth="1.2" />
-              <circle cx="374" cy="58" r="2.5" fill="#A7F3D0" />
-            </svg>
-
-            <div className="relative z-10 flex flex-col justify-between gap-5 p-6 sm:p-8 md:pl-[44%] lg:flex-row lg:items-center">
-              <div className="max-w-xl space-y-2">
-                <p className="font-mono text-[10.5px] font-semibold tracking-[0.16em] text-[#A7F3D0] uppercase">
-                  SẢNH THƯ GIÃN · POMODORO BREAK
-                </p>
-                <h2 className="font-serif text-xl leading-snug font-semibold text-white sm:text-2xl">
-                  Nghỉ nhịp 5 phút giữa các phiên chứng minh
-                </h2>
-                <p className="text-xs leading-relaxed text-white/82 sm:text-[13px]">
-                  Thư giãn nhẹ giữa các khối lý thuyết với Bảo tàng 40 Di sản Học thuật và bàn Bida
-                  8-Ball vật lý 120fps chuẩn luật WPA.
-                </p>
-              </div>
-
-              <div className="flex shrink-0 flex-wrap items-center gap-2.5">
-                <Link
-                  to={ROUTES.sanctuaryTab('bida')}
-                  className="group/sbida inline-flex items-center gap-2 rounded-full bg-white px-4 py-2.5 text-xs font-semibold text-[#17332C] shadow-sm transition-all duration-150 hover:bg-[#EAF5F0] active:scale-[0.98]"
-                >
-                  <Gamepad2 className="h-3.5 w-3.5 text-[#0F7656]" aria-hidden="true" />
-                  <span>Mở bàn Bida 8-Ball</span>
-                  <ArrowRight
-                    className="h-3.5 w-3.5 transition-transform duration-150 group-hover/sbida:translate-x-0.5"
-                    aria-hidden="true"
-                  />
-                </Link>
-
-                <Link
-                  to={ROUTES.sanctuaryTab('di-san')}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-white/10 px-4 py-2.5 text-xs font-semibold text-white backdrop-blur-md transition-colors hover:bg-white/20"
-                >
-                  <Landmark className="h-3.5 w-3.5 text-[#F0C87D]" aria-hidden="true" />
-                  <span>Bảo tàng 40 Di sản</span>
-                </Link>
-              </div>
-            </div>
           </div>
         </section>
       </div>

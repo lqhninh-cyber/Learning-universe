@@ -1,17 +1,24 @@
 ---
 id: anh-xa-dang-cu-va-phep-bien-doi-dang-cu
-title: "Ánh xạ Đẳng cự và Phép Biến đổi Đẳng cự"
-description: "Ánh xạ bảo toàn khoảng cách, cấu trúc đại số của nhóm đẳng cự, phép dời hình và phép phản xạ."
-estimatedMinutes: 45
+title: 'Ánh xạ Đẳng cự và Phép Biến đổi Đẳng cự'
+description: 'Ánh xạ bảo toàn khoảng cách, nhóm các phép biến đổi đẳng cự, phương trình ma trận trực giao và phân loại đầy đủ các phép dời hình phẳng.'
+estimatedMinutes: 65
 level: intermediate
-prerequisites: []
+prerequisites:
+  - bo-sung-ve-cac-phep-toan-tren-khong-gian-vecto
+  - khong-gian-euclide
+  - muc-tieu-truc-chuan-toa-do-truc-chuan
+  - cac-phang-trong-khong-gian-euclide
+  - goc-trong-khong-gian-euclide
 tags:
-  - "đẳng cự"
-  - "phép dời hình"
-  - "phép phản xạ"
+  - 'ánh xạ đẳng cự'
+  - 'phép dời hình'
+  - 'ma trận trực giao'
+  - 'phép quay'
+  - 'phép đối xứng'
 sources:
   - source: gt-hhcc-nmh-2004
-    pages: '121-129'
+    pages: '106-113'
     sections: '§6'
 status: published
 version: 1.0.0
@@ -24,158 +31,538 @@ authoring:
 
 ## 1. Ánh xạ đẳng cự
 
-<Definition id="def-e6-1" title="a) Định nghĩa">
-Ánh xạ $f: \mathbb{E} \to \mathbb{E}'$ của các không gian Ơclit gọi là *ánh xạ đẳng cự* nếu *f* là một ánh xạ afin mà ánh xạ tuyến tính liên kết $\varphi : \mathbf{\overline{E}} \to \mathbf{\overline{E}}'$ là ánh xạ tuyến tính trực giao của hai không gian vectơ **Ē** và **Ē**′.
+<Definition id="def-e6-1" title="a) Định nghĩa ánh xạ đẳng cự">
+Ánh xạ $f: \mathcal{E} \to \mathcal{E}'$ giữa các <GlossaryTerm termId="khong-gian-euclide">không gian Ơclit</GlossaryTerm> $\mathcal{E}$ và $\mathcal{E}'$ được gọi là <GlossaryTerm termId="anh-xa-dang-cu">ánh xạ đẳng cự</GlossaryTerm> nếu $f$ là một ánh xạ affine mà ánh xạ tuyến tính liên kết $\varphi: \overrightarrow{\mathcal{E}} \to \overrightarrow{\mathcal{E}'}$ là một *ánh xạ tuyến tính trực giao* của hai không gian vectơ $\overrightarrow{\mathcal{E}}$ và $\overrightarrow{\mathcal{E}'}$ (nghĩa là $\varphi$ tuyến tính và bảo toàn tích vô hướng: $\varphi(\vec{u}) \cdot \varphi(\vec{v}) = \vec{u} \cdot \vec{v}$ với mọi $\vec{u}, \vec{v} \in \overrightarrow{\mathcal{E}}$).
 
-Từ định nghĩa suy ra: với mọi $M, N \in \mathbb{E}$ và $M' = f(M), N' = f(N)$ thì $d(M',N') = d(M,N)$; nghĩa là ánh xạ đẳng cự bảo toàn khoảng cách giữa hai điểm bất kì.
+Từ định nghĩa, ta dễ dàng suy ra đối với mọi cặp điểm $M, N \in \mathcal{E}$ và ảnh của chúng $M' = f(M)$, $N' = f(N)$, vì $\overrightarrow{M'N'} = \varphi(\overrightarrow{MN})$ nên:
+$$
+d(M', N')^2 = \overrightarrow{M'N'}^2 = \varphi(\overrightarrow{MN}) \cdot \varphi(\overrightarrow{MN}) = \overrightarrow{MN} \cdot \overrightarrow{MN} = d(M, N)^2 \implies d(M', N') = d(M, N).
+$$
+Nói cách khác, ánh xạ đẳng cự bảo toàn khoảng cách giữa hai điểm bất kì.
 </Definition>
 
-<Theorem id="thm-e6-2" title="b) Định lí">
-Mọi ánh xạ $f: \mathbb{E} \to \mathbb{E}'$ bảo toàn khoảng cách giữa hai điểm bất kì $(d(f(M),f(N)) = d(M,N))$ là một ánh xạ đẳng cự.
+Ngược lại, tính chất bảo toàn khoảng cách hoàn toàn đặc trưng cho ánh xạ đẳng cự (mà không cần giả thiết trước tính chất affine):
 
-**Hệ quả.** Ánh xạ đẳng cự bảo tồn số chiều của các phẳng, tính vuông góc, khoảng cách giữa các phẳng và góc giữa các phẳng.
+<Theorem id="thm-e6-2" title="b) Định lí đặc trưng ánh xạ đẳng cự qua khoảng cách">
+Mọi ánh xạ $f: \mathcal{E} \to \mathcal{E}'$ giữa các không gian Ơclit có tính chất bảo toàn khoảng cách giữa hai điểm bất kì, tức là với mọi $M, N \in \mathcal{E}$ đều có:
+$$
+d\bigl(f(M), f(N)\bigr) = d(M, N),
+$$
+là một ánh xạ đẳng cự.
 </Theorem>
 
-<Proof of="thm-e6-2">
-Lấy $I \in \mathbb{E}, I' = f(I)$, xác định $\varphi : \mathbf{\overline{E}} \to \mathbf{\overline{E}}'$ bởi $\varphi (\vect{IM}) = \vect{I'M'}$ với $M' = f(M)$.
+<Proof>
+Lấy cố định một điểm $I \in \mathcal{E}$ và đặt $I' = f(I) \in \mathcal{E}'$. Xét ánh xạ $\varphi: \overrightarrow{\mathcal{E}} \to \overrightarrow{\mathcal{E}'}$ xác định như sau: giả sử $\vec{u} \in \overrightarrow{\mathcal{E}}$, ta lấy điểm duy nhất $M \in \mathcal{E}$ sao cho $\overrightarrow{IM} = \vec{u}$ và đặt $\varphi(\vec{u}) = \overrightarrow{I'M'}$ với $M' = f(M)$.
 
-Từ $d(M,N) = d(M',N'): \vect{IN}^{2} + \vect{IM}^{2} - 2\vect{IN}·\vect{IM} = \vect{I'N'}^{2} + \vect{I'M'}^{2} - 2\vect{I'N'}·\vect{I'M'}$, mà $\vect{IN}^{2} = \vect{I'N'}^{2}, \vect{IM}^{2} = \vect{I'M'}^{2}$, nên $\vect{IN}·\vect{IM} = \vect{I'N'}·\vect{I'M'}$, tức $\vec{u}·\vec{v} = \varphi (\vec{u})· \varphi (\vec{v})$.
+Ta chứng minh $\varphi$ không làm thay đổi tích vô hướng của hai vectơ bất kì của $\overrightarrow{\mathcal{E}}$. Lấy thêm $\vec{v} \in \overrightarrow{\mathcal{E}}$ bất kì và lấy điểm $N \in \mathcal{E}$ sao cho $\overrightarrow{IN} = \vec{v}$; khi đó $\varphi(\vec{v}) = \overrightarrow{I'N'}$ với $N' = f(N)$.
 
-Vậy φ bảo tồn tích vô hướng nên là ánh xạ tuyến tính trực giao và là ánh xạ liên kết của *f*.
+Vì $f$ bảo toàn khoảng cách giữa hai điểm bất kì nên $d(M, N) = d(M', N')$. Bình phương hai vế và dùng quy tắc Chasles $\overrightarrow{MN} = \overrightarrow{IN} - \overrightarrow{IM}$, $\overrightarrow{M'N'} = \overrightarrow{I'N'} - \overrightarrow{I'M'}$:
+$$
+\begin{aligned}
+\overrightarrow{MN}^2 = \overrightarrow{M'N'}^2
+&\iff (\overrightarrow{IN} - \overrightarrow{IM})^2 = (\overrightarrow{I'N'} - \overrightarrow{I'M'})^2 \\
+&\iff \overrightarrow{IN}^2 + \overrightarrow{IM}^2 - 2(\overrightarrow{IN} \cdot \overrightarrow{IM}) = \overrightarrow{I'N'}^2 + \overrightarrow{I'M'}^2 - 2(\overrightarrow{I'N'} \cdot \overrightarrow{I'M'}).
+\end{aligned}
+$$
+Áp dụng tiếp giả thiết bảo toàn khoảng cách cho hai cặp điểm $(I, N)$ và $(I, M)$, ta lại có $\overrightarrow{IN}^2 = d(I, N)^2 = d(I', N')^2 = \overrightarrow{I'N'}^2$ và $\overrightarrow{IM}^2 = d(I, M)^2 = d(I', M')^2 = \overrightarrow{I'M'}^2$. Rút gọn hai vế suy ra $\overrightarrow{IN} \cdot \overrightarrow{IM} = \overrightarrow{I'N'} \cdot \overrightarrow{I'M'}$, tức là:
+$$
+\vec{u} \cdot \vec{v} = \varphi(\vec{u}) \cdot \varphi(\vec{v}) \qquad (\forall \vec{u}, \vec{v} \in \overrightarrow{\mathcal{E}}).
+$$
+Từ việc $\varphi$ bảo toàn tích vô hướng của mọi cặp vectơ, với mọi $\vec{u}, \vec{v} \in \overrightarrow{\mathcal{E}}$ và mọi $\lambda, \mu \in \mathbb{R}$, ta tính bình phương độ dài của hiệu $\varphi(\lambda\vec{u} + \mu\vec{v}) - \lambda\varphi(\vec{u}) - \mu\varphi(\vec{v})$ bằng cách khai triển và thay $\varphi(\vec{x}) \cdot \varphi(\vec{y}) = \vec{x} \cdot \vec{y}$:
+$$
+\begin{aligned}
+\bigl(\varphi(\lambda\vec{u} + \mu\vec{v}) - \lambda\varphi(\vec{u}) - \mu\varphi(\vec{v})\bigr)^2
+&= (\lambda\vec{u} + \mu\vec{v})^2 + \lambda^2\vec{u}^2 + \mu^2\vec{v}^2 - 2\lambda(\lambda\vec{u} + \mu\vec{v}) \cdot \vec{u} - 2\mu(\lambda\vec{u} + \mu\vec{v}) \cdot \vec{v} + 2\lambda\mu(\vec{u} \cdot \vec{v}) \\
+&= (\lambda\vec{u} + \mu\vec{v})^2 - (\lambda\vec{u} + \mu\vec{v})^2 = 0.
+\end{aligned}
+$$
+Theo tiên đề xác định dương của tích vô hướng, suy ra $\varphi(\lambda\vec{u} + \mu\vec{v}) = \lambda\varphi(\vec{u}) + \mu\varphi(\vec{v})$. Vậy $\varphi$ là ánh xạ tuyến tính trực giao, và theo cách xác định $\overrightarrow{I'f(M)} = \varphi(\overrightarrow{IM})$ ($\forall M \in \mathcal{E}$), $\varphi$ chính là ánh xạ tuyến tính liên kết của ánh xạ affine $f$. Vậy $f$ là ánh xạ đẳng cự.
 </Proof>
 
-<Example id="ex-e6-4" title="Ví dụ">
-$f: \mathbb{E}^{2} \to \mathbb{E}^{2}, x'_{1} = -x_{2} + 1, x'_{2} = x_{1} + 2$ có $\varphi (1,0) = (0,1), \varphi (0,1) = (-1,0)$: hai ảnh vẫn có độ dài 1 và tích vô hướng 0, nên φ trực giao và *f* là ánh xạ đẳng cự.
+<Corollary id="cor-e6-2" title="Hệ quả (Các đại lượng được bảo toàn qua ánh xạ đẳng cự)">
+Ánh xạ đẳng cự bảo toàn số chiều của các phẳng, tính vuông góc của các phẳng, khoảng cách giữa các phẳng và góc giữa các phẳng (đường thẳng, siêu phẳng).
+</Corollary>
 
-Tam giác O(0,0), A(1,0), B(0,1) có cạnh $1, 1, \sqrt{2}$ biến thành (1,2), (1,3), (0,2) cũng có cạnh $1, 1, \sqrt{2}$.
+<Proof>
+Vì $|\varphi(\vec{u})| = |\vec{u}|$ nên $\ker\varphi = \{\vec{0}\}$ ($\varphi$ là đơn cấu tuyến tính), do đó nếu $\alpha \subset \mathcal{E}$ là $m$-phẳng có phương $\overrightarrow{\alpha}$ thì ảnh $f(\alpha)$ là phẳng có phương $\varphi(\overrightarrow{\alpha})$ với $\dim \varphi(\overrightarrow{\alpha}) = \dim \overrightarrow{\alpha} = m$. Đồng thời $\varphi$ bảo toàn tích vô hướng và độ dài vectơ nên bảo toàn quan hệ trực giao giữa các phương, khoảng cách giữa các cặp điểm thuộc hai phẳng và giá trị côsin/sin của góc giữa các đường thẳng, siêu phẳng.
+</Proof>
+
+<Example id="ex-e6-4" title="Ví dụ kiểm tra ánh xạ đẳng cự trên mặt phẳng">
+**Đề bài:** Trong $\mathcal{E}^2$ với <GlossaryTerm termId="muc-tieu-truc-chuan">mục tiêu trực chuẩn</GlossaryTerm>, cho ánh xạ $f: \mathcal{E}^2 \to \mathcal{E}^2$ xác định bởi $x'_1 = -x_2 + 1$, $x'_2 = x_1 + 2$. Chứng minh $f$ là ánh xạ đẳng cự và kiểm nghiệm sự bảo toàn độ dài các cạnh của tam giác $OAB$ với $O(0, 0)$, $A(1, 0)$, $B(0, 1)$.
+
+**Lời giải:** Ánh xạ $f$ là ánh xạ affine có ánh xạ tuyến tính liên kết $\varphi(u_1, u_2) = (-u_2, u_1)$. Với mọi $\vec{u} = (u_1, u_2)$ và $\vec{v} = (v_1, v_2)$, ta có:
+$$
+\varphi(\vec{u}) \cdot \varphi(\vec{v}) = (-u_2)(-v_2) + u_1 v_1 = u_1 v_1 + u_2 v_2 = \vec{u} \cdot \vec{v},
+$$
+nên $\varphi$ là ánh xạ tuyến tính trực giao và $f$ là ánh xạ đẳng cự.
+
+Ảnh của ba đỉnh $O(0, 0)$, $A(1, 0)$, $B(0, 1)$ lần lượt là $O'(1, 2)$, $A'(1, 3)$, $B'(0, 2)$. Độ dài các cạnh trước và sau ánh xạ hoàn toàn bằng nhau: $OA = O'A' = 1$, $OB = O'B' = 1$, $AB = A'B' = \sqrt{2}$.
 </Example>
 
 ## 2. Biến đổi đẳng cự
 
-<Definition id="def-e6-5" title="a) Định nghĩa">
-Ánh xạ đẳng cự $f: \mathbb{E} \to \mathbb{E}$ từ không gian Ơclit vào chính nó là đơn ánh (nên là song ánh vì **Ē** hữu hạn chiều) và ánh xạ ngược *f*$^{-1}$ cũng đẳng cự.
+<Definition id="def-e6-5" title="a) Định nghĩa phép biến đổi đẳng cự (phép dời hình)">
+Xét ánh xạ đẳng cự $f: \mathcal{E} \to \mathcal{E}$ từ một không gian Ơclit $\mathcal{E}$ vào chính nó. Vì $f$ là đơn ánh (do $d(f(M), f(N)) = d(M, N)$) và không gian vectơ $\overrightarrow{\mathcal{E}}$ hữu hạn chiều, ánh xạ tuyến tính trực giao liên kết $\varphi: \overrightarrow{\mathcal{E}} \to \overrightarrow{\mathcal{E}}$ là một đẳng cấu tuyến tính, kéo theo $f$ là một song ánh và ánh xạ ngược $f^{-1}: \mathcal{E} \to \mathcal{E}$ cũng bảo toàn khoảng cách nên là một ánh xạ đẳng cự.
 
-Khi đó gọi là *phép biến đổi đẳng cự* hay *phép dời hình* của $\mathbb{E}$; ánh xạ liên kết φ là một phép biến đổi tuyến tính trực giao của **Ē**.
+Khi đó $f$ được gọi là một *phép biến đổi đẳng cự* hay một *phép dời hình* của không gian Ơclit $\mathcal{E}$, còn ánh xạ $\varphi$ liên kết với $f$ là một *phép biến đổi tuyến tính trực giao* của không gian vectơ $\overrightarrow{\mathcal{E}}$.
 </Definition>
 
-<Definition id="def-e6-6" title="b) Nhận xét">
-Tập hợp các phép biến đổi đẳng cự của $\mathbb{E} ^{n}$ làm thành một nhóm con của nhóm các phép biến đổi afin.
-
-Các phép tịnh tiến hiển nhiên là phép đẳng cự và làm thành nhóm $T(\mathbb{E}^{n})$, là nhóm con của nhóm đẳng cự.
-</Definition>
+<Remark id="def-e6-6" title="b) Nhận xét về cấu trúc nhóm">
+- Tập hợp tất cả các phép biến đổi đẳng cự của $\mathcal{E}^n$ làm thành một nhóm con của nhóm các phép biến đổi affine của $\mathcal{E}^n$ (đóng kín với phép hợp thành ánh xạ, chứa phép đồng nhất và chứa ánh xạ ngược $f^{-1}$ của mỗi phần tử $f$).
+- Các phép tịnh tiến $T_{\vec{v}}$ của $\mathcal{E}^n$ hiển nhiên là những phép đẳng cự (vì $\overrightarrow{T_{\vec{v}}(M)T_{\vec{v}}(N)} = \overrightarrow{MN}$ nên bảo toàn khoảng cách); chúng làm thành nhóm tịnh tiến $T(\mathcal{E}^n)$, là một nhóm con của nhóm các phép biến đổi đẳng cự.
+</Remark>
 
 ## 3. Phép dời hình và phương trình của phép dời hình
 
-Với mục tiêu trực chuẩn, phép biến đổi afin $f: \mathbb{E}^{n} \to \mathbb{E}^{n}$ có phương trình $[x'] = A[x] + [b]$, và A cũng là ma trận của φ đối với cơ sở trực chuẩn.
+Đối với một mục tiêu trực chuẩn $\{O; \vec{e}_1, \vec{e}_2, \dots, \vec{e}_n\}$ trong $\mathcal{E}^n$, xét phép biến đổi affine $f: \mathcal{E}^n \to \mathcal{E}^n$ có phương trình ma trận:
+$$
+[x'] = A[x] + [b],
+$$
+trong đó $A$ cũng chính là ma trận của phép biến đổi tuyến tính liên kết $\varphi$ đối với cơ sở trực chuẩn $\{\vec{e}_1, \vec{e}_2, \dots, \vec{e}_n\}$. Bởi vậy, phép biến đổi affine $f$ trở thành phép biến đổi đẳng cự (phép dời hình) khi và chỉ khi $A$ là *ma trận trực giao* cấp $n$ (với $A^* = A^T$ là ma trận chuyển vị và $I_n$ là ma trận đơn vị cấp $n$), tức là:
+$$
+A^* A = I_n.
+$$
+Vì $A$ là ma trận trực giao nên $(\det A)^2 = \det(A^* A) = 1 \implies \det A = \pm 1$ *(hơn nữa $\det A = \det \varphi$ không phụ thuộc vào việc chọn mục tiêu trực chuẩn)*.
 
-Vậy *f* là phép dời hình khi và chỉ khi A là ma trận trực giao, tức $A*A = I$.
+<Definition id="def-e6-7" title="Phân loại phép dời hình thuận – nghịch và nhóm dời">
+Đối với phép dời hình $f: \mathcal{E}^n \to \mathcal{E}^n$ có ma trận trực giao $A$ trong mục tiêu trực chuẩn:
 
-Vì vậy $det A = \pm 1$:
+- Nếu $\det A = 1$ thì $f$ được gọi là *phép dời hình loại $1$* hay *phép dời hình thuận*.
+- Nếu $\det A = -1$ thì $f$ được gọi là *phép dời hình loại $2$* hay *phép dời hình nghịch*.
 
-<Definition id="def-e6-7" title="Phân loại">
-Nếu $det A = 1$ thì *f* là *phép dời hình loại 1* (phép dời hình thuận); nếu $det A = -1$ thì *f* là *phép dời hình loại 2* (phép dời hình nghịch).
-
-Tập các phép dời hình làm thành một nhóm, gọi là *nhóm dời* 𝒟$^{n}$.
+Tập hợp tất cả các phép dời hình của không gian Ơclit $\mathcal{E}^n$ làm thành một nhóm gọi là *nhóm dời* (hay *nhóm dời hình*), được kí hiệu là $\mathcal{D}^n$.
 </Definition>
 
-<Theorem id="thm-e6-8" title="Định lí">
-Phương trình của phép dời hình trong $\mathbb{E} ^{n}$ đối với một mục tiêu trực chuẩn có dạng $[x'] = A[x] + [b]$, với A là ma trận trực giao cấp n.
+<Theorem id="thm-e6-8" title="Định lí về phương trình của phép dời hình">
+Phương trình của phép dời hình trong $\mathcal{E}^n$ đối với một mục tiêu trực chuẩn cho trước có dạng:
+$$
+[x'] = A[x] + [b],
+$$
+trong đó $A$ là ma trận trực giao cấp $n$.
 
-Ngược lại, mỗi phương trình có dạng đó là phương trình của một phép dời hình trong $\mathbb{E} ^{n}$ đối với một mục tiêu trực chuẩn đã chọn.
-
-**Chú thích.** Ma trận A của phương trình phép dời hình *f* trong $\mathbb{E} ^{n}$ cũng chính là ma trận của phép biến đổi tuyến tính trực giao liên kết φ của phép dời hình đó trong **Ē**$^{n}$.
-
-Do đó luôn tìm được một mục tiêu trực chuẩn sao cho A có dạng chéo khối: các khối A$_{1}$,…,A$_{k}$ cấp 2 dạng $\begin{pmatrix} cos \varphi _{i} & -sin \varphi _{i} \\ sin \varphi _{i} & cos \varphi _{i} \end{pmatrix} (i = 1..k)$ và các số ±1 trên đường chéo còn lại, các ô khác bằng 0.
-
-Phép biến đổi tuyến tính trực giao φ sinh ra trên mỗi không gian con bất biến một phép biến đổi tuyến tính trực giao.
-
-Gọi W$_{i}$ là các không gian con bất biến hai chiều và V$_{j}$ là các không gian con bất biến một chiều, đôi một vuông góc với nhau; ta có $\mathbf{\overline{E}}^{n} = W_{1} ⊕ \dots ⊕ W_{k} ⊕ V_{1} ⊕ \dots ⊕ V_{p}$.
-
-Gọi A$_{i}$ là ma trận của $\varphi |W_{i}$ và B$_{j}$ là ma trận của $\varphi |V_{j}$ thì A$_{i}$ là các ma trận trực giao vuông cấp 2 và B$_{j}$ là các ma trận trực giao chỉ có một hàng một cột.
+**Ngược lại:** Mỗi phương trình có dạng $[x'] = A[x] + [b]$ trong đó $A$ là ma trận trực giao cấp $n$ đều là phương trình của một phép dời hình trong $\mathcal{E}^n$ đối với mục tiêu trực chuẩn đã chọn.
 </Theorem>
 
-<Example id="ex-e6-9" title="Ví dụ">
-$A = \begin{pmatrix} 0 & -1 \\ 1 & 0 \end{pmatrix}$ có $A*A = I, det A = 1$: phép dời hình loại 1 (quay $90°)$.
+<Proof>
+Trong mục tiêu trực chuẩn $\{O; \vec{e}_1, \dots, \vec{e}_n\}$, với hai điểm $M(x), N(y)$ bất kì có ảnh $M'(x'), N'(y')$ qua phương trình $[x'] = A[x] + [b]$, ta có cột tọa độ của vectơ $\overrightarrow{M'N'}$ là $[y'] - [x'] = A([y] - [x])$. Do đó:
+$$
+d(M', N')^2 = ([y'] - [x'])^* ([y'] - [x']) = ([y] - [x])^* (A^* A) ([y] - [x]).
+$$
+Đẳng thức $d(M', N')^2 = ([y] - [x])^*([y] - [x]) = d(M, N)^2$ nghiệm đúng với mọi $M, N \in \mathcal{E}^n$ khi và chỉ khi $A^* A = I_n$, tức $A$ là ma trận trực giao cấp $n$.
+</Proof>
 
-$A = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}$ có $A*A = I, det A = -1$: loại 2 (đối xứng qua đường $y = x)$.
+<Remark id="rem-e6-8" title="Chú thích về dạng chính tắc đường chéo khối của ma trận trực giao (tr. 108–109)">
+Ma trận $A$ của phương trình phép dời hình $f$ trong $\mathcal{E}^n$ cũng chính là ma trận của phép biến đổi tuyến tính trực giao liên kết $\varphi$ trong $\overrightarrow{\mathcal{E}^n}$. Dựa vào kết quả chuẩn tắc của Đại số tuyến tính, ta luôn tìm được một mục tiêu trực chuẩn của $\mathcal{E}^n$ sao cho ma trận $A$ của phép dời hình $f$ có dạng đường chéo khối:
+$$
+A = \begin{bmatrix}
+A_1 & & & & & \\
+& \ddots & & & 0 & \\
+& & A_k & & & \\
+& & & \pm 1 & & \\
+& 0 & & & \ddots & \\
+& & & & & \pm 1
+\end{bmatrix},
+\qquad
+A_i = \begin{bmatrix}
+\cos\varphi_i & -\sin\varphi_i \\
+\sin\varphi_i & \cos\varphi_i
+\end{bmatrix}
+\quad (i = 1, 2, \dots, k).
+$$
+Cụ thể, phép biến đổi tuyến tính trực giao $\varphi$ cảm sinh trên mỗi không gian con bất biến một phép biến đổi tuyến tính trực giao. Nếu gọi $W_1, \dots, W_k$ là các không gian con bất biến hai chiều và $V_1, \dots, V_p$ là các không gian con bất biến một chiều đôi một vuông góc với nhau ($2k + p = n$), ta có phân tích tổng trực tiếp trực giao:
+$$
+\overrightarrow{\mathcal{E}^n} = V_E^n = W_1 \oplus W_2 \oplus \dots \oplus W_k \oplus V_1 \oplus V_2 \oplus \dots \oplus V_p,
+$$
+trong đó mỗi $A_i$ là ma trận trực giao vuông cấp $2$ của thu hẹp $\varphi|_{W_i}$ và mỗi $B_j = [\pm 1]$ là ma trận trực giao một hàng một cột của thu hẹp $\varphi|_{V_j}$.
+</Remark>
 
-Còn $A = \begin{pmatrix} 1 & 1 \\ 0 & 1 \end{pmatrix}$ không trực giao (cột thứ hai $(1,1)$ có độ dài $\sqrt{2})$, nên $x' = A x$ không phải phép dời hình.
+<Example id="ex-e6-9" title="Ví dụ nhận diện phép dời hình thuận, nghịch qua ma trận">
+**Đề bài:** Trong $\mathcal{E}^2$ với mục tiêu trực chuẩn, xét ba phép biến đổi affine $f_1, f_2, f_3$ có phần tuyến tính cho bởi các ma trận:
+$$
+A_1 = \begin{bmatrix} 0 & -1 \\ 1 & 0 \end{bmatrix}, \qquad
+A_2 = \begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix}, \qquad
+A_3 = \begin{bmatrix} 1 & 1 \\ 0 & 1 \end{bmatrix}.
+$$
+Phép nào là phép dời hình và thuộc loại mấy?
+
+**Lời giải:**
+- Với $A_1$: $A_1^* A_1 = I_2$ và $\det A_1 = 1$, nên $f_1$ là phép dời hình loại $1$ (thuận).
+- Với $A_2$: $A_2^* A_2 = I_2$ và $\det A_2 = -1$, nên $f_2$ là phép dời hình loại $2$ (nghịch).
+- Với $A_3$: cột thứ hai $(1, 1)^T$ có bình phương độ dài bằng $1^2 + 1^2 = 2 \neq 1$ ($A_3^* A_3 \neq I_2$), nên $A_3$ không phải ma trận trực giao và $f_3$ không phải phép dời hình (đây là phép trượt affine bảo toàn diện tích nhưng làm biến dạng khoảng cách).
 </Example>
 
-## 4. Phân loại các phép dời hình trong E2
+## 4. Phân loại các phép dời hình trong mặt phẳng Ơclit
 
-Với mục tiêu trực chuẩn thích hợp, ma trận A của phép dời hình trong $\mathbb{E} ^{2}$ có một trong ba dạng:
+Áp dụng dạng chính tắc ở Mục 3 cho $n = 2$: nếu chọn được một mục tiêu trực chuẩn thích hợp thì ma trận $A$ của một phép dời hình trong $\mathcal{E}^2$ sẽ nhận một trong ba dạng sau đây *(lưu ý dạng $\operatorname{diag}(-1, -1)$ thuộc dạng 2 ứng với $\varphi = \pi$, còn dạng $\operatorname{diag}(-1, 1)$ đưa về dạng 3 khi đổi thứ tự hai trục tọa độ trực chuẩn)*:
+$$
+1)\; \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}, \qquad
+2)\; \begin{bmatrix} \cos\varphi & -\sin\varphi \\ \sin\varphi & \cos\varphi \end{bmatrix}, \qquad
+3)\; \begin{bmatrix} 1 & 0 \\ 0 & -1 \end{bmatrix}.
+$$
 
-1) $\begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}$;
+<Theorem id="thm-e6-10" title="Khảo sát chi tiết ba trường hợp chính tắc trong E2">
+Trong $\mathcal{E}^2$ đối với mục tiêu trực chuẩn thích hợp nêu trên:
 
-2) $\begin{pmatrix} cos \varphi & -sin \varphi \\ sin \varphi & cos \varphi \end{pmatrix}$;
+1. **Trường hợp 1 ($A$ có dạng 1):** Phương trình phép dời hình là $\begin{cases} x'_1 = x_1 + b_1, \\ x'_2 = x_2 + b_2. \end{cases}$ Đó là *phép tịnh tiến* theo vectơ $\vec{b} = (b_1, b_2)$.
 
-3) $\begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix}$.
+2. **Trường hợp 2 ($A$ có dạng 2 với $0 < \varphi \le \pi$; nếu $\varphi = 0$ ta trở về Trường hợp 1):** Phương trình có dạng:
+   $$
+   \begin{cases}
+   x'_1 = x_1\cos\varphi - x_2\sin\varphi + b_1, \\
+   x'_2 = x_1\sin\varphi + x_2\cos\varphi + b_2.
+   \end{cases}
+   $$
+   Phép dời hình này có **một điểm kép (điểm bất động) duy nhất** $I$, và chính là *phép quay quanh điểm kép $I$ với góc quay $\varphi$* (đồng thời trong mục tiêu ban đầu nó là tích của một phép quay quanh gốc với một phép tịnh tiến).
 
-<Theorem id="thm-e6-10" title="Trường hợp 1">
-A có dạng 1): phương trình $x'_{1} = x_{1} + b_{1}, x'_{2} = x_{2} + b_{2}$, là phép tịnh tiến theo $\vec{b} = (b_{1},b_{2})$.
-
-Trường hợp 2. A có dạng 2) với $0 < \varphi \le π$ (nếu $\varphi = 0$ ta có trường hợp $1): x'_{1} =$ x$_{1}$cosφ $-$ x$_{2}$sinφ $+ b_{1}, x'_{2} =$ x$_{1}$sinφ $+$ x$_{2}$cosφ $+ b_{2}$.
-
-Điểm kép (bất động) giải từ $(1 - cos \varphi )x_{1} + sin \varphi ·x_{2} = b_{1}, -sin \varphi ·x_{1} + (1 - cos \varphi )x_{2} = b_{2}$; định thức hệ là $2(1 - cos \varphi ) \neq 0$ nên có nghiệm duy nhất.
-
-Tịnh tiến gốc về điểm kép O thì phương trình thành $X'_{1} =$ X$_{1}$cosφ $-$ X$_{2}$sinφ, $X'_{2} =$ X$_{1}$sinφ $+$ X$_{2}$cosφ: *phép quay quanh điểm kép O với góc quay φ*.
-
-(Thật vậy $OM'^{2} = OM^{2}$ và $cos(\vect{OM},\vect{OM'}) = cos \varphi .)$ Như vậy phép dời hình này là tích của một phép tịnh tiến với một phép quay.
-
-Trường hợp 3. A có dạng $3): x'_{1} = x_{1} + b_{1}, x'_{2} = -x_{2} + b_{2}$.
-
-a) Nếu $b_{1} = b_{2} = 0$: phép đối xứng qua đường thẳng $x_{2} = 0$.
-
-b) Nếu $b_{1} = 0$: đổi tọa độ $X_{1} = x_{1}, X_{2} = x_{2} - \frac{b_{2}}{2}$ thì $X'_{1} = X_{1}, X'_{2} = -X_{2}$: phép đối xứng qua đường thẳng $x_{2} - \frac{b_{2}}{2} = 0$.
-
-c) Nếu $b_{1} \neq 0$: phân tích thành hai phép: $x″_{1} = x_{1}, x″_{2} = -x_{2} + b_{2}$ (đối xứng qua đường thẳng $x_{2} - \frac{b_{2}}{2} = 0)$ rồi $x'_{1} = x″_{1} + b_{1}, x'_{2} = x″_{2}$ (tịnh tiến theo vectơ $(b_{1},0)$ cùng phương với đường thẳng đó).
+3. **Trường hợp 3 ($A$ có dạng 3):** Phương trình có dạng $\begin{cases} x'_1 = x_1 + b_1, \\ x'_2 = -x_2 + b_2. \end{cases}$
+   - **a)** Nếu $b_1 = b_2 = 0$: phép đối xứng qua đường thẳng $x_2 = 0$.
+   - **b)** Nếu $b_1 = 0$: phép đối xứng qua đường thẳng $x_2 - \dfrac{b_2}{2} = 0$.
+   - **c)** Nếu $b_1 \neq 0$: tích (hợp thành) của phép đối xứng qua đường thẳng $x_2 - \dfrac{b_2}{2} = 0$ và phép tịnh tiến theo vectơ $(b_1, 0) \neq \vec{0}$ cùng phương với đường thẳng đó *(phép đối xứng trượt)*.
 </Theorem>
 
-Tóm lại trường hợp 1 và 2 là phép dời hình loại 1 và trường hợp 3 là phép dời hình loại 2.
+<Proof>
+**1. Chứng minh Trường hợp 2 ($0 < \varphi \le \pi$):**
 
-Ta có:
+Muốn tìm điểm kép (điểm bất động) của phép dời hình, ta giải hệ phương trình $x'_1 = x_1$, $x'_2 = x_2$:
+$$
+\begin{cases}
+x_1 = x_1\cos\varphi - x_2\sin\varphi + b_1, \\
+x_2 = x_1\sin\varphi + x_2\cos\varphi + b_2
+\end{cases}
+\iff
+\begin{cases}
+(1 - \cos\varphi)x_1 + (\sin\varphi)x_2 = b_1, \\
+-(\sin\varphi)x_1 + (1 - \cos\varphi)x_2 = b_2.
+\end{cases}
+$$
+Định thức của hệ phương trình tuyến tính này là:
+$$
+\begin{vmatrix}
+1 - \cos\varphi & \sin\varphi \\
+-\sin\varphi & 1 - \cos\varphi
+\end{vmatrix} = (1 - \cos\varphi)^2 + \sin^2\varphi = 1 - 2\cos\varphi + (\cos^2\varphi + \sin^2\varphi) = 2(1 - \cos\varphi).
+$$
+Vì $0 < \varphi \le \pi$ nên $\cos\varphi < 1$, do đó $2(1 - \cos\varphi) > 0 \neq 0$; hệ phương trình có một nghiệm duy nhất là tọa độ của điểm kép.
 
-<Theorem id="thm-e6-11" title="Định lí">
-Mọi phép dời hình loại 1 trong $\mathbb{E} ^{2}$ là một phép tịnh tiến, hoặc một phép quay, hoặc tích của một phép tịnh tiến và một phép quay.
+Tịnh tiến mục tiêu trực chuẩn sao cho gốc mới (kí hiệu lại là $O$) trùng với điểm kép duy nhất đó, thì hằng số tự do triệt tiêu và phương trình phép dời hình đối với mục tiêu mới có dạng:
+$$
+\begin{cases}
+X'_1 = X_1\cos\varphi - X_2\sin\varphi, \\
+X'_2 = X_1\sin\varphi + X_2\cos\varphi.
+\end{cases}
+$$
+Thật vậy, gọi $M'(X'_1, X'_2)$ là ảnh của điểm $M(X_1, X_2) \neq O$ qua phép dời hình, ta có:
+$$
+\overrightarrow{OM'}^2 = {X'_1}^2 + {X'_2}^2 = X_1^2(\cos^2\varphi + \sin^2\varphi) + X_2^2(\sin^2\varphi + \cos^2\varphi) = X_1^2 + X_2^2 = \overrightarrow{OM}^2,
+$$
+nên $d(O, M) = d(O, M')$. Mặt khác, côsin của góc giữa hai vectơ $\overrightarrow{OM}$ và $\overrightarrow{OM'}$ là:
+$$
+\cos\widehat{(\overrightarrow{OM}, \overrightarrow{OM'})} = \frac{\overrightarrow{OM} \cdot \overrightarrow{OM'}}{|\overrightarrow{OM}|\,|\overrightarrow{OM'}|} = \frac{X_1 X'_1 + X_2 X'_2}{X_1^2 + X_2^2} = \frac{X_1(X_1\cos\varphi - X_2\sin\varphi) + X_2(X_1\sin\varphi + X_2\cos\varphi)}{X_1^2 + X_2^2} = \frac{(X_1^2 + X_2^2)\cos\varphi}{X_1^2 + X_2^2} = \cos\varphi.
+$$
+Vì $0 < \varphi \le \pi$ nên $\widehat{(\overrightarrow{OM}, \overrightarrow{OM'})} = \varphi$ (và khi $\varphi < \pi$, định thức $\begin{vmatrix} X_1 & X_2 \\ X'_1 & X'_2 \end{vmatrix} = (X_1^2 + X_2^2)\sin\varphi > 0$ xác định chiều quay thuận; khi $\varphi = \pi$ thì $X'_1 = -X_1, X'_2 = -X_2$ là phép quay góc $\pi$, tức phép đối xứng tâm $O$). Điều đó chứng tỏ phép dời hình là phép quay tâm $O$ với góc quay $\varphi$; nhìn trong mục tiêu ban đầu trước khi tịnh tiến gốc, phương trình $[x'] = A[x] + [b]$ cũng biểu diễn tích của một phép quay quanh gốc ban đầu với phép tịnh tiến theo vectơ $(b_1, b_2)$.
 
-Mọi phép dời hình loại 2 là một phép đối xứng qua một đường thẳng, hoặc là tích của một phép đối xứng qua một đường thẳng và một phép tịnh tiến theo một vectơ thuộc phương của đường thẳng đó.
+**2. Chứng minh Trường hợp 3:**
+
+- **a)** Khi $b_1 = b_2 = 0$, phương trình $x'_1 = x_1, x'_2 = -x_2$ giữ nguyên trục $x_2 = 0$ và biến mỗi điểm $M(x_1, x_2)$ thành điểm đối xứng qua đường thẳng $x_2 = 0$.
+- **b)** Khi $b_1 = 0$, thực hiện phép đổi tọa độ trực chuẩn $X_1 = x_1$, $X_2 = x_2 - \dfrac{b_2}{2}$ và $X'_1 = x'_1$, $X'_2 = x'_2 - \dfrac{b_2}{2}$. Từ $x'_2 = -x_2 + b_2 \iff x'_2 - \dfrac{b_2}{2} = -\left(x_2 - \dfrac{b_2}{2}\right)$, phương trình đưa về dạng $\begin{cases} X'_1 = X_1, \\ X'_2 = -X_2. \end{cases}$ Đây là phép đối xứng đối với đường thẳng $X_2 = 0$, tức đường thẳng $x_2 - \dfrac{b_2}{2} = 0$.
+- **c)** Khi $b_1 \neq 0$, ta phân tích phép dời hình đã cho thành hợp của hai phép liên tiếp:
+  $$
+  \begin{cases}
+  x''_1 = x_1, \\
+  x''_2 = -x_2 + b_2,
+  \end{cases}
+  \qquad
+  \begin{cases}
+  x'_1 = x''_1 + b_1, \\
+  x'_2 = x''_2.
+  \end{cases}
+  $$
+  Theo câu b), phép thứ nhất là phép đối xứng qua đường thẳng $x_2 - \dfrac{b_2}{2} = 0$; phép thứ hai là phép tịnh tiến theo vectơ có tọa độ $(b_1, 0)$, vectơ này cùng phương với đường thẳng $x_2 - \dfrac{b_2}{2} = 0$.
+</Proof>
+
+Tóm lại, Trường hợp 1 và Trường hợp 2 ($\det A = 1$) là các phép dời hình loại $1$, còn Trường hợp 3 ($\det A = -1$) là phép dời hình loại $2$. Từ đó ta có định lí phân loại hoàn chỉnh:
+
+<Theorem id="thm-e6-11" title="Định lí phân loại phép dời hình trong E2">
+- Mọi phép dời hình loại $1$ trong $\mathcal{E}^2$ là một phép tịnh tiến, hoặc một phép quay, hoặc tích của một phép tịnh tiến và một phép quay *(mà tích của một phép tịnh tiến với một phép quay góc $\varphi \in (0, \pi]$ bản thân nó lại là một phép quay quanh điểm kép duy nhất)*.
+- Mọi phép dời hình loại $2$ trong $\mathcal{E}^2$ là một phép đối xứng qua một đường thẳng, hoặc là tích của một phép đối xứng qua một đường thẳng và một phép tịnh tiến theo một vectơ thuộc phương của đường thẳng đó.
 </Theorem>
 
-<Example id="ex-e6-12" title="Ví dụ">
-$(1) f: x'_{1} = -x_{2} + 1, x'_{2} = x_{1} + 2$ có $A = \begin{pmatrix} 0 & -1 \\ 1 & 0 \end{pmatrix}: \varphi = \frac{π}{2}$, loại 1, trường hợp 2.
+<Example id="ex-e6-12" title="Ví dụ phân loại cụ thể phép dời hình phẳng">
+**Đề bài:** Trong $\mathcal{E}^2$ với mục tiêu trực chuẩn, hãy xác định bản chất hình học của hai phép biến đổi:
+1. $f: \begin{cases} x'_1 = -x_2 + 1, \\ x'_2 = x_1 + 2; \end{cases}$
+2. $g: \begin{cases} x'_1 = x_1 + 3, \\ x'_2 = -x_2 + 4. \end{cases}$
 
-Điểm kép: $x_{1} + x_{2} = 1$ và $-x_{1} + x_{2} = 2$, cho $(\frac{-1}{2}, \frac{3}{2})$; kiểm tra $f(\frac{-1}{2}, \frac{3}{2}) = (\frac{-3}{2} + 1, \frac{-1}{2} + 2) = (\frac{-1}{2}, \frac{3}{2})$.
-
-Vậy *f* là phép quay $90°$ quanh $(\frac{-1}{2}, \frac{3}{2})$.
-
-$(2) x'_{1} = x_{1} + 3, x'_{2} = -x_{2} + 4: A = diag(1,-1)$, loại $2, b_{1} = 3 \neq 0$ (trường hợp 3c): là tích của phép đối xứng qua đường thẳng $x_{2} = 2$ và phép tịnh tiến theo $(3,0)$.
-
-Còn $x'_{1} = x_{1}, x'_{2} = -x_{2} + 4 (b_{1} = 0$, trường hợp 3b) chỉ là phép đối xứng qua $x_{2} = 2$: điểm $(5,2)$ giữ nguyên, $(5,3) ↦ (5,1)$.
+**Lời giải:**
+1. Phép $f$ có ma trận $A = \begin{bmatrix} 0 & -1 \\ 1 & 0 \end{bmatrix}$ trực giao với $\det A = 1$ ($\cos\varphi = 0, \sin\varphi = 1 \implies \varphi = \dfrac{\pi}{2}$), là phép dời hình loại $1$ thuộc Trường hợp 2. Giải hệ tìm điểm kép $x_1 = -x_2 + 1$, $x_2 = x_1 + 2$ được điểm kép duy nhất $I\left(-\dfrac{1}{2}, \dfrac{3}{2}\right)$. Vậy $f$ là phép quay góc $\dfrac{\pi}{2}$ quanh tâm $I\left(-\dfrac{1}{2}, \dfrac{3}{2}\right)$.
+2. Phép $g$ có ma trận $A = \operatorname{diag}(1, -1)$ trực giao với $\det A = -1$ và $b_1 = 3 \neq 0$, là phép dời hình loại $2$ thuộc Trường hợp 3c (không có điểm kép): $g$ là tích của phép đối xứng qua đường thẳng $x_2 - 2 = 0$ và phép tịnh tiến theo vectơ $(3, 0)$ cùng phương với trục đối xứng $x_2 - 2 = 0$.
 </Example>
 
-## Bài tập vận dụng và củng cố
+## Bài tập
 
-<Exercise id="exr-e6-1" title="Phép dời hình và phân loại trong E² (§6, mục 3–4)">
-Xét phép f: x'₁ = -x₂ + 1, x'₂ = x₁ + 2 trong E². Chứng minh f là phép dời hình, tìm điểm kép và cho biết f là phép gì.
+*(Trọn bộ $6$ bài tập thuộc §6 trong cụm bài tập §6, §7, §8 cuối Chương II, trang 142–144; các bài tập thuộc §7 và §8 sẽ được trình bày trọn vẹn ở Bài 2.7 và Bài 2.8).*
 
+<Exercise id="exr-e6-42" title="Bài tập 2.42 (Xét tính chất các phép biến đổi trong mặt phẳng Ơclit — tr. 142)">
+Trong không gian Ơclit $\mathcal{E}^2$ xét tính chất của phép biến đổi có phương trình sau đây đối với một mục tiêu trực chuẩn:
+
+a) $\begin{cases} x'_1 = \dfrac{\sqrt{2}}{2}x_1 - \dfrac{\sqrt{2}}{2}x_2 + 1, \\ x'_2 = \dfrac{\sqrt{2}}{2}x_1 + \dfrac{\sqrt{2}}{2}x_2. \end{cases}$
+
+b) $\begin{cases} x'_1 = -x_1 - 6, \\ x'_2 = x_2. \end{cases}$
 
 <Hint>
-Kiểm tra A trực giao (AᵀA = I), tính det A. Điểm kép: giải x = f(x).
+Kiểm tra tính trực giao $A^* A = I_2$ và định thức $\det A = \pm 1$ để xác định loại phép dời hình; giải hệ $f(x) = x$ tìm tập điểm kép để xác định tâm quay, góc quay (câu a) hoặc trục đối xứng (câu b).
 </Hint>
 
 <Solution>
-A = [[0,-1],[1,0]], AᵀA = I và det A = 1: phép dời hình loại 1.
+**a) Xét phép biến đổi thứ nhất:**
 
-Điểm kép: x₁ = -x₂ + 1, x₂ = x₁ + 2 cho x₁ = -1/2, x₂ = 3/2.
+Ma trận của phần tuyến tính là:
+$$
+A = \begin{bmatrix}
+\frac{\sqrt{2}}{2} & -\frac{\sqrt{2}}{2} \\
+\frac{\sqrt{2}}{2} & \frac{\sqrt{2}}{2}
+\end{bmatrix}
+= \begin{bmatrix}
+\cos\frac{\pi}{4} & -\sin\frac{\pi}{4} \\
+\sin\frac{\pi}{4} & \cos\frac{\pi}{4}
+\end{bmatrix}.
+$$
+Ta thấy $A^* A = I_2$ và $\det A = \dfrac{1}{2} + \dfrac{1}{2} = 1$, nên đây là **phép dời hình loại $1$ (phép dời hình thuận)** dạng Trường hợp 2 với góc $\varphi = \dfrac{\pi}{4}$.
 
-Ma trận quay góc  $ varphi$  = π/2.
+Tìm điểm kép (điểm bất động) $I(x_1, x_2)$ từ hệ:
+$$
+\begin{cases}
+\left(1 - \frac{\sqrt{2}}{2}\right)x_1 + \frac{\sqrt{2}}{2}x_2 = 1, \\
+-\frac{\sqrt{2}}{2}x_1 + \left(1 - \frac{\sqrt{2}}{2}\right)x_2 = 0.
+\end{cases}
+$$
+Từ phương trình thứ hai suy ra $x_1 = \dfrac{2 - \sqrt{2}}{\sqrt{2}}x_2 = (\sqrt{2} - 1)x_2$. Thế vào phương trình thứ nhất:
+$$
+\left[\left(1 - \frac{\sqrt{2}}{2}\right)(\sqrt{2} - 1) + \frac{\sqrt{2}}{2}\right]x_2 = (2\sqrt{2} - 2)x_2 = 1 \implies x_2 = \frac{1}{2(\sqrt{2} - 1)} = \frac{1 + \sqrt{2}}{2},
+$$
+suy ra $x_1 = (\sqrt{2} - 1)\dfrac{\sqrt{2} + 1}{2} = \dfrac{1}{2}$.
 
-**Đáp án:** Phép quay 90° quanh điểm (-1/2, 3/2)
+**Kết luận câu a:** Phép biến đổi là một **phép quay** thuận chiều một góc $\varphi = \dfrac{\pi}{4}$ quanh tâm quay duy nhất $I\left(\dfrac{1}{2}, \dfrac{1 + \sqrt{2}}{2}\right)$.
+
+**b) Xét phép biến đổi thứ hai:**
+
+Ma trận của phần tuyến tính là:
+$$
+A = \begin{bmatrix} -1 & 0 \\ 0 & 1 \end{bmatrix},
+$$
+thỏa mãn $A^* A = I_2$ và $\det A = -1$, nên đây là **phép dời hình loại $2$ (phép dời hình nghịch)**.
+
+Giải hệ tìm điểm kép: $\begin{cases} x_1 = -x_1 - 6, \\ x_2 = x_2 \end{cases} \iff x_1 + 3 = 0$ ($x_2 \in \mathbb{R}$ tùy ý). Tập hợp các điểm bất động là toàn bộ đường thẳng $d: x_1 + 3 = 0$. Hơn nữa, với mọi điểm $M(x_1, x_2) \notin d$ có ảnh $M'(-x_1 - 6, x_2)$, trung điểm của đoạn $MM'$ là $\left(\dfrac{x_1 + (-x_1 - 6)}{2}, x_2\right) = (-3, x_2) \in d$ và vectơ $\overrightarrow{MM'} = (-2x_1 - 6, 0)$ vuông góc với đường thẳng $d$.
+
+**Kết luận câu b:** Phép biến đổi là **phép đối xứng trục** qua đường thẳng $x_1 + 3 = 0$.
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e6-43" title="Bài tập 2.43 (Phương trình phép đẳng cự biến mục tiêu trực chuẩn {E0; Ei} thành {E'0; Ei} — tr. 143)">
+Trong $\mathcal{E}^n$ cho hai mục tiêu trực chuẩn $\{E_0; E_i\}$ và $\{E'_0; E_i\}$ ($i = 1, 2, \dots, n$). Lập phương trình phép đẳng cự (phép dời hình) $f$ đối với mục tiêu $\{E_0; E_i\}$, biến mục tiêu $\{E_0; E_i\}$ thành mục tiêu $\{E'_0; E_i\}$ sao cho $f(E_0) = E'_0$ và $f(E_i) = E_i$ với $i = 1, 2, \dots, n$.
+
+<Hint>
+Sử dụng kết quả Bài tập 2.32 (§4): nếu $E'_0 = E_0$ thì $f$ là phép đồng nhất; nếu $E'_0 \neq E_0$ thì $E'_0 = \left(\dfrac{2}{n}, \dots, \dfrac{2}{n}\right)$ đối với $\{E_0; E_i\}$. Từ $f(E_0) = E'_0$ và $\varphi(\vec{e}_j) = \overrightarrow{E'_0 E_j} = \vec{e}_j - \overrightarrow{E_0 E'_0}$, lập ma trận cột của $\varphi$ và cột tịnh tiến $[b]$.
+</Hint>
+
+<Solution>
+Đặt $\vec{e}_j = \overrightarrow{E_0 E_j}$ ($j = 1, \dots, n$) làm cơ sở trực chuẩn gắn với mục tiêu $\{E_0; E_i\}$. Một phép biến đổi affine $f: \mathcal{E}^n \to \mathcal{E}^n$ được xác định duy nhất bởi ảnh của $n + 1$ điểm độc lập affine $E_0, E_1, \dots, E_n$.
+
+- **Trường hợp 1 ($E'_0 \equiv E_0$):** Điều kiện $f(E_0) = E_0$ và $f(E_i) = E_i$ ($i = 1, \dots, n$) xác định phép đồng nhất $f = \mathrm{id}_{\mathcal{E}^n}$, có phương trình $x'_k = x_k$ ($k = 1, \dots, n$).
+
+- **Trường hợp 2 ($E'_0 \neq E_0$):** Theo kết quả đã chứng minh ở Bài tập 2.32 (§4), để $\{E'_0; E_i\}$ cũng là mục tiêu trực chuẩn khi $E'_0 \neq E_0$, điểm $E'_0$ bắt buộc có tọa độ đối với $\{E_0; E_i\}$ là:
+  $$
+  E'_0 = \left(\frac{2}{n}, \frac{2}{n}, \dots, \frac{2}{n}\right).
+  $$
+  Do $f(E_0) = E'_0$, cột tự do $[b]$ trong phương trình $[x'] = A[x] + [b]$ chính là tọa độ của $E'_0$: $b_k = \dfrac{2}{n}$ ($k = 1, \dots, n$).
+
+  Ánh xạ tuyến tính liên kết $\varphi$ thỏa mãn:
+  $$
+  \varphi(\vec{e}_j) = \varphi(\overrightarrow{E_0 E_j}) = \overrightarrow{f(E_0)f(E_j)} = \overrightarrow{E'_0 E_j} = \vec{e}_j - \overrightarrow{E_0 E'_0} = \vec{e}_j - \frac{2}{n}\sum_{k=1}^n \vec{e}_k \quad (j = 1, \dots, n).
+  $$
+  Vì $\{\overrightarrow{E'_0 E_1}, \dots, \overrightarrow{E'_0 E_n}\}$ là cơ sở trực chuẩn nên $\varphi$ biến cơ sở trực chuẩn thành cơ sở trực chuẩn, tức $f$ thực sự là một phép dời hình. Cột thứ $j$ của ma trận $A = [a_{kj}]$ là tọa độ của $\varphi(\vec{e}_j)$:
+  $$
+  a_{kj} = \delta_{kj} - \frac{2}{n} \quad (k, j = 1, 2, \dots, n).
+  $$
+  Thay vào $[x'] = A[x] + [b]$, ta thu được hệ phương trình tường minh của phép dời hình $f$ đối với mục tiêu $\{E_0; E_i\}$:
+  $$
+  x'_k = x_k - \frac{2}{n}(x_1 + x_2 + \dots + x_n - 1) \quad (k = 1, 2, \dots, n).
+  $$
+  *(Ý nghĩa hình học: $f$ chính là phép đối xứng qua siêu phẳng $x_1 + x_2 + \dots + x_n - 1 = 0$ đi qua $n$ điểm $E_1, \dots, E_n$, là một phép dời hình loại $2$)*.
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e6-44" title="Bài tập 2.44 (Phương trình phép tịnh tiến và tính chất phép dời hình loại một — tr. 143)">
+Trong $\mathcal{E}^n$ với hệ mục tiêu trực chuẩn, cho vectơ $\vec{v} = (v_1, v_2, \dots, v_n)$. Hãy viết phương trình phép tịnh tiến theo vectơ $\vec{v}$ đã cho và tìm ảnh của điểm $M$ có tọa độ là $(1, 2, 3, \dots, n)$ qua phép tịnh tiến đó. Chứng tỏ phép tịnh tiến là phép dời hình loại một.
+
+<Hint>
+Sử dụng định nghĩa phép tịnh tiến $M' = T_{\vec{v}}(M) \iff \overrightarrow{MM'} = \vec{v}$ để viết biểu thức tọa độ và xét ma trận $A$ của phần tuyến tính.
+</Hint>
+
+<Solution>
+**1. Phương trình phép tịnh tiến $T_{\vec{v}}$:**
+
+Đối với mục tiêu trực chuẩn $\{O; \vec{e}_1, \dots, \vec{e}_n\}$, điểm $M(x_1, \dots, x_n)$ biến thành điểm $M'(x'_1, \dots, x'_n) = T_{\vec{v}}(M)$ khi và chỉ khi $\overrightarrow{MM'} = \vec{v}$, tức là:
+$$
+\begin{cases}
+x'_1 = x_1 + v_1, \\
+x'_2 = x_2 + v_2, \\
+\vdots \\
+x'_n = x_n + v_n.
+\end{cases}
+$$
+
+**2. Ảnh của điểm $M(1, 2, 3, \dots, n)$:**
+
+Thay $x_i = i$ ($i = 1, 2, \dots, n$) vào phương trình trên, tọa độ ảnh $M' = T_{\vec{v}}(M)$ là:
+$$
+M' = (1 + v_1,\; 2 + v_2,\; 3 + v_3,\; \dots,\; n + v_n).
+$$
+
+**3. Chứng minh $T_{\vec{v}}$ là phép dời hình loại một:**
+
+Phương trình của $T_{\vec{v}}$ đối với mục tiêu trực chuẩn có dạng ma trận $[x'] = I_n[x] + [v]$, trong đó ma trận của phép biến đổi tuyến tính liên kết là ma trận đơn vị $A = I_n$ (tức $\varphi = \mathrm{id}_{\overrightarrow{\mathcal{E}^n}}$). Vì $I_n^* I_n = I_n I_n = I_n$ nên $A = I_n$ là ma trận trực giao cấp $n$, đồng thời $\det A = \det I_n = 1 > 0$. Theo Định lí ở Mục 3, mọi phép tịnh tiến $T_{\vec{v}}$ đều là **phép dời hình loại một** (phép dời hình thuận).
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e6-45" title="Bài tập 2.45 (Phép đối xứng qua m-phẳng tọa độ trong En — tr. 143)">
+Trong $\mathcal{E}^n$, đối với một mục tiêu trực chuẩn đã chọn, cho phép biến đổi $f$ có phương trình như sau ($0 \le m \le n$):
+$$
+\begin{cases}
+x'_1 = x_1, \\
+\vdots \\
+x'_m = x_m, \\
+x'_{m+1} = -x_{m+1}, \\
+\vdots \\
+x'_n = -x_n.
+\end{cases}
+$$
+
+a) Chứng tỏ rằng $f$ là một phép đẳng cự (phép dời hình).
+
+b) Với những điều kiện nào của $m$ và của $n$ thì phép biến đổi $f$ là phép dời hình loại một hoặc loại hai?
+
+c) Hãy mô tả phép đẳng cự đó cùng với những tính chất của nó nếu $m = n - 1$.
+
+<Hint>
+Câu a: Lập ma trận đường chéo $A = \operatorname{diag}(1, \dots, 1, -1, \dots, -1)$ và kiểm tra $A^* A = I_n$. Câu b: Tính $\det A = (-1)^{n - m}$ theo tính chẵn lẻ của $n - m$. Câu c: Khi $m = n - 1$, xét tập điểm bất động $x_n = 0$ và vị trí đoạn thẳng $MM'$ đối với siêu phẳng $x_n = 0$.
+</Hint>
+
+<Solution>
+**a) Chứng minh $f$ là phép dời hình:**
+
+Đối với mục tiêu trực chuẩn đã chọn, phương trình của $f$ có dạng $[x'] = A[x]$ (với $[b] = [0]$), trong đó $A$ là ma trận đường chéo cấp $n$ có $m$ phần tử đầu trên đường chéo chính bằng $+1$ và $n - m$ phần tử sau bằng $-1$:
+$$
+A = \operatorname{diag}(\underbrace{1, \dots, 1}_{m}, \underbrace{-1, \dots, -1}_{n - m}).
+$$
+Vì $A^* = A$ và $(\pm 1)^2 = 1$, ta có $A^* A = A^2 = \operatorname{diag}(1, 1, \dots, 1) = I_n$, nên $A$ là ma trận trực giao cấp $n$. Theo Định lí ở Mục 3, $f$ là một phép đẳng cự (phép dời hình) của $\mathcal{E}^n$.
+
+**b) Điều kiện để $f$ là phép dời hình loại một hoặc loại hai:**
+
+Định thức của ma trận đường chéo $A$ là tích các phần tử trên đường chéo chính:
+$$
+\det A = 1^m \cdot (-1)^{n - m} = (-1)^{n - m}.
+$$
+- Phép $f$ là **phép dời hình loại một** (thuận) khi và chỉ khi $\det A = 1 \iff n - m$ là một **số nguyên chẵn** (tức $m$ và $n$ cùng tính chẵn lẻ).
+- Phép $f$ là **phép dời hình loại hai** (nghịch) khi và chỉ khi $\det A = -1 \iff n - m$ là một **số nguyên lẻ** (tức $m$ và $n$ khác tính chẵn lẻ).
+
+**c) Mô tả và các tính chất của $f$ khi $m = n - 1$:**
+
+Khi $m = n - 1$, phương trình của $f$ trở thành:
+$$
+x'_1 = x_1, \quad x'_2 = x_2, \quad \dots, \quad x'_{n-1} = x_{n-1}, \quad x'_n = -x_n.
+$$
+Đây là **phép đối xứng qua siêu phẳng $\alpha: x_n = 0$**, có các tính chất cơ bản sau:
+1. $n - m = 1$ là số lẻ ($\det A = -1$), nên $f$ là một **phép dời hình loại hai** (nghịch).
+2. Tập hợp tất cả các điểm kép (điểm bất động) của $f$ chính là toàn bộ siêu phẳng $\alpha: x_n = 0$ (vì $x'_i = x_i$ với mọi $i = 1, \dots, n \iff x_n = -x_n \iff x_n = 0$).
+3. Với mọi điểm $M(x_1, \dots, x_{n-1}, x_n) \notin \alpha$ ($x_n \neq 0$) và ảnh $M'(x_1, \dots, x_{n-1}, -x_n)$, trung điểm của đoạn $MM'$ là $H(x_1, \dots, x_{n-1}, 0) \in \alpha$ và vectơ $\overrightarrow{MM'} = (0, \dots, 0, -2x_n)$ cùng phương với pháp tuyến $\vec{e}_n$ của $\alpha$, nghĩa là siêu phẳng $\alpha$ là siêu phẳng trung trực của đoạn thẳng $MM'$.
+4. $f$ có tính đối hợp ($f \circ f = \mathrm{id}_{\mathcal{E}^n}$, tức $f^{-1} = f$) vì $A^2 = I_n$.
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e6-46" title="Bài tập 2.46 (Biểu thức tọa độ tổng quát của phép đối xứng qua một siêu phẳng — tr. 143–144)">
+Trong $\mathcal{E}^n$ với mục tiêu trực chuẩn đã chọn, cho siêu phẳng $\alpha$ có phương trình:
+$$
+a_1 x_1 + a_2 x_2 + \dots + a_n x_n + a_0 = 0 \qquad \left(\sum_{i=1}^n a_i^2 = 1\right).
+$$
+Hãy viết biểu thức tọa độ của phép đối xứng qua siêu phẳng đó và qua đó chứng tỏ rằng siêu phẳng $\alpha$ chứa toàn điểm kép.
+
+<Hint>
+Với điểm $M(x_1, \dots, x_n)$ bất kì, tìm hình chiếu vuông góc $H$ của $M$ trên $\alpha$ (theo đường thẳng $y_i = x_i + a_i t$ đi qua $M$ với vectơ pháp tuyến đơn vị $\vec{a} = (a_1, \dots, a_n)$), sau đó dùng hệ thức trung điểm $\overrightarrow{OM'} = \overrightarrow{OM} + 2\overrightarrow{MH}$ (ứng với tham số $2t$).
+</Hint>
+
+<Solution>
+**1. Lập biểu thức tọa độ của phép đối xứng $f$ qua siêu phẳng $\alpha$:**
+
+Siêu phẳng $\alpha$ có vectơ pháp tuyến đơn vị $\vec{a} = (a_1, a_2, \dots, a_n)$ với $|\vec{a}|^2 = \sum_{j=1}^n a_j^2 = 1$. Xét điểm $M(x_1, \dots, x_n) \in \mathcal{E}^n$ tùy ý; gọi $H$ là hình chiếu vuông góc của $M$ trên $\alpha$ và $M'(x'_1, \dots, x'_n) = f(M)$ là ảnh của $M$ qua phép đối xứng qua siêu phẳng $\alpha$ (định nghĩa bởi $H$ là trung điểm đoạn $MM'$ và $MM' \perp \alpha$, riêng khi $M \in \alpha$ thì $M' \equiv H \equiv M$).
+
+Đường thẳng đi qua $M$ vuông góc với $\alpha$ có phương trình $y_i = x_i + a_i t$ ($i = 1, \dots, n$). Giao điểm $H$ với $\alpha$ ứng với tham số $t$ thỏa mãn:
+$$
+\sum_{j=1}^n a_j(x_j + a_j t) + a_0 = 0 \iff \left(\sum_{j=1}^n a_j x_j + a_0\right) + \left(\sum_{j=1}^n a_j^2\right)t = 0 \implies t = -\left(\sum_{j=1}^n a_j x_j + a_0\right)
+$$
+(do $\sum_{j=1}^n a_j^2 = 1$). Vì $\overrightarrow{MM'} = 2\overrightarrow{MH} = 2t\vec{a}$, tọa độ của ảnh $M'(x'_1, \dots, x'_n)$ được cho bởi:
+$$
+x'_i = x_i - 2a_i\left(\sum_{j=1}^n a_j x_j + a_0\right) = \sum_{j=1}^n (\delta_{ij} - 2a_i a_j)x_j - 2a_0 a_i \quad (i = 1, 2, \dots, n).
+$$
+*(Kiểm tra lại tính đẳng cự: đặt cột $[a] = (a_1, \dots, a_n)^T$ với $[a]^*[a] = 1$, ma trận $A = I_n - 2[a][a]^*$ đối xứng và thỏa mãn $A^* A = (I_n - 2[a][a]^*)(I_n - 2[a][a]^*) = I_n - 4[a][a]^* + 4[a]([a]^*[a])[a]^* = I_n$, nên $f$ là một phép dời hình)*.
+
+**2. Chứng tỏ siêu phẳng $\alpha$ chứa toàn điểm kép (và chính là tập tất cả các điểm kép):**
+
+Điểm $M(x_1, \dots, x_n)$ là điểm kép của $f$ khi và chỉ khi $x'_i = x_i$ với mọi $i = 1, \dots, n$:
+$$
+x_i - 2a_i\left(\sum_{j=1}^n a_j x_j + a_0\right) = x_i \quad (\forall i = 1, \dots, n) \iff 2a_i\left(\sum_{j=1}^n a_j x_j + a_0\right) = 0 \quad (\forall i = 1, \dots, n).
+$$
+Vì $\sum_{i=1}^n a_i^2 = 1$ nên tồn tại ít nhất một hệ số $a_k \neq 0$; hệ điều kiện trên tương đương hoàn toàn với:
+$$
+\sum_{j=1}^n a_j x_j + a_0 = 0 \iff M \in \alpha.
+$$
+Vậy mọi điểm thuộc siêu phẳng $\alpha$ đều là điểm kép (và ngược lại mọi điểm kép của $f$ đều thuộc $\alpha$).
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e6-47" title="Bài tập 2.47 (Các phép dời hình của mặt phẳng biến một elip không tròn thành chính nó — tr. 144)">
+Trong $\mathcal{E}^2$ với hệ tọa độ trực chuẩn, cho elip $(E)$ có phương trình:
+$$
+\frac{x_1^2}{a^2} + \frac{x_2^2}{b^2} = 1 \qquad (a \neq b;\; a > 0,\; b > 0).
+$$
+Viết phương trình các phép đẳng cự (phép dời hình) của $\mathcal{E}^2$ biến elip thành chính nó.
+
+<Hint>
+Không mất tính tổng quát giả sử $a > b > 0$. Khai thác bất biến khoảng cách của phép dời hình $f$: khoảng cách lớn nhất giữa hai điểm thuộc $(E)$ bằng $2a$ chỉ đạt được tại cặp đỉnh trục lớn $\{V_1(a, 0), V_2(-a, 0)\}$, suy ra $f$ giữ nguyên trung điểm $O(0, 0)$ và hoán vị $\{V_1, V_2\}$ cũng như cặp đỉnh trục nhỏ $\{W_1(0, b), W_2(0, -b)\}$.
+</Hint>
+
+<Solution>
+Không mất tính tổng quát, ta xét trường hợp $a > b > 0$ *(nếu $b > a > 0$, lập luận hoàn toàn tương tự bằng cách đổi vai trò hai trục tọa độ và cho cùng bốn phương trình nghiệm)*.
+
+Giả sử $f: \mathcal{E}^2 \to \mathcal{E}^2$ là một phép dời hình biến elip $(E)$ thành chính nó, tức $f(E) = E$.
+
+**1. Chứng minh $f$ biến gốc tọa độ $O(0, 0)$ thành chính nó và bảo toàn hai cặp đỉnh:**
+
+Với mọi điểm $M(x_1, x_2) \in (E)$, từ $x_2^2 = b^2\left(1 - \dfrac{x_1^2}{a^2}\right) \ge 0$ ta có $|x_1| \le a$, và:
+$$
+d(O, M)^2 = x_1^2 + x_2^2 = b^2 + \left(1 - \frac{b^2}{a^2}\right)x_1^2.
+$$
+Vì $a > b > 0 \implies 1 - \dfrac{b^2}{a^2} > 0$, ta suy ra hai tính chất cực trị khoảng cách trên $(E)$:
+- Với mọi $M \in (E)$, $d(O, M) \le a$, dấu $"="$ chỉ xảy ra khi $x_1 = \pm a, x_2 = 0$, tức tại hai đỉnh trục lớn $V_1(a, 0)$ và $V_2(-a, 0)$. Theo bất đẳng thức tam giác, với mọi cặp điểm $P, Q \in (E)$, ta có $d(P, Q) \le d(P, O) + d(O, Q) \le 2a$, và $d(P, Q) = 2a$ khi và chỉ khi $\{P, Q\} = \{V_1, V_2\}$. Vì phép dời hình $f$ bảo toàn khoảng cách và $f(E) = E$, ta phải có $d(f(V_1), f(V_2)) = d(V_1, V_2) = 2a$ với $f(V_1), f(V_2) \in (E)$, do đó $f$ biến tập $\{V_1, V_2\}$ thành chính tập $\{V_1, V_2\}$. Vì $f$ là phép biến đổi affine nên $f$ bảo toàn trung điểm của đoạn $V_1V_2$, suy ra $f(O) = O$.
+- Với mọi $M \in (E)$, $d(O, M) \ge b$, dấu $"="$ chỉ xảy ra khi $x_1 = 0, x_2 = \pm b$, tức tại hai đỉnh trục nhỏ $W_1(0, b)$ và $W_2(0, -b)$. Vì $f(O) = O$ và $f$ bảo toàn khoảng cách đến $O$, với $i \in \{1, 2\}$ ta có $d(O, f(W_i)) = d(f(O), f(W_i)) = d(O, W_i) = b$, nên $f$ biến tập $\{W_1, W_2\}$ thành chính tập $\{W_1, W_2\}$.
+
+**2. Xác định tất cả các phép dời hình thỏa mãn:**
+
+Vì $f(0, 0) = (0, 0)$, phương trình của $f$ có dạng $[x'] = A[x]$. Gọi $\vec{e}_1 = (1, 0) = \dfrac{1}{a}\overrightarrow{OV_1}$ và $\vec{e}_2 = (0, 1) = \dfrac{1}{b}\overrightarrow{OW_1}$. Từ $f(V_1) \in \{V_1, V_2\}$ và $f(W_1) \in \{W_1, W_2\}$, ánh xạ tuyến tính liên kết $\varphi$ phải thỏa mãn:
+$$
+\varphi(\vec{e}_1) = \varepsilon_1 \vec{e}_1, \qquad \varphi(\vec{e}_2) = \varepsilon_2 \vec{e}_2 \qquad \bigl(\varepsilon_1, \varepsilon_2 \in \{-1, 1\}\bigr).
+$$
+Ngược lại, với mỗi bộ $(\varepsilon_1, \varepsilon_2) \in \{-1, 1\}^2$, ma trận $A = \operatorname{diag}(\varepsilon_1, \varepsilon_2)$ là ma trận trực giao và phương trình $x'_1 = \varepsilon_1 x_1$, $x'_2 = \varepsilon_2 x_2$ thỏa mãn $\dfrac{{x'_1}^2}{a^2} + \dfrac{{x'_2}^2}{b^2} = \dfrac{x_1^2}{a^2} + \dfrac{x_2^2}{b^2} = 1$, nên thực sự biến elip $(E)$ thành chính nó.
+
+Vậy có đúng **$4$ phép dời hình** của $\mathcal{E}^2$ biến elip $(E)$ ($a \neq b$) thành chính nó (lập thành nhóm Klein cấp $4$):
+1. $\begin{cases} x'_1 = x_1, \\ x'_2 = x_2 \end{cases}$ *(phép đồng nhất — loại $1$)*;
+2. $\begin{cases} x'_1 = -x_1, \\ x'_2 = -x_2 \end{cases}$ *(phép đối xứng tâm $O$, tức phép quay góc $\pi$ quanh $O$ — loại $1$)*;
+3. $\begin{cases} x'_1 = x_1, \\ x'_2 = -x_2 \end{cases}$ *(phép đối xứng qua trục lớn $x_2 = 0$ — loại $2$)*;
+4. $\begin{cases} x'_1 = -x_1, \\ x'_2 = x_2 \end{cases}$ *(phép đối xứng qua trục nhỏ $x_1 = 0$ — loại $2$)*.
 </Solution>
 </Exercise>
 
 <KeyTakeaways>
-- Mọi phép biến đổi đẳng cự đều là phép biến đổi affine có ánh xạ liên kết là biến đổi trực giao.
-- Phép biến đổi đẳng cự có thể biểu diễn thành tích của các phép đối xứng qua siêu phẳng.
+- Một ánh xạ giữa hai không gian Ơclit bảo toàn khoảng cách giữa mọi cặp điểm khi và chỉ khi nó là ánh xạ affine có ánh xạ tuyến tính liên kết là ánh xạ tuyến tính trực giao (bảo toàn tích vô hướng).
+- Trong mục tiêu trực chuẩn của $\mathcal{E}^n$, mọi phép dời hình có phương trình $[x'] = A[x] + [b]$ với $A^* A = I_n$, tách thành phép dời hình loại $1$ ($\det A = 1$) và loại $2$ ($\det A = -1$), lập thành nhóm dời $\mathcal{D}^n$.
+- Trong mặt phẳng Ơclit $\mathcal{E}^2$, mọi phép dời hình loại $1$ là phép tịnh tiến hoặc phép quay; mọi phép dời hình loại $2$ là phép đối xứng trục hoặc tích của phép đối xứng trục với phép tịnh tiến dọc theo chính trục đó.
 </KeyTakeaways>

@@ -442,16 +442,20 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(metricsCard).toHaveAttribute('data-material', 'frosted-glass');
       expect(metricsCard).toHaveTextContent(/Bài hoàn thành/i);
       expect(metricsCard).toHaveTextContent(/Tiến độ tổng/i);
-      expect(metricsCard).toHaveTextContent(/Kho Thuật ngữ/i);
+      expect(metricsCard).toHaveTextContent(/Chuỗi ngày/i);
+      expect(metricsCard).not.toHaveTextContent(/Kho Thuật ngữ/i);
       const pomodoroBar = screen.getByTestId('dashboard-pomodoro-bar');
       expect(pomodoroBar).toHaveTextContent('25:00');
       fireEvent.click(screen.getByTestId('dashboard-pomodoro-start'));
       expect(pomodoroBar).toHaveTextContent(/Tạm dừng/i);
 
-      const quickHubCard = screen.getByTestId('dashboard-quick-hub-card');
-      expect(quickHubCard).toHaveAttribute('data-material', 'deep-emerald');
-      expect(quickHubCard).toHaveTextContent(/ĐIỀU PHỐI NHANH/i);
-      expect(quickHubCard).toHaveTextContent(/Bắt đầu phiên học sâu/i);
+      // Thẻ "Hôm nay" thay khối Điều phối nhanh (lối tắt trùng Rail trái)
+      expect(screen.queryByTestId('dashboard-quick-hub-card')).not.toBeInTheDocument();
+      const todayCard = screen.getByTestId('dashboard-today-card');
+      expect(todayCard).toHaveAttribute('data-material', 'deep-emerald');
+      expect(todayCard).toHaveTextContent(/Hôm nay/i);
+      expect(screen.getByTestId('today-empty')).toBeInTheDocument();
+      expect(screen.getByTestId('today-week-goal')).toHaveTextContent(/\/5 bài/);
 
       // C. 4 Thẻ Cổng Học Phần tràn viền (CTĐS, HHAVE, GTHMB, GDH)
       const subjectsGrid = screen.getByTestId('dashboard-subjects-grid');
@@ -487,9 +491,8 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       expect(screen.getByTestId('dashboard-glossary-card')).toHaveTextContent(
         /Thuật ngữ ngẫu nhiên/i,
       );
-      const sanctuaryBanner = screen.getByTestId('dashboard-sanctuary-banner');
-      expect(sanctuaryBanner).toHaveTextContent(/SẢNH THƯ GIÃN · POMODORO BREAK/i);
-      expect(sanctuaryBanner).toHaveTextContent(/Nghỉ nhịp 5 phút giữa các phiên chứng minh/i);
+      // Banner Sảnh Thư Giãn đã gỡ (trùng Rail trái, thẻ Di sản và toast nghỉ Pomodoro)
+      expect(screen.queryByTestId('dashboard-sanctuary-banner')).not.toBeInTheDocument();
 
       // Bảo đảm 40 tác phẩm di sản không trùng id, tiêu đề hay imageSrc
       expect(HERITAGE_ARTWORKS).toHaveLength(40);
@@ -499,14 +502,6 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
 
       // Bảo tàng 40 Di sản & Bida 8-Ball đã được tách sạch sang /thu-gian
       expect(screen.getByRole('link', { name: /Xem phòng trưng bày 40 Di sản/i })).toHaveAttribute(
-        'href',
-        '/thu-gian?tab=di-san',
-      );
-      expect(screen.getByRole('link', { name: /Mở bàn Bida 8-Ball/i })).toHaveAttribute(
-        'href',
-        '/thu-gian?tab=bida',
-      );
-      expect(screen.getByRole('link', { name: /Bảo tàng 40 Di sản/i })).toHaveAttribute(
         'href',
         '/thu-gian?tab=di-san',
       );

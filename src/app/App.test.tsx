@@ -59,7 +59,7 @@ describe('App routing smoke test', () => {
     expect(screen.getByTestId('three-material-dock')).toBeInTheDocument();
     expect(screen.getByTestId('dashboard-resume-card')).toBeInTheDocument();
     expect(screen.getByTestId('dashboard-metrics-card')).toBeInTheDocument();
-    expect(screen.getByTestId('dashboard-quick-hub-card')).toBeInTheDocument();
+    expect(screen.getByTestId('dashboard-today-card')).toBeInTheDocument();
     expect(screen.getByTestId('dashboard-pomodoro-bar')).toBeInTheDocument();
     expect(screen.getByTestId('dashboard-subjects-grid')).toBeInTheDocument();
     expect(screen.getByTestId('study-planner-widget')).toBeInTheDocument();
@@ -83,18 +83,10 @@ describe('App routing smoke test', () => {
     expect(screen.getByTestId('dashboard-heritage-card')).toBeInTheDocument();
     expect(screen.getByTestId('heritage-overlap-badge')).toBeInTheDocument();
     expect(screen.getByTestId('dashboard-glossary-card')).toBeInTheDocument();
-    expect(screen.getByTestId('dashboard-sanctuary-banner')).toBeInTheDocument();
+    expect(screen.queryByTestId('dashboard-sanctuary-banner')).not.toBeInTheDocument();
 
     // Bảo tàng 40 Di sản & Bida 8-Ball đã được tách hoàn toàn sang /thu-gian
     expect(screen.getByRole('link', { name: /Xem phòng trưng bày 40 Di sản/i })).toHaveAttribute(
-      'href',
-      '/thu-gian?tab=di-san',
-    );
-    expect(screen.getByRole('link', { name: /Mở bàn Bida 8-Ball/i })).toHaveAttribute(
-      'href',
-      '/thu-gian?tab=bida',
-    );
-    expect(screen.getByRole('link', { name: /Bảo tàng 40 Di sản/i })).toHaveAttribute(
       'href',
       '/thu-gian?tab=di-san',
     );

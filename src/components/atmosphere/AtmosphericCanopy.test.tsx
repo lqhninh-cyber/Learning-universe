@@ -158,9 +158,9 @@ describe('Spatial Editorial Portal & Thiên Cảnh Khí Quyển (0% AI Real Phot
     expect(metricsCard).toHaveAttribute('data-material', 'frosted-glass');
     expect(metricsCard.className).toContain('backdrop-blur-xl');
 
-    const quickHubCard = screen.getByTestId('dashboard-quick-hub-card');
-    expect(quickHubCard).toHaveAttribute('data-material', 'deep-emerald');
-    expect(quickHubCard.className).toContain('bg-[#17332C]');
+    const todayCard = screen.getByTestId('dashboard-today-card');
+    expect(todayCard).toHaveAttribute('data-material', 'deep-emerald');
+    expect(todayCard.className).toContain('bg-[#17332C]');
 
     // Khối C: 4 Thẻ Học Phần dùng đồ họa vector toán học SVG thuần (KHÔNG dùng ảnh phong cảnh)
     const subjectsGrid = screen.getByTestId('dashboard-subjects-grid');
@@ -180,12 +180,8 @@ describe('Spatial Editorial Portal & Thiên Cảnh Khí Quyển (0% AI Real Phot
     expect(screen.getByTestId('heritage-math-connection')).toBeInTheDocument();
     expect(screen.getByTestId('dashboard-glossary-card')).toBeInTheDocument();
 
-    const sanctuaryBanner = screen.getByTestId('dashboard-sanctuary-banner');
-    expect(sanctuaryBanner.className).toContain('bg-[#17332C]');
-    expect(sanctuaryBanner.querySelector('img')).toHaveAttribute(
-      'src',
-      '/assets/atmosphere/sanctuary-banner.webp',
-    );
+    // Banner Sảnh Thư Giãn đã gỡ khỏi Tổng quan (trùng Rail trái & thẻ Di sản)
+    expect(screen.queryByTestId('dashboard-sanctuary-banner')).not.toBeInTheDocument();
   });
 
   it('LearningSpacePage hiển thị dải sương khí quyển đầu trang và mô hình 3D đặt nổi không viền hộp cứng', () => {

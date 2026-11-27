@@ -2443,6 +2443,14 @@
         "count": 17
       },
       {
+        "lessonId": "anh-xa-dang-cu-va-phep-bien-doi-dang-cu",
+        "lessonCode": "HHAVE 2.6",
+        "lessonTitle": "Ánh xạ Đẳng cự và Phép Biến đổi Đẳng cự",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/anh-xa-dang-cu-va-phep-bien-doi-dang-cu",
+        "count": 17
+      },
+      {
         "lessonId": "tap-loi-trong-khong-gian-afin-thuc",
         "lessonCode": "HHAVE 1.5",
         "lessonTitle": "Tập Lồi trong Không gian Affine Thực",
@@ -2505,14 +2513,6 @@
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-xa-anh/sieu-mat-bac-hai-trong-khong-gian-xa-anh",
         "count": 3
-      },
-      {
-        "lessonId": "anh-xa-dang-cu-va-phep-bien-doi-dang-cu",
-        "lessonCode": "HHAVE 2.6",
-        "lessonTitle": "Ánh xạ Đẳng cự và Phép Biến đổi Đẳng cự",
-        "subjectId": "hinh-hoc-affine",
-        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/anh-xa-dang-cu-va-phep-bien-doi-dang-cu",
-        "count": 1
       },
       {
         "lessonId": "toa-do-xa-anh-va-muc-tieu-xa-anh",
@@ -2609,6 +2609,14 @@
         "count": 42
       },
       {
+        "lessonId": "anh-xa-dang-cu-va-phep-bien-doi-dang-cu",
+        "lessonCode": "HHAVE 2.6",
+        "lessonTitle": "Ánh xạ Đẳng cự và Phép Biến đổi Đẳng cự",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/anh-xa-dang-cu-va-phep-bien-doi-dang-cu",
+        "count": 4
+      },
+      {
         "lessonId": "nhom-cac-phep-bien-doi-afin-va-hinh-hoc-afin",
         "lessonCode": "HHAVE 1.7",
         "lessonTitle": "Nhóm các Phép Biến đổi Affine và Hình học Affine",
@@ -2622,14 +2630,6 @@
         "lessonTitle": "Không gian Ơclit",
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/khong-gian-euclide",
-        "count": 1
-      },
-      {
-        "lessonId": "anh-xa-dang-cu-va-phep-bien-doi-dang-cu",
-        "lessonCode": "HHAVE 2.6",
-        "lessonTitle": "Ánh xạ Đẳng cự và Phép Biến đổi Đẳng cự",
-        "subjectId": "hinh-hoc-affine",
-        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/anh-xa-dang-cu-va-phep-bien-doi-dang-cu",
         "count": 1
       }
     ],
@@ -2667,20 +2667,20 @@
         "count": 7
       },
       {
+        "lessonId": "anh-xa-dang-cu-va-phep-bien-doi-dang-cu",
+        "lessonCode": "HHAVE 2.6",
+        "lessonTitle": "Ánh xạ Đẳng cự và Phép Biến đổi Đẳng cự",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/anh-xa-dang-cu-va-phep-bien-doi-dang-cu",
+        "count": 6
+      },
+      {
         "lessonId": "hinh-hoc-euclide",
         "lessonCode": "HHAVE 2.7",
         "lessonTitle": "Hình học Ơclit theo Quan điểm Klein",
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/hinh-hoc-euclide",
         "count": 4
-      },
-      {
-        "lessonId": "anh-xa-dang-cu-va-phep-bien-doi-dang-cu",
-        "lessonCode": "HHAVE 2.6",
-        "lessonTitle": "Ánh xạ Đẳng cự và Phép Biến đổi Đẳng cự",
-        "subjectId": "hinh-hoc-affine",
-        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/anh-xa-dang-cu-va-phep-bien-doi-dang-cu",
-        "count": 3
       },
       {
         "lessonId": "hinh-hoc-dong-dang",
@@ -2775,6 +2775,14 @@
         "count": 10
       },
       {
+        "lessonId": "anh-xa-dang-cu-va-phep-bien-doi-dang-cu",
+        "lessonCode": "HHAVE 2.6",
+        "lessonTitle": "Ánh xạ Đẳng cự và Phép Biến đổi Đẳng cự",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/anh-xa-dang-cu-va-phep-bien-doi-dang-cu",
+        "count": 7
+      },
+      {
         "lessonId": "mo-hinh-xa-anh-cua-khong-gian-euclide",
         "lessonCode": "HHAVE 3.11",
         "lessonTitle": "Mô hình Xạ ảnh của Không gian Ơclit",
@@ -2805,14 +2813,6 @@
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/sieu-cau-trong-khong-gian-euclide",
         "count": 3
-      },
-      {
-        "lessonId": "anh-xa-dang-cu-va-phep-bien-doi-dang-cu",
-        "lessonCode": "HHAVE 2.6",
-        "lessonTitle": "Ánh xạ Đẳng cự và Phép Biến đổi Đẳng cự",
-        "subjectId": "hinh-hoc-affine",
-        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/anh-xa-dang-cu-va-phep-bien-doi-dang-cu",
-        "count": 2
       },
       {
         "lessonId": "hinh-hoc-euclide",
@@ -2849,6 +2849,14 @@
         "count": 29
       },
       {
+        "lessonId": "anh-xa-dang-cu-va-phep-bien-doi-dang-cu",
+        "lessonCode": "HHAVE 2.6",
+        "lessonTitle": "Ánh xạ Đẳng cự và Phép Biến đổi Đẳng cự",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/anh-xa-dang-cu-va-phep-bien-doi-dang-cu",
+        "count": 24
+      },
+      {
         "lessonId": "goc-trong-khong-gian-euclide",
         "lessonCode": "HHAVE 2.5",
         "lessonTitle": "Góc trong Không gian Ơclit",
@@ -2863,14 +2871,6 @@
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/sieu-mat-bac-hai-trong-khong-gian-euclide",
         "count": 8
-      },
-      {
-        "lessonId": "anh-xa-dang-cu-va-phep-bien-doi-dang-cu",
-        "lessonCode": "HHAVE 2.6",
-        "lessonTitle": "Ánh xạ Đẳng cự và Phép Biến đổi Đẳng cự",
-        "subjectId": "hinh-hoc-affine",
-        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/anh-xa-dang-cu-va-phep-bien-doi-dang-cu",
-        "count": 5
       },
       {
         "lessonId": "mo-hinh-xa-anh-cua-khong-gian-euclide",
@@ -2904,7 +2904,7 @@
         "lessonTitle": "Ánh xạ Đẳng cự và Phép Biến đổi Đẳng cự",
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/anh-xa-dang-cu-va-phep-bien-doi-dang-cu",
-        "count": 17
+        "count": 27
       },
       {
         "lessonId": "hinh-hoc-euclide",
@@ -4634,10 +4634,10 @@
     "anh-xa-dang-cu-va-phep-bien-doi-dang-cu": [
       "anh-xa-dang-cu",
       "muc-tieu-truc-chuan",
-      "phep-bien-doi-afin",
+      "sieu-phang",
       "khong-gian-euclide",
-      "anh-xa-afin",
-      "sieu-phang"
+      "phep-bien-doi-afin",
+      "anh-xa-afin"
     ],
     "hinh-hoc-euclide": [
       "phep-bien-doi-afin",
