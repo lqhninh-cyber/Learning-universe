@@ -1,17 +1,21 @@
 ---
 id: hinh-hoc-euclide
-title: "Hình học Ơclit theo Quan điểm Klein"
-description: "Các bất biến của nhóm đẳng cự, các hình bằng nhau và hệ thống tiên đề hình học Ơclit."
-estimatedMinutes: 45
+title: 'Hình học Ơclit theo Quan điểm Klein'
+description: 'Hình học của nhóm các phép dời hình theo quan điểm Klein, mối quan hệ bao hàm giữa hình học affine với hình học Ơclit và phương pháp dùng hình tương đương affine để giải toán.'
+estimatedMinutes: 60
 level: intermediate
-prerequisites: []
+prerequisites:
+  - khong-gian-euclide
+  - anh-xa-dang-cu-va-phep-bien-doi-dang-cu
 tags:
-  - "hình học Ơclit"
-  - "bất biến đẳng cự"
-  - "quan điểm Klein"
+  - 'hình học Ơclit'
+  - 'nhóm dời hình'
+  - 'quan điểm Klein'
+  - 'bất biến affine'
+  - 'đường kính liên hợp'
 sources:
   - source: gt-hhcc-nmh-2004
-    pages: '130-136'
+    pages: '113-116'
     sections: '§7'
 status: published
 version: 1.0.0
@@ -22,117 +26,217 @@ authoring:
   draftedAt: '2026-11-03'
 ---
 
-Không gian Ơclit $\mathbb{E} ^{n}$ cũng là một không gian afin nên trong đó có các phép biến đổi afin.
+<GlossaryTerm termId="khong-gian-euclide">Không gian Ơclit</GlossaryTerm> $\mathcal{E}^n$ cũng là một không gian affine nên trong đó có các phép biến đổi affine; tập hợp các phép biến đổi affine này cùng với phép toán lấy tích (hợp thành) các ánh xạ làm thành một nhóm. Mặt khác, các phép dời hình (<GlossaryTerm termId="anh-xa-dang-cu">phép biến đổi đẳng cự</GlossaryTerm>) của $\mathcal{E}^n$ là những phép biến đổi affine đặc biệt có tính chất không làm thay đổi khoảng cách giữa hai điểm bất kì, nên tập hợp các phép dời hình là một nhóm con của nhóm các phép biến đổi affine.
 
-Các phép biến đổi afin này cùng với phép toán lấy tích các ánh xạ làm thành một nhóm.
-
-Các phép dời hình của $\mathbb{E} ^{n}$ là các phép afin đặc biệt có tính chất không làm thay đổi khoảng cách giữa hai điểm bất kì.
-
-Bởi vậy tập hợp các phép dời hình là một bộ phận của tập hợp các phép biến đổi afin.
-
-Ta đã biết hình học afin của không gian Ơclit $\mathbb{E} ^{n}$ là môn học nghiên cứu mọi bất biến afin của không gian đó.
-
-Gọi 𝒜$^{n}$ là nhóm các phép biến đổi afin của $\mathbb{E} ^{n}$ và gọi 𝒟$^{n}$ là nhóm các phép dời hình của $\mathbb{E} ^{n}$.
-
-Ta có $𝒟^{n} \subset 𝒜^{n}$ và có định nghĩa về hình học Ơclit n chiều như sau:
+Ta đã biết ở Chương I (§7) rằng hình học affine trên $\mathcal{E}^n$ là môn học nghiên cứu mọi bất biến affine của không gian đó. Kí hiệu $\mathcal{A}^n$ là *nhóm các phép biến đổi affine* của $\mathcal{E}^n$ và $\mathcal{D}^n$ là *nhóm các phép dời hình* của $\mathcal{E}^n$ *(cần lưu ý trong §7 và §8, theo ký hiệu của giáo trình gốc, $\mathcal{A}^n$ dùng để chỉ nhóm biến đổi affine trên $\mathcal{E}^n$)*. Ta có bao hàm thức nhóm con $\mathcal{D}^n \subset \mathcal{A}^n$, từ đó dẫn đến định nghĩa hình học Ơclit $n$ chiều theo chương trình Erlangen của Felix Klein như sau.
 
 ## 1. Định nghĩa
 
-<Definition id="def-e7-1" title="Định nghĩa">
-Hình học của nhóm các phép dời hình 𝒟$^{n}$ của $\mathbb{E} ^{n}$ gọi là *hình học Ơclit n chiều*.
+<Definition id="def-e7-1" title="Định nghĩa hình học Ơclit và hai hình bằng nhau">
+Hình học của nhóm các phép dời hình $\mathcal{D}^n$ của không gian Ơclit $\mathcal{E}^n$ được gọi là *hình học Ơclit $n$ chiều*.
 
-Hai hình gọi là *tương đương Ơclit* nếu có một phép dời hình biến hình này thành hình kia; hai hình ứng với nhau qua tích một số phép dời hình gọi là *bằng nhau*.
+- Trong hình học Ơclit, hai hình được gọi là *tương đương Ơclit* nếu có một phép dời hình thuộc $\mathcal{D}^n$ biến hình này thành hình kia.
+- Hai hình tương ứng với nhau qua tích của một số hữu hạn phép dời hình được gọi là *bằng nhau* *(vì $\mathcal{D}^n$ là một nhóm nên tích của các phép dời hình vẫn là một phép dời hình và quan hệ bằng nhau là một quan hệ tương đương, trùng với quan hệ tương đương Ơclit)*.
 
-Hình học Ơclit nghiên cứu những tính chất không thay đổi qua các phép dời hình của nhóm 𝒟$^{n}$, tức là những tính chất nếu có ở một hình này thì cũng có ở những hình bằng nó.
+Theo định nghĩa trên, hình học Ơclit $n$ chiều nghiên cứu những tính chất và đại lượng không thay đổi qua các phép dời hình của nhóm $\mathcal{D}^n$, tức là những tính chất nếu có ở một hình này thì cũng có ở mọi hình bằng nó.
 </Definition>
 
-## 2. Mối quan hệ giữa hình học afin và hình học Ơclit trong En
+## 2. Mối quan hệ giữa hình học affine và hình học Ơclit
 
-Vì 𝒟$^{n}$ là nhóm con của 𝒜$^{n}$ nên *hình học afin là một bộ phận của hình học Ơclit*: các tính chất afin cũng là tính chất Ơclit và được nghiên cứu trong hình học Ơclit.
+Vì trên không gian Ơclit $\mathcal{E}^n$ có nhóm các phép biến đổi affine $\mathcal{A}^n$ nên ta vẫn có hình học affine trên $\mathcal{E}^n$. Do nhóm dời hình $\mathcal{D}^n$ là một nhóm con của nhóm affine $\mathcal{A}^n$ ($\mathcal{D}^n \subset \mathcal{A}^n$) nên *hình học affine là một bộ phận của hình học Ơclit*:
 
-Ngược lại không đúng: các tính chất bất biến qua nhóm dời chưa chắc bất biến afin (tính vuông góc, số đo khoảng cách, số đo góc,…).
+- Mọi tính chất affine (những tính chất không thay đổi qua mọi phép biến đổi thuộc $\mathcal{A}^n$, như tính thẳng hàng, song song, tỉ số đơn, tâm tỉ cự, tiếp tuyến và tâm của siêu mặt bậc hai...) hiển nhiên không thay đổi qua các phép thuộc nhóm con $\mathcal{D}^n$, nên đều là các tính chất Ơclit và được nghiên cứu trong hình học Ơclit.
+- **Điều ngược lại không đúng:** Có nhiều tính chất bất biến qua nhóm dời $\mathcal{D}^n$ nhưng không bất biến qua toàn bộ nhóm affine $\mathcal{A}^n$, thí dụ như tính vuông góc của các phẳng, số đo khoảng cách, số đo góc, diện tích, thể tích... Bởi vậy, hệ thống khái niệm và định lí của hình học Ơclit trên $\mathcal{E}^n$ rộng hơn, phong phú hơn hình học affine trên $\mathcal{E}^n$ *(nhóm biến đổi càng thu hẹp thì tập hợp các bất biến của nó càng mở rộng)*.
 
-Vì vậy hình học Ơclit phong phú hơn hình học afin.
+<Remark id="rem-e7-1" title="Ý nghĩa của việc phân biệt tính chất affine và tính chất Ơclit (tr. 114)">
+Khi nghiên cứu hình học Ơclit, việc phân biệt một tính chất (hoặc khái niệm) là tính chất affine hay tính chất Ơclit thuần túy có ý nghĩa rất quan trọng. Giả sử một hình $H \subset \mathcal{E}^n$ có tính chất $(\mathcal{P})$:
 
-Khi nghiên cứu hình học Ơclit, việc phân biệt một tính chất là afin hay Ơclit thuần túy rất quan trọng.
+- Nếu $(\mathcal{P})$ là **tính chất affine**, thì *mọi hình tương đương affine* với $H$ cũng có tính chất $(\mathcal{P})$. Chẳng hạn tính chất *"ba đường trung tuyến của một tam giác đồng quy"* đúng với tam giác đều thì lập tức áp dụng được cho mọi tam giác bất kì, vì trung điểm, đường thẳng và sự đồng quy đều là những khái niệm affine (mà mọi tam giác đều tương đương affine với nhau).
+- Ngược lại, nếu $(\mathcal{P})$ chỉ là **tính chất Ơclit thuần túy**, ta chỉ có thể kết luận những hình *bằng* $H$ mới có tính chất đó. Chẳng hạn tính chất *"trong tam giác đều, đường cao trùng với đường trung tuyến"* không thể suy rộng cho tam giác bất kì, vì khái niệm đường cao (vuông góc) không phải bất biến affine, và qua một phép biến đổi affine một tam giác đều có thể biến thành một tam giác có hình dạng tùy ý.
+</Remark>
 
-Giả sử hình H có tính chất α: nếu α là tính chất afin thì những hình tương đương afin với H cũng có tính chất α; còn nếu α là tính chất Ơclit thì chỉ có thể nói những hình bằng hình H mới có tính chất đó.
+<Example id="ex-e7-2" title="Ví dụ đối chiếu đại lượng bất biến affine và bất biến Ơclit">
+**Đề bài:** Trong $\mathcal{E}^2$ với <GlossaryTerm termId="muc-tieu-truc-chuan">mục tiêu trực chuẩn</GlossaryTerm>, xét phép biến đổi trượt affine $f: (x_1, x_2) \mapsto (x_1 + x_2,\; x_2)$ và tam giác vuông cân $OAB$ với $O(0, 0)$, $A(2, 0)$, $B(0, 2)$, trung điểm $M(1, 1)$ của cạnh $AB$. Hãy so sánh độ dài $OB$, góc $\widehat{AOB}$ và vị trí trung điểm trước và sau khi tác động $f$.
 
-Tính chất “trong tam giác đều đường cao là đường trung tuyến” không áp dụng được cho tam giác bất kì (vì qua phép afin tam giác đều biến thành tam giác bất kì); ngược lại tính chất “ba đường trung tuyến của tam giác đồng quy” đúng cho mọi tam giác vì đó là tính chất afin.
-
-## 3. Phương pháp dùng hình tương đương afin để giải toán
-
-<Definition id="def-e7-2" title="Phương pháp">
-Vì hình học afin là một bộ phận của hình học Ơclit nên khi nghiên cứu hình học afin ta có thể dùng các phương tiện của hình học Ơclit.
-
-Giả sử cần chứng minh một hình H có tính chất α mà α là tính chất afin.
-
-Khi đó có thể chứng minh α đối với một hình H′ nào đó tương đương afin với H; bởi vậy có thể chọn trong lớp tương đương afin với H một hình H′ đặc biệt mà tính chất α dễ chứng minh hơn.
-</Definition>
-
-<Example id="ex-e7-3" title="Bài toán (sách, tr. 114–115)">
-Cho tam giác ABC; trên các cạnh BC, CA, AB lấy lần lượt A′, B′, C′ sao cho (BCA′) $=$ (CAB′) $=$ (ABC′) $= \frac{4}{3}$.
-
-Chứng minh ABC và A′B′C′ có cùng trọng tâm.
-
-*Giải.*
-
-Đây là bài toán afin vì tam giác, tỉ số đơn, trọng tâm đều là khái niệm afin.
-
-Đối với hình học Ơclit thì tam giác đều là một loại tam giác đặc biệt đối với các tam giác bất kì khác, nhưng đối với hình học afin thì tam giác đều tương đương afin với mọi tam giác bất kì khác.
-
-Lấy phép afin *f* biến tam giác ABC thành tam giác đều A$_{1}$B$_{1}$C$_{1}$; trọng tâm G của ABC biến thành trọng tâm G′ của A$_{1}$B$_{1}$C$_{1}$, và A′, B′, C′ biến thành A$_{1}$′, B$_{1}$′, C$_{1}$′ với cùng tỉ số đơn $\frac{4}{3}$.
-
-Phép quay góc $120°$ quanh G′ biến $A_{1} \to B_{1} \to C_{1} \to A_{1}$, nên cũng biến $A_{1}' \to B_{1}' \to C_{1}' \to A_{1}'$; tức tam giác A$_{1}$′B$_{1}$′C$_{1}$′ biến thành chính nó, nên G′ cũng là trọng tâm của nó. Áp dụng *f*$^{-1}$ ta được G là trọng tâm chung của ABC và A′B′C′.
-
-*Kiểm tra bằng số.*
-
-A(0,0), B(4,0), C(0,4): từ (BCA′) $= \frac{4}{3}$ có $\vect{BA'} = ¾\vect{BC}$ nên $A' = (1,3)$, tương tự $B' = (0,1), C' = (3,0)$.
-
-Tổng tọa độ $A' + B' + C' = (4,4) = A + B + C$, nên hai tam giác cùng trọng tâm $(\frac{4}{3}, \frac{4}{3})$.
+**Lời giải:** Qua phép biến đổi affine $f$ (có ma trận $A = \begin{bmatrix} 1 & 1 \\ 0 & 1 \end{bmatrix}$ không trực giao nên $f \in \mathcal{A}^2 \setminus \mathcal{D}^2$), các điểm biến thành $O'(0, 0)$, $A'(2, 0)$, $B'(2, 2)$ và $M'(2, 1)$:
+- Độ dài $OB = 2$ biến thành $O'B' = 2\sqrt{2} \neq 2$, và góc vuông $\widehat{AOB} = \dfrac{\pi}{2}$ biến thành $\widehat{A'O'B'} = \dfrac{\pi}{4} \neq \dfrac{\pi}{2}$: độ dài và góc chỉ là bất biến Ơclit, không phải bất biến affine.
+- Tuy nhiên $M'(2, 1) = \dfrac{1}{2}(A' + B')$ vẫn chính xác là trung điểm của đoạn $A'B'$ (tỉ số đơn $(M'A'B') = -1 = (MAB)$), vì trung điểm và tỉ số đơn là bất biến affine.
 </Example>
 
-## Bài tập vận dụng và củng cố
+## 3. Phương pháp dùng hình tương đương affine để giải toán
 
-<Exercise id="exr-e7-1" title="Quan hệ giữa hình học afin và hình học Ơclit (§7, mục 2)">
-Phép afin f: x' = x + y, y' = y. Với O(0,0), A(1,0), B(0,1), so sánh độ dài OB, góc AOB, tính song song và tỉ số đơn trước và sau f. Kết luận gì về tính chất afin và tính chất Ơclit?
+<Theorem id="def-e7-2" title="Nguyên lí chuyển về hình mẫu Ơclit đặc biệt trong lớp tương đương affine">
+Vì hình học affine là một bộ phận của hình học Ơclit, khi cần chứng minh một hình $H \subset \mathcal{E}^n$ có tính chất $(\mathcal{P})$ mà $(\mathcal{P})$ là một **tính chất affine** (được phát biểu hoàn toàn qua các khái niệm và quan hệ bất biến affine), ta thực hiện theo ba bước:
 
+1. Chỉ ra mọi khái niệm và kết luận trong $(\mathcal{P})$ đều là bất biến đối với nhóm biến đổi affine $\mathcal{A}^n$.
+2. Chọn trong lớp tương đương affine của $H$ một hình mẫu đặc biệt $H' = f(H)$ ($f \in \mathcal{A}^n$) có tính đối xứng Ơclit cao (chẳng hạn biến tam giác bất kì thành tam giác đều hoặc tam giác vuông cân, biến hình bình hành thành hình vuông, biến elip thành đường tròn...) và dùng các công cụ của hình học Ơclit để chứng minh $(\mathcal{P})$ đúng trên $H'$.
+3. Tác động phép biến đổi affine ngược $f^{-1} \in \mathcal{A}^n$ để suy ra $(\mathcal{P})$ đúng đối với hình $H$ ban đầu.
+</Theorem>
+
+<Example id="ex-e7-3" title="Bài toán mẫu (Hai tam giác chia cạnh theo cùng tỉ số đơn có chung trọng tâm — tr. 114–116)">
+**Đề bài:** Cho tam giác $ABC$. Trên các đường thẳng chứa các cạnh $BC, CA, AB$ lần lượt lấy các điểm $A', B', C'$ sao cho các tỉ số đơn bằng nhau:
+$$
+(BCA') = (CAB') = (ABC') = \frac{4}{3}.
+$$
+Chứng minh rằng hai tam giác $ABC$ và $A'B'C'$ có cùng trọng tâm *(hơn nữa kết quả vẫn đúng khi thay $\dfrac{4}{3}$ bằng hằng số $k \notin \{0, 1\}$ bất kì sao cho $A', B', C'$ không thẳng hàng)*.
+
+**Lời giải:**
+1. **Kiểm tra tính bất biến affine:** Đây là một bài toán thuần túy affine vì các khái niệm tam giác, tỉ số đơn của ba điểm thẳng hàng ($(BCA') = \dfrac{4}{3} \iff \overrightarrow{BC} = \dfrac{4}{3}\overrightarrow{BA'}$, tức $\overrightarrow{BA'} = \dfrac{3}{4}\overrightarrow{BC}$) và trọng tâm của tam giác đều là những khái niệm bất biến qua mọi phép biến đổi affine.
+2. **Chuyển sang hình mẫu tam giác đều trong $\mathcal{E}^2$:** Đối với hình học Ơclit thì tam giác đều là một loại tam giác đặc biệt, nhưng đối với hình học affine thì mọi tam giác đều tương đương affine với nhau. Trong mặt phẳng $\mathcal{E}^2$ chứa tam giác $ABC$, chọn một tam giác đều $A_1 B_1 C_1$; tồn tại duy nhất phép biến đổi affine $f \in \mathcal{A}^2$ sao cho $f(A) = A_1$, $f(B) = B_1$, $f(C) = C_1$.
+
+   Đặt $A'_1 = f(A')$, $B'_1 = f(B')$, $C'_1 = f(C')$ và gọi $G$ là trọng tâm của tam giác $ABC$. Do $f$ bảo toàn tỉ số đơn và trọng tâm nên $G' = f(G)$ là trọng tâm của tam giác đều $A_1 B_1 C_1$, đồng thời:
+   $$
+   (B_1 C_1 A'_1) = (C_1 A_1 B'_1) = (A_1 B_1 C'_1) = \frac{4}{3}.
+   $$
+3. **Giải bài toán trên tam giác đều $A_1 B_1 C_1$ bằng phép quay Ơclit:** Xét phép quay $R$ tâm $G'$ góc quay $\dfrac{2\pi}{3}$ ($120^\circ$) theo chiều từ $A_1$ đến $B_1$. Vì $A_1 B_1 C_1$ là tam giác đều nhận $G'$ làm tâm nên $R$ biến $A_1 \mapsto B_1$, $B_1 \mapsto C_1$, $C_1 \mapsto A_1$ (biến tam giác $A_1 B_1 C_1$ thành chính nó).
+
+   Phép quay $R \in \mathcal{D}^2 \subset \mathcal{A}^2$ cũng bảo toàn tỉ số đơn, nên từ $(B_1 C_1 A'_1) = \dfrac{4}{3}$ suy ra ảnh $R(A'_1)$ nằm trên $R(B_1 C_1) = C_1 A_1$ và thỏa mãn $(C_1 A_1 R(A'_1)) = \dfrac{4}{3} = (C_1 A_1 B'_1)$, tức $R(A'_1) = B'_1$; hoàn toàn tương tự $R(B'_1) = C'_1$ và $R(C'_1) = A'_1$. Như vậy phép quay $R$ biến tam giác $A'_1 B'_1 C'_1$ thành chính nó, nên phải biến trọng tâm $G'_0$ của tam giác $A'_1 B'_1 C'_1$ thành chính $G'_0$. Vì phép quay góc $\dfrac{2\pi}{3}$ quanh $G'$ có điểm bất động duy nhất là $G'$ (§6, Mục 4), bắt buộc $G'_0 \equiv G'$, tức $G'$ cũng là trọng tâm của tam giác $A'_1 B'_1 C'_1$.
+4. **Kết luận qua $f^{-1}$:** Thực hiện phép biến đổi affine ngược $f^{-1}$, điểm $G = f^{-1}(G')$ là trọng tâm của tam giác $A'B'C'$. Vậy hai tam giác $ABC$ và $A'B'C'$ có cùng trọng tâm $G$.
+</Example>
+
+## Bài tập
+
+*(Trọn bộ $5$ bài tập thuộc §7 trong cụm bài tập §6, §7, §8 cuối Chương II, trang 144–145, vận dụng trực tiếp phương pháp dùng hình tương đương affine ở Mục 3).*
+
+<Exercise id="exr-e7-52" title="Bài tập 2.52 (Sự đồng quy các đường chéo của lục giác tạo bởi các đường chia ba cạnh tam giác — tr. 144–145)">
+Cho một tam giác $ABC$. Mỗi cạnh của nó được chia làm ba phần bằng nhau. Nối các điểm chia với đỉnh đối diện của cạnh đó ta sẽ được sáu đường thẳng tạo nên một hình lục giác (không đều). Chứng minh các đường chéo (nối các cặp đỉnh đối diện) của hình lục giác đó đồng quy tại một điểm.
 
 <Hint>
-Tính ảnh O', A', B' rồi so sánh từng đại lượng.
+Chứng tỏ việc chia ba mỗi cạnh (theo tỉ số đơn), giao điểm các đường thẳng, hình lục giác lồi trung tâm và sự đồng quy của ba đường chéo chính đều là các bất biến affine. Dùng phép biến đổi affine đưa tam giác $ABC$ về tam giác đều $A_1 B_1 C_1$, sau đó khai thác ba phép đối xứng trục của tam giác đều để chứng minh ba đường chéo chính nằm ngay trên ba đường trung tuyến và đồng quy tại trọng tâm.
 </Hint>
 
 <Solution>
-O' = (0,0), A' = (1,0), B' = (1,1).
+Trên các cạnh $BC, CA, AB$ của tam giác $ABC$, lấy các điểm chia ba theo thứ tự vòng quanh:
+$$
+\overrightarrow{BM_1} = \frac{1}{3}\overrightarrow{BC}, \quad \overrightarrow{BM_2} = \frac{2}{3}\overrightarrow{BC}; \qquad
+\overrightarrow{CN_1} = \frac{1}{3}\overrightarrow{CA}, \quad \overrightarrow{CN_2} = \frac{2}{3}\overrightarrow{CA}; \qquad
+\overrightarrow{AP_1} = \frac{1}{3}\overrightarrow{AB}, \quad \overrightarrow{AP_2} = \frac{2}{3}\overrightarrow{AB}.
+$$
+Sáu đường thẳng $AM_1, AM_2, BN_1, BN_2, CP_1, CP_2$ giới hạn ở miền trong tam giác một lục giác lồi $H_1 H_2 H_3 H_4 H_5 H_6$ với sáu đỉnh theo thứ tự vòng quanh là:
+$$
+H_1 = BN_2 \cap CP_1, \quad H_2 = AM_1 \cap BN_2, \quad H_3 = CP_2 \cap AM_1, \quad H_4 = BN_1 \cap CP_2, \quad H_5 = AM_2 \cap BN_1, \quad H_6 = CP_1 \cap AM_2.
+$$
+Ba đường chéo chính nối các cặp đỉnh đối diện của lục giác là $H_1 H_4$, $H_2 H_5$ và $H_3 H_6$.
 
-OB = 1 nhưng O'B' = √2; góc AOB = 90° nhưng cos(A'O'B') = 1/√2, góc 45°.
+**1. Đưa về tam giác đều bằng phép biến đổi affine:**
 
-Song song và tỉ số đơn được bảo toàn (phép afin).
+Mọi khái niệm xuất hiện trong bài toán (điểm chia đoạn theo tỉ số cố định, giao điểm hai đường thẳng, đoạn thẳng, thứ tự đỉnh của lục giác lồi và sự đồng quy của ba đường thẳng) đều là bất biến affine. Chọn một phép biến đổi affine $f \in \mathcal{A}^2$ biến tam giác $ABC$ thành một tam giác đều $A_1 B_1 C_1$ có trọng tâm $G' = f(G)$ (với $G$ là trọng tâm tam giác $ABC$); kí hiệu ảnh tương ứng của các điểm chia và các đỉnh lục giác qua $f$ bằng dấu phẩy ($M'_1, \dots, P'_2$ và $H'_1, \dots, H'_6$).
 
-**Đáp án:** Độ dài và góc không bất biến afin (chỉ bất biến Ơclit); song song và tỉ số đơn là bất biến afin.
+**2. Khai thác phép đối xứng trục của tam giác đều $A_1 B_1 C_1$:**
+
+Trong mặt phẳng Ơclit $\mathcal{E}^2$, gọi $s_{A_1} \in \mathcal{D}^2$ là phép đối xứng trục qua đường trung tuyến (đồng thời là đường trung trực) $d_{A_1} = A_1 G'$ của tam giác đều $A_1 B_1 C_1$. Phép đối xứng $s_{A_1}$ giữ nguyên $A_1$ và hoán vị $B_1 \leftrightarrow C_1$, do đó:
+- Hai điểm chia cách $A_1$ một phần ba cạnh hoán vị cho nhau: $N'_2 \leftrightarrow P'_1$, suy ra hai đường thẳng $B_1 N'_2$ và $C_1 P'_1$ là ảnh đối xứng của nhau qua $d_{A_1}$. Vì vậy giao điểm duy nhất của chúng là $H'_1 = B_1 N'_2 \cap C_1 P'_1$ bất động qua $s_{A_1}$, nghĩa là $H'_1 \in d_{A_1}$.
+- Hai điểm chia cách $A_1$ hai phần ba cạnh cũng hoán vị cho nhau: $N'_1 \leftrightarrow P'_2$, suy ra hai đường thẳng $B_1 N'_1$ và $C_1 P'_2$ đối xứng nhau qua $d_{A_1}$, nên giao điểm $H'_4 = B_1 N'_1 \cap C_1 P'_2$ cũng nằm trên trục đối xứng $d_{A_1}$.
+
+Như vậy đường chéo chính $H'_1 H'_4$ trùng với đường trung tuyến $A_1 G'$. Hoàn toàn tương tự (hoặc dùng phép quay góc $\dfrac{2\pi}{3}$ quanh $G'$), phép đối xứng qua trung tuyến $C_1 G'$ chứng tỏ đường chéo chính $H'_2 H'_5$ trùng với trung tuyến $C_1 G'$, và phép đối xứng qua trung tuyến $B_1 G'$ chứng tỏ đường chéo chính $H'_3 H'_6$ trùng với trung tuyến $B_1 G'$.
+
+Do đó ba đường chéo chính $H'_1 H'_4$, $H'_2 H'_5$, $H'_3 H'_6$ đồng quy tại trọng tâm $G'$ của tam giác đều $A_1 B_1 C_1$. Tác động phép biến đổi affine ngược $f^{-1}$, trong tam giác $ABC$ ban đầu ba đường chéo chính $H_1 H_4$, $H_2 H_5$, $H_3 H_6$ nằm trên ba đường trung tuyến $AG, CG, BG$ và **đồng quy tại trọng tâm $G$ của tam giác $ABC$**.
 </Solution>
 </Exercise>
 
-<Exercise id="exr-e7-2" title="Phương pháp dùng hình tương đương afin (§7, mục 3)">
-Cho tam giác ABC, trên BC, CA, AB lấy A', B', C' sao cho (BCA') = (CAB') = (ABC') = 3. Chứng minh ABC và A'B'C' có cùng trọng tâm. Kiểm tra bằng số với A(0,0), B(4,0), C(0,4).
-
+<Exercise id="exr-e7-53" title="Bài tập 2.53 (Hình bình hành nội tiếp trong một elip — tr. 145)">
+Cho hình bình hành có các đỉnh nằm trên một elip. Chứng minh tâm của hình bình hành trùng với tâm của elip còn các cạnh của hình bình hành thì song song với hai đường kính liên hợp của elip.
 
 <Hint>
-Đây là bài toán afin: chuyển ABC thành tam giác đều bằng phép afin rồi dùng phép quay 120°.
+Nhắc lại định nghĩa affine của hai đường kính liên hợp (tập hợp trung điểm của các dây cung song song với đường kính này nằm trên đường kính kia), dùng phép biến đổi affine trong $\mathcal{E}^2$ biến elip thành đường tròn đơn vị; hình bình hành nội tiếp đường tròn trở thành hình chữ nhật nội tiếp đường tròn.
 </Hint>
 
 <Solution>
-Phép afin f biến ABC thành tam giác đều A₁B₁C₁ (bảo toàn tỉ số đơn và trọng tâm).
+**1. Tính bất biến affine của bài toán và phép biến đổi đưa elip về đường tròn:**
 
-Phép quay 120° quanh trọng tâm G₁ đưa A₁ → B₁ → C₁ → A₁ nên cũng đưa A'₁ → B'₁ → C'₁ → A'₁, do đó G₁ là trọng tâm của A'₁B'₁C'₁; áp dụng f⁻¹.
+Trong mặt phẳng $\mathcal{E}^2$, chọn hệ tọa độ affine (hoặc trực chuẩn) có gốc tại tâm $O$ của elip $(E)$ sao cho $(E)$ có phương trình chính tắc $\dfrac{x_1^2}{a^2} + \dfrac{x_2^2}{b^2} = 1$ ($a, b > 0$). Phép biến đổi affine $f: (x_1, x_2) \mapsto (X_1, X_2) = \left(\dfrac{x_1}{a}, \dfrac{x_2}{b}\right)$ biến elip $(E)$ thành đường tròn đơn vị $(C): X_1^2 + X_2^2 = 1$ có tâm $O(0, 0)$ là ảnh tâm của $(E)$.
 
-Kiểm tra: A' = (8/3, 4/3), B' = (0, 8/3), C' = (4/3, 0); tổng bằng (4, 4) = A + B + C.
+Mọi khái niệm trong đề bài đều là bất biến affine: hình bình hành, tâm hình bình hành (trung điểm đường chéo), tâm elip, tính song song và **cặp đường kính liên hợp** *(theo Chương I §8, hai đường kính của elip được gọi là liên hợp nếu mỗi đường kính đi qua trung điểm của mọi dây cung song song với đường kính kia — phát biểu hoàn toàn qua tính song song và trung điểm)*. Đặc biệt, trên đường tròn $(C)$, đường thẳng đi qua tâm và đi qua trung điểm của một dây cung khi và chỉ khi nó vuông góc với dây cung đó, nên **hai đường kính của đường tròn $(C)$ liên hợp khi và chỉ khi chúng vuông góc với nhau**.
 
-**Đáp án:** Hai tam giác có cùng trọng tâm (4/3, 4/3) trong ví dụ số
+**2. Giải bài toán trên đường tròn $(C)$ và kết luận:**
+
+Giả sử hình bình hành $ABCD$ có bốn đỉnh nằm trên elip $(E)$. Qua phép biến đổi affine $f$, nó biến thành hình bình hành $A'B'C'D'$ có bốn đỉnh nằm trên đường tròn $(C)$.
+- Trong hình bình hành $A'B'C'D'$, hai góc đối bằng nhau ($\widehat{A'} = \widehat{C'}$); mặt khác vì tứ giác $A'B'C'D'$ nội tiếp đường tròn $(C)$ nên tổng hai góc đối bằng $\pi$ ($\widehat{A'} + \widehat{C'} = \pi$). Suy ra $\widehat{A'} = \widehat{B'} = \widehat{C'} = \widehat{D'} = \dfrac{\pi}{2}$, tức $A'B'C'D'$ là một **hình chữ nhật** nội tiếp $(C)$.
+- Vì $\widehat{A'B'C'} = \dfrac{\pi}{2}$ và $\widehat{B'C'D'} = \dfrac{\pi}{2}$, hai đường chéo $A'C'$ và $B'D'$ chắn nửa đường tròn nên đều là các đường kính của đường tròn $(C)$, cắt nhau ngay tại tâm $O$ của $(C)$. Vậy tâm của hình chữ nhật $A'B'C'D'$ trùng với tâm $O$ của đường tròn $(C)$.
+- Hai cạnh kề $A'B'$ và $B'C'$ vuông góc với nhau ($A'B' \perp B'C'$), nên hai đường kính của $(C)$ đi qua $O$ lần lượt song song với $A'B'$ và $B'C'$ vuông góc với nhau, tức là **hai đường kính liên hợp** của đường tròn $(C)$.
+
+Tác động phép biến đổi affine ngược $f^{-1}$, ta suy ra tâm của hình bình hành $ABCD$ trùng với tâm $O$ của elip $(E)$, và các cạnh của $ABCD$ lần lượt song song với một cặp đường kính liên hợp của elip $(E)$.
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e7-54" title="Bài tập 2.54 (Hình bình hành ngoại tiếp một elip — tr. 145)">
+Cho hình bình hành có các cạnh tiếp xúc với một elip. Chứng minh các đường chéo của hình bình hành là những đường kính liên hợp của elip *(hiểu theo nghĩa các đường thẳng chứa hai đường chéo đi qua tâm elip và cắt elip theo hai đường kính liên hợp)*.
+
+<Hint>
+Dùng phép biến đổi affine $f$ đưa elip $(E)$ về đường tròn $(C)$ tâm $O$ bán kính $1$; chứng minh hình bình hành có bốn cạnh tiếp xúc với $(C)$ có hai chiều cao cùng bằng $2$ nên là hình thoi nhận $O$ làm tâm đối xứng, từ đó hai đường chéo đi qua $O$ và vuông góc với nhau.
+</Hint>
+
+<Solution>
+Quan hệ tiếp xúc giữa đường thẳng với đường bậc hai (đường thẳng có đúng một điểm chung với elip), hình bình hành, đường chéo và cặp đường kính liên hợp đều là những khái niệm bất biến affine.
+
+Dùng phép biến đổi affine $f$ như ở Bài tập 2.53 biến elip $(E)$ thành đường tròn đơn vị $(C)$ tâm $O$ bán kính $R = 1$. Hình bình hành $ABCD$ có bốn cạnh tiếp xúc với $(E)$ biến thành hình bình hành $A'B'C'D'$ có bốn cạnh đều tiếp xúc với đường tròn $(C)$.
+
+Trong mặt phẳng Ơclit $\mathcal{E}^2$:
+1. Cặp cạnh đối song song $A'B'$ và $C'D'$ cùng tiếp xúc với đường tròn $(C)$ ở hai đầu của một đường kính vuông góc với chúng, nên khoảng cách giữa $A'B'$ và $C'D'$ bằng $2R = 2$, đồng thời tâm $O$ cách đều hai đường thẳng song song $A'B', C'D'$. Hoàn toàn tương tự, khoảng cách giữa cặp cạnh đối song song $B'C'$ và $A'D'$ cũng bằng $2R = 2$ và tâm $O$ cách đều $B'C', A'D'$.
+2. Từ việc $O$ nằm trên cả hai đường trung bình cách đều hai cặp cạnh đối của hình bình hành $A'B'C'D'$, suy ra $O$ chính là giao điểm hai đường chéo $A'C'$ và $B'D'$ (tâm của hình bình hành $A'B'C'D'$).
+3. Tính diện tích hình bình hành $A'B'C'D'$ theo hai đáy và hai chiều cao tương ứng:
+   $$
+   S_{A'B'C'D'} = A'B' \cdot 2R = B'C' \cdot 2R \implies A'B' = B'C'.
+   $$
+   Hình bình hành có hai cạnh kề bằng nhau là một **hình thoi**, do đó hai đường chéo của nó vuông góc với nhau: $A'C' \perp B'D'$.
+
+Vì hai đường thẳng $A'C'$ và $B'D'$ cùng đi qua tâm $O$ của đường tròn $(C)$ và vuông góc với nhau, chúng chứa hai đường kính liên hợp của đường tròn $(C)$. Thực hiện phép biến đổi affine ngược $f^{-1}$, hai đường chéo $AC$ và $BD$ đi qua tâm của elip $(E)$ và có phương là hai đường kính liên hợp của elip $(E)$.
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e7-55" title="Bài tập 2.55 (Quỹ tích giao điểm hai tiếp tuyến tại đầu mút cặp đường kính liên hợp của elip — tr. 145)">
+Gọi $AB, CD$ là một cặp đường kính liên hợp bất kì của một elip cho trước. Các tiếp tuyến của elip tại $A$ và $C$ cắt nhau tại $M$. Tìm quỹ tích các điểm $M$ khi $AB$ và $CD$ thay đổi trên elip.
+
+<Hint>
+Trong mục tiêu mà elip $(E)$ có phương trình $\dfrac{x_1^2}{a^2} + \dfrac{x_2^2}{b^2} = 1$, dùng phép biến đổi affine $f(x_1, x_2) = \left(\dfrac{x_1}{a}, \dfrac{x_2}{b}\right)$ đưa $(E)$ về đường tròn đơn vị $(C)$; chứng minh tứ giác $OA'M'C'$ là hình vuông cạnh $1$ (suy ra $OM' = \sqrt{2}$) và kiểm tra cả chiều thuận lẫn chiều đảo của quỹ tích.
+</Hint>
+
+<Solution>
+Chọn mục tiêu trong mặt phẳng sao cho tâm của elip $(E)$ là gốc tọa độ $O(0, 0)$ và phương trình của $(E)$ có dạng chính tắc:
+$$
+(E): \frac{x_1^2}{a^2} + \frac{x_2^2}{b^2} = 1 \qquad (a > 0,\; b > 0).
+$$
+Xét phép biến đổi affine $f: (x_1, x_2) \mapsto (X_1, X_2) = \left(\dfrac{x_1}{a}, \dfrac{x_2}{b}\right)$ biến elip $(E)$ thành đường tròn đơn vị $(C): X_1^2 + X_2^2 = 1$ tâm $O(0, 0)$ bán kính $1$. Vì cặp đường kính liên hợp, tiếp tuyến và giao điểm đều là các bất biến affine, điểm $M$ thuộc quỹ tích cần tìm khi và chỉ khi ảnh $M' = f(M)$ thuộc quỹ tích tương ứng đối với đường tròn $(C)$.
+
+- **Phần thuận:** Khi $AB$ và $CD$ là một cặp đường kính liên hợp của $(E)$, ảnh $A'B'$ và $C'D'$ là hai đường kính liên hợp của đường tròn $(C)$, nghĩa là $OA' \perp OC'$ với $OA' = OC' = 1$. Tiếp tuyến của $(C)$ tại $A'$ vuông góc với $OA'$, tiếp tuyến tại $C'$ vuông góc với $OC'$, nên hai tiếp tuyến này không song song và cắt nhau tại $M'$ tạo thành tứ giác $OA'M'C'$ có ba góc vuông và hai cạnh kề bằng nhau ($OA' = OC' = 1$). Vậy $OA'M'C'$ là một **hình vuông** cạnh $1$, suy ra đường chéo $OM' = \sqrt{2}$, tức $M'(X_1, X_2)$ thuộc đường tròn đồng tâm $(C_1): X_1^2 + X_2^2 = 2$.
+- **Phần đảo:** Ngược lại, lấy bất kì điểm $M'$ nằm trên đường tròn $(C_1)$ ($OM' = \sqrt{2} > 1$). Từ $M'$ kẻ được hai tiếp tuyến tới đường tròn đơn vị $(C)$ với các tiếp điểm $A', C' \in (C)$. Trong hai tam giác vuông $OA'M'$ và $OC'M'$ có $OA' = OC' = 1$ và $OM' = \sqrt{2}$, ta có $\cos\widehat{A'OM'} = \cos\widehat{C'OM'} = \dfrac{1}{\sqrt{2}} \implies \widehat{A'OM'} = \widehat{C'OM'} = \dfrac{\pi}{4}$. Do hai tiếp điểm nằm về hai phía của tia $OM'$ nên $\widehat{A'OC'} = \dfrac{\pi}{4} + \dfrac{\pi}{4} = \dfrac{\pi}{2}$, tức hai đường kính $A'B'$ và $C'D'$ đi qua $A', C'$ vuông góc nhau (liên hợp đối với $(C)$).
+
+Như vậy quỹ tích của điểm $M'$ đối với đường tròn $(C)$ là toàn bộ đường tròn $(C_1): X_1^2 + X_2^2 = 2$. Thực hiện phép biến đổi affine ngược $f^{-1}$ (thay $X_1 = \dfrac{x_1}{a}$, $X_2 = \dfrac{x_2}{b}$), phương trình quỹ tích của điểm $M(x_1, x_2)$ là:
+$$
+\frac{x_1^2}{a^2} + \frac{x_2^2}{b^2} = 2 \iff \frac{x_1^2}{2a^2} + \frac{x_2^2}{2b^2} = 1.
+$$
+**Kết luận:** Quỹ tích các điểm $M$ là **elip cùng tâm với elip đã cho**, chính là ảnh của elip đã cho qua phép vị tự tâm $O$ tỉ số $\sqrt{2}$ (có các bán trục bằng $a\sqrt{2}$ và $b\sqrt{2}$).
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e7-56" title="Bài tập 2.56 (Phương liên hợp từ tứ giác toàn phần nội tiếp nửa cung elip — tr. 145)">
+Cho elip có đường kính $AB$. Trên một nửa cung elip ta lấy hai điểm phân biệt $M, N$ (khác $A, B$, sao cho $AM$ không song song với $BN$). Gọi $C = AM \cap BN$, $D = AN \cap BM$. Chứng minh phương của đường thẳng $CD$ là phương liên hợp với phương của đường kính $AB$.
+
+<Hint>
+Đưa elip về đường tròn $(C)$ đường kính $A'B'$ bằng phép biến đổi affine $f$: vì $M', N'$ nằm trên đường tròn đường kính $A'B'$ nên $\widehat{A'M'B'} = \widehat{A'N'B'} = \dfrac{\pi}{2}$, tức $B'M'$ và $A'N'$ là hai đường cao của tam giác $C'A'B'$ cắt nhau tại trực tâm $D'$, suy ra $C'D' \perp A'B'$.
+</Hint>
+
+<Solution>
+Hai điểm $M, N$ phân biệt (khác $A, B$) cùng thuộc một nửa cung elip xác định bởi đường kính $AB$ (giao của elip với một nửa mặt phẳng mở bờ $AB$) thì đoạn $MN$ không cắt đoạn $AB$, nên hai đường chéo $AN$ và $BM$ luôn cắt nhau tại một điểm $D$ ở miền trong nửa elip; với điều kiện $AM \nparallel BN$ thì giao điểm $C = AM \cap BN$ tồn tại và $C \neq D$.
+
+Áp dụng phép biến đổi affine $f$ biến elip đã cho thành đường tròn $(C)$ tâm $O$:
+- Đường kính $AB$ của elip biến thành đường kính $A'B'$ của đường tròn $(C)$.
+- Nửa cung elip biến thành nửa đường tròn đường kính $A'B'$, trên đó chứa hai điểm phân biệt $M' = f(M)$ và $N' = f(N)$ (khác $A', B'$), với $C' = f(C) = A'M' \cap B'N'$ và $D' = f(D) = A'N' \cap B'M'$.
+
+Trong mặt phẳng Ơclit $\mathcal{E}^2$:
+1. Vì $M'$ và $N'$ thuộc đường tròn đường kính $A'B'$ (khác $A', B'$), góc nội tiếp chắn nửa đường tròn là góc vuông nên $A'M' \perp B'M'$ và $B'N' \perp A'N'$.
+2. Xét tam giác $C'A'B'$ (ba điểm $C', A', B'$ không thẳng hàng vì $M' \notin A'B'$): đường thẳng $B'M'$ đi qua đỉnh $B'$ và vuông góc với cạnh đối diện $A'C'$ (chứa $A'M'$), còn đường thẳng $A'N'$ đi qua đỉnh $A'$ và vuông góc với cạnh đối diện $B'C'$ (chứa $B'N'$). Vậy $B'M'$ và $A'N'$ là hai đường cao của tam giác $C'A'B'$.
+3. Giao điểm $D' = A'N' \cap B'M'$ chính là **trực tâm** của tam giác $C'A'B'$. Theo định lí ba đường cao của tam giác đồng quy (Bài tập 2.15), đường thẳng nối đỉnh thứ ba $C'$ với trực tâm $D'$ phải vuông góc với cạnh đối diện $A'B'$:
+   $$
+   C'D' \perp A'B'.
+   $$
+
+Đối với đường tròn $(C)$, phương vuông góc với đường kính $A'B'$ chính là phương liên hợp với phương của đường kính $A'B'$. Do phép biến đổi affine ngược $f^{-1}$ bảo toàn hai phương liên hợp đối với đường bậc hai, ta suy ra phương của đường thẳng $CD$ là phương liên hợp với phương của đường kính $AB$ đối với elip đã cho.
 </Solution>
 </Exercise>
 
 <KeyTakeaways>
-- Hình học Ơclit là hình học nghiên cứu các tính chất bất biến đối với nhóm các phép biến đổi đẳng cự.
-- Hai hình được gọi là bằng nhau nếu tồn tại một phép đẳng cự biến hình này thành hình kia.
+- Hình học Ơclit $n$ chiều là hình học của nhóm các phép dời hình $\mathcal{D}^n$, nghiên cứu các tính chất bất biến qua các phép biến đổi bảo toàn khoảng cách (hai hình tương ứng qua $\mathcal{D}^n$ gọi là bằng nhau).
+- Vì $\mathcal{D}^n \subset \mathcal{A}^n$, mọi khái niệm và định lí của hình học affine đều thuộc hình học Ơclit, nhưng hình học Ơclit phong phú hơn nhờ có thêm khoảng cách, góc, tính vuông góc, diện tích và thể tích.
+- Đối với một bài toán thuần túy affine trên $\mathcal{E}^n$, có thể dùng phép biến đổi affine đưa cấu hình về hình mẫu đặc biệt có tính đối xứng Ơclit cao (tam giác đều, hình vuông, đường tròn...) rồi giải ngắn gọn bằng công cụ của hình học Ơclit.
 </KeyTakeaways>

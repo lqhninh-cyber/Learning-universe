@@ -2,7 +2,7 @@
   "stats": {
     "totalLessons": 122,
     "totalTerms": 67,
-    "totalBacklinks": 511,
+    "totalBacklinks": 514,
     "termsWithBacklinks": 67,
     "lessonsWithBacklinks": 116
   },
@@ -2563,6 +2563,14 @@
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/cac-phang-trong-khong-gian-euclide",
         "count": 1
+      },
+      {
+        "lessonId": "hinh-hoc-euclide",
+        "lessonCode": "HHAVE 2.7",
+        "lessonTitle": "Hình học Ơclit theo Quan điểm Klein",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/hinh-hoc-euclide",
+        "count": 1
       }
     ],
     "tap-loi": [
@@ -2643,6 +2651,14 @@
         "count": 58
       },
       {
+        "lessonId": "hinh-hoc-euclide",
+        "lessonCode": "HHAVE 2.7",
+        "lessonTitle": "Hình học Ơclit theo Quan điểm Klein",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/hinh-hoc-euclide",
+        "count": 30
+      },
+      {
         "lessonId": "nhom-cac-phep-bien-doi-afin-va-hinh-hoc-afin",
         "lessonCode": "HHAVE 1.7",
         "lessonTitle": "Nhóm các Phép Biến đổi Affine và Hình học Affine",
@@ -2673,14 +2689,6 @@
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/anh-xa-dang-cu-va-phep-bien-doi-dang-cu",
         "count": 6
-      },
-      {
-        "lessonId": "hinh-hoc-euclide",
-        "lessonCode": "HHAVE 2.7",
-        "lessonTitle": "Hình học Ơclit theo Quan điểm Klein",
-        "subjectId": "hinh-hoc-affine",
-        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/hinh-hoc-euclide",
-        "count": 4
       },
       {
         "lessonId": "hinh-hoc-dong-dang",
@@ -2741,6 +2749,14 @@
         "count": 2
       },
       {
+        "lessonId": "hinh-hoc-euclide",
+        "lessonCode": "HHAVE 2.7",
+        "lessonTitle": "Hình học Ơclit theo Quan điểm Klein",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/hinh-hoc-euclide",
+        "count": 1
+      },
+      {
         "lessonId": "mo-hinh-xa-anh-cua-khong-gian-euclide",
         "lessonCode": "HHAVE 3.11",
         "lessonTitle": "Mô hình Xạ ảnh của Không gian Ơclit",
@@ -2799,6 +2815,14 @@
         "count": 5
       },
       {
+        "lessonId": "hinh-hoc-euclide",
+        "lessonCode": "HHAVE 2.7",
+        "lessonTitle": "Hình học Ơclit theo Quan điểm Klein",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/hinh-hoc-euclide",
+        "count": 3
+      },
+      {
         "lessonId": "sieu-mat-bac-hai-trong-khong-gian-euclide",
         "lessonCode": "HHAVE 2.9",
         "lessonTitle": "Siêu mặt Bậc hai trong Không gian Ơclit",
@@ -2813,14 +2837,6 @@
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/sieu-cau-trong-khong-gian-euclide",
         "count": 3
-      },
-      {
-        "lessonId": "hinh-hoc-euclide",
-        "lessonCode": "HHAVE 2.7",
-        "lessonTitle": "Hình học Ơclit theo Quan điểm Klein",
-        "subjectId": "hinh-hoc-affine",
-        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/hinh-hoc-euclide",
-        "count": 2
       },
       {
         "lessonId": "khong-gian-affine",
@@ -2886,6 +2902,14 @@
         "lessonTitle": "Bổ sung về các Phép toán trên Không gian Vectơ",
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/bo-sung-ve-cac-phep-toan-tren-khong-gian-vecto",
+        "count": 1
+      },
+      {
+        "lessonId": "hinh-hoc-euclide",
+        "lessonCode": "HHAVE 2.7",
+        "lessonTitle": "Hình học Ơclit theo Quan điểm Klein",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/hinh-hoc-euclide",
         "count": 1
       },
       {
@@ -4643,7 +4667,10 @@
       "phep-bien-doi-afin",
       "khong-gian-euclide",
       "anh-xa-dang-cu",
-      "khong-gian-afin"
+      "khong-gian-afin",
+      "muc-tieu-truc-chuan",
+      "sieu-mat-bac-hai",
+      "tam-ti-cu"
     ],
     "hinh-hoc-dong-dang": [
       "phep-bien-doi-afin"

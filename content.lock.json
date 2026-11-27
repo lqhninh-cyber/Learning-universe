@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-27T12:27:41.854Z",
+  "updatedAt": "2026-11-27T17:09:54.709Z",
   "lessons": {
     "tap-hop-anh-xa-va-cong-cu-so-hoc": {
       "path": "content/algebraic-structures/00-ngon-ngu-va-cong-cu-dai-so/01-tap-hop-anh-xa-va-cong-cu-so-hoc.mdx",
@@ -1115,13 +1115,17 @@
       "path": "content/affine-geometry/02-khong-gian-euclide/07-hinh-hoc-euclide.mdx",
       "status": "published",
       "version": "1.0.0",
-      "sha256": "3fa9c100457774c68dab56bd4f0aad237eb68ec8c5c257bf567eedbc69d1c492",
+      "sha256": "2b061c95b795fc2642e479e209cb659c955776b5df5f5d54920fe3a1933e9b02",
       "numberedBlocks": {
         "def-e7-1": "2.7.1",
+        "ex-e7-2": "2.7.1",
         "def-e7-2": "2.7.2",
-        "ex-e7-3": "2.7.1",
-        "exr-e7-1": "2.7.1",
-        "exr-e7-2": "2.7.2"
+        "ex-e7-3": "2.7.2",
+        "exr-e7-52": "2.7.1",
+        "exr-e7-53": "2.7.2",
+        "exr-e7-54": "2.7.3",
+        "exr-e7-55": "2.7.4",
+        "exr-e7-56": "2.7.5"
       }
     },
     "hinh-hoc-dong-dang": {
