@@ -38,6 +38,16 @@ export {
 export { CayleyTable, type CayleyTableProps } from './components/CayleyTable';
 export { DiagramRenderer, type DiagramRendererProps } from '@/components/diagrams/DiagramRenderer';
 export { Proof, type ProofProps } from './components/Proof';
+export {
+  clampProofStep,
+  countProofSteps,
+  decorateProofSteps,
+  getProofStepState,
+  stepProofSpotlight,
+  type DecoratedProofStepsResult,
+  type DecorateProofStepsOptions,
+  type ProofStepState,
+} from './components/proof-spotlight';
 export { Ref, type RefProps } from './components/Ref';
 export {
   Sidenote,

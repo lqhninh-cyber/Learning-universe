@@ -34,6 +34,14 @@
   --kb-proof-bg: transparent;
   --kb-proof-label: var(--text-secondary, #4a5955);
   --kb-proof-target: var(--text-main, #111a18);
+  --kb-proof-spotlight-accent: var(--accent-os, #17332c);
+  --kb-proof-spotlight-bg: rgba(23, 51, 44, 0.05);
+  --kb-proof-spotlight-hover-bg: rgba(23, 51, 44, 0.03);
+  --kb-proof-spotlight-ctrl-bg: var(--bg-surface, #f8fafb);
+  --kb-proof-spotlight-ctrl-border: var(--border-hairline, #e3e8ec);
+  --kb-proof-spotlight-btn-active-bg: rgba(23, 51, 44, 0.1);
+  --kb-proof-spotlight-btn-active-border: rgba(23, 51, 44, 0.32);
+  --kb-proof-spotlight-btn-active-text: var(--accent-os, #17332c);
 }
 
 .dark,
@@ -66,6 +74,14 @@
   --kb-proof-bg: transparent;
   --kb-proof-label: #9eb0aa;
   --kb-proof-target: #eff4f2;
+  --kb-proof-spotlight-accent: var(--accent-verandah, #52b394);
+  --kb-proof-spotlight-bg: rgba(82, 179, 148, 0.06);
+  --kb-proof-spotlight-hover-bg: rgba(82, 179, 148, 0.035);
+  --kb-proof-spotlight-ctrl-bg: rgba(24, 31, 29, 0.85);
+  --kb-proof-spotlight-ctrl-border: var(--border-hairline, #242e2b);
+  --kb-proof-spotlight-btn-active-bg: rgba(82, 179, 148, 0.16);
+  --kb-proof-spotlight-btn-active-border: rgba(82, 179, 148, 0.42);
+  --kb-proof-spotlight-btn-active-text: #7fd4b7;
 }
 
 /* Định nghĩa nhận màu nhận diện học phần (CTĐS #8C5828 · HHAVE #1D4F6E · GTHMB #1B5E4A · GDH #8F3D35) */
@@ -152,6 +168,14 @@
   --kb-proof-bg: transparent;
   --kb-proof-label: #5a5242;
   --kb-proof-target: #231f18;
+  --kb-proof-spotlight-accent: #17332c;
+  --kb-proof-spotlight-bg: rgba(23, 51, 44, 0.05);
+  --kb-proof-spotlight-hover-bg: rgba(23, 51, 44, 0.03);
+  --kb-proof-spotlight-ctrl-bg: #f6efe0;
+  --kb-proof-spotlight-ctrl-border: #dfd3ba;
+  --kb-proof-spotlight-btn-active-bg: rgba(23, 51, 44, 0.1);
+  --kb-proof-spotlight-btn-active-border: rgba(23, 51, 44, 0.3);
+  --kb-proof-spotlight-btn-active-text: #17332c;
 }
 
 /* --- 1 & 2. Khối Định nghĩa (def) & Định lý / Tính chất / Hệ quả / Bổ đề / Mệnh đề (thm) --- */
@@ -319,6 +343,96 @@ details.ex-block[data-kind='ex'][open] > .ex-block-body {
 
 .kb-halmos {
   color: var(--kb-proof-label);
+}
+
+/* Chế độ Lật từng bước kèm Spotlight trong khối Chứng minh (<Proof>) */
+.proof-spotlight-toggle-active {
+  background-color: var(--kb-proof-spotlight-btn-active-bg);
+  border-color: var(--kb-proof-spotlight-btn-active-border);
+  color: var(--kb-proof-spotlight-btn-active-text);
+}
+
+.proof-spotlight-toolbar {
+  background-color: var(--kb-proof-spotlight-ctrl-bg);
+  border-color: var(--kb-proof-spotlight-ctrl-border);
+}
+
+.proof-spotlight-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.proof-spotlight-step {
+  border-left: 3px solid transparent;
+  border-radius: 0.375rem;
+  padding: 0.45rem 0.75rem;
+  transition:
+    opacity 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 220ms ease,
+    border-color 220ms ease;
+}
+
+.proof-spotlight-step > p:last-child {
+  margin-bottom: 0;
+}
+
+.proof-spotlight-step[data-spotlight-state='active'] {
+  opacity: 1;
+  border-left-color: var(--kb-proof-spotlight-accent);
+  background-color: var(--kb-proof-spotlight-bg);
+}
+
+.proof-spotlight-step[data-spotlight-state='past'] {
+  opacity: 0.72;
+  cursor: pointer;
+}
+
+.proof-spotlight-step[data-spotlight-state='past']:hover {
+  opacity: 0.88;
+  background-color: var(--kb-proof-spotlight-hover-bg);
+}
+
+.proof-spotlight-step[data-spotlight-state='future'] {
+  opacity: 0.16;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.proof-spotlight-step[data-spotlight-state='future']:hover,
+.proof-spotlight-step[data-spotlight-state='future']:focus-visible {
+  opacity: 0.34;
+  background-color: var(--kb-proof-spotlight-hover-bg);
+}
+
+.proof-spotlight-step:focus-visible {
+  outline: 2px solid var(--border-control, #6b847d);
+  outline-offset: 2px;
+}
+
+.proof-spotlight-qed {
+  transition: opacity 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .proof-spotlight-step,
+  .proof-spotlight-qed,
+  .proof-spotlight-toggle {
+    transition: none !important;
+  }
+}
+
+@media print {
+  .proof-spotlight-step {
+    opacity: 1 !important;
+    border-left-color: transparent !important;
+    background-color: transparent !important;
+    padding: 0 !important;
+  }
+
+  .proof-spotlight-qed {
+    opacity: 1 !important;
+  }
 }
 
 /* --- 5. Hiệu ứng Flash Highlight & Tô sáng tìm kiếm tại chỗ --- */

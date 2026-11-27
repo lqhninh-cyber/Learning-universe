@@ -24,7 +24,6 @@ import {
   PanelLeft,
   Pencil,
   Plus,
-  Pointer,
   Presentation,
   Redo2,
   RotateCw,
@@ -91,12 +90,16 @@ import {
   evaluateGeoScene,
   hitTestGeoScene,
   isPointInPolygon,
+  LASER_DARK_CORE_COLOR,
+  LASER_LIGHT_CORE_COLOR,
+  LASER_POINT_TTL_MS,
   nextGeoPointLabel,
   PAGE_DIMENSIONS,
   recognizeInkGesture,
   removeGeoObjectsWithCascade,
   renderExamTextToWorksheetDataUrl,
   renderInkPageToCanvas,
+  renderLaserOverlay,
   selectActiveInkBucket,
   selectActiveInkFolders,
   selectActiveInkPage,
@@ -121,6 +124,9 @@ import {
   type InkTextItem,
   type InkVariationTableItem,
   type InkWorksheetBackground,
+  type LaserColorPresetId,
+  type LaserCursorPosition,
+  type LaserTrail,
   type RulerState,
   type SelectionMode,
   type ShapeToolKind,
@@ -150,15 +156,23 @@ type OpenPopoverKey =
   | 'selection'
   | 'zoom';
 
-const LASER_COLOR_OPTIONS = [
-  { id: 'red', label: 'Đỏ rực', hex: '#EF4444' },
-  { id: 'emerald', label: 'Xanh lá', hex: '#22C55E' },
-  { id: 'blue', label: 'Xanh dương', hex: '#3B82F6' },
-] as const;
+const LASER_COLOR_OPTIONS: readonly {
+  readonly id: LaserColorPresetId;
+  readonly label: string;
+  readonly swatch: string;
+}[] = [
+  { id: 'default', label: 'Đỏ laser', swatch: LASER_LIGHT_CORE_COLOR },
+  { id: 'emerald', label: 'Xanh lá', swatch: '#22C55E' },
+  { id: 'blue', label: 'Xanh dương', swatch: '#3B82F6' },
+];
 
-interface LaserTrailStroke {
-  readonly color: string;
-  readonly points: { readonly x: number; readonly y: number; readonly t: number }[];
+function isDarkHexColor(hex: string): boolean {
+  const clean = hex.replace('#', '');
+  if (clean.length !== 6) return false;
+  const r = Number.parseInt(clean.slice(0, 2), 16);
+  const g = Number.parseInt(clean.slice(2, 4), 16);
+  const b = Number.parseInt(clean.slice(4, 6), 16);
+  return (0.299 * r + 0.587 * g + 0.114 * b) / 255 < 0.45;
 }
 
 function makeLocalId(prefix: string): string {
@@ -336,7 +350,7 @@ export function MathInkPage() {
     color: '#DC2626',
     label: 'A',
   });
-  const [laserColor, setLaserColor] = useState<string>(LASER_COLOR_OPTIONS[0].hex);
+  const [laserColorPreset, setLaserColorPreset] = useState<LaserColorPresetId>('default');
   const [isExportingPdf, setIsExportingPdf] = useState(false);
 
   // Đổi tên file vở trực tiếp trên thanh công cụ trên cùng
@@ -442,8 +456,12 @@ export function MathInkPage() {
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const laserCanvasRef = useRef<HTMLCanvasElement>(null);
-  const laserStrokesRef = useRef<LaserTrailStroke[]>([]);
+  const laserTrailsRef = useRef<LaserTrail[]>([]);
+  const laserPointerHeadRef = useRef<LaserCursorPosition | null>(null);
+  const isLaserPointerActiveRef = useRef<boolean>(false);
   const laserRafRef = useRef<number | null>(null);
+  const laserColorPresetRef = useRef<LaserColorPresetId>('default');
+  const paperBgColorRef = useRef<string>(activeNotebook.paper.backgroundColor);
   const pageHostRef = useRef<HTMLDivElement>(null);
   const imageUploadRef = useRef<HTMLInputElement>(null);
   const imageCacheRef = useRef<Map<string, HTMLImageElement>>(new Map());
@@ -518,10 +536,36 @@ export function MathInkPage() {
     };
   }, [activePage.images, activePage.worksheetBackground]);
 
-  // Vòng kết xuất tia Laser trình chiếu (tự mờ biến mất sau 1.5 giây, không lưu vào vở)
+  useEffect(() => {
+    laserColorPresetRef.current = laserColorPreset;
+  }, [laserColorPreset]);
+
+  useEffect(() => {
+    paperBgColorRef.current = activeNotebook.paper.backgroundColor;
+  }, [activeNotebook.paper.backgroundColor]);
+
+  const stopLaserLoop = useCallback(() => {
+    if (laserRafRef.current !== null) {
+      window.cancelAnimationFrame(laserRafRef.current);
+      laserRafRef.current = null;
+    }
+  }, []);
+
+  const clearLaserOverlay = useCallback(() => {
+    laserTrailsRef.current = [];
+    laserPointerHeadRef.current = null;
+    isLaserPointerActiveRef.current = false;
+    stopLaserLoop();
+    const canvas = laserCanvasRef.current;
+    const ctx = canvas?.getContext('2d');
+    if (canvas && ctx) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+  }, [stopLaserLoop]);
+
+  // Vòng kết xuất tia Laser tự tan 60fps (1200ms, 0% CPU lúc nhàn rỗi, không lưu vào vở / Undo / xuất file)
   const ensureLaserLoop = useCallback(() => {
     if (laserRafRef.current !== null) return;
-    const LASER_TTL_MS = 1500;
 
     const tick = () => {
       const canvas = laserCanvasRef.current;
@@ -543,84 +587,45 @@ export function MathInkPage() {
         canvas.height = targetH;
       }
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctx.clearRect(0, 0, dims.width, dims.height);
 
-      const now = performance.now();
-      const alive: LaserTrailStroke[] = [];
+      const isDarkUi =
+        typeof document !== 'undefined' &&
+        (document.documentElement.classList.contains('dark') ||
+          document.documentElement.getAttribute('data-theme') === 'dark');
+      const isDarkSurface = isDarkUi || isDarkHexColor(paperBgColorRef.current);
 
-      for (const trail of laserStrokesRef.current) {
-        const freshPts = trail.points.filter((p) => now - p.t < LASER_TTL_MS);
-        if (freshPts.length === 0) continue;
-        alive.push({ color: trail.color, points: freshPts });
+      const { aliveTrails, shouldContinue } = renderLaserOverlay(ctx, {
+        width: dims.width,
+        height: dims.height,
+        trails: laserTrailsRef.current,
+        pointerHead: laserPointerHeadRef.current,
+        isPointerActive: isLaserPointerActiveRef.current,
+        isDark: isDarkSurface,
+        activeColorPreset: laserColorPresetRef.current,
+        now: performance.now(),
+        ttlMs: LASER_POINT_TTL_MS,
+      });
 
-        if (freshPts.length === 1) {
-          const p = freshPts[0]!;
-          const alpha = Math.max(0, 1 - (now - p.t) / LASER_TTL_MS);
-          ctx.save();
-          ctx.globalAlpha = alpha;
-          ctx.shadowColor = trail.color;
-          ctx.shadowBlur = 16;
-          ctx.fillStyle = trail.color;
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, 6, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.fillStyle = '#FFFFFF';
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.restore();
-          continue;
-        }
-
-        ctx.save();
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
-        for (let i = 1; i < freshPts.length; i += 1) {
-          const prev = freshPts[i - 1]!;
-          const cur = freshPts[i]!;
-          const life = Math.max(0, 1 - (now - cur.t) / LASER_TTL_MS);
-          // Quầng phát sáng ngoài
-          ctx.globalAlpha = life * 0.72;
-          ctx.strokeStyle = trail.color;
-          ctx.shadowColor = trail.color;
-          ctx.shadowBlur = 14;
-          ctx.lineWidth = 2.5 + life * 5.5;
-          ctx.beginPath();
-          ctx.moveTo(prev.x, prev.y);
-          ctx.lineTo(cur.x, cur.y);
-          ctx.stroke();
-
-          // Lõi sáng trắng sắc nét ở trung tâm tia laser
-          ctx.globalAlpha = life * 0.95;
-          ctx.strokeStyle = '#FFFFFF';
-          ctx.shadowBlur = 0;
-          ctx.lineWidth = Math.max(1, life * 2.2);
-          ctx.beginPath();
-          ctx.moveTo(prev.x, prev.y);
-          ctx.lineTo(cur.x, cur.y);
-          ctx.stroke();
-        }
-        ctx.restore();
-      }
-
-      laserStrokesRef.current = alive;
-      if (alive.length > 0) {
+      laserTrailsRef.current = aliveTrails;
+      if (shouldContinue) {
         laserRafRef.current = window.requestAnimationFrame(tick);
       } else {
-        laserRafRef.current = null;
+        stopLaserLoop();
       }
     };
 
     laserRafRef.current = window.requestAnimationFrame(tick);
-  }, [dims.height, dims.width]);
+  }, [dims.height, dims.width, stopLaserLoop]);
+
+  useEffect(() => {
+    clearLaserOverlay();
+  }, [activeNotebook.id, activePage.id, clearLaserOverlay]);
 
   useEffect(() => {
     return () => {
-      if (laserRafRef.current !== null) {
-        window.cancelAnimationFrame(laserRafRef.current);
-      }
+      stopLaserLoop();
     };
-  }, []);
+  }, [stopLaserLoop]);
 
   // Vẽ lại toàn bộ trang Canvas HiDPI mỗi khi trạng thái thay đổi
   useEffect(() => {
@@ -729,7 +734,10 @@ export function MathInkPage() {
       const target = e.target as HTMLElement | null;
       if (
         target &&
-        (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT')
+        (target.tagName === 'INPUT' ||
+          target.tagName === 'TEXTAREA' ||
+          target.tagName === 'SELECT' ||
+          target.isContentEditable)
       ) {
         return;
       }
@@ -779,6 +787,12 @@ export function MathInkPage() {
         e.preventDefault();
         setActiveTool('select');
         setOpenPopover(null);
+      } else if (!e.ctrlKey && !e.metaKey && !e.altKey && e.key.toLowerCase() === 'l') {
+        e.preventDefault();
+        setOpenPopover(null);
+        setActiveTool((prev) => (prev === 'laser' ? 'pen' : 'laser'));
+      } else if (e.key === 'Escape' && activeTool === 'laser') {
+        setActiveTool('pen');
       } else if (e.key === 'Escape' && activeTool === 'geo') {
         if (geoPendingPts.length > 0 || geoPendingCurveId) {
           setGeoPendingPts([]);
@@ -1838,12 +1852,14 @@ export function MathInkPage() {
       return;
     }
 
-    // 0. Bút Laser trình chiếu (không lưu nét, tự mờ sau 1.5s)
+    // 0. Bút Laser tự tan (lớp phủ không phá hủy, 1200ms, không lưu vào vở/Undo/export)
     if (activeTool === 'laser') {
       const now = performance.now();
-      laserStrokesRef.current.push({
-        color: laserColor,
-        points: [{ x: rawPt.x, y: rawPt.y, t: now }],
+      isLaserPointerActiveRef.current = true;
+      laserPointerHeadRef.current = { x: rawPt.x, y: rawPt.y };
+      laserTrailsRef.current.push({
+        colorPreset: laserColorPreset,
+        points: [{ x: rawPt.x, y: rawPt.y, createdAt: now }],
       });
       interactionRef.current = {
         ...interactionRef.current,
@@ -2087,13 +2103,14 @@ export function MathInkPage() {
     const rawPt = toCanvasPoint(e);
 
     if (state.mode === 'laser') {
-      const currentTrail = laserStrokesRef.current[laserStrokesRef.current.length - 1];
-      if (currentTrail && Math.hypot(rawPt.x - state.lastX, rawPt.y - state.lastY) >= 2) {
-        currentTrail.points.push({ x: rawPt.x, y: rawPt.y, t: performance.now() });
+      laserPointerHeadRef.current = { x: rawPt.x, y: rawPt.y };
+      const currentTrail = laserTrailsRef.current[laserTrailsRef.current.length - 1];
+      if (currentTrail && Math.hypot(rawPt.x - state.lastX, rawPt.y - state.lastY) >= 1.5) {
+        currentTrail.points.push({ x: rawPt.x, y: rawPt.y, createdAt: performance.now() });
         state.lastX = rawPt.x;
         state.lastY = rawPt.y;
-        ensureLaserLoop();
       }
+      ensureLaserLoop();
       return;
     }
 
@@ -2263,6 +2280,22 @@ export function MathInkPage() {
     }
     const rawPt = toCanvasPoint(e);
 
+    if (state.mode === 'laser') {
+      isLaserPointerActiveRef.current = false;
+      laserPointerHeadRef.current = null;
+      interactionRef.current = {
+        mode: 'none',
+        startX: 0,
+        startY: 0,
+        lastX: 0,
+        lastY: 0,
+        lastTimeMs: 0,
+        strokeDraft: null,
+        shapeDraft: null,
+        lassoDraft: [],
+      };
+      return;
+    }
     if (state.mode === 'draw-stroke' && state.strokeDraft) {
       const endCandidate = ruler.visible
         ? (snapPointToRulerEdge(rawPt.x, rawPt.y, ruler) ?? rawPt)
@@ -3585,17 +3618,56 @@ export function MathInkPage() {
                   setOpenPopover(null);
                   setActiveTool((prev) => (prev === 'laser' ? 'pen' : 'laser'));
                 }}
-                title="Bút Laser trình chiếu (nét phát sáng tự mờ biến mất sau 1.5 giây, không làm bẩn vở)"
+                title="Bút Laser tự tan (Phím tắt: L — tự mờ sau 1.2 giây, không lưu vào vở)"
                 aria-pressed={activeTool === 'laser'}
-                aria-label="Bút Laser trình chiếu"
+                aria-label="Bút Laser tự tan (Phím tắt L)"
                 className={cn(
-                  'inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl border transition-colors',
+                  'inline-flex h-9 cursor-pointer items-center justify-center gap-1.5 rounded-xl border px-2.5 text-[13px] font-medium transition-all duration-150 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-[1px] active:scale-[0.98]',
                   activeTool === 'laser'
-                    ? 'border-[#DC2626] bg-[#DC2626] text-white shadow-xs'
-                    : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:text-[#DC2626]',
+                    ? 'border-[#FF4D4F] bg-[#FF4D4F] text-white shadow-xs dark:border-[#FF6B6B] dark:bg-[#FF6B6B] dark:text-[#111A18]'
+                    : 'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-secondary)] hover:border-[#FF4D4F]/50 hover:text-[#FF4D4F] dark:hover:border-[#FF6B6B]/55 dark:hover:text-[#FF6B6B]',
                 )}
               >
-                <Pointer className="h-4 w-4" aria-hidden="true" />
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                  className="h-4 w-4 shrink-0"
+                >
+                  <circle cx="18" cy="6" r="2.2" fill="currentColor" />
+                  <path
+                    d="M18 1.75V3M22.25 6H21M20.85 3.15L19.95 4.05M20.85 8.85L19.95 7.95"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M15.2 8.8L4.2 19.8"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M10.8 13.2L8.4 10.8"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                    strokeOpacity="0.65"
+                  />
+                </svg>
+                <span className="hidden sm:inline">Laser</span>
+                <kbd
+                  aria-hidden="true"
+                  className={cn(
+                    'hidden rounded px-1 py-0.5 font-mono text-[10px] leading-none font-semibold xl:inline-block',
+                    activeTool === 'laser'
+                      ? 'bg-white/20 text-current dark:bg-black/15'
+                      : 'bg-[var(--bg-surface)] text-[var(--text-muted)]',
+                  )}
+                >
+                  L
+                </kbd>
               </button>
             </div>
 
@@ -4183,27 +4255,37 @@ export function MathInkPage() {
               </div>
             )}
 
-            {/* Thanh nổi cho Bút Laser trình chiếu */}
+            {/* Thanh nổi cho Bút Laser tự tan */}
             {activeTool === 'laser' && (
               <div
                 data-testid="ink-laser-bar"
-                className="sticky top-2 z-20 mx-auto mb-3 flex w-fit flex-wrap items-center gap-2 rounded-full border border-[#DC2626]/35 bg-[var(--bg-workspace)]/95 px-3.5 py-1.5 text-xs shadow-lg backdrop-blur-md"
+                className="sticky top-2 z-20 mx-auto mb-3 flex w-fit flex-wrap items-center gap-2 rounded-full border border-[#FF4D4F]/35 bg-[var(--bg-workspace)]/95 px-3.5 py-1.5 text-xs shadow-lg backdrop-blur-md dark:border-[#FF6B6B]/40"
               >
-                <span className="inline-flex items-center gap-1.5 font-semibold text-[#DC2626]">
-                  <span className="h-2 w-2 animate-pulse rounded-full bg-[#DC2626]" />
-                  <span>Chế độ Laser trình chiếu (tự mờ sau 1.5s)</span>
+                <span className="inline-flex items-center gap-1.5 font-semibold text-[#D9363E] dark:text-[#FF6B6B]">
+                  <span className="h-2 w-2 animate-pulse rounded-full bg-[#FF4D4F] dark:bg-[#FF6B6B]" />
+                  <span>Bút Laser tự tan (1.2s · phím L)</span>
                 </span>
                 <div className="flex items-center gap-1 border-l border-[var(--border-hairline)] pl-2">
                   {LASER_COLOR_OPTIONS.map((opt) => (
                     <button
                       key={opt.id}
                       type="button"
-                      onClick={() => setLaserColor(opt.hex)}
+                      onClick={() => setLaserColorPreset(opt.id)}
                       title={opt.label}
-                      style={{ backgroundColor: opt.hex }}
+                      aria-label={`Màu tia laser: ${opt.label}`}
+                      aria-pressed={laserColorPreset === opt.id}
+                      style={{
+                        backgroundColor:
+                          opt.id === 'default'
+                            ? isDarkHexColor(activeNotebook.paper.backgroundColor)
+                              ? LASER_DARK_CORE_COLOR
+                              : LASER_LIGHT_CORE_COLOR
+                            : opt.swatch,
+                      }}
                       className={cn(
-                        'h-4 w-4 cursor-pointer rounded-full border border-white/60',
-                        laserColor === opt.hex && 'ring-2 ring-[var(--text-main)] ring-offset-1',
+                        'h-4 w-4 cursor-pointer rounded-full border border-white/60 transition-transform hover:scale-110 active:scale-95',
+                        laserColorPreset === opt.id &&
+                          'ring-2 ring-[var(--text-main)] ring-offset-1',
                       )}
                     />
                   ))}
@@ -4211,7 +4293,7 @@ export function MathInkPage() {
                 <button
                   type="button"
                   onClick={() => setActiveTool('pen')}
-                  className="cursor-pointer rounded-md border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2 py-0.5 text-[11px] font-medium hover:text-[var(--accent-os)]"
+                  className="cursor-pointer rounded-md border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-2 py-0.5 text-[11px] font-medium transition-colors hover:text-[var(--accent-os)]"
                 >
                   Quay lại bút
                 </button>

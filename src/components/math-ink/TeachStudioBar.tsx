@@ -385,7 +385,7 @@ export const TeachStudioBar: FC<TeachStudioBarProps> = ({
           type="button"
           data-testid="teach-laser-btn"
           onClick={() => onSelectTool(activeTool === 'laser' ? 'pen' : 'laser')}
-          title="Bút Laser chỉ bảng (tự mờ sau 1.5s)"
+          title="Bút Laser tự tan (Phím tắt: L — tự mờ sau 1.2s)"
           className={cn(
             'inline-flex h-7 cursor-pointer items-center gap-1 rounded-lg border px-2 text-xs font-medium transition-colors',
             activeTool === 'laser'

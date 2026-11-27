@@ -7,6 +7,7 @@ import { cn } from '@/shared/lib/cn';
 export interface CollapsibleProps {
   readonly title: ReactNode;
   readonly badge?: ReactNode;
+  readonly headerActions?: ReactNode;
   readonly children: ReactNode;
   readonly defaultOpen?: boolean;
   readonly open?: boolean;
@@ -18,6 +19,7 @@ export interface CollapsibleProps {
 export function Collapsible({
   title,
   badge,
+  headerActions,
   children,
   defaultOpen = false,
   open: controlledOpen,
@@ -46,19 +48,22 @@ export function Collapsible({
         className,
       )}
     >
-      <CollapsiblePrimitive.Trigger className="focus-visible:outline-subject-600 flex w-full cursor-pointer items-center justify-between gap-3 rounded-xl px-4 py-3 text-left text-sm font-medium text-stone-800 transition-colors hover:bg-stone-100/60 focus-visible:outline-2 focus-visible:outline-offset-2">
-        <span className="flex items-center gap-2.5">
-          <span>{title}</span>
-          {badge}
-        </span>
-        <ChevronDown
-          className={cn(
-            'h-4 w-4 shrink-0 text-stone-500 transition-transform duration-300 ease-in-out',
-            open && 'rotate-180 text-stone-900',
-          )}
-          aria-hidden="true"
-        />
-      </CollapsiblePrimitive.Trigger>
+      <div className="flex items-center justify-between gap-2">
+        <CollapsiblePrimitive.Trigger className="focus-visible:outline-subject-600 flex min-w-0 flex-1 cursor-pointer items-center justify-between gap-3 rounded-xl px-4 py-3 text-left text-sm font-medium text-stone-800 transition-colors hover:bg-stone-100/60 focus-visible:outline-2 focus-visible:outline-offset-2 dark:hover:bg-white/[0.04]">
+          <span className="flex min-w-0 items-center gap-2.5">
+            <span>{title}</span>
+            {badge}
+          </span>
+          <ChevronDown
+            className={cn(
+              'h-4 w-4 shrink-0 text-stone-500 transition-transform duration-300 ease-in-out',
+              open && 'rotate-180 text-stone-900 dark:text-[var(--text-main)]',
+            )}
+            aria-hidden="true"
+          />
+        </CollapsiblePrimitive.Trigger>
+        {headerActions && <div className="shrink-0 pr-2 print:hidden">{headerActions}</div>}
+      </div>
       <CollapsiblePrimitive.Content
         className={cn(
           'border-t border-stone-200/50 px-4 py-3.5 text-sm leading-relaxed text-stone-700 transition-all duration-300 ease-in-out',
