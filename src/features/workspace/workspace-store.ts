@@ -10,7 +10,9 @@ import {
   type CloudWorkspacePayload,
 } from '@/services/supabase/workspace-sync';
 import {
+  DEFAULT_DASHBOARD_LAYOUT,
   DEFAULT_WEEKLY_GOAL,
+  type DashboardSectionId,
   type ExamMilestoneItem,
   type StudyTaskItem,
   type TaskPriority,
@@ -18,7 +20,7 @@ import {
   type WeeklyStudyGoal,
   type WorkspaceSubjectSlug,
 } from './types';
-import { toLocalDateKey } from './workspace-utils';
+import { normalizeDashboardLayout, toLocalDateKey } from './workspace-utils';
 
 export const GUEST_ACCOUNT_KEY = 'guest';
 
@@ -27,6 +29,11 @@ const EMPTY_WORKSPACE_BUCKET: UserWorkspaceBucket = Object.freeze({
   milestones: Object.freeze([]),
   weeklyGoal: Object.freeze({ ...DEFAULT_WEEKLY_GOAL }),
   pomodoroLogs: Object.freeze([]),
+  dashboardLayout: Object.freeze({
+    order: Object.freeze([...DEFAULT_DASHBOARD_LAYOUT.order]),
+    hidden: Object.freeze([]),
+  }),
+  reviewedLessons: Object.freeze({}),
   updatedAt: '1970-01-01T00:00:00.000Z',
 });
 
@@ -36,6 +43,11 @@ function createEmptyBucket(): UserWorkspaceBucket {
     milestones: [],
     weeklyGoal: { ...DEFAULT_WEEKLY_GOAL },
     pomodoroLogs: [],
+    dashboardLayout: {
+      order: [...DEFAULT_DASHBOARD_LAYOUT.order],
+      hidden: [],
+    },
+    reviewedLessons: {},
     updatedAt: new Date(0).toISOString(),
   };
 }
@@ -83,6 +95,10 @@ export interface WorkspaceState {
   deleteMilestone: (milestoneId: string) => void;
   updateWeeklyGoal: (goal: Partial<WeeklyStudyGoal>) => void;
   recordPomodoroCompleted: (completedAtIso?: string) => void;
+  toggleDashboardSection: (sectionId: DashboardSectionId) => void;
+  moveDashboardSection: (sectionId: DashboardSectionId, direction: 'up' | 'down') => void;
+  resetDashboardLayout: () => void;
+  markLessonReviewed: (lessonId: string, dateKey?: string) => void;
   mergeCloudWorkspaceData: (userId: string, cloud: CloudWorkspacePayload) => void;
   resetWorkspaceStore: () => void;
 }
@@ -414,6 +430,106 @@ export const useWorkspaceStore = create<WorkspaceState>()(
         }
       },
 
+      toggleDashboardSection: (sectionId) => {
+        const state = get();
+        const accountKey = state.activeAccountKey;
+        const currentBucket = state.buckets[accountKey] ?? createEmptyBucket();
+        const currentLayout = normalizeDashboardLayout(currentBucket.dashboardLayout);
+        const isHidden = currentLayout.hidden.includes(sectionId);
+        const nextHidden = isHidden
+          ? currentLayout.hidden.filter((id) => id !== sectionId)
+          : [...currentLayout.hidden, sectionId];
+
+        set({
+          buckets: {
+            ...state.buckets,
+            [accountKey]: {
+              ...currentBucket,
+              dashboardLayout: {
+                order: currentLayout.order,
+                hidden: nextHidden,
+              },
+              updatedAt: new Date().toISOString(),
+            },
+          },
+        });
+      },
+
+      moveDashboardSection: (sectionId, direction) => {
+        const state = get();
+        const accountKey = state.activeAccountKey;
+        const currentBucket = state.buckets[accountKey] ?? createEmptyBucket();
+        const currentLayout = normalizeDashboardLayout(currentBucket.dashboardLayout);
+        const nextOrder = [...currentLayout.order];
+        const idx = nextOrder.indexOf(sectionId);
+        if (idx === -1) return;
+
+        const targetIdx = direction === 'up' ? idx - 1 : idx + 1;
+        if (targetIdx < 0 || targetIdx >= nextOrder.length) return;
+
+        const swapped = nextOrder[targetIdx];
+        if (!swapped) return;
+        nextOrder[targetIdx] = sectionId;
+        nextOrder[idx] = swapped;
+
+        set({
+          buckets: {
+            ...state.buckets,
+            [accountKey]: {
+              ...currentBucket,
+              dashboardLayout: {
+                order: nextOrder,
+                hidden: currentLayout.hidden,
+              },
+              updatedAt: new Date().toISOString(),
+            },
+          },
+        });
+      },
+
+      resetDashboardLayout: () => {
+        const state = get();
+        const accountKey = state.activeAccountKey;
+        const currentBucket = state.buckets[accountKey] ?? createEmptyBucket();
+
+        set({
+          buckets: {
+            ...state.buckets,
+            [accountKey]: {
+              ...currentBucket,
+              dashboardLayout: {
+                order: [...DEFAULT_DASHBOARD_LAYOUT.order],
+                hidden: [],
+              },
+              updatedAt: new Date().toISOString(),
+            },
+          },
+        });
+      },
+
+      markLessonReviewed: (lessonId, dateKey) => {
+        const cleanId = lessonId.trim();
+        if (!cleanId) return;
+        const state = get();
+        const accountKey = state.activeAccountKey;
+        const currentBucket = state.buckets[accountKey] ?? createEmptyBucket();
+        const stampKey = dateKey?.trim() || toLocalDateKey(new Date());
+
+        set({
+          buckets: {
+            ...state.buckets,
+            [accountKey]: {
+              ...currentBucket,
+              reviewedLessons: {
+                ...(currentBucket.reviewedLessons ?? {}),
+                [cleanId]: stampKey,
+              },
+              updatedAt: new Date().toISOString(),
+            },
+          },
+        });
+      },
+
       mergeCloudWorkspaceData: (userId, cloud) => {
         if (!userId) return;
         set((state) => {
@@ -450,6 +566,8 @@ export const useWorkspaceStore = create<WorkspaceState>()(
                 ),
                 weeklyGoal: cloud.weeklyGoal ?? local.weeklyGoal,
                 pomodoroLogs: mergedLogs,
+                dashboardLayout: local.dashboardLayout,
+                reviewedLessons: local.reviewedLessons,
                 updatedAt: new Date().toISOString(),
               },
             },

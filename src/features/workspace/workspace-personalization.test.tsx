@@ -6,12 +6,16 @@ import { IslandProvider } from '@/context/IslandContext';
 import { LayoutProvider } from '@/context/LayoutContext';
 import { ReadingSettingsProvider } from '@/context/ReadingSettingsContext';
 import { HERITAGE_MATH_CONNECTIONS } from '@/data/heritageMathConnections';
+import { getSubjects } from '@/content-runtime/manifest';
 import { AuthProvider } from '@/features/auth';
 import { useLearningStore } from '@/features/learning';
 import {
   addDaysLocal,
+  computeDueReviewLessons,
+  computeExamPacePlan,
   computeStudyActivityMetrics,
   getVietnameseTimeGreeting,
+  normalizeDashboardLayout,
   selectActiveWorkspaceBucket,
   toLocalDateKey,
   useWorkspaceStore,
@@ -161,12 +165,18 @@ describe('Tính năng Cá nhân hóa Trang Tổng quan (Step 1)', () => {
     expect(screen.getByTestId('hero-soft-wave-divider')).toBeInTheDocument();
     expect(screen.queryByTestId('hero-floating-pill')).not.toBeInTheDocument();
 
-    // 1b. Biểu đồ cột bo tròn & vòng tròn tiến độ + Kệ Studio gần đây kèm 2 ảnh minh họa
+    // 1b. Thẻ gộp "Nhịp học & Chuyên cần" (7 ngày ↔ Nhiệt đồ 28 ngày, không còn Donut/4 học phần lặp) + Kệ Studio gần đây
     expect(screen.getByTestId('dashboard-analytics-card')).toBeInTheDocument();
+    expect(screen.queryByTestId('study-rhythm-card')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('analytics-donut-chart')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('analytics-mode-subjects')).not.toBeInTheDocument();
     expect(screen.getByTestId('analytics-week-bars')).toBeInTheDocument();
-    expect(screen.getByTestId('analytics-donut-chart')).toBeInTheDocument();
-    fireEvent.click(screen.getByTestId('analytics-mode-subjects'));
-    expect(screen.getByTestId('analytics-subject-bars')).toBeInTheDocument();
+    fireEvent.click(screen.getByTestId('analytics-mode-heatmap'));
+    expect(screen.getByTestId('study-activity-heatmap')).toBeInTheDocument();
+
+    // 1c. Chống trùng chip bài trên màn hình rộng (chip chỉ hiện ở mobile, desktop hiện tóm tắt chương)
+    expect(screen.getByTestId('resume-chapter-chips-mobile').className).toContain('md:hidden');
+    expect(screen.getByTestId('resume-chapter-summary-desktop').className).toContain('md:flex');
 
     expect(screen.getByTestId('recent-studio-shelf')).toBeInTheDocument();
     const studioStrip = screen.getByTestId('studio-visual-preview-strip');
@@ -225,16 +235,20 @@ describe('Tính năng Cá nhân hóa Trang Tổng quan (Step 1)', () => {
     fireEvent.click(checkBtn);
     expect(screen.getByTestId('study-streak-value')).toHaveTextContent('1');
 
-    // 4. Ghim 1 mốc đếm ngược kỳ thi trên Lịch biểu
+    // 4. Ghim 1 mốc đếm ngược kỳ thi gắn với môn học -> hiển thị tiến độ & nhịp bài/ngày
     fireEvent.click(screen.getByTestId('exam-milestone-toggle'));
     const examInput = screen.getByLabelText('Tên mốc kỳ thi hoặc hạn nộp');
     fireEvent.change(examInput, { target: { value: 'Thi cuối kỳ Hình học Affine' } });
+    fireEvent.change(screen.getByLabelText('Học phần kỳ thi'), {
+      target: { value: 'hinh-hoc-affine' },
+    });
     fireEvent.submit(screen.getByTestId('exam-milestone-form'));
     expect(screen.getByTestId('exam-milestone-item')).toHaveTextContent(
       'Thi cuối kỳ Hình học Affine',
     );
+    expect(screen.getByTestId('exam-milestone-pace')).toHaveTextContent(/chưa học/i);
 
-    // 5. Chỉnh mục tiêu học tập theo tuần
+    // 5. Chỉnh mục tiêu học tập theo tuần (nằm ngay trong thẻ Nhịp học & Chuyên cần đã gộp)
     fireEvent.click(screen.getByTestId('weekly-goal-edit-toggle'));
     fireEvent.change(screen.getByLabelText('Mục tiêu số bài mỗi tuần'), {
       target: { value: '9' },
@@ -245,11 +259,131 @@ describe('Tính năng Cá nhân hóa Trang Tổng quan (Step 1)', () => {
     // 6. Di sản trong ngày có dòng Liên hệ Toán học / Học phần
     expect(screen.getByTestId('heritage-math-connection')).toHaveTextContent(/Liên hệ học phần/i);
 
-    // 7. Chế độ Flashcard ôn nhanh trên thẻ Thuật ngữ ngẫu nhiên
+    // 7. Chế độ Flashcard ôn nhanh & tab Ôn tập hôm nay trên thẻ Ôn tập
     fireEvent.click(screen.getByTestId('glossary-flashcard-toggle'));
     expect(screen.getByTestId('glossary-flashcard-stage')).toBeInTheDocument();
     expect(screen.queryByTestId('glossary-flashcard-answer')).not.toBeInTheDocument();
     fireEvent.click(screen.getByTestId('glossary-flashcard-reveal'));
     expect(screen.getByTestId('glossary-flashcard-answer')).toBeInTheDocument();
+
+    // 8. Tùy chỉnh ẩn/hiện & sắp xếp các tầng trên Trang Tổng quan
+    fireEvent.click(screen.getByTestId('dashboard-layout-trigger'));
+    expect(screen.getByTestId('dashboard-layout-panel')).toBeInTheDocument();
+    fireEvent.click(screen.getByTestId('layout-toggle-heritage'));
+    expect(screen.queryByTestId('dashboard-heritage-card')).not.toBeInTheDocument();
+    expect(screen.getByTestId('dashboard-layout-hidden-badge')).toHaveTextContent('Ẩn 1');
+    fireEvent.click(screen.getByTestId('dashboard-layout-reset'));
+    expect(screen.getByTestId('dashboard-heritage-card')).toBeInTheDocument();
+  });
+
+  it('computeExamPacePlan tính chính xác nhịp ôn tập theo số ngày còn lại và bài chưa học', () => {
+    const plan = computeExamPacePlan({
+      daysUntil: 12,
+      completedCount: 4,
+      lessonCount: 12,
+      subjectCode: 'CTĐS',
+    });
+    expect(plan).not.toBeNull();
+    expect(plan?.remainingLessons).toBe(8);
+    expect(plan?.summary).toBe('Còn 8 bài CTĐS chưa học → khoảng 1 bài/ngày');
+    expect(plan?.urgency).toBe('comfortable');
+
+    const readyPlan = computeExamPacePlan({
+      daysUntil: 5,
+      completedCount: 10,
+      lessonCount: 10,
+      subjectCode: 'HHAVE',
+    });
+    expect(readyPlan?.urgency).toBe('ready');
+
+    const slowPlan = computeExamPacePlan({
+      daysUntil: 20,
+      completedCount: 6,
+      lessonCount: 10,
+      subjectCode: 'GDH',
+    });
+    expect(slowPlan?.summary).toBe('Còn 4 bài GDH chưa học → khoảng 1 bài/5 ngày');
+  });
+
+  it('computeDueReviewLessons lọc chính xác bài cần ôn theo chu kỳ 1 / 3 / 7 ngày và tôn trọng trạng thái đã ôn', () => {
+    const now = new Date(2026, 10, 27, 14, 0, 0);
+    const d1 = addDaysLocal(now, -1).toISOString();
+    const d2 = addDaysLocal(now, -2).toISOString();
+    const d3 = addDaysLocal(now, -3).toISOString();
+    const d7 = addDaysLocal(now, -7).toISOString();
+    const todayKey = toLocalDateKey(now);
+
+    const due = computeDueReviewLessons({
+      completedLessons: {
+        'ls-1': d1,
+        'ls-2': d2,
+        'ls-3': d3,
+        'ls-7': d7,
+      },
+      reviewedLessons: {
+        'ls-3': todayKey,
+      },
+      now,
+    });
+
+    expect(due.map((d) => [d.lessonId, d.intervalDays, d.reviewedToday])).toEqual([
+      ['ls-1', 1, false],
+      ['ls-7', 7, false],
+      ['ls-3', 3, true],
+    ]);
+  });
+
+  it('lưu tách biệt thứ tự & ẩn/hiện các tầng Trang Tổng quan theo từng tài khoản', () => {
+    const store = useWorkspaceStore.getState();
+
+    store.setActiveAccount('user-layout-a');
+    store.toggleDashboardSection('heritage');
+    store.moveDashboardSection('planner', 'up');
+
+    const layoutA = normalizeDashboardLayout(
+      selectActiveWorkspaceBucket(useWorkspaceStore.getState()).dashboardLayout,
+    );
+    expect(layoutA.hidden).toEqual(['heritage']);
+    expect(layoutA.order.indexOf('planner')).toBe(2);
+
+    // Chuyển sang tài khoản B -> bố cục vẫn là mặc định
+    store.setActiveAccount('user-layout-b');
+    const layoutB = normalizeDashboardLayout(
+      selectActiveWorkspaceBucket(useWorkspaceStore.getState()).dashboardLayout,
+    );
+    expect(layoutB.hidden).toEqual([]);
+    expect(layoutB.order.indexOf('planner')).toBe(3);
+
+    // Quay lại tài khoản A -> vẫn nguyên cấu hình
+    store.setActiveAccount('user-layout-a');
+    const restoredA = normalizeDashboardLayout(
+      selectActiveWorkspaceBucket(useWorkspaceStore.getState()).dashboardLayout,
+    );
+    expect(restoredA.hidden).toEqual(['heritage']);
+    expect(restoredA.order.indexOf('planner')).toBe(2);
+  });
+
+  it('HomePage tự động hiển thị danh sách Ôn tập hôm nay khi có bài hoàn thành cách 1/3/7 ngày và cho phép đánh dấu đã ôn', () => {
+    const firstLesson = getSubjects()[0]?.chapters[0]?.lessons[0];
+    expect(firstLesson).toBeDefined();
+
+    const yesterdayIso = addDaysLocal(new Date(), -1).toISOString();
+    useLearningStore.setState({
+      completedLessons: {
+        [firstLesson!.id]: yesterdayIso,
+      },
+    });
+
+    renderHome();
+
+    // Có bài đến kỳ ôn -> thẻ mặc định mở tab Ôn tập hôm nay với badge 1
+    expect(screen.getByTestId('daily-review-lessons-panel')).toBeInTheDocument();
+    expect(screen.getByTestId('review-pending-badge')).toHaveTextContent('1');
+    expect(screen.getByTestId('due-review-item')).toHaveTextContent(firstLesson!.title);
+    expect(screen.getByTestId('due-review-item')).toHaveTextContent('Sau 1 ngày');
+
+    // Đánh dấu đã ôn hôm nay
+    fireEvent.click(screen.getByTestId(`mark-reviewed-${firstLesson!.id}`));
+    expect(screen.queryByTestId('review-pending-badge')).not.toBeInTheDocument();
   });
 });

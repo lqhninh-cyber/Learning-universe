@@ -17,19 +17,25 @@ import {
   Sunrise,
   Sunset,
 } from 'lucide-react';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState, type ReactNode } from 'react';
 import { Link } from 'react-router';
 import { AtmosphericCanopy } from '@/components/atmosphere/AtmosphericCanopy';
 import { ActiveChapterConstellation } from '@/components/home/ActiveChapterConstellation';
 import { DashboardAnalyticsCard } from '@/components/home/DashboardAnalyticsCard';
-import { GlossaryFlashcardCard } from '@/components/home/GlossaryFlashcardCard';
+import { DashboardLayoutCustomizer } from '@/components/home/DashboardLayoutCustomizer';
+import {
+  GlossaryFlashcardCard,
+  type ResolvedDueReviewLesson,
+} from '@/components/home/GlossaryFlashcardCard';
 import {
   HERITAGE_ARTWORKS,
   HeritageFallbackIllustration,
 } from '@/components/home/HeritageArtShowcase';
 import { RecentStudioShelf } from '@/components/home/RecentStudioShelf';
-import { StudyPlannerWidget } from '@/components/home/StudyPlannerWidget';
-import { StudyRhythmCard } from '@/components/home/StudyRhythmCard';
+import {
+  StudyPlannerWidget,
+  type PlannerSubjectProgress,
+} from '@/components/home/StudyPlannerWidget';
 import {
   SubjectMathCard,
   type SubjectMathCardRecentLesson,
@@ -49,12 +55,16 @@ import { useLearningStore } from '@/features/learning';
 import { getAllGlossaryEntries } from '@/features/math-glossary';
 import {
   computeDaysUntilDate,
+  computeDueReviewLessons,
+  computeExamPacePlan,
   computeStudyActivityMetrics,
   formatCountdownLabel,
   getVietnameseTimeGreeting,
+  normalizeDashboardLayout,
   selectActiveWorkspaceBucket,
   useWorkspaceStore,
   WORKSPACE_SUBJECT_META,
+  type DashboardSectionId,
   type DayPeriod,
 } from '@/features/workspace';
 import { SCHOLARLY_QUOTES } from '@/pages/home/RotatingScholarlyQuote';
@@ -192,6 +202,15 @@ export function HomePage() {
   const isStoreAuth = useLearningStore((state) => state.isAuthenticated);
   const storeLearnerName = useLearningStore((state) => state.learnerName);
   const workspaceBucket = useWorkspaceStore(selectActiveWorkspaceBucket);
+  const toggleDashboardSection = useWorkspaceStore((state) => state.toggleDashboardSection);
+  const moveDashboardSection = useWorkspaceStore((state) => state.moveDashboardSection);
+  const resetDashboardLayout = useWorkspaceStore((state) => state.resetDashboardLayout);
+  const markLessonReviewed = useWorkspaceStore((state) => state.markLessonReviewed);
+
+  const dashboardLayout = useMemo(
+    () => normalizeDashboardLayout(workspaceBucket.dashboardLayout),
+    [workspaceBucket.dashboardLayout],
+  );
 
   const [quoteIndex, setQuoteIndex] = useState(0);
   const [heritageIndex, setHeritageIndex] = useState(() =>
@@ -357,32 +376,93 @@ export function HomePage() {
   const isHeritageFallback = failedHeritageId === currentHeritage.id;
   const heritageNumberLabel = String(heritageIndex + 1).padStart(2, '0');
 
+  const subjectProgressBySlug = useMemo<Readonly<Record<string, PlannerSubjectProgress>>>(() => {
+    const map: Record<string, PlannerSubjectProgress> = {};
+    for (const card of subjectCards) {
+      map[card.subject.slug] = {
+        code: card.code,
+        completedCount: card.completedCount,
+        lessonCount: card.lessonCount,
+      };
+    }
+    return map;
+  }, [subjectCards]);
+
   const nearestMilestone = useMemo(() => {
     const upcoming = workspaceBucket.milestones
-      .map((m) => ({ milestone: m, daysUntil: computeDaysUntilDate(m.examDate) }))
+      .map((m) => {
+        const daysUntil = computeDaysUntilDate(m.examDate);
+        const progress = m.subjectSlug ? subjectProgressBySlug[m.subjectSlug] : undefined;
+        const pacePlan = progress
+          ? computeExamPacePlan({
+              daysUntil,
+              completedCount: progress.completedCount,
+              lessonCount: progress.lessonCount,
+              subjectCode: progress.code,
+            })
+          : null;
+        return { milestone: m, daysUntil, pacePlan };
+      })
       .filter((item) => item.daysUntil >= 0 && item.daysUntil <= 30)
       .sort((a, b) => a.daysUntil - b.daysUntil);
     return upcoming[0] ?? null;
-  }, [workspaceBucket.milestones]);
+  }, [subjectProgressBySlug, workspaceBucket.milestones]);
 
   const pendingTasksCount = useMemo(
     () => workspaceBucket.tasks.filter((t) => !t.completed).length,
     [workspaceBucket.tasks],
   );
 
-  const subjectAnalyticsData = useMemo(
-    () =>
-      subjectCards.map((c) => ({
-        slug: c.subject.slug,
-        code: c.code,
-        title: c.subject.title,
-        color: c.color,
-        completedCount: c.completedCount,
-        lessonCount: c.lessonCount,
-        percent: c.percent,
-      })),
-    [subjectCards],
-  );
+  // Gợi ý bài cần ôn tập hôm nay theo chu kỳ lặp lại ngắt quãng 1 / 3 / 7 ngày
+  const dueReviewLessons = useMemo<readonly ResolvedDueReviewLesson[]>(() => {
+    const rawItems = computeDueReviewLessons({
+      completedLessons,
+      reviewedLessons: workspaceBucket.reviewedLessons,
+    });
+    const resolved: ResolvedDueReviewLesson[] = [];
+    for (const item of rawItems) {
+      const loc = getLessonById(item.lessonId);
+      if (!loc) continue;
+      const meta = WORKSPACE_SUBJECT_META[loc.subject.slug as keyof typeof WORKSPACE_SUBJECT_META];
+      resolved.push({
+        lessonId: item.lessonId,
+        title: loc.lesson.title,
+        chapterLabel: `Bài ${loc.chapter.number}.${loc.lesson.number}`,
+        subjectCode: meta?.code ?? loc.subject.slug.toUpperCase().slice(0, 5),
+        subjectPillClass:
+          meta?.pillClass ??
+          'border-[var(--border-hairline)] bg-[var(--bg-workspace)] text-[var(--text-main)]',
+        intervalDays: item.intervalDays,
+        daysAgo: item.daysAgo,
+        reviewedToday: item.reviewedToday,
+        to: ROUTES.lesson(loc.subject.slug, loc.chapter.slug, loc.lesson.slug),
+      });
+    }
+    return resolved;
+  }, [completedLessons, workspaceBucket.reviewedLessons]);
+
+  const resumeChapterSummary = useMemo(() => {
+    if (!resumeLocation) return null;
+    const lessons = resumeLocation.chapter.lessons;
+    const doneInChapter = lessons.filter((ls) => Boolean(completedLessons[ls.id])).length;
+    const nextUnfinished =
+      lessons.find((ls) => ls.id !== resumeLocation.lesson.id && !completedLessons[ls.id]) ?? null;
+    return {
+      doneInChapter,
+      totalInChapter: lessons.length,
+      nextUnfinished: nextUnfinished
+        ? {
+            label: `${resumeLocation.chapter.number}.${nextUnfinished.number}`,
+            title: nextUnfinished.title,
+            to: ROUTES.lesson(
+              resumeLocation.subject.slug,
+              resumeLocation.chapter.slug,
+              nextUnfinished.slug,
+            ),
+          }
+        : null,
+    };
+  }, [completedLessons, resumeLocation]);
 
   const miniRingRadius = 11;
   const miniRingCirc = 2 * Math.PI * miniRingRadius;
@@ -484,12 +564,19 @@ export function HomePage() {
                     {nearestMilestone && (
                       <a
                         href="#lich-bieu-hoc-tap"
+                        data-testid="hero-milestone-pill"
+                        title={
+                          nearestMilestone.pacePlan?.summary ?? nearestMilestone.milestone.title
+                        }
                         className="inline-flex items-center gap-1.5 rounded-full border border-[#F0C87D]/45 bg-[#17332C]/75 px-3 py-1 font-mono text-[10.5px] font-semibold text-[#F5D89B] backdrop-blur-md transition-colors hover:bg-[#17332C]"
                       >
                         <Pin className="h-3 w-3 shrink-0" aria-hidden="true" />
-                        <span className="max-w-[190px] truncate">
+                        <span className="max-w-[260px] truncate">
                           {formatCountdownLabel(nearestMilestone.daysUntil)} ·{' '}
                           {nearestMilestone.milestone.title}
+                          {nearestMilestone.pacePlan
+                            ? ` · ${nearestMilestone.pacePlan.shortLabel}`
+                            : ''}
                         </span>
                       </a>
                     )}
@@ -750,43 +837,74 @@ export function HomePage() {
                   </h2>
                 )}
 
+                {/* Trên mobile (< md) chòm sao Hero ẩn nên hiển thị dãy chip bài trong chương tại đây;
+                    trên màn rộng (md+) chòm sao Hero đã hiển thị đầy đủ nên chỉ hiện tóm tắt tiến độ chương */}
                 {resumeLocation && (
-                  <div
-                    className="flex flex-wrap items-center gap-1.5 pt-0.5"
-                    aria-label="Các bài trong chương hiện tại"
-                  >
-                    {resumeLocation.chapter.lessons.slice(0, 6).map((ls) => {
-                      const isCurrent = ls.id === resumeLocation.lesson.id;
-                      const isDone = Boolean(completedLessons[ls.id]);
-                      return (
-                        <Link
-                          key={ls.id}
-                          to={ROUTES.lesson(
-                            resumeLocation.subject.slug,
-                            resumeLocation.chapter.slug,
-                            ls.slug,
-                          )}
-                          title={ls.title}
-                          className={cn(
-                            'inline-flex h-6 items-center gap-1 rounded-full border px-2.5 font-mono text-[10.5px] font-semibold transition-all duration-150',
-                            isCurrent
-                              ? 'border-transparent text-white shadow-2xs'
-                              : isDone
-                                ? 'border-[#0F7656]/25 bg-[#EAF5F0] text-[#0F7656] dark:bg-[#132C24] dark:text-[#4AD1A3]'
-                                : 'border-[var(--border-hairline)] bg-[#F6F8F7] text-[var(--text-muted)] hover:border-[var(--border-strong)] hover:text-[var(--text-main)] dark:bg-[#0F1715]',
-                          )}
-                          style={isCurrent ? { backgroundColor: resumeAccentColor } : undefined}
-                        >
-                          {isDone && !isCurrent && (
-                            <Check className="h-2.5 w-2.5 shrink-0" aria-hidden="true" />
-                          )}
-                          <span>
-                            {resumeLocation.chapter.number}.{ls.number}
-                          </span>
-                        </Link>
-                      );
-                    })}
-                  </div>
+                  <>
+                    <div
+                      data-testid="resume-chapter-chips-mobile"
+                      className="flex flex-wrap items-center gap-1.5 pt-0.5 md:hidden"
+                      aria-label="Các bài trong chương hiện tại"
+                    >
+                      {resumeLocation.chapter.lessons.slice(0, 6).map((ls) => {
+                        const isCurrent = ls.id === resumeLocation.lesson.id;
+                        const isDone = Boolean(completedLessons[ls.id]);
+                        return (
+                          <Link
+                            key={ls.id}
+                            to={ROUTES.lesson(
+                              resumeLocation.subject.slug,
+                              resumeLocation.chapter.slug,
+                              ls.slug,
+                            )}
+                            title={ls.title}
+                            className={cn(
+                              'inline-flex h-6 items-center gap-1 rounded-full border px-2.5 font-mono text-[10.5px] font-semibold transition-all duration-150',
+                              isCurrent
+                                ? 'border-transparent text-white shadow-2xs'
+                                : isDone
+                                  ? 'border-[#0F7656]/25 bg-[#EAF5F0] text-[#0F7656] dark:bg-[#132C24] dark:text-[#4AD1A3]'
+                                  : 'border-[var(--border-hairline)] bg-[#F6F8F7] text-[var(--text-muted)] hover:border-[var(--border-strong)] hover:text-[var(--text-main)] dark:bg-[#0F1715]',
+                            )}
+                            style={isCurrent ? { backgroundColor: resumeAccentColor } : undefined}
+                          >
+                            {isDone && !isCurrent && (
+                              <Check className="h-2.5 w-2.5 shrink-0" aria-hidden="true" />
+                            )}
+                            <span>
+                              {resumeLocation.chapter.number}.{ls.number}
+                            </span>
+                          </Link>
+                        );
+                      })}
+                    </div>
+
+                    {resumeChapterSummary && (
+                      <div
+                        data-testid="resume-chapter-summary-desktop"
+                        className="hidden flex-wrap items-center justify-between gap-2 pt-0.5 text-[11.5px] text-[var(--text-secondary)] md:flex"
+                      >
+                        <span className="font-mono text-[11px] tabular-nums">
+                          Chương {resumeLocation.chapter.number}:{' '}
+                          <strong className="text-[var(--text-main)]">
+                            {resumeChapterSummary.doneInChapter}/
+                            {resumeChapterSummary.totalInChapter}
+                          </strong>{' '}
+                          bài hoàn thành
+                        </span>
+                        {resumeChapterSummary.nextUnfinished && (
+                          <Link
+                            to={resumeChapterSummary.nextUnfinished.to}
+                            title={resumeChapterSummary.nextUnfinished.title}
+                            className="inline-flex items-center gap-1 font-mono text-[10.5px] font-semibold text-[#0F7656] hover:underline dark:text-[#4AD1A3]"
+                          >
+                            <span>Bài tiếp {resumeChapterSummary.nextUnfinished.label}</span>
+                            <ArrowRight className="h-3 w-3" aria-hidden="true" />
+                          </Link>
+                        )}
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
 
@@ -930,266 +1048,366 @@ export function HomePage() {
           </section>
         </div>
 
-        {/* ========================================================================
-            TẦNG 2 — BIỂU ĐỒ CỘT BO TRÒN + VÒNG TRÒN TIẾN ĐỘ (7/12) & KỆ STUDIO GẦN ĐÂY (5/12)
-            ======================================================================== */}
-        <section
-          aria-label="Phân tích nhịp học trực quan và Studio gần đây"
-          className="grid grid-cols-1 gap-5 lg:grid-cols-12"
-        >
-          <div className="lg:col-span-7">
-            <DashboardAnalyticsCard
-              metrics={activityMetrics}
-              subjectProgress={subjectAnalyticsData}
-              totalPercent={totalPercent}
-              completedCount={completedCount}
-              totalLessons={totalLessons}
-            />
-          </div>
-          <div className="lg:col-span-5">
-            <RecentStudioShelf />
-          </div>
-        </section>
+        {/* Thanh điều khiển tùy chỉnh ẩn/hiện & sắp xếp các tầng theo tài khoản */}
+        <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
+          <p className="font-mono text-[10.5px] text-[var(--text-muted)]">
+            Không gian cá nhân hóa · {dashboardLayout.order.length - dashboardLayout.hidden.length}/
+            {dashboardLayout.order.length} khối đang hiển thị
+          </p>
+          <DashboardLayoutCustomizer
+            layout={dashboardLayout}
+            onToggleSection={toggleDashboardSection}
+            onMoveSection={moveDashboardSection}
+            onReset={resetDashboardLayout}
+          />
+        </div>
 
         {/* ========================================================================
-            TẦNG 3 — 4 THẺ HỌC PHẦN TOÁN HỌC BO TRÒN MỀM (NỀN TRANH MÀU NƯỚC + MÔ HÌNH ĐỘNG)
+            CÁC TẦNG MÔ-ĐUN TÙY CHỈNH THỨ TỰ & ẨN/HIỆN THEO TÀI KHOẢN
             ======================================================================== */}
-        <section aria-label="Bốn học phần trọng tâm" className="space-y-4">
-          <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-black/[0.04] bg-white/75 px-4 py-3 shadow-2xs backdrop-blur-md dark:border-white/[0.06] dark:bg-[#141D1A]/80">
-            <div className="flex items-center gap-3">
-              <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-[#0F7656] to-[#17332C] text-[#F5D078] shadow-xs">
-                <Compass className="h-4.5 w-4.5" aria-hidden="true" />
-              </span>
-              <div>
-                <div className="flex items-center gap-2">
-                  <h2 className="font-mono text-[10.5px] font-bold tracking-[0.14em] text-[#0F7656] uppercase dark:text-[#4AD1A3]">
-                    Học phần trọng tâm
-                  </h2>
-                  <span aria-hidden="true" className="text-xs text-[#D4AF6A]">
-                    ◆
-                  </span>
-                  <span className="hidden font-mono text-[10px] text-[var(--text-muted)] sm:inline">
-                    {subjectCards.length} học phần · {totalLessons} bài giảng
-                  </span>
-                </div>
-                <p className="font-serif text-base font-semibold text-[var(--text-main)] sm:text-[17px]">
-                  Bản đồ Mô hình Toán học &amp; Khoa học Giáo dục
-                </p>
-              </div>
-            </div>
+        {(() => {
+          const hiddenSet = new Set(dashboardLayout.hidden);
+          const visibleIds = dashboardLayout.order.filter((id) => !hiddenSet.has(id));
 
-            <Link
-              to={ROUTES.learningSpace}
-              className="group/all inline-flex items-center gap-1.5 rounded-full border border-[#0F7656]/25 bg-[#EAF5F0] px-3.5 py-1.5 font-mono text-[11px] font-semibold text-[#0F7656] shadow-2xs transition-all hover:bg-[#0F7656] hover:text-white dark:border-[#4AD1A3]/25 dark:bg-[#132C24] dark:text-[#4AD1A3] dark:hover:bg-[#286D57] dark:hover:text-white"
-            >
-              <span>Mở bản đồ đầy đủ</span>
-              <ArrowRight
-                className="h-3.5 w-3.5 transition-transform duration-150 group-hover/all:translate-x-0.5"
-                aria-hidden="true"
-              />
-            </Link>
-          </div>
-
-          <div
-            data-testid="dashboard-subjects-grid"
-            className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4"
-          >
-            {subjectCards.map((item) => (
-              <SubjectMathCard
-                key={item.subject.slug}
-                slug={item.subject.slug}
-                code={item.code}
-                title={item.subject.title}
-                color={item.color}
-                pillClass={item.pillClass}
-                chapterCount={item.chapterCount}
-                lessonCount={item.lessonCount}
-                completedCount={item.completedCount}
-                percent={item.percent}
-                overviewHref={ROUTES.subjectOverview(item.subject.slug)}
-                recentLesson={item.recentLesson}
-              />
-            ))}
-          </div>
-        </section>
-
-        {/* ========================================================================
-            TẦNG 4 — KHÔNG GIAN LỊCH BIỂU & NHỊP HỌC RIÊNG RỘNG TRỌN MÀN HÌNH (12/12)
-            ======================================================================== */}
-        <section
-          id="lich-bieu-hoc-tap"
-          aria-label="Kế hoạch cá nhân hóa và nhịp chuyên cần"
-          data-testid="calendar-studio-section"
-          className="scroll-mt-16 space-y-4"
-        >
-          <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-black/[0.04] bg-white/75 px-4 py-3 shadow-2xs backdrop-blur-md dark:border-white/[0.06] dark:bg-[#141D1A]/80">
-            <div className="flex items-center gap-3">
-              <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-[#0F7656] to-[#1D4F6E] text-white shadow-xs">
-                <CalendarDays className="h-4.5 w-4.5" aria-hidden="true" />
-              </span>
-              <div>
-                <div className="flex items-center gap-2">
-                  <h2 className="font-mono text-[10.5px] font-bold tracking-[0.14em] text-[#0F7656] uppercase dark:text-[#4AD1A3]">
-                    Không gian Lịch biểu &amp; Nhịp học cá nhân
-                  </h2>
-                  <span aria-hidden="true" className="text-xs text-[#D4AF6A]">
-                    ◆
-                  </span>
-                </div>
-                <p className="font-serif text-base font-semibold text-[var(--text-main)] sm:text-[17px]">
-                  Kế hoạch Ôn tập, Đếm ngược Kỳ thi &amp; Bản đồ Nhiệt 28 ngày
-                </p>
-              </div>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-2 font-mono text-[11px] text-[var(--text-secondary)]">
-              <span className="rounded-full border border-[#0F7656]/20 bg-[#EAF5F0]/80 px-3 py-1 font-medium shadow-2xs dark:border-[#4AD1A3]/20 dark:bg-[#132C24]">
-                <strong className="text-[#0F7656] dark:text-[#4AD1A3]">{pendingTasksCount}</strong>{' '}
-                việc đang chờ
-              </span>
-            </div>
-          </div>
-
-          {/* Lịch biểu + Kế hoạch trải rộng trọn 12 cột thoáng đãng như 1 màn hình lịch chuyên dụng */}
-          <StudyPlannerWidget activityByDate={activityMetrics.activityByDate} />
-
-          {/* Dải ngang Nhịp chuyên cần + Nhiệt đồ 28 ngày + Mục tiêu tuần nối liền bên dưới */}
-          <StudyRhythmCard metrics={activityMetrics} layout="horizontal" />
-        </section>
-
-        {/* ========================================================================
-            TẦNG 5 — DI SẢN LIÊN HỆ TOÁN HỌC + THUẬT NGỮ FLASHCARD & BANNER SẢNH THƯ GIÃN
-            ======================================================================== */}
-        <section aria-label="Di sản học thuật, thuật ngữ và Sảnh Thư Giãn" className="space-y-5">
-          <div className="grid grid-cols-1 gap-5 lg:grid-cols-12">
-            {/* Cột Trái (7/12) — Di sản trong ngày + Dòng liên hệ Toán học / Sư phạm */}
-            <div
-              data-testid="dashboard-heritage-card"
-              className="group/heritage relative flex min-w-0 flex-col justify-between gap-4 overflow-hidden rounded-[26px] border border-black/[0.05] bg-white p-5 shadow-[0_14px_38px_-22px_rgba(16,45,35,0.14)] sm:p-6 lg:col-span-7 dark:border-white/[0.07] dark:bg-[#141D1A]"
-            >
-              {/* Hào quang triển lãm ấm phía sau khung tranh di sản */}
+          if (visibleIds.length === 0) {
+            return (
               <div
-                aria-hidden="true"
-                className="pointer-events-none absolute -top-12 -left-10 h-56 w-56 rounded-full bg-[radial-gradient(circle,rgba(212,175,106,0.18)_0%,transparent_72%)] dark:bg-[radial-gradient(circle,rgba(212,175,106,0.14)_0%,transparent_72%)]"
-              />
-              <div className="relative z-10 flex items-center justify-between gap-2">
-                <span className="inline-flex items-center gap-1.5 font-mono text-[11px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
-                  <Landmark
-                    className="h-3.5 w-3.5 text-[var(--accent-heritage)]"
-                    aria-hidden="true"
-                  />
-                  <span>Di sản trong ngày</span>
-                </span>
-
+                data-testid="dashboard-all-sections-hidden"
+                className="flex flex-col items-center justify-center gap-3 rounded-[26px] border border-dashed border-[var(--border-hairline)] bg-white/80 p-8 text-center dark:bg-[#141D1A]/80"
+              >
+                <p className="font-serif text-base font-semibold text-[var(--text-main)]">
+                  Tất cả các khối nội dung bên dưới đang được ẩn
+                </p>
                 <button
                   type="button"
-                  data-testid="dashboard-heritage-shuffle"
-                  onClick={handleShuffleHeritage}
-                  aria-label="Đổi tác phẩm di sản ngẫu nhiên"
-                  title="Đổi tác phẩm khác"
-                  className="group/hbtn inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-[var(--border-hairline)] bg-[#F6F8F7] text-[var(--text-secondary)] transition-colors hover:border-[var(--accent-heritage)] hover:text-[var(--text-main)] active:scale-95 dark:bg-[#0F1715]"
+                  onClick={resetDashboardLayout}
+                  className="inline-flex cursor-pointer items-center gap-1.5 rounded-full bg-[#0F7656] px-4 py-2 text-xs font-semibold text-white transition-opacity hover:opacity-95"
                 >
-                  <RefreshCw
-                    className="h-3.5 w-3.5 transition-transform duration-300 group-hover/hbtn:rotate-180"
-                    aria-hidden="true"
-                  />
+                  <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
+                  <span>Khôi phục bố cục mặc định</span>
                 </button>
               </div>
+            );
+          }
 
-              <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
-                <div className="relative shrink-0 pb-2 sm:w-52">
-                  <div className="h-40 w-full overflow-hidden rounded-[20px] border border-black/[0.06] bg-[var(--bg-shell)] shadow-xs dark:border-white/[0.08]">
-                    {isHeritageFallback ? (
-                      <HeritageFallbackIllustration artwork={currentHeritage} compact />
-                    ) : (
-                      <img
-                        src={currentHeritage.imageSrc}
-                        alt={currentHeritage.alt}
-                        loading="lazy"
-                        decoding="async"
-                        onError={() => setFailedHeritageId(currentHeritage.id)}
-                        className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover/heritage:scale-105"
-                      />
-                    )}
-                  </div>
-                  <div
-                    data-testid="heritage-overlap-badge"
-                    className="absolute right-2.5 bottom-0 inline-flex items-center gap-1.5 rounded-full border border-black/[0.06] bg-white px-3 py-1 font-mono text-[10px] font-semibold text-[var(--text-main)] shadow-md dark:border-white/[0.1] dark:bg-[#18221F]"
-                  >
-                    <span className="text-[var(--accent-heritage)] tabular-nums">
-                      {heritageNumberLabel}/{HERITAGE_ARTWORKS.length}
-                    </span>
-                    <span aria-hidden="true" className="text-[var(--border-strong)]">
-                      ·
-                    </span>
-                    <span className="max-w-[110px] truncate text-[var(--text-secondary)]">
-                      {currentHeritage.yearOrEra}
-                    </span>
-                  </div>
+          const renderSectionBlock = (id: DashboardSectionId, colSpanClass?: string): ReactNode => {
+            if (id === 'rhythm') {
+              return (
+                <div
+                  key="rhythm"
+                  data-dashboard-section="rhythm"
+                  className={colSpanClass ?? 'w-full'}
+                >
+                  <DashboardAnalyticsCard metrics={activityMetrics} />
                 </div>
+              );
+            }
 
-                <div className="min-w-0 flex-1 space-y-2.5">
-                  <div>
-                    <p className="truncate font-mono text-[10.5px] text-[var(--text-muted)]">
-                      {currentHeritage.artistOrOrigin}
-                    </p>
-                    <h3
-                      title={currentHeritage.title}
-                      className="truncate font-serif text-lg font-semibold text-[var(--text-main)]"
-                    >
-                      {currentHeritage.title}
-                    </h3>
-                  </div>
+            if (id === 'studio') {
+              return (
+                <div
+                  key="studio"
+                  data-dashboard-section="studio"
+                  className={colSpanClass ?? 'w-full'}
+                >
+                  <RecentStudioShelf />
+                </div>
+              );
+            }
 
-                  <p className="line-clamp-2 text-xs leading-relaxed text-[var(--text-secondary)]">
-                    {currentHeritage.coreAcademicValue}
-                  </p>
-
-                  {/* Dòng liên hệ Toán học / Sư phạm gắn chặt với 4 học phần */}
-                  <div
-                    data-testid="heritage-math-connection"
-                    className="rounded-[18px] bg-[#F6F8F7] px-3.5 py-2.5 text-[11.5px] leading-relaxed text-[var(--text-secondary)] dark:bg-[#0F1715]"
-                  >
-                    <div className="mb-1 flex items-center justify-between gap-2">
-                      <span className="inline-flex items-center gap-1 font-mono text-[10px] font-semibold tracking-wider text-[#0F7656] uppercase dark:text-[#4AD1A3]">
-                        <Sparkles className="h-3 w-3 shrink-0" aria-hidden="true" />
-                        <span>Liên hệ học phần</span>
+            if (id === 'subjects') {
+              return (
+                <section
+                  key="subjects"
+                  data-dashboard-section="subjects"
+                  aria-label="Bốn học phần trọng tâm"
+                  className="space-y-4"
+                >
+                  <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-black/[0.04] bg-white/75 px-4 py-3 shadow-2xs backdrop-blur-md dark:border-white/[0.06] dark:bg-[#141D1A]/80">
+                    <div className="flex items-center gap-3">
+                      <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-[#0F7656] to-[#17332C] text-[#F5D078] shadow-xs">
+                        <Compass className="h-4.5 w-4.5" aria-hidden="true" />
                       </span>
-                      <Link
-                        to={ROUTES.subjectOverview(currentHeritageMath.subjectSlug)}
-                        className={cn(
-                          'rounded-full border px-2 py-0.5 font-mono text-[9.5px] font-bold transition-opacity hover:opacity-85',
-                          currentHeritageSubjectMeta.pillClass,
-                        )}
-                      >
-                        {currentHeritageMath.subjectCode} ↗
-                      </Link>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <h2 className="font-mono text-[10.5px] font-bold tracking-[0.14em] text-[#0F7656] uppercase dark:text-[#4AD1A3]">
+                            Học phần trọng tâm
+                          </h2>
+                          <span aria-hidden="true" className="text-xs text-[#D4AF6A]">
+                            ◆
+                          </span>
+                          <span className="hidden font-mono text-[10px] text-[var(--text-muted)] sm:inline">
+                            {subjectCards.length} học phần · {totalLessons} bài giảng
+                          </span>
+                        </div>
+                        <p className="font-serif text-base font-semibold text-[var(--text-main)] sm:text-[17px]">
+                          Bản đồ Mô hình Toán học &amp; Khoa học Giáo dục
+                        </p>
+                      </div>
                     </div>
-                    <p>{currentHeritageMath.connection}</p>
-                  </div>
 
-                  <div className="pt-0.5">
                     <Link
-                      to={ROUTES.sanctuaryTab('di-san')}
-                      className="group/hlink inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--accent-heritage)] transition-opacity hover:opacity-85"
+                      to={ROUTES.learningSpace}
+                      className="group/all inline-flex items-center gap-1.5 rounded-full border border-[#0F7656]/25 bg-[#EAF5F0] px-3.5 py-1.5 font-mono text-[11px] font-semibold text-[#0F7656] shadow-2xs transition-all hover:bg-[#0F7656] hover:text-white dark:border-[#4AD1A3]/25 dark:bg-[#132C24] dark:text-[#4AD1A3] dark:hover:bg-[#286D57] dark:hover:text-white"
                     >
-                      <span>Xem phòng trưng bày 40 Di sản</span>
+                      <span>Mở bản đồ đầy đủ</span>
                       <ArrowRight
-                        className="h-3.5 w-3.5 transition-transform duration-150 group-hover/hlink:translate-x-0.5"
+                        className="h-3.5 w-3.5 transition-transform duration-150 group-hover/all:translate-x-0.5"
                         aria-hidden="true"
                       />
                     </Link>
                   </div>
-                </div>
-              </div>
-            </div>
 
-            {/* Cột Phải (5/12) — Thuật ngữ ngẫu nhiên KaTeX có chế độ Flashcard ôn nhanh */}
-            {currentGlossary && (
-              <GlossaryFlashcardCard entry={currentGlossary} onShuffle={handleShuffleGlossary} />
-            )}
-          </div>
-        </section>
+                  <div
+                    data-testid="dashboard-subjects-grid"
+                    className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4"
+                  >
+                    {subjectCards.map((item) => (
+                      <SubjectMathCard
+                        key={item.subject.slug}
+                        slug={item.subject.slug}
+                        code={item.code}
+                        title={item.subject.title}
+                        color={item.color}
+                        pillClass={item.pillClass}
+                        chapterCount={item.chapterCount}
+                        lessonCount={item.lessonCount}
+                        completedCount={item.completedCount}
+                        percent={item.percent}
+                        overviewHref={ROUTES.subjectOverview(item.subject.slug)}
+                        recentLesson={item.recentLesson}
+                      />
+                    ))}
+                  </div>
+                </section>
+              );
+            }
+
+            if (id === 'planner') {
+              return (
+                <section
+                  key="planner"
+                  id="lich-bieu-hoc-tap"
+                  data-dashboard-section="planner"
+                  aria-label="Kế hoạch cá nhân hóa và đếm ngược kỳ thi"
+                  data-testid="calendar-studio-section"
+                  className="scroll-mt-16 space-y-4"
+                >
+                  <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-black/[0.04] bg-white/75 px-4 py-3 shadow-2xs backdrop-blur-md dark:border-white/[0.06] dark:bg-[#141D1A]/80">
+                    <div className="flex items-center gap-3">
+                      <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-[#0F7656] to-[#1D4F6E] text-white shadow-xs">
+                        <CalendarDays className="h-4.5 w-4.5" aria-hidden="true" />
+                      </span>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <h2 className="font-mono text-[10.5px] font-bold tracking-[0.14em] text-[#0F7656] uppercase dark:text-[#4AD1A3]">
+                            Không gian Lịch biểu &amp; Kỳ thi
+                          </h2>
+                          <span aria-hidden="true" className="text-xs text-[#D4AF6A]">
+                            ◆
+                          </span>
+                        </div>
+                        <p className="font-serif text-base font-semibold text-[var(--text-main)] sm:text-[17px]">
+                          Kế hoạch Ôn tập &amp; Đếm ngược Kỳ thi theo Tiến độ
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-2 font-mono text-[11px] text-[var(--text-secondary)]">
+                      <span className="rounded-full border border-[#0F7656]/20 bg-[#EAF5F0]/80 px-3 py-1 font-medium shadow-2xs dark:border-[#4AD1A3]/20 dark:bg-[#132C24]">
+                        <strong className="text-[#0F7656] dark:text-[#4AD1A3]">
+                          {pendingTasksCount}
+                        </strong>{' '}
+                        việc đang chờ
+                      </span>
+                    </div>
+                  </div>
+
+                  <StudyPlannerWidget
+                    activityByDate={activityMetrics.activityByDate}
+                    subjectProgressBySlug={subjectProgressBySlug}
+                  />
+                </section>
+              );
+            }
+
+            if (id === 'heritage') {
+              return (
+                <div
+                  key="heritage"
+                  data-dashboard-section="heritage"
+                  data-testid="dashboard-heritage-card"
+                  className={cn(
+                    'group/heritage relative flex min-w-0 flex-col justify-between gap-4 overflow-hidden rounded-[26px] border border-black/[0.05] bg-white p-5 shadow-[0_14px_38px_-22px_rgba(16,45,35,0.14)] sm:p-6 dark:border-white/[0.07] dark:bg-[#141D1A]',
+                    colSpanClass,
+                  )}
+                >
+                  <div
+                    aria-hidden="true"
+                    className="pointer-events-none absolute -top-12 -left-10 h-56 w-56 rounded-full bg-[radial-gradient(circle,rgba(212,175,106,0.18)_0%,transparent_72%)] dark:bg-[radial-gradient(circle,rgba(212,175,106,0.14)_0%,transparent_72%)]"
+                  />
+                  <div className="relative z-10 flex items-center justify-between gap-2">
+                    <span className="inline-flex items-center gap-1.5 font-mono text-[11px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
+                      <Landmark
+                        className="h-3.5 w-3.5 text-[var(--accent-heritage)]"
+                        aria-hidden="true"
+                      />
+                      <span>Di sản trong ngày</span>
+                    </span>
+
+                    <button
+                      type="button"
+                      data-testid="dashboard-heritage-shuffle"
+                      onClick={handleShuffleHeritage}
+                      aria-label="Đổi tác phẩm di sản ngẫu nhiên"
+                      title="Đổi tác phẩm khác"
+                      className="group/hbtn inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-[var(--border-hairline)] bg-[#F6F8F7] text-[var(--text-secondary)] transition-colors hover:border-[var(--accent-heritage)] hover:text-[var(--text-main)] active:scale-95 dark:bg-[#0F1715]"
+                    >
+                      <RefreshCw
+                        className="h-3.5 w-3.5 transition-transform duration-300 group-hover/hbtn:rotate-180"
+                        aria-hidden="true"
+                      />
+                    </button>
+                  </div>
+
+                  <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
+                    <div className="relative shrink-0 pb-2 sm:w-52">
+                      <div className="h-40 w-full overflow-hidden rounded-[20px] border border-black/[0.06] bg-[var(--bg-shell)] shadow-xs dark:border-white/[0.08]">
+                        {isHeritageFallback ? (
+                          <HeritageFallbackIllustration artwork={currentHeritage} compact />
+                        ) : (
+                          <img
+                            src={currentHeritage.imageSrc}
+                            alt={currentHeritage.alt}
+                            loading="lazy"
+                            decoding="async"
+                            onError={() => setFailedHeritageId(currentHeritage.id)}
+                            className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover/heritage:scale-105"
+                          />
+                        )}
+                      </div>
+                      <div
+                        data-testid="heritage-overlap-badge"
+                        className="absolute right-2.5 bottom-0 inline-flex items-center gap-1.5 rounded-full border border-black/[0.06] bg-white px-3 py-1 font-mono text-[10px] font-semibold text-[var(--text-main)] shadow-md dark:border-white/[0.1] dark:bg-[#18221F]"
+                      >
+                        <span className="text-[var(--accent-heritage)] tabular-nums">
+                          {heritageNumberLabel}/{HERITAGE_ARTWORKS.length}
+                        </span>
+                        <span aria-hidden="true" className="text-[var(--border-strong)]">
+                          ·
+                        </span>
+                        <span className="max-w-[110px] truncate text-[var(--text-secondary)]">
+                          {currentHeritage.yearOrEra}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="min-w-0 flex-1 space-y-2.5">
+                      <div>
+                        <p className="truncate font-mono text-[10.5px] text-[var(--text-muted)]">
+                          {currentHeritage.artistOrOrigin}
+                        </p>
+                        <h3
+                          title={currentHeritage.title}
+                          className="truncate font-serif text-lg font-semibold text-[var(--text-main)]"
+                        >
+                          {currentHeritage.title}
+                        </h3>
+                      </div>
+
+                      <p className="line-clamp-2 text-xs leading-relaxed text-[var(--text-secondary)]">
+                        {currentHeritage.coreAcademicValue}
+                      </p>
+
+                      <div
+                        data-testid="heritage-math-connection"
+                        className="rounded-[18px] bg-[#F6F8F7] px-3.5 py-2.5 text-[11.5px] leading-relaxed text-[var(--text-secondary)] dark:bg-[#0F1715]"
+                      >
+                        <div className="mb-1 flex items-center justify-between gap-2">
+                          <span className="inline-flex items-center gap-1 font-mono text-[10px] font-semibold tracking-wider text-[#0F7656] uppercase dark:text-[#4AD1A3]">
+                            <Sparkles className="h-3 w-3 shrink-0" aria-hidden="true" />
+                            <span>Liên hệ học phần</span>
+                          </span>
+                          <Link
+                            to={ROUTES.subjectOverview(currentHeritageMath.subjectSlug)}
+                            className={cn(
+                              'rounded-full border px-2 py-0.5 font-mono text-[9.5px] font-bold transition-opacity hover:opacity-85',
+                              currentHeritageSubjectMeta.pillClass,
+                            )}
+                          >
+                            {currentHeritageMath.subjectCode} ↗
+                          </Link>
+                        </div>
+                        <p>{currentHeritageMath.connection}</p>
+                      </div>
+
+                      <div className="pt-0.5">
+                        <Link
+                          to={ROUTES.sanctuaryTab('di-san')}
+                          className="group/hlink inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--accent-heritage)] transition-opacity hover:opacity-85"
+                        >
+                          <span>Xem phòng trưng bày 40 Di sản</span>
+                          <ArrowRight
+                            className="h-3.5 w-3.5 transition-transform duration-150 group-hover/hlink:translate-x-0.5"
+                            aria-hidden="true"
+                          />
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            }
+
+            // id === 'review'
+            if (!currentGlossary) return null;
+            return (
+              <div
+                key="review"
+                data-dashboard-section="review"
+                className={colSpanClass ?? 'w-full'}
+              >
+                <GlossaryFlashcardCard
+                  entry={currentGlossary}
+                  onShuffle={handleShuffleGlossary}
+                  dueReviews={dueReviewLessons}
+                  onMarkReviewed={markLessonReviewed}
+                />
+              </div>
+            );
+          };
+
+          const isPaired = (a: DashboardSectionId, b: DashboardSectionId): boolean =>
+            (a === 'rhythm' && b === 'studio') ||
+            (a === 'studio' && b === 'rhythm') ||
+            (a === 'heritage' && b === 'review') ||
+            (a === 'review' && b === 'heritage');
+
+          const getPairSpan = (id: DashboardSectionId): string =>
+            id === 'rhythm' || id === 'heritage' ? 'lg:col-span-7' : 'lg:col-span-5';
+
+          const rows: ReactNode[] = [];
+          for (let i = 0; i < visibleIds.length; i += 1) {
+            const curr = visibleIds[i]!;
+            const next = visibleIds[i + 1];
+            if (next && isPaired(curr, next)) {
+              rows.push(
+                <div
+                  key={`${curr}-${next}`}
+                  className="grid grid-cols-1 items-stretch gap-5 lg:grid-cols-12"
+                >
+                  {renderSectionBlock(curr, getPairSpan(curr))}
+                  {renderSectionBlock(next, getPairSpan(next))}
+                </div>,
+              );
+              i += 1;
+            } else {
+              rows.push(renderSectionBlock(curr));
+            }
+          }
+
+          return <div className="space-y-8">{rows}</div>;
+        })()}
       </div>
     </div>
   );

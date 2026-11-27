@@ -170,9 +170,10 @@ describe('Spatial Editorial Portal & Thiên Cảnh Khí Quyển (0% AI Real Phot
     expect(screen.getByTestId('subject-svg-giai-tich-ham-mot-bien')).toBeInTheDocument();
     expect(screen.getByTestId('subject-svg-giao-duc-hoc')).toBeInTheDocument();
 
-    // Khối D: Lịch biểu, Mốc thi, To-Do & Nhịp chuyên cần cá nhân hóa
+    // Khối D: Lịch biểu, Mốc thi theo tiến độ & Nhịp học gộp (không còn study-rhythm-card tách rời)
     expect(screen.getByTestId('study-planner-widget')).toBeInTheDocument();
-    expect(screen.getByTestId('study-rhythm-card')).toBeInTheDocument();
+    expect(screen.getByTestId('dashboard-analytics-card')).toBeInTheDocument();
+    expect(screen.queryByTestId('study-rhythm-card')).not.toBeInTheDocument();
 
     // Khối E: Editorial Overlap Card Di sản (có liên hệ toán học) + Thuật ngữ Flashcard + Banner Sảnh Thư Giãn
     expect(screen.getByTestId('dashboard-heritage-card')).toBeInTheDocument();

@@ -1,4 +1,4 @@
-import { ArrowRight, BookMarked, Eye, Layers, RefreshCw } from 'lucide-react';
+import { ArrowRight, BookMarked, Check, Eye, History, Layers, RefreshCw } from 'lucide-react';
 import { type FC, useState } from 'react';
 import { Link } from 'react-router';
 import {
@@ -7,12 +7,31 @@ import {
   type MathGlossaryEntry,
   type MathGlossarySubject,
 } from '@/features/math-glossary';
+import type { ReviewIntervalDays } from '@/features/workspace';
 import { ROUTES } from '@/shared/config/routes';
 import { cn } from '@/shared/lib/cn';
+
+export interface ResolvedDueReviewLesson {
+  readonly lessonId: string;
+  readonly title: string;
+  readonly chapterLabel: string;
+  readonly subjectCode: string;
+  readonly subjectPillClass: string;
+  readonly intervalDays: ReviewIntervalDays;
+  readonly daysAgo: number;
+  readonly reviewedToday: boolean;
+  readonly to: string;
+}
 
 export interface GlossaryFlashcardCardProps {
   readonly entry: MathGlossaryEntry;
   readonly onShuffle: () => void;
+  /** Danh sách bài đã học đến kỳ ôn tập 1 / 3 / 7 ngày */
+  readonly dueReviews?: readonly ResolvedDueReviewLesson[];
+  /** Đánh dấu đã ôn tập bài học trong hôm nay */
+  readonly onMarkReviewed?: (lessonId: string) => void;
+  /** Lớp bổ sung cho container (hỗ trợ co giãn 5/12 hoặc 12/12 khi ẩn Di sản) */
+  readonly className?: string;
 }
 
 interface GlossarySubjectTheme {
@@ -166,13 +185,26 @@ const GlossaryDomainArtwork: FC<{ readonly subject: MathGlossarySubject }> = ({ 
   );
 };
 
-export const GlossaryFlashcardCard: FC<GlossaryFlashcardCardProps> = ({ entry, onShuffle }) => {
+export const GlossaryFlashcardCard: FC<GlossaryFlashcardCardProps> = ({
+  entry,
+  onShuffle,
+  dueReviews = [],
+  onMarkReviewed,
+  className,
+}) => {
+  const [selectedTab, setSelectedTab] = useState<'lessons' | 'glossary' | null>(null);
   const [isFlashcardMode, setIsFlashcardMode] = useState(false);
   const [isRevealed, setIsRevealed] = useState(false);
   const domainTheme =
     GLOSSARY_SUBJECT_THEMES[entry.subject] ?? GLOSSARY_SUBJECT_THEMES['cau-truc-dai-so'];
 
+  const pendingReviewsCount = dueReviews.filter((item) => !item.reviewedToday).length;
+  // Mặc định mở tab "Ôn bài 1·3·7" nếu hôm nay có bài đến kỳ ôn, ngược lại mở ngay Thuật ngữ & Flashcard
+  const activeTab: 'lessons' | 'glossary' =
+    selectedTab ?? (pendingReviewsCount > 0 ? 'lessons' : 'glossary');
+
   const handleToggleFlashcardMode = () => {
+    setSelectedTab('glossary');
     setIsFlashcardMode((prev) => !prev);
     setIsRevealed(false);
   };
@@ -185,182 +217,351 @@ export const GlossaryFlashcardCard: FC<GlossaryFlashcardCardProps> = ({ entry, o
   return (
     <div
       data-testid="dashboard-glossary-card"
-      className="relative flex min-w-0 flex-col justify-between gap-4 overflow-hidden rounded-[26px] border border-black/[0.05] bg-white p-5 shadow-[0_14px_38px_-22px_rgba(16,45,35,0.14)] sm:p-6 lg:col-span-5 dark:border-white/[0.07] dark:bg-[#141D1A]"
+      className={cn(
+        'relative flex h-full min-w-0 flex-col justify-between gap-4 overflow-hidden rounded-[26px] border border-black/[0.05] bg-white p-5 shadow-[0_14px_38px_-22px_rgba(16,45,35,0.14)] sm:p-6 dark:border-white/[0.07] dark:bg-[#141D1A]',
+        className,
+      )}
     >
-      {/* Dải gờ màu chuyên ngành trên đỉnh thẻ Thuật ngữ */}
+      {/* Dải gờ màu chuyên ngành trên đỉnh thẻ Ôn tập */}
       <div
         aria-hidden="true"
         style={{ background: domainTheme.topBarGradient }}
         className="pointer-events-none absolute inset-x-0 top-0 h-1.5 opacity-85"
       />
-      <div className="flex items-center justify-between gap-2">
-        <span className="inline-flex items-center gap-1.5 font-mono text-[11px] font-semibold tracking-wider text-[var(--text-muted)] uppercase">
-          <BookMarked
-            className="h-3.5 w-3.5 text-[#0F7656] dark:text-[#4AD1A3]"
-            aria-hidden="true"
-          />
-          <span>Thuật ngữ ngẫu nhiên</span>
-        </span>
-
-        <div className="flex items-center gap-1.5">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div
+          role="tablist"
+          aria-label="Chế độ ôn tập hôm nay"
+          className="inline-flex items-center gap-1 rounded-full border border-[var(--border-hairline)] bg-[#F6F8F7] p-0.5 dark:bg-[#0F1715]"
+        >
           <button
             type="button"
-            data-testid="glossary-flashcard-toggle"
-            onClick={handleToggleFlashcardMode}
-            aria-pressed={isFlashcardMode}
+            role="tab"
+            aria-selected={activeTab === 'lessons'}
+            data-testid="review-tab-lessons"
+            onClick={() => setSelectedTab('lessons')}
             className={cn(
-              'inline-flex h-7 cursor-pointer items-center gap-1 rounded-full border px-2.5 font-mono text-[10px] font-semibold transition-colors',
-              isFlashcardMode
-                ? 'border-[#0F7656] bg-[#0F7656] text-white'
-                : 'border-[var(--border-hairline)] bg-[#F6F8F7] text-[var(--text-secondary)] hover:border-[#0F7656]/40 hover:text-[var(--text-main)] dark:bg-[#0F1715]',
+              'inline-flex cursor-pointer items-center gap-1.5 rounded-full px-2.5 py-1 font-mono text-[10px] font-semibold transition-colors',
+              activeTab === 'lessons'
+                ? 'bg-[#17332C] text-white dark:bg-[#1F5E49]'
+                : 'text-[var(--text-secondary)] hover:text-[var(--text-main)]',
             )}
           >
-            <Layers className="h-3 w-3" aria-hidden="true" />
-            <span>{isFlashcardMode ? 'Đang ôn nhanh' : 'Flashcard'}</span>
+            <History className="h-3 w-3" aria-hidden="true" />
+            <span>Ôn tập hôm nay</span>
+            {pendingReviewsCount > 0 && (
+              <span
+                data-testid="review-pending-badge"
+                className={cn(
+                  'rounded-full px-1.5 py-0.25 text-[9.5px] leading-none font-bold tabular-nums',
+                  activeTab === 'lessons'
+                    ? 'bg-[#F0C87D] text-[#17332C]'
+                    : 'bg-[#0F7656] text-white dark:bg-[#4AD1A3] dark:text-[#0C1210]',
+                )}
+              >
+                {pendingReviewsCount}
+              </span>
+            )}
           </button>
 
           <button
             type="button"
-            data-testid="glossary-shuffle-btn"
-            onClick={handleNextCard}
-            aria-label="Đổi thuật ngữ ngẫu nhiên"
-            className="group/gbtn inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-[var(--border-hairline)] bg-[#F6F8F7] text-[var(--text-secondary)] transition-colors hover:border-[#0F7656]/40 hover:text-[var(--text-main)] active:scale-95 dark:bg-[#0F1715]"
+            role="tab"
+            aria-selected={activeTab === 'glossary'}
+            data-testid="review-tab-glossary"
+            onClick={() => setSelectedTab('glossary')}
+            className={cn(
+              'inline-flex cursor-pointer items-center gap-1 rounded-full px-2.5 py-1 font-mono text-[10px] font-semibold transition-colors',
+              activeTab === 'glossary'
+                ? 'bg-[#17332C] text-white dark:bg-[#1F5E49]'
+                : 'text-[var(--text-secondary)] hover:text-[var(--text-main)]',
+            )}
           >
-            <RefreshCw
-              className="h-3.5 w-3.5 transition-transform duration-300 group-hover/gbtn:rotate-180"
-              aria-hidden="true"
-            />
+            <BookMarked className="h-3 w-3" aria-hidden="true" />
+            <span>Thuật ngữ</span>
           </button>
         </div>
+
+        {activeTab === 'glossary' && (
+          <div className="flex items-center gap-1.5">
+            <button
+              type="button"
+              data-testid="glossary-flashcard-toggle"
+              onClick={handleToggleFlashcardMode}
+              aria-pressed={isFlashcardMode}
+              className={cn(
+                'inline-flex h-7 cursor-pointer items-center gap-1 rounded-full border px-2.5 font-mono text-[10px] font-semibold transition-colors',
+                isFlashcardMode
+                  ? 'border-[#0F7656] bg-[#0F7656] text-white'
+                  : 'border-[var(--border-hairline)] bg-[#F6F8F7] text-[var(--text-secondary)] hover:border-[#0F7656]/40 hover:text-[var(--text-main)] dark:bg-[#0F1715]',
+              )}
+            >
+              <Layers className="h-3 w-3" aria-hidden="true" />
+              <span>{isFlashcardMode ? 'Đang ôn nhanh' : 'Flashcard'}</span>
+            </button>
+
+            <button
+              type="button"
+              data-testid="glossary-shuffle-btn"
+              onClick={handleNextCard}
+              aria-label="Đổi thuật ngữ ngẫu nhiên"
+              className="group/gbtn inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-[var(--border-hairline)] bg-[#F6F8F7] text-[var(--text-secondary)] transition-colors hover:border-[#0F7656]/40 hover:text-[var(--text-main)] active:scale-95 dark:bg-[#0F1715]"
+            >
+              <RefreshCw
+                className="h-3.5 w-3.5 transition-transform duration-300 group-hover/gbtn:rotate-180"
+                aria-hidden="true"
+              />
+            </button>
+          </div>
+        )}
       </div>
 
-      {isFlashcardMode ? (
+      {activeTab === 'lessons' ? (
         <div
-          data-testid="glossary-flashcard-stage"
-          className={cn(
-            'lu-atelier-backdrop relative flex flex-1 flex-col justify-center gap-4 overflow-hidden rounded-[20px] border border-black/[0.04] bg-gradient-to-br p-5 dark:border-white/[0.06]',
-            domainTheme.stageGradClass,
-            domainTheme.inkClass,
-          )}
+          data-testid="daily-review-lessons-panel"
+          className="flex flex-1 flex-col justify-between gap-3"
         >
-          <GlossaryDomainArtwork subject={entry.subject} />
-          <div className="relative z-10 space-y-1 text-[var(--text-main)]">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <span className="font-mono text-[10px] font-semibold tracking-wider text-[var(--accent-heritage)] uppercase">
-                Thử nhớ công thức & định nghĩa
-              </span>
-              <span
-                className={cn(
-                  'rounded-full border px-2 py-0.5 font-mono text-[9.5px] font-bold',
-                  domainTheme.pillClass,
-                )}
-              >
-                {domainTheme.code}
-              </span>
-            </div>
-            <p className="font-serif text-lg font-semibold text-[var(--text-main)]">
-              {entry.nameVi}
-            </p>
-            <p className="font-mono text-[11px] text-[var(--text-muted)]">{entry.nameEn}</p>
-          </div>
+          {dueReviews.length > 0 ? (
+            <ul className="space-y-2" aria-label="Các bài đến kỳ ôn tập 1, 3, 7 ngày">
+              {dueReviews.slice(0, 4).map((item) => (
+                <li
+                  key={item.lessonId}
+                  data-testid="due-review-item"
+                  className={cn(
+                    'flex items-center justify-between gap-2.5 rounded-2xl border px-3 py-2.5 transition-colors',
+                    item.reviewedToday
+                      ? 'border-[#0F7656]/20 bg-[#EAF5F0]/55 opacity-75 dark:border-[#4AD1A3]/20 dark:bg-[#132C24]/50'
+                      : 'border-[var(--border-hairline)] bg-[#F7F8F7] hover:border-[#0F7656]/35 dark:bg-[#0F1715]',
+                  )}
+                >
+                  <Link to={item.to} className="min-w-0 flex-1 space-y-0.5">
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <span
+                        className={cn(
+                          'rounded-full border px-1.5 py-0.25 font-mono text-[9.5px] font-bold',
+                          item.subjectPillClass,
+                        )}
+                      >
+                        {item.subjectCode}
+                      </span>
+                      <span className="rounded-full bg-[#FDF4E7] px-2 py-0.25 font-mono text-[9.5px] font-semibold text-[#8C5828] dark:bg-[#261D12] dark:text-[#E5A95C]">
+                        Sau {item.intervalDays} ngày
+                      </span>
+                      <span className="truncate font-mono text-[10px] text-[var(--text-muted)]">
+                        {item.chapterLabel}
+                      </span>
+                    </div>
+                    <p
+                      className={cn(
+                        'truncate text-xs font-semibold text-[var(--text-main)] hover:text-[#0F7656] dark:hover:text-[#4AD1A3]',
+                        item.reviewedToday && 'line-through',
+                      )}
+                    >
+                      {item.title}
+                    </p>
+                  </Link>
 
-          {isRevealed ? (
+                  {onMarkReviewed && (
+                    <button
+                      type="button"
+                      data-testid={`mark-reviewed-${item.lessonId}`}
+                      disabled={item.reviewedToday}
+                      onClick={() => onMarkReviewed(item.lessonId)}
+                      aria-label={
+                        item.reviewedToday
+                          ? `Đã ôn hôm nay: ${item.title}`
+                          : `Đánh dấu đã ôn: ${item.title}`
+                      }
+                      className={cn(
+                        'inline-flex shrink-0 cursor-pointer items-center gap-1 rounded-full border px-2.5 py-1 font-mono text-[10px] font-semibold transition-colors',
+                        item.reviewedToday
+                          ? 'cursor-default border-[#0F7656]/25 bg-[#EAF5F0] text-[#0F7656] dark:bg-[#132C24] dark:text-[#4AD1A3]'
+                          : 'border-[var(--border-hairline)] bg-white text-[var(--text-secondary)] hover:border-[#0F7656] hover:bg-[#0F7656] hover:text-white dark:bg-[#141D1A]',
+                      )}
+                    >
+                      <Check className="h-3 w-3" aria-hidden="true" />
+                      <span>{item.reviewedToday ? 'Đã ôn' : 'Xong'}</span>
+                    </button>
+                  )}
+                </li>
+              ))}
+            </ul>
+          ) : (
             <div
-              data-testid="glossary-flashcard-answer"
-              className="relative z-10 space-y-3 border-t border-[var(--border-hairline)] pt-3"
+              data-testid="daily-review-empty"
+              className="flex flex-1 flex-col items-start justify-center gap-2.5 rounded-[20px] border border-dashed border-[var(--border-hairline)] bg-[#F7F8F7] p-4 dark:bg-[#0F1715]"
             >
-              <div className="inline-flex rounded-xl border border-[#0F7656]/20 bg-white px-3.5 py-2 text-sm text-[var(--text-main)] shadow-2xs dark:bg-[#141D1A]">
+              <p className="font-serif text-sm font-semibold text-[var(--text-main)]">
+                Chưa có bài đến mốc ôn tập 1 · 3 · 7 ngày
+              </p>
+              <p className="text-xs leading-relaxed text-[var(--text-secondary)]">
+                Mỗi khi hoàn thành bài giảng, hệ thống sẽ tự động gợi ý ôn lại sau 1 ngày, 3 ngày và
+                7 ngày để củng cố định lý và chứng minh lâu dài.
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedTab('glossary');
+                  setIsFlashcardMode(true);
+                  setIsRevealed(false);
+                }}
+                className="inline-flex cursor-pointer items-center gap-1.5 rounded-full bg-[#0F7656] px-3.5 py-1.5 text-xs font-semibold text-white transition-opacity hover:opacity-95"
+              >
+                <Layers className="h-3.5 w-3.5" aria-hidden="true" />
+                <span>Luyện Flashcard thuật ngữ ngay</span>
+              </button>
+            </div>
+          )}
+
+          <div className="flex items-center justify-between gap-2 pt-1">
+            <span className="font-mono text-[10px] text-[var(--text-muted)]">
+              Lặp lại ngắt quãng · 1 / 3 / 7 ngày
+            </span>
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedTab('glossary');
+                setIsFlashcardMode(true);
+                setIsRevealed(false);
+              }}
+              className="inline-flex cursor-pointer items-center gap-1 font-mono text-[11px] font-semibold text-[#0F7656] hover:underline dark:text-[#4AD1A3]"
+            >
+              <span>Ôn Flashcard</span>
+              <ArrowRight className="h-3 w-3" aria-hidden="true" />
+            </button>
+          </div>
+        </div>
+      ) : (
+        <>
+          {isFlashcardMode ? (
+            <div
+              data-testid="glossary-flashcard-stage"
+              className={cn(
+                'lu-atelier-backdrop relative flex flex-1 flex-col justify-center gap-4 overflow-hidden rounded-[20px] border border-black/[0.04] bg-gradient-to-br p-5 dark:border-white/[0.06]',
+                domainTheme.stageGradClass,
+                domainTheme.inkClass,
+              )}
+            >
+              <GlossaryDomainArtwork subject={entry.subject} />
+              <div className="relative z-10 space-y-1 text-[var(--text-main)]">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <span className="font-mono text-[10px] font-semibold tracking-wider text-[var(--accent-heritage)] uppercase">
+                    Thử nhớ công thức &amp; định nghĩa
+                  </span>
+                  <span
+                    className={cn(
+                      'rounded-full border px-2 py-0.5 font-mono text-[9.5px] font-bold',
+                      domainTheme.pillClass,
+                    )}
+                  >
+                    {domainTheme.code}
+                  </span>
+                </div>
+                <p className="font-serif text-lg font-semibold text-[var(--text-main)]">
+                  {entry.nameVi}
+                </p>
+                <p className="font-mono text-[11px] text-[var(--text-muted)]">{entry.nameEn}</p>
+              </div>
+
+              {isRevealed ? (
+                <div
+                  data-testid="glossary-flashcard-answer"
+                  className="relative z-10 space-y-3 border-t border-[var(--border-hairline)] pt-3"
+                >
+                  <div className="inline-flex rounded-xl border border-[#0F7656]/20 bg-white px-3.5 py-2 text-sm text-[var(--text-main)] shadow-2xs dark:bg-[#141D1A]">
+                    <KatexMath math={entry.formula || entry.symbol} />
+                  </div>
+                  {entry.brief && (
+                    <p className="text-xs leading-relaxed text-[var(--text-secondary)]">
+                      <InlineMathText text={entry.brief} />
+                    </p>
+                  )}
+                  <div className="flex items-center justify-between pt-1">
+                    <button
+                      type="button"
+                      onClick={() => setIsRevealed(false)}
+                      className="cursor-pointer font-mono text-[10.5px] text-[var(--text-muted)] hover:text-[var(--text-main)]"
+                    >
+                      Úp thẻ lại
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleNextCard}
+                      className="inline-flex cursor-pointer items-center gap-1 rounded-full bg-[#0F7656] px-3 py-1 text-[11px] font-semibold text-white transition-opacity hover:opacity-95"
+                    >
+                      <span>Thẻ tiếp theo</span>
+                      <ArrowRight className="h-3 w-3" aria-hidden="true" />
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  data-testid="glossary-flashcard-reveal"
+                  onClick={() => setIsRevealed(true)}
+                  className="relative z-10 flex w-full cursor-pointer items-center justify-center gap-2 rounded-2xl border border-dashed border-[#0F7656]/45 bg-white/90 px-3 py-3.5 text-xs font-semibold text-[#0F7656] backdrop-blur-xs transition-colors hover:bg-[#EAF5F0] dark:bg-[#141D1A]/90 dark:text-[#4AD1A3]"
+                >
+                  <Eye className="h-3.5 w-3.5" aria-hidden="true" />
+                  <span>Lật xem công thức &amp; định nghĩa</span>
+                </button>
+              )}
+            </div>
+          ) : (
+            <Link
+              to={`${ROUTES.glossary}?q=${encodeURIComponent(entry.nameVi)}`}
+              className={cn(
+                'lu-atelier-backdrop group relative flex flex-1 flex-col justify-center gap-3.5 overflow-hidden rounded-[20px] border border-black/[0.05] bg-gradient-to-br p-4 transition-all duration-200 hover:border-black/[0.1] dark:border-white/[0.07] dark:hover:border-white/[0.14]',
+                domainTheme.stageGradClass,
+                domainTheme.inkClass,
+              )}
+            >
+              {/* Lớp tranh màu nước khoáng thạch cục bộ hòa trộn dịu phía sau công thức */}
+              <div
+                aria-hidden="true"
+                style={{ backgroundImage: `url('${domainTheme.washUrl}')` }}
+                className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-40 mix-blend-multiply transition-transform duration-700 ease-out group-hover:scale-105 dark:opacity-15 dark:mix-blend-screen"
+              />
+              <GlossaryDomainArtwork subject={entry.subject} />
+              <div className="relative z-10 space-y-1 text-[var(--text-main)]">
+                <div className="flex items-start justify-between gap-2">
+                  <p className="font-serif text-lg leading-snug font-semibold text-[var(--text-main)] group-hover:text-[#0F7656] dark:group-hover:text-[#4AD1A3]">
+                    {entry.nameVi}
+                  </p>
+                  <span
+                    className={cn(
+                      'shrink-0 rounded-full border px-2 py-0.5 font-mono text-[9.5px] font-bold',
+                      domainTheme.pillClass,
+                    )}
+                  >
+                    {domainTheme.code}
+                  </span>
+                </div>
+                <p className="font-mono text-[11px] text-[var(--text-muted)]">{entry.nameEn}</p>
+              </div>
+
+              <div className="relative z-10 flex items-center justify-center rounded-2xl border border-[#0F7656]/18 bg-white/92 px-4 py-3 text-base text-[var(--text-main)] shadow-xs backdrop-blur-xs dark:bg-[#141D1A]/92">
                 <KatexMath math={entry.formula || entry.symbol} />
               </div>
+
               {entry.brief && (
-                <p className="text-xs leading-relaxed text-[var(--text-secondary)]">
+                <p className="relative z-10 line-clamp-3 text-xs leading-relaxed text-[var(--text-secondary)]">
                   <InlineMathText text={entry.brief} />
                 </p>
               )}
-              <div className="flex items-center justify-between pt-1">
-                <button
-                  type="button"
-                  onClick={() => setIsRevealed(false)}
-                  className="cursor-pointer font-mono text-[10.5px] text-[var(--text-muted)] hover:text-[var(--text-main)]"
-                >
-                  Úp thẻ lại
-                </button>
-                <button
-                  type="button"
-                  onClick={handleNextCard}
-                  className="inline-flex cursor-pointer items-center gap-1 rounded-full bg-[#0F7656] px-3 py-1 text-[11px] font-semibold text-white transition-opacity hover:opacity-95"
-                >
-                  <span>Thẻ tiếp theo</span>
-                  <ArrowRight className="h-3 w-3" aria-hidden="true" />
-                </button>
-              </div>
-            </div>
-          ) : (
-            <button
-              type="button"
-              data-testid="glossary-flashcard-reveal"
-              onClick={() => setIsRevealed(true)}
-              className="relative z-10 flex w-full cursor-pointer items-center justify-center gap-2 rounded-2xl border border-dashed border-[#0F7656]/45 bg-white/90 px-3 py-3.5 text-xs font-semibold text-[#0F7656] backdrop-blur-xs transition-colors hover:bg-[#EAF5F0] dark:bg-[#141D1A]/90 dark:text-[#4AD1A3]"
+            </Link>
+          )}
+
+          <div className="flex justify-end">
+            <Link
+              to={ROUTES.glossary}
+              className="inline-flex items-center gap-1 font-mono text-[11px] font-semibold text-[#0F7656] hover:underline dark:text-[#4AD1A3]"
             >
-              <Eye className="h-3.5 w-3.5" aria-hidden="true" />
-              <span>Lật xem công thức & định nghĩa</span>
-            </button>
-          )}
-        </div>
-      ) : (
-        <Link
-          to={`${ROUTES.glossary}?q=${encodeURIComponent(entry.nameVi)}`}
-          className={cn(
-            'lu-atelier-backdrop group relative flex flex-1 flex-col justify-center gap-3.5 overflow-hidden rounded-[20px] border border-black/[0.05] bg-gradient-to-br p-4 transition-all duration-200 hover:border-black/[0.1] dark:border-white/[0.07] dark:hover:border-white/[0.14]',
-            domainTheme.stageGradClass,
-            domainTheme.inkClass,
-          )}
-        >
-          {/* Lớp tranh màu nước khoáng thạch cục bộ hòa trộn dịu phía sau công thức */}
-          <div
-            aria-hidden="true"
-            style={{ backgroundImage: `url('${domainTheme.washUrl}')` }}
-            className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-40 mix-blend-multiply transition-transform duration-700 ease-out group-hover:scale-105 dark:opacity-15 dark:mix-blend-screen"
-          />
-          <GlossaryDomainArtwork subject={entry.subject} />
-          <div className="relative z-10 space-y-1 text-[var(--text-main)]">
-            <div className="flex items-start justify-between gap-2">
-              <p className="font-serif text-lg leading-snug font-semibold text-[var(--text-main)] group-hover:text-[#0F7656] dark:group-hover:text-[#4AD1A3]">
-                {entry.nameVi}
-              </p>
-              <span
-                className={cn(
-                  'shrink-0 rounded-full border px-2 py-0.5 font-mono text-[9.5px] font-bold',
-                  domainTheme.pillClass,
-                )}
-              >
-                {domainTheme.code}
-              </span>
-            </div>
-            <p className="font-mono text-[11px] text-[var(--text-muted)]">{entry.nameEn}</p>
+              <span>Tra cứu trên Kho Thuật ngữ</span>
+              <ArrowRight className="h-3 w-3" aria-hidden="true" />
+            </Link>
           </div>
-
-          <div className="relative z-10 flex items-center justify-center rounded-2xl border border-[#0F7656]/18 bg-white/92 px-4 py-3 text-base text-[var(--text-main)] shadow-xs backdrop-blur-xs dark:bg-[#141D1A]/92">
-            <KatexMath math={entry.formula || entry.symbol} />
-          </div>
-
-          {entry.brief && (
-            <p className="relative z-10 line-clamp-3 text-xs leading-relaxed text-[var(--text-secondary)]">
-              <InlineMathText text={entry.brief} />
-            </p>
-          )}
-        </Link>
+        </>
       )}
-
-      <div className="flex justify-end">
-        <Link
-          to={ROUTES.glossary}
-          className="inline-flex items-center gap-1 font-mono text-[11px] font-semibold text-[#0F7656] hover:underline dark:text-[#4AD1A3]"
-        >
-          <span>Tra cứu trên Kho Thuật ngữ</span>
-          <ArrowRight className="h-3 w-3" aria-hidden="true" />
-        </Link>
-      </div>
     </div>
   );
 };

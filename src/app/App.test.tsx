@@ -63,7 +63,8 @@ describe('App routing smoke test', () => {
     expect(screen.getByTestId('dashboard-pomodoro-bar')).toBeInTheDocument();
     expect(screen.getByTestId('dashboard-subjects-grid')).toBeInTheDocument();
     expect(screen.getByTestId('study-planner-widget')).toBeInTheDocument();
-    expect(screen.getByTestId('study-rhythm-card')).toBeInTheDocument();
+    expect(screen.getByTestId('dashboard-analytics-card')).toBeInTheDocument();
+    expect(screen.queryByTestId('study-rhythm-card')).not.toBeInTheDocument();
     expect(screen.getByTestId('dashboard-subject-card-cau-truc-dai-so')).toHaveAttribute(
       'href',
       '/mon-hoc/cau-truc-dai-so',

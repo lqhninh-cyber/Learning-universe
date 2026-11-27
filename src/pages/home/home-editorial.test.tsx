@@ -488,9 +488,8 @@ describe('Home Editorial Components & Scholarly Upgrades', () => {
       fireEvent.click(screen.getByTestId('dashboard-heritage-shuffle'));
       expect(heritageCard.querySelector('h3')?.textContent).not.toBe(initialHeritageTitle);
 
-      expect(screen.getByTestId('dashboard-glossary-card')).toHaveTextContent(
-        /Thuật ngữ ngẫu nhiên/i,
-      );
+      expect(screen.getByTestId('dashboard-glossary-card')).toHaveTextContent(/Ôn tập hôm nay/i);
+      expect(screen.getByTestId('dashboard-glossary-card')).toHaveTextContent(/Thuật ngữ/i);
       // Banner Sảnh Thư Giãn đã gỡ (trùng Rail trái, thẻ Di sản và toast nghỉ Pomodoro)
       expect(screen.queryByTestId('dashboard-sanctuary-banner')).not.toBeInTheDocument();
 

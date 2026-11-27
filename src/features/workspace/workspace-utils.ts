@@ -1,4 +1,10 @@
-import type { StudyTaskItem } from './types';
+import {
+  DEFAULT_DASHBOARD_SECTION_ORDER,
+  isDashboardSectionId,
+  type DashboardLayoutConfig,
+  type DashboardSectionId,
+  type StudyTaskItem,
+} from './types';
 
 export type DayPeriod = 'morning' | 'afternoon' | 'evening' | 'night';
 
@@ -277,5 +283,185 @@ export function computeStudyActivityMetrics(params: {
     weekCompletedTasksCount,
     activityByDate,
     heatmapDays,
+  };
+}
+
+/** Chuẩn hóa cấu hình bố cục tầng trang Tổng quan (tương thích dữ liệu cũ từ localStorage) */
+export function normalizeDashboardLayout(
+  layout?: Partial<DashboardLayoutConfig> | null,
+): DashboardLayoutConfig {
+  const seenOrder = new Set<DashboardSectionId>();
+  const order: DashboardSectionId[] = [];
+  for (const id of layout?.order ?? []) {
+    if (isDashboardSectionId(id) && !seenOrder.has(id)) {
+      seenOrder.add(id);
+      order.push(id);
+    }
+  }
+  for (const id of DEFAULT_DASHBOARD_SECTION_ORDER) {
+    if (!seenOrder.has(id)) {
+      seenOrder.add(id);
+      order.push(id);
+    }
+  }
+
+  const seenHidden = new Set<DashboardSectionId>();
+  const hidden: DashboardSectionId[] = [];
+  for (const id of layout?.hidden ?? []) {
+    if (isDashboardSectionId(id) && !seenHidden.has(id)) {
+      seenHidden.add(id);
+      hidden.push(id);
+    }
+  }
+
+  return { order, hidden };
+}
+
+export type ReviewIntervalDays = 1 | 3 | 7;
+
+export interface DueReviewLessonItem {
+  readonly lessonId: string;
+  readonly completedDateKey: string;
+  readonly daysAgo: number;
+  readonly intervalDays: ReviewIntervalDays;
+  readonly reviewedToday: boolean;
+}
+
+/**
+ * Lọc danh sách bài đã hoàn thành đến hạn ôn tập theo chu kỳ ngắt quãng 1 / 3 / 7 ngày.
+ * - 1 ngày: vừa hoàn thành hôm qua
+ * - 3 ngày: hoàn thành cách đây 3–4 ngày (chưa ôn lại trong cửa sổ này)
+ * - 7 ngày: hoàn thành cách đây 7–10 ngày (chưa ôn lại trong cửa sổ này)
+ */
+export function computeDueReviewLessons(params: {
+  readonly completedLessons: Readonly<Record<string, string>>;
+  readonly reviewedLessons?: Readonly<Record<string, string>>;
+  readonly now?: Date;
+}): readonly DueReviewLessonItem[] {
+  const now = params.now ?? new Date();
+  const todayKey = toLocalDateKey(now);
+  const reviewedMap = params.reviewedLessons ?? {};
+
+  const items: DueReviewLessonItem[] = [];
+
+  for (const [lessonId, completedIso] of Object.entries(params.completedLessons)) {
+    const completedDateKey = isoToLocalDateKey(completedIso);
+    if (!completedDateKey) continue;
+
+    const daysAgo = -computeDaysUntilDate(completedDateKey, now);
+    let intervalDays: ReviewIntervalDays | null = null;
+    let windowStartDaysAgo = 0;
+
+    if (daysAgo === 1) {
+      intervalDays = 1;
+      windowStartDaysAgo = 1;
+    } else if (daysAgo >= 3 && daysAgo <= 4) {
+      intervalDays = 3;
+      windowStartDaysAgo = 3;
+    } else if (daysAgo >= 7 && daysAgo <= 10) {
+      intervalDays = 7;
+      windowStartDaysAgo = 7;
+    }
+
+    if (!intervalDays) continue;
+
+    const lastReviewedDateKey = reviewedMap[lessonId] ?? null;
+    const reviewedToday = lastReviewedDateKey === todayKey;
+
+    // Nếu đã ôn lại trong cùng cửa sổ mốc này ở ngày trước hôm nay thì không nhắc lặp
+    if (lastReviewedDateKey && !reviewedToday) {
+      const daysBetweenCompletedAndReview = computeDaysUntilDate(
+        lastReviewedDateKey,
+        parseLocalDateKey(completedDateKey),
+      );
+      if (daysBetweenCompletedAndReview >= windowStartDaysAgo) {
+        continue;
+      }
+    }
+
+    items.push({
+      lessonId,
+      completedDateKey,
+      daysAgo,
+      intervalDays,
+      reviewedToday,
+    });
+  }
+
+  return items.sort((a, b) => {
+    if (a.reviewedToday !== b.reviewedToday) return a.reviewedToday ? 1 : -1;
+    if (a.intervalDays !== b.intervalDays) return a.intervalDays - b.intervalDays;
+    return a.daysAgo - b.daysAgo;
+  });
+}
+
+export type ExamPaceUrgency = 'ready' | 'comfortable' | 'tight' | 'intense';
+
+export interface ExamPacePlan {
+  readonly remainingLessons: number;
+  readonly lessonsPerDay: number;
+  readonly urgency: ExamPaceUrgency;
+  readonly summary: string;
+  readonly shortLabel: string;
+}
+
+/**
+ * Gắn đếm ngược kỳ thi với tiến độ thực tế của học phần để gợi ý nhịp học mỗi ngày.
+ * Ví dụ: còn 12 ngày, còn 8 bài CTĐS chưa học → "Còn 8 bài CTĐS chưa học → khoảng 1 bài/ngày"
+ */
+export function computeExamPacePlan(params: {
+  readonly daysUntil: number;
+  readonly completedCount: number;
+  readonly lessonCount: number;
+  readonly subjectCode: string;
+}): ExamPacePlan | null {
+  const { daysUntil, completedCount, lessonCount, subjectCode } = params;
+  if (daysUntil < 0 || lessonCount <= 0) return null;
+
+  const remainingLessons = Math.max(0, lessonCount - completedCount);
+
+  if (remainingLessons === 0) {
+    return {
+      remainingLessons: 0,
+      lessonsPerDay: 0,
+      urgency: 'ready',
+      summary: `Đã xong ${lessonCount}/${lessonCount} bài ${subjectCode} · Sẵn sàng tổng ôn`,
+      shortLabel: 'Đã học đủ · Tổng ôn',
+    };
+  }
+
+  if (daysUntil === 0) {
+    return {
+      remainingLessons,
+      lessonsPerDay: remainingLessons,
+      urgency: 'intense',
+      summary: `Còn ${remainingLessons} bài ${subjectCode} chưa học · Thi hôm nay`,
+      shortLabel: `còn ${remainingLessons} bài`,
+    };
+  }
+
+  const exactPerDay = remainingLessons / daysUntil;
+  let paceText: string;
+  let shortPace: string;
+
+  if (exactPerDay < 0.5) {
+    const daysPerLesson = Math.max(2, Math.round(daysUntil / remainingLessons));
+    paceText = `khoảng 1 bài/${daysPerLesson} ngày`;
+    shortPace = `~1 bài/${daysPerLesson} ngày`;
+  } else {
+    const roundedPerDay = Math.max(1, Math.ceil(exactPerDay));
+    paceText = `khoảng ${roundedPerDay} bài/ngày`;
+    shortPace = `~${roundedPerDay} bài/ngày`;
+  }
+
+  const urgency: ExamPaceUrgency =
+    exactPerDay <= 1 ? 'comfortable' : exactPerDay <= 2 ? 'tight' : 'intense';
+
+  return {
+    remainingLessons,
+    lessonsPerDay: Number(exactPerDay.toFixed(2)),
+    urgency,
+    summary: `Còn ${remainingLessons} bài ${subjectCode} chưa học → ${paceText}`,
+    shortLabel: `còn ${remainingLessons} bài · ${shortPace}`,
   };
 }

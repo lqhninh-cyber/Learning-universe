@@ -19,6 +19,7 @@ import { PLANNER_EMPTY_ASSET } from '@/config/atmosphereAssets';
 import { useOptionalAuth } from '@/features/auth';
 import {
   computeDaysUntilDate,
+  computeExamPacePlan,
   formatCountdownLabel,
   formatShortVietnameseDate,
   GUEST_ACCOUNT_KEY,
@@ -32,9 +33,17 @@ import {
 } from '@/features/workspace';
 import { cn } from '@/shared/lib/cn';
 
+export interface PlannerSubjectProgress {
+  readonly code: string;
+  readonly completedCount: number;
+  readonly lessonCount: number;
+}
+
 export interface StudyPlannerWidgetProps {
   /** Bản đồ ngày (`YYYY-MM-DD`) -> số hoạt động học tập để chấm dấu trên lịch tháng */
   readonly activityByDate: Readonly<Record<string, number>>;
+  /** Tiến độ thực tế theo slug học phần để tính nhịp độ ôn thi mỗi ngày */
+  readonly subjectProgressBySlug?: Readonly<Record<string, PlannerSubjectProgress>>;
 }
 
 type TaskFilterMode = 'all' | 'today' | 'upcoming' | 'done';
@@ -111,7 +120,10 @@ function buildMonthGrid(year: number, monthIndex: number): readonly CalendarDayC
   return cells;
 }
 
-export const StudyPlannerWidget: FC<StudyPlannerWidgetProps> = ({ activityByDate }) => {
+export const StudyPlannerWidget: FC<StudyPlannerWidgetProps> = ({
+  activityByDate,
+  subjectProgressBySlug,
+}) => {
   const auth = useOptionalAuth();
   const user = auth?.user ?? null;
   const openAuthModal = auth?.openAuthModal ?? (() => {});
@@ -671,55 +683,109 @@ export const StudyPlannerWidget: FC<StudyPlannerWidgetProps> = ({ activityByDate
               Chưa ghim lịch thi nào. Nhấn &ldquo;Ghim mốc&rdquo; để đếm ngược hạn thi/tiểu luận.
             </p>
           ) : (
-            <ul className="space-y-1.5">
+            <ul className="space-y-2">
               {upcomingMilestones.map((milestone) => {
                 const daysUntil = computeDaysUntilDate(milestone.examDate);
                 const subjectMeta = milestone.subjectSlug
                   ? WORKSPACE_SUBJECT_META[milestone.subjectSlug]
                   : null;
+                const progress = milestone.subjectSlug
+                  ? subjectProgressBySlug?.[milestone.subjectSlug]
+                  : undefined;
+                const pacePlan =
+                  progress && subjectMeta
+                    ? computeExamPacePlan({
+                        daysUntil,
+                        completedCount: progress.completedCount,
+                        lessonCount: progress.lessonCount,
+                        subjectCode: progress.code,
+                      })
+                    : null;
+                const subjectPct =
+                  progress && progress.lessonCount > 0
+                    ? Math.round((progress.completedCount / progress.lessonCount) * 100)
+                    : 0;
                 return (
                   <li
                     key={milestone.id}
                     data-testid="exam-milestone-item"
-                    className="flex items-center justify-between gap-2 rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-2.5 py-1.5 text-xs"
+                    className="space-y-1.5 rounded-xl border border-[var(--border-hairline)] bg-[var(--bg-workspace)] px-2.5 py-2 text-xs"
                   >
-                    <div className="flex min-w-0 items-center gap-2">
-                      <span
-                        className="h-2 w-2 shrink-0 rounded-full"
-                        style={{ backgroundColor: subjectMeta?.color ?? '#9E763B' }}
-                        aria-hidden="true"
-                      />
-                      <div className="min-w-0">
-                        <p className="truncate font-medium text-[var(--text-main)]">
-                          {milestone.title}
-                        </p>
-                        <p className="font-mono text-[10px] text-[var(--text-muted)]">
-                          {subjectMeta ? `${subjectMeta.code} · ` : ''}
-                          {formatShortVietnameseDate(milestone.examDate)}
-                        </p>
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex min-w-0 items-center gap-2">
+                        <span
+                          className="h-2 w-2 shrink-0 rounded-full"
+                          style={{ backgroundColor: subjectMeta?.color ?? '#9E763B' }}
+                          aria-hidden="true"
+                        />
+                        <div className="min-w-0">
+                          <p className="truncate font-medium text-[var(--text-main)]">
+                            {milestone.title}
+                          </p>
+                          <p className="font-mono text-[10px] text-[var(--text-muted)]">
+                            {subjectMeta ? `${subjectMeta.code} · ` : ''}
+                            {formatShortVietnameseDate(milestone.examDate)}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex shrink-0 items-center gap-1.5">
+                        <span
+                          className={cn(
+                            'rounded-md px-1.5 py-0.5 font-mono text-[10px] font-bold tabular-nums',
+                            daysUntil <= 3 && daysUntil >= 0
+                              ? 'bg-[#FBF4F3] text-[#8F3D35] dark:bg-[#2A1716] dark:text-[#DF7B70]'
+                              : 'bg-[var(--bg-surface)] text-[var(--accent-heritage)]',
+                          )}
+                        >
+                          {formatCountdownLabel(daysUntil)}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => deleteMilestone(milestone.id)}
+                          aria-label={`Xóa mốc ${milestone.title}`}
+                          className="inline-flex h-5 w-5 cursor-pointer items-center justify-center rounded text-[var(--text-muted)] hover:bg-[var(--bg-surface)] hover:text-[#8F3D35]"
+                        >
+                          <X className="h-3 w-3" aria-hidden="true" />
+                        </button>
                       </div>
                     </div>
 
-                    <div className="flex shrink-0 items-center gap-1.5">
-                      <span
-                        className={cn(
-                          'rounded-md px-1.5 py-0.5 font-mono text-[10px] font-bold tabular-nums',
-                          daysUntil <= 3 && daysUntil >= 0
-                            ? 'bg-[#FBF4F3] text-[#8F3D35] dark:bg-[#2A1716] dark:text-[#DF7B70]'
-                            : 'bg-[var(--bg-surface)] text-[var(--accent-heritage)]',
-                        )}
+                    {pacePlan && (
+                      <div
+                        data-testid="exam-milestone-pace"
+                        className="space-y-1 border-t border-[var(--border-hairline)]/70 pt-1.5"
                       >
-                        {formatCountdownLabel(daysUntil)}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => deleteMilestone(milestone.id)}
-                        aria-label={`Xóa mốc ${milestone.title}`}
-                        className="inline-flex h-5 w-5 cursor-pointer items-center justify-center rounded text-[var(--text-muted)] hover:bg-[var(--bg-surface)] hover:text-[#8F3D35]"
-                      >
-                        <X className="h-3 w-3" aria-hidden="true" />
-                      </button>
-                    </div>
+                        <div className="flex items-center justify-between gap-2 text-[10.5px]">
+                          <span
+                            className={cn(
+                              'font-medium',
+                              pacePlan.urgency === 'ready'
+                                ? 'text-[#0F7656] dark:text-[#4AD1A3]'
+                                : pacePlan.urgency === 'intense'
+                                  ? 'text-[#8F3D35] dark:text-[#DF7B70]'
+                                  : pacePlan.urgency === 'tight'
+                                    ? 'text-[#8C5828] dark:text-[#E5A95C]'
+                                    : 'text-[var(--text-secondary)]',
+                            )}
+                          >
+                            {pacePlan.summary}
+                          </span>
+                          <span className="shrink-0 font-mono text-[9.5px] text-[var(--text-muted)] tabular-nums">
+                            {subjectPct}%
+                          </span>
+                        </div>
+                        <div className="h-1 w-full overflow-hidden rounded-full bg-[var(--border-hairline)]">
+                          <div
+                            className="h-full rounded-full transition-[width] duration-300"
+                            style={{
+                              width: `${Math.max(subjectPct, progress && progress.completedCount > 0 ? 6 : 0)}%`,
+                              backgroundColor: subjectMeta?.color ?? '#0F7656',
+                            }}
+                          />
+                        </div>
+                      </div>
+                    )}
                   </li>
                 );
               })}
