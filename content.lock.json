@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-27T17:09:54.709Z",
+  "updatedAt": "2026-11-27T17:26:38.535Z",
   "lessons": {
     "tap-hop-anh-xa-va-cong-cu-so-hoc": {
       "path": "content/algebraic-structures/00-ngon-ngu-va-cong-cu-dai-so/01-tap-hop-anh-xa-va-cong-cu-so-hoc.mdx",
@@ -1132,7 +1132,7 @@
       "path": "content/affine-geometry/02-khong-gian-euclide/08-hinh-hoc-dong-dang.mdx",
       "status": "published",
       "version": "1.0.0",
-      "sha256": "08922ae1540bd2ddabda493688384afa917e7522b2bd98284b58a4e892fca072",
+      "sha256": "8df02c80b67ab8105a493db1e28aa1f8eb3a618dadf719d486fb2b6725aac4a0",
       "numberedBlocks": {
         "def-e8-1": "2.8.1",
         "thm-e8-2": "2.8.2",
@@ -1140,11 +1140,20 @@
         "ex-e8-5": "2.8.1",
         "def-e8-6": "2.8.4",
         "thm-e8-7": "2.8.5",
-        "thm-e8-9": "2.8.6",
-        "ex-e8-11": "2.8.2",
-        "def-e8-12": "2.8.7",
-        "ex-e8-13": "2.8.3",
-        "exr-e8-1": "2.8.1"
+        "cor-e8-7": "2.8.6",
+        "thm-e8-9": "2.8.7",
+        "def-e8-12": "2.8.8",
+        "ex-e8-13": "2.8.2",
+        "exr-e8-48": "2.8.1",
+        "exr-e8-49": "2.8.2",
+        "exr-e8-50": "2.8.3",
+        "exr-e8-51": "2.8.4",
+        "exr-e8-57": "2.8.5",
+        "exr-e8-58": "2.8.6",
+        "exr-e8-59": "2.8.7",
+        "exr-e8-60": "2.8.8",
+        "exr-e8-61": "2.8.9",
+        "exr-e8-62": "2.8.10"
       }
     },
     "sieu-mat-bac-hai-trong-khong-gian-euclide": {

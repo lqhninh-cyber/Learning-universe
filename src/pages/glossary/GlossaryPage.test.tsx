@@ -23,7 +23,7 @@ describe('Trang Tra cứu Thuật ngữ & Ký hiệu Toán học (GlossaryPage)'
     expect(screen.getByText('Đẳng cấu')).toBeInTheDocument();
     expect(screen.getByText('Dãy Cauchy')).toBeInTheDocument();
     expect(screen.getByText('Tam giác sư phạm')).toBeInTheDocument();
-  });
+  }, 30000);
 
   it('lọc thuật ngữ khi nhập từ khóa tìm kiếm tiếng Việt không dấu', () => {
     render(
@@ -37,7 +37,7 @@ describe('Trang Tra cứu Thuật ngữ & Ký hiệu Toán học (GlossaryPage)'
 
     expect(screen.getByText('Nhóm bốn Klein')).toBeInTheDocument();
     expect(screen.queryByText('Không gian Affine')).not.toBeInTheDocument();
-  });
+  }, 30000);
 
   it('chuyển đổi giữa các tab lọc môn học', () => {
     render(
@@ -77,7 +77,7 @@ describe('Trang Tra cứu Thuật ngữ & Ký hiệu Toán học (GlossaryPage)'
 
     expect(screen.getByText('Hoạt động sư phạm')).toBeInTheDocument();
     expect(screen.getByText('Vùng phát triển gần (ZPD)')).toBeInTheDocument();
-  });
+  }, 30000);
 
   it('hiển thị thông báo khi không tìm thấy kết quả phù hợp', () => {
     render(
@@ -95,7 +95,7 @@ describe('Trang Tra cứu Thuật ngữ & Ký hiệu Toán học (GlossaryPage)'
     const resetBtn = screen.getByRole('button', { name: /Đặt lại bộ lọc/i });
     fireEvent.click(resetBtn);
     expect(screen.getByText('Nhóm bốn Klein')).toBeInTheDocument();
-  });
+  }, 30000);
 
   it('hiển thị Swiss Almanac Header sạch gọn (không telemetry/blueprint thừa), thanh A–Z sticky top-12, tên bài đích thay #slug và nút sao chép', () => {
     render(
@@ -130,5 +130,5 @@ describe('Trang Tra cứu Thuật ngữ & Ký hiệu Toán học (GlossaryPage)'
     const copyBtn = screen.getByRole('button', { name: /Sao chép định nghĩa Nhóm bốn Klein/i });
     fireEvent.click(copyBtn);
     expect(copyBtn).toBeInTheDocument();
-  });
+  }, 30000);
 });

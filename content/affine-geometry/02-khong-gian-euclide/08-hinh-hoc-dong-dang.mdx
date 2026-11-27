@@ -1,17 +1,23 @@
 ---
 id: hinh-hoc-dong-dang
-title: "Hình học Đồng dạng"
-description: "Phép biến đổi đồng dạng, tỉ số đồng dạng, nhóm các phép biến đổi đồng dạng và hình học đồng dạng."
-estimatedMinutes: 45
+title: 'Hình học Đồng dạng'
+description: 'Ánh xạ tuyến tính đồng dạng, phép biến đổi đồng dạng, tỉ số đồng dạng, nhóm đồng dạng và sự phân tầng ba nền hình học Affine – Đồng dạng – Ơclit.'
+estimatedMinutes: 65
 level: intermediate
-prerequisites: []
+prerequisites:
+  - khong-gian-euclide
+  - goc-trong-khong-gian-euclide
+  - anh-xa-dang-cu-va-phep-bien-doi-dang-cu
+  - hinh-hoc-euclide
 tags:
-  - "đồng dạng"
-  - "nhóm đồng dạng"
-  - "phép vị tự"
+  - 'ánh xạ tuyến tính đồng dạng'
+  - 'phép đồng dạng'
+  - 'tỉ số đồng dạng'
+  - 'nhóm đồng dạng'
+  - 'hình học đồng dạng'
 sources:
   - source: gt-hhcc-nmh-2004
-    pages: '137-143'
+    pages: '116-121'
     sections: '§8'
 status: published
 version: 1.0.0
@@ -24,136 +30,500 @@ authoring:
 
 ## 1. Ánh xạ tuyến tính đồng dạng
 
-<Definition id="def-e8-1" title="a) Định nghĩa">
-Ánh xạ tuyến tính $\varphi : \mathbf{\overline{E}} \to \mathbf{\overline{E}}'$ của các không gian vectơ Ơclit gọi là *ánh xạ tuyến tính đồng dạng* nếu có số thực $k \neq 0$ để $\varphi (\vec{x})· \varphi (\vec{y}) = k\vec{x}·\vec{y}$ với mọi $\vec{x}, \vec{y} \in \mathbf{\overline{E}}$.
+<Definition id="def-e8-1" title="a) Định nghĩa ánh xạ tuyến tính đồng dạng">
+Ánh xạ tuyến tính $\varphi: \overrightarrow{\mathcal{E}} \to \overrightarrow{\mathcal{E}'}$ giữa các không gian vectơ Ơclit $\overrightarrow{\mathcal{E}}$ và $\overrightarrow{\mathcal{E}'}$ được gọi là một *ánh xạ tuyến tính đồng dạng* nếu tồn tại một số thực $k \neq 0$ sao cho:
+$$
+\varphi(\vec{x}) \cdot \varphi(\vec{y}) = k(\vec{x} \cdot \vec{y}) \qquad (\forall \vec{x}, \vec{y} \in \overrightarrow{\mathcal{E}}).
+$$
 </Definition>
 
-<Theorem id="thm-e8-2" title="b) Tính chất">
-• $k > 0$ (khi $dim \mathbf{\overline{E}} > 0)$, vì với $\vec{x} = \vec{y} \neq \vec{0}$ thì $[ \varphi (\vec{x})]^{2} = k\vec{x}^{2}$.
+<Proposition id="thm-e8-2" title="b) Các tính chất cơ bản">
+1. Số thực $k > 0$ (khi $\dim \overrightarrow{\mathcal{E}} > 0$), vì lấy $\vec{x} = \vec{y} \neq \vec{0}$ thì $\bigl(\varphi(\vec{x})\bigr)^2 = k\vec{x}^2 \ge 0$ và do $k \neq 0$, $\vec{x}^2 > 0$ nên $k = \dfrac{\bigl(\varphi(\vec{x})\bigr)^2}{\vec{x}^2} > 0$.
+2. Mọi ánh xạ tuyến tính trực giao đều là ánh xạ tuyến tính đồng dạng (ứng với $k = 1$).
+3. Tích (hợp thành) của những ánh xạ tuyến tính đồng dạng là một ánh xạ tuyến tính đồng dạng: nếu $\varphi: \overrightarrow{\mathcal{E}} \to \overrightarrow{\mathcal{E}'}$ có hằng số $k_1$ và $\psi: \overrightarrow{\mathcal{E}'} \to \overrightarrow{\mathcal{E}''}$ có hằng số $k_2$ thì $(\psi \circ \varphi)(\vec{x}) \cdot (\psi \circ \varphi)(\vec{y}) = k_2\bigl(\varphi(\vec{x}) \cdot \varphi(\vec{y})\bigr) = (k_1 k_2)(\vec{x} \cdot \vec{y})$.
+</Proposition>
 
-• Mọi ánh xạ tuyến tính trực giao là đồng dạng $(k = 1)$.
-
-• Tích những ánh xạ tuyến tính đồng dạng là một ánh xạ tuyến tính đồng dạng.
+<Theorem id="thm-e8-3" title="c) Định lí đặc trưng phép biến đổi tuyến tính đồng dạng">
+Một ánh xạ $\varphi: \overrightarrow{\mathcal{E}} \to \overrightarrow{\mathcal{E}}$ của không gian vectơ Ơclit hữu hạn chiều vào chính nó là một phép biến đổi tuyến tính (và do đó là phép biến đổi tuyến tính đồng dạng) nếu tồn tại một số thực $k \neq 0$ sao cho với mọi vectơ $\vec{x}, \vec{y} \in \overrightarrow{\mathcal{E}}$ ta có:
+$$
+\varphi(\vec{x}) \cdot \varphi(\vec{y}) = k(\vec{x} \cdot \vec{y}).
+$$
+Phép biến đổi tuyến tính này biến mỗi cơ sở trực chuẩn của $\overrightarrow{\mathcal{E}}$ thành một cơ sở trực giao.
 </Theorem>
 
-<Theorem id="thm-e8-3" title="c) Định lí">
-Một ánh xạ $\varphi : \mathbf{\overline{E}} \to \mathbf{\overline{E}}$ của không gian vectơ Ơclit vào chính nó là một phép biến đổi tuyến tính nếu có số thực $k \neq 0$ sao cho $\varphi (\vec{x})· \varphi (\vec{y}) = k\vec{x}·\vec{y}$ với mọi $\vec{x}$, $\vec{y}$.
+<Proof>
+Nếu $\dim \overrightarrow{\mathcal{E}} = 0$ thì $\overrightarrow{\mathcal{E}} = \{\vec{0}\}$, mệnh đề hiển nhiên đúng. Giả sử $\dim \overrightarrow{\mathcal{E}} = n \ge 1$; lấy $\vec{x} = \vec{y} \neq \vec{0}$ suy ra $k\vec{x}^2 = \bigl(\varphi(\vec{x})\bigr)^2 \ge 0$, kết hợp $k \neq 0$ ta có $k > 0$.
 
-Phép biến đổi tuyến tính này biến một cơ sở trực chuẩn thành một cơ sở trực giao.
-</Theorem>
+Gọi $\{\vec{e}_1, \vec{e}_2, \dots, \vec{e}_n\}$ là một cơ sở trực chuẩn của $\overrightarrow{\mathcal{E}}$ ($\vec{e}_i \cdot \vec{e}_j = \delta_{ij}$). Đặt $\vec{e}'_i = \varphi(\vec{e}_i)$ với $i = 1, 2, \dots, n$. Theo giả thiết:
+- Với $i \neq j$: $\vec{e}'_i \cdot \vec{e}'_j = \varphi(\vec{e}_i) \cdot \varphi(\vec{e}_j) = k(\vec{e}_i \cdot \vec{e}_j) = 0$;
+- Với $i = j$: $(\vec{e}'_i)^2 = \varphi(\vec{e}_i) \cdot \varphi(\vec{e}_i) = k\vec{e}_i^2 = k > 0$, suy ra $|\vec{e}'_i| = \sqrt{k}|\vec{e}_i| = \sqrt{k} > 0$ *(đính chính lỗi in sách gốc tr. 117 dòng 6 thiếu dấu độ dài giá trị tuyệt đối khi in $\vec{e}'_i = \sqrt{k}\vec{e}_i$)*.
 
-<Proof of="thm-e8-3">
-Với \{$\vect{e_{i}}$\} trực chuẩn, đặt $\vect{e'_{i}} = \varphi (\vect{e_{i}})$.
+Như vậy $\{\vec{e}'_1, \dots, \vec{e}'_n\}$ là một hệ gồm $n$ vectơ khác $\vec{0}$ đôi một trực giao, nên là một hệ độc lập tuyến tính trong không gian $n$ chiều $\overrightarrow{\mathcal{E}}$ và lập thành một cơ sở trực giao của $\overrightarrow{\mathcal{E}}$.
 
-Vì $\varphi (\vect{e_{i}})· \varphi (\vect{e_{j}}) = k\vect{e_{i}}·\vect{e_{j}} = 0 (i \neq j)$ nên các $\vect{e'_{i}}$ trực giao, độc lập, có độ dài $\sqrt{k}$, nên là một cơ sở.
+Gọi $\Psi: \overrightarrow{\mathcal{E}} \to \overrightarrow{\mathcal{E}}$ là phép biến đổi tuyến tính duy nhất xác định bởi hai cơ sở $\{\vec{e}_i\}$ và $\{\vec{e}'_i\}$ theo quy tắc $\Psi(\vec{e}_i) = \vec{e}'_i$ ($i = 1, \dots, n$). Ta chứng minh $\varphi$ trùng với $\Psi$.
 
-Gọi Ψ là phép biến đổi tuyến tính xác định bởi $\vect{e_{i}} ↦ \vect{e'_{i}}$.
+Lấy vectơ $\vec{x} \in \overrightarrow{\mathcal{E}}$ bất kì, khai triển theo cơ sở trực chuẩn $\{\vec{e}_i\}$ là $\vec{x} = \sum_{j=1}^n x_j\vec{e}_j$, khi đó theo tính tuyến tính của $\Psi$ ta có $\Psi(\vec{x}) = \sum_{j=1}^n x_j\vec{e}'_j$. Mặt khác, vì $\{\vec{e}'_1, \dots, \vec{e}'_n\}$ cũng là một cơ sở của $\overrightarrow{\mathcal{E}}$, vectơ ảnh $\varphi(\vec{x}) \in \overrightarrow{\mathcal{E}}$ có biểu diễn duy nhất dưới dạng $\varphi(\vec{x}) = \sum_{j=1}^n x'_j\vec{e}'_j$ với bộ hệ số $(x'_1, \dots, x'_n)$ nào đó.
 
-Với $\vec{x} = \sum_{i=1}^{n}x_{i}\vect{e_{i}}: \varphi (\vec{x})·\vect{e'_{i}} = k\vec{x}·\vect{e_{i}} = kx_{i}$ và $Ψ(\vec{x})·\vect{e'_{i}} = x_{i}|\vect{e'_{i}}|^{2} = kx_{i}$.
-
-Hai vectơ φ($\vec{x}$) và Ψ($\vec{x}$) có cùng tọa độ đối với cơ sở trực giao \{$\vect{e'_{i}}$\} nên $\varphi = Ψ$.
+Với mỗi chỉ số $i \in \{1, \dots, n\}$, ta tính tích vô hướng với $\vec{e}'_i = \varphi(\vec{e}_i)$ theo ba cách:
+1. Theo giả thiết về $\varphi$:
+   $$
+   \varphi(\vec{x}) \cdot \vec{e}'_i = \varphi(\vec{x}) \cdot \varphi(\vec{e}_i) = k(\vec{x} \cdot \vec{e}_i) = k\left(\sum_{j=1}^n x_j\vec{e}_j\right) \cdot \vec{e}_i = k x_i. \tag{1}
+   $$
+2. Đối với $\Psi(\vec{x})$ (do $\vec{e}'_j \cdot \vec{e}'_i = k\delta_{ji}$):
+   $$
+   \Psi(\vec{x}) \cdot \vec{e}'_i = \left(\sum_{j=1}^n x_j\vec{e}'_j\right) \cdot \vec{e}'_i = x_i(\vec{e}'_i)^2 = k x_i. \tag{2}
+   $$
+3. Từ biểu diễn của $\varphi(\vec{x})$ theo cơ sở trực giao $\{\vec{e}'_j\}$:
+   $$
+   \varphi(\vec{x}) \cdot \vec{e}'_i = \left(\sum_{j=1}^n x'_j\vec{e}'_j\right) \cdot \vec{e}'_i = x'_i(\vec{e}'_i)^2 = k x'_i. \tag{3}
+   $$
+Từ $(1)$ và $(3)$ với $k > 0$ suy ra $x'_i = x_i$ với mọi $i = 1, \dots, n$; do đó $\varphi(\vec{x}) = \sum_{i=1}^n x_i\vec{e}'_i = \Psi(\vec{x})$ với mọi $\vec{x} \in \overrightarrow{\mathcal{E}}$. Vậy $\varphi \equiv \Psi$ là một phép biến đổi tuyến tính (đồng dạng), biến cơ sở trực chuẩn $\{\vec{e}_i\}$ thành cơ sở trực giao $\{\vec{e}'_i\}$.
 </Proof>
 
-<Example id="ex-e8-5" title="Ví dụ">
-$\varphi (x,y) = (-3y, 3x)$ trên $\R^{2}: \varphi (\vec{x})· \varphi (\vec{y}) = 9(x_{1}y_{1} + x_{2}y_{2})$, nên là ánh xạ tuyến tính đồng dạng với $k = 9$.
+<Example id="ex-e8-5" title="Ví dụ kiểm tra phép biến đổi tuyến tính đồng dạng">
+**Đề bài:** Trên $V_E^2 = \mathbb{R}^2$ với tích vô hướng chính tắc, cho ánh xạ $\varphi(x_1, x_2) = (-3x_2,\; 3x_1)$. Chứng minh $\varphi$ là phép biến đổi tuyến tính đồng dạng và tìm ảnh của cơ sở trực chuẩn chính tắc.
 
-Cơ sở trực chuẩn (1,0), (0,1) biến thành $(0,3), (-3,0)$: trực giao, độ dài $3 = \sqrt{k}.$
+**Lời giải:** Với mọi $\vec{x} = (x_1, x_2)$ và $\vec{y} = (y_1, y_2)$, ta có:
+$$
+\varphi(\vec{x}) \cdot \varphi(\vec{y}) = (-3x_2)(-3y_2) + (3x_1)(3y_1) = 9(x_1 y_1 + x_2 y_2) = 9(\vec{x} \cdot \vec{y}),
+$$
+nên $\varphi$ là phép biến đổi tuyến tính đồng dạng ứng với hằng số $k = 9$. Cơ sở trực chuẩn $\{\vec{e}_1 = (1, 0), \vec{e}_2 = (0, 1)\}$ biến thành $\{\vec{e}'_1 = (0, 3), \vec{e}'_2 = (-3, 0)\}$ gồm hai vectơ trực giao cùng có độ dài $\sqrt{9} = 3$.
 </Example>
 
-## 2. Phép đồng dạng
+## 2. Phép đồng dạng và hình học đồng dạng
 
-<Definition id="def-e8-6" title="a) Định nghĩa">
-Phép biến đổi $f: \mathbb{E}^{n} \to \mathbb{E}^{n}$ gọi là *phép đồng dạng* nếu với hai điểm bất kì M, N và ảnh $M' = f(M), N' = f(N)$ luôn có $d(M',N') = k·d(M,N)$, trong đó $k > 0$ cố định gọi là *tỉ số đồng dạng*.
+<Definition id="def-e8-6" title="a) Định nghĩa phép đồng dạng và tỉ số đồng dạng">
+Ánh xạ (phép biến đổi) $f: \mathcal{E}^n \to \mathcal{E}^n$ trên <GlossaryTerm termId="khong-gian-euclide">không gian Ơclit</GlossaryTerm> $\mathcal{E}^n$ được gọi là *phép đồng dạng* nếu với hai điểm bất kì $M, N \in \mathcal{E}^n$ và ảnh của chúng là $M' = f(M)$, $N' = f(N)$, ta luôn có:
+$$
+d(M', N') = k \cdot d(M, N),
+$$
+trong đó $k > 0$ là một số thực dương cố định được gọi là *tỉ số đồng dạng* của phép đồng dạng $f$.
 
-Với $k = 1$ đó là phép dời hình; phép vị tự tỉ số k là phép đồng dạng tỉ số $|k|$.
+- Với $k = 1$, phép đồng dạng $f$ chính là một <GlossaryTerm termId="anh-xa-dang-cu">phép dời hình</GlossaryTerm>.
+- Phép vị tự tỉ số $k \neq 0$ là một phép đồng dạng có tỉ số đồng dạng bằng $|k|$.
 </Definition>
 
-<Theorem id="thm-e8-7" title="b) Định lí">
-Phép đồng dạng là một phép afin.
-
-**Hệ quả.** Phép biến đổi afin *f* là phép đồng dạng tỉ số k khi và chỉ khi phép biến đổi tuyến tính φ liên kết thỏa $| \varphi (\vec{x})| = k|\vec{x}|$ với mọi $\vec{x}$.
+<Theorem id="thm-e8-7" title="b) Định lí (Mọi phép đồng dạng đều là phép biến đổi affine)">
+Mọi phép đồng dạng $f: \mathcal{E}^n \to \mathcal{E}^n$ đều là một phép biến đổi affine của $\mathcal{E}^n$.
 </Theorem>
 
-<Proof of="thm-e8-7">
-Lấy $O, O' = f(O)$, xác định $\varphi (\vect{OM}) = \vect{O'M'}$.
+<Proof>
+Giả sử $f: \mathcal{E}^n \to \mathcal{E}^n$ là phép đồng dạng tỉ số $k > 0$. Lấy cố định một điểm $O \in \mathcal{E}^n$ và gọi $O' = f(O)$. Ta định nghĩa ánh xạ $\varphi: \overrightarrow{\mathcal{E}^n} \to \overrightarrow{\mathcal{E}^n}$ như sau: với mỗi vectơ $\vec{x} \in \overrightarrow{\mathcal{E}^n}$, gọi $M \in \mathcal{E}^n$ là điểm duy nhất sao cho $\overrightarrow{OM} = \vec{x}$, lấy $M' = f(M)$ và đặt $\varphi(\vec{x}) = \overrightarrow{O'M'}$.
 
-Từ $d^{2}(M',N') = k^{2}d^{2}(M,N)$ áp dụng cho các cặp (M,N), (O,N), (O,M) và khai triển $d^{2}(M,N) = ON^{2} + OM^{2} - 2\vect{ON}·\vect{OM}$ (tương tự cho ảnh) suy ra $\vect{O'M'}·\vect{O'N'} = k^{2}\vect{OM}·\vect{ON}$, tức $\varphi (\vec{x})· \varphi (\vec{y}) = k^{2}\vec{x}·\vec{y}$.
-
-Theo định lí 1c, φ là phép biến đổi tuyến tính, nên *f* là phép afin.
+Ta chứng minh $\varphi$ là phép biến đổi tuyến tính của $\overrightarrow{\mathcal{E}^n}$. Thật vậy, với mọi cặp điểm $M, N \in \mathcal{E}^n$, ta có:
+$$
+d^2(M, N) = (\overrightarrow{ON} - \overrightarrow{OM})^2 = \overrightarrow{ON}^2 + \overrightarrow{OM}^2 - 2(\overrightarrow{ON} \cdot \overrightarrow{OM}) = d^2(O, N) + d^2(O, M) - 2(\overrightarrow{ON} \cdot \overrightarrow{OM}). \tag{1}
+$$
+Tương tự với ảnh $M' = f(M)$ và $N' = f(N)$:
+$$
+d^2(M', N') = (\overrightarrow{O'N'} - \overrightarrow{O'M'})^2 = d^2(O', N') + d^2(O', M') - 2(\overrightarrow{O'N'} \cdot \overrightarrow{O'M'}). \tag{2}
+$$
+Mặt khác, vì $f$ là phép đồng dạng tỉ số $k$ nên:
+$$
+d^2(M', N') = k^2 d^2(M, N), \qquad d^2(O', N') = k^2 d^2(O, N), \qquad d^2(O', M') = k^2 d^2(O, M).
+$$
+Thay ba hệ thức này vào $(2)$ và đối chiếu với $(1)$ nhân cho $k^2$, ta suy ra:
+$$
+\overrightarrow{O'M'} \cdot \overrightarrow{O'N'} = k^2(\overrightarrow{OM} \cdot \overrightarrow{ON}) \iff \varphi(\overrightarrow{OM}) \cdot \varphi(\overrightarrow{ON}) = k^2(\overrightarrow{OM} \cdot \overrightarrow{ON}).
+$$
+Theo Định lí ở Mục 1c (ứng với hằng số $k^2 > 0$), ánh xạ $\varphi$ là một phép biến đổi tuyến tính đồng dạng (và là đẳng cấu tuyến tính vì biến cơ sở trực chuẩn thành cơ sở trực giao của $\overrightarrow{\mathcal{E}^n}$). Từ định nghĩa $\overrightarrow{O'f(M)} = \varphi(\overrightarrow{OM})$ ($\forall M \in \mathcal{E}^n$), $\varphi$ chính là phép biến đổi tuyến tính liên kết với $f$, nên $f$ là một phép biến đổi affine (song ánh) của $\mathcal{E}^n$.
 </Proof>
 
-<Theorem id="thm-e8-9" title="c) Định lí">
-Tập các phép đồng dạng của $\mathbb{E} ^{n}$ làm thành một nhóm, gọi là *nhóm đồng dạng* 𝒮$^{n}$, là nhóm con của nhóm afin và chứa nhóm dời hình: $𝒟^{n} \subset 𝒮^{n} \subset 𝒜^{n}$.
+<Corollary id="cor-e8-7" title="Hệ quả">
+Phép biến đổi affine $f: \mathcal{E}^n \to \mathcal{E}^n$ là một phép đồng dạng tỉ số $k > 0$ khi và chỉ khi phép biến đổi tuyến tính $\varphi$ liên kết với $f$ thỏa mãn tính chất:
+$$
+|\varphi(\vec{x})| = k|\vec{x}| \qquad (\forall \vec{x} \in \overrightarrow{\mathcal{E}^n}).
+$$
+*(Đối với một <GlossaryTerm termId="muc-tieu-truc-chuan">mục tiêu trực chuẩn</GlossaryTerm>, nếu $f$ có phương trình $[x'] = A[x] + [b]$ thì điều kiện tương đương là $A^* A = k^2 I_n$, tức $A = k Q$ với $Q$ là ma trận trực giao cấp $n$)*.
+</Corollary>
+
+<Proof>
+Với mọi $M, N \in \mathcal{E}^n$, ta có $\overrightarrow{f(M)f(N)} = \varphi(\overrightarrow{MN})$. Nếu $|\varphi(\vec{x})| = k|\vec{x}|$ với mọi $\vec{x}$ thì $d(f(M), f(N)) = |\varphi(\overrightarrow{MN})| = k|\overrightarrow{MN}| = k\,d(M, N)$, tức $f$ là phép đồng dạng tỉ số $k$. Ngược lại, nếu $f$ là phép đồng dạng tỉ số $k$, mọi $\vec{x} \in \overrightarrow{\mathcal{E}^n}$ viết dưới dạng $\vec{x} = \overrightarrow{MN}$ cho $|\varphi(\vec{x})| = d(f(M), f(N)) = k\,d(M, N) = k|\vec{x}|$.
+</Proof>
+
+<Theorem id="thm-e8-9" title="c) Định lí về nhóm các phép đồng dạng">
+Tập hợp tất cả các phép biến đổi đồng dạng của không gian Ơclit $\mathcal{E}^n$ làm thành một nhóm gọi là *nhóm đồng dạng*, kí hiệu là $\mathcal{S}^n$. Nhóm $\mathcal{S}^n$ là nhóm con của nhóm biến đổi affine $\mathcal{A}^n$ và chứa nhóm dời hình $\mathcal{D}^n$:
+$$
+\mathcal{D}^n \subset \mathcal{S}^n \subset \mathcal{A}^n.
+$$
 </Theorem>
 
-<Proof of="thm-e8-9">
-Phép ngược của phép đồng dạng tỉ số k là phép đồng dạng tỉ số $\frac{1}{k}$.
-
-Nếu *f*, g có tỉ số k$_{1}$, k$_{2}$ thì $d(M″,N″) =$ k$_{2}$k$_{1}$d(M,N), nên g∘*f* là phép đồng dạng tỉ số k$_{2}$k$_{1}$.
+<Proof>
+- Theo Định lí 2b, mỗi phép đồng dạng $f \in \mathcal{S}^n$ tỉ số $k > 0$ là một phép biến đổi affine song ánh của $\mathcal{E}^n$ (nên $\mathcal{S}^n \subset \mathcal{A}^n$). Phép đồng nhất $\mathrm{id}_{\mathcal{E}^n}$ là phép đồng dạng tỉ số $1$, nên $\mathcal{S}^n \neq \varnothing$.
+- Nếu $f \in \mathcal{S}^n$ có tỉ số $k > 0$, biến $M, N$ thành $M', N'$ với $d(M', N') = k\,d(M, N)$, thì ánh xạ ngược $f^{-1}$ biến $M', N'$ thành $M, N$ thỏa mãn $d(M, N) = \dfrac{1}{k}d(M', N')$ với $\dfrac{1}{k} > 0$, nên $f^{-1} \in \mathcal{S}^n$ là phép đồng dạng tỉ số $\dfrac{1}{k}$.
+- Nếu $f, g \in \mathcal{S}^n$ lần lượt có tỉ số đồng dạng là $k_1 > 0$ và $k_2 > 0$, thì với hai điểm $M, N \in \mathcal{E}^n$ bất kì, đặt $M' = f(M), N' = f(N)$ và $M'' = g(M') = (g \circ f)(M)$, $N'' = g(N') = (g \circ f)(N)$, ta có:
+  $$
+  d(M'', N'') = k_2\,d(M', N') = (k_2 k_1)\,d(M, N).
+  $$
+  Vậy tích $g \circ f$ là phép đồng dạng với tỉ số $k_2 k_1 > 0$, thuộc $\mathcal{S}^n$. Do đó $\mathcal{S}^n$ là nhóm con của $\mathcal{A}^n$, và hiển nhiên chứa $\mathcal{D}^n$ (tập các phép đồng dạng có tỉ số $k = 1$).
 </Proof>
 
-<Example id="ex-e8-11" title="Ví dụ">
-$f(x,y) = (-3y + 1, 3x)$ có $\varphi (x,y) = (-3y, 3x)$ với $| \varphi (\vec{x})| = 3|\vec{x}|$, nên là phép đồng dạng tỉ số 3 (quay $90°$ rồi vị tự tỉ số 3, rồi tịnh tiến).
+<Definition id="def-e8-12" title="d) Hình học đồng dạng và hệ thống phân tầng các nền hình học">
+Hai hình trong $\mathcal{E}^n$ tương ứng với nhau qua một phép đồng dạng thuộc $\mathcal{S}^n$ được gọi là *hai hình đồng dạng với nhau*. Hình học của nhóm đồng dạng $\mathcal{S}^n$ được gọi là *hình học đồng dạng*; nó nghiên cứu những bất biến của nhóm đồng dạng $\mathcal{S}^n$, tức là những tính chất và đại lượng không thay đổi qua mọi phép đồng dạng.
 
-Kiểm tra: 
-
-$$
-M(0,0) ↦ (1,0), N(1,0) ↦ (1,3), P(1,1) ↦ (-2,3): d(M',N') = 3 = 3·d(M,N); d(M',P') = \sqrt{9}+9 = 3\sqrt{2} = 3·\sqrt{2} .
-$$
-
- Tích của phép đồng dạng tỉ số 2 và phép đồng dạng tỉ số 3 là phép đồng dạng tỉ số 6.
-</Example>
-
-## 3. Hình học đồng dạng
-
-<Definition id="def-e8-12" title="d) Định nghĩa">
-Hai hình tương ứng với nhau qua một phép đồng dạng gọi là *hai hình đồng dạng với nhau*.
-
-Hình học của nhóm đồng dạng gọi là *hình học đồng dạng*; nó nghiên cứu những bất biến của nhóm 𝒮$^{n}$, tức những tính chất không thay đổi qua phép đồng dạng.
+Từ chuỗi bao hàm nhóm con $\mathcal{D}^n \subset \mathcal{S}^n \subset \mathcal{A}^n$, theo nguyên lí Klein ta suy ra:
+- **Hình học affine là một bộ phận của hình học đồng dạng**, và **hình học đồng dạng là một bộ phận của hình học Ơclit**.
+- Trong hình học đồng dạng có mặt mọi khái niệm và tính chất của hình học affine; tuy nhiên có những khái niệm, đại lượng của hình học Ơclit *không* thuộc hình học đồng dạng, như độ dài đoạn thẳng, khoảng cách từ một điểm đến một $m$-phẳng, diện tích các hình phẳng, thể tích các hình không gian... (các đại lượng có thứ nguyên độ dài này thay đổi khi tỉ số $k \neq 1$).
 </Definition>
 
-Vì $𝒟^{n} \subset 𝒮^{n} \subset 𝒜^{n}$ nên hình học afin là một bộ phận của hình học đồng dạng, và hình học đồng dạng là một bộ phận của hình học Ơclit.
+<Remark id="rem-e8-12" title="Chú ý về các bất biến đặc trưng của hình học đồng dạng (tr. 120)">
+Độ dài của một đoạn thẳng không phải là một bất biến đồng dạng, nhưng **tỉ số độ dài của hai đoạn thẳng** ($\dfrac{d(A', B')}{d(C', D')} = \dfrac{k\,d(A, B)}{k\,d(C, D)} = \dfrac{d(A, B)}{d(C, D)}$) là một bất biến đồng dạng. Ngoài ra, **số đo góc giữa hai đường thẳng** (cũng như góc giữa các siêu phẳng, tính vuông góc) cũng là một bất biến đồng dạng.
 
-Trong hình học đồng dạng có mọi khái niệm và tính chất afin, nhưng một số khái niệm của hình học Ơclit không phải là khái niệm của hình học đồng dạng, như độ dài đoạn thẳng, khoảng cách từ một điểm đến một m-phẳng, diện tích các hình phẳng, thể tích các hình không gian.
-
-<Remark title="Chú ý">
-Chú ý.
-
-Độ dài đoạn thẳng không phải là bất biến đồng dạng, nhưng tỉ số độ dài của hai đoạn thẳng là một bất biến đồng dạng.
-
-Số đo góc giữa hai đường thẳng cũng là bất biến đồng dạng.
-
-Từ đó suy ra định lí Pitago là một định lí của hình học đồng dạng, và nhiều khái niệm như hình vuông, hình tam giác đều, đường tròn,… đều là khái niệm của hình học đồng dạng.
+Từ đó suy ra *định lí Pitago* ($\dfrac{a^2 + b^2}{c^2} = 1$ khi góc xen giữa bằng $\dfrac{\pi}{2}$) là một định lí của hình học đồng dạng, và rất nhiều khái niệm quen thuộc như *hình vuông*, *hình tam giác đều*, *đường tròn*, *tứ diện đều*... đều là những khái niệm của hình học đồng dạng.
 </Remark>
 
-<Example id="ex-e8-13" title="Ví dụ">
-Tam giác vuông có cạnh 3, 4, 5.
+<Example id="ex-e8-13" title="Ví dụ phân tích phép đồng dạng phẳng">
+**Đề bài:** Trong $\mathcal{E}^2$ với mục tiêu trực chuẩn, cho phép biến đổi $f(x_1, x_2) = (-3x_2 + 1,\; 3x_1)$. Chứng minh $f$ là phép đồng dạng, tìm tỉ số đồng dạng và kiểm tra ảnh của tam giác vuông $MNP$ với $M(0, 0)$, $N(3, 0)$, $P(0, 4)$.
 
-Qua phép đồng dạng tỉ số 2 nó thành tam giác 6, 8, 10: độ dài đổi nhưng tỉ số các cạnh 3:4:5 và các góc giữ nguyên (cos của góc nhọn nhỏ vẫn là $\frac{4}{5})$, và $6^{2} + 8^{2} = 10^{2}$ (Pitago).
+**Lời giải:** Phép biến đổi affine $f$ có ma trận $A = \begin{bmatrix} 0 & -3 \\ 3 & 0 \end{bmatrix}$ thỏa mãn $A^* A = 9I_2$, nên $|\varphi(\vec{x})| = 3|\vec{x}|$ với mọi $\vec{x} \in \overrightarrow{\mathcal{E}^2}$. Vậy $f$ là phép đồng dạng thuận với tỉ số đồng dạng $k = 3$.
 
-Qua phép afin $(x,y) ↦ (2x + y, 3y)$ tam giác vuông cân (0,0), (1,0), (0,1) thành tam giác (0,0), (2,0), (1,3) không còn vuông: góc không bất biến afin.
+Qua $f$, ba đỉnh biến thành $M'(1, 0)$, $N'(1, 9)$ và $P'(-11, 0)$, có các cạnh $M'N' = 9 = 3MN$, $M'P' = 12 = 3MP$, $N'P' = \sqrt{12^2 + 9^2} = 15 = 3NP$: độ dài từng cạnh tăng gấp $3$ lần nhưng tỉ số các cạnh $3 : 4 : 5$ và góc vuông tại $M'$ hoàn toàn bất biến.
 </Example>
 
-## Bài tập vận dụng và củng cố
+## Bài tập
 
-<Exercise id="exr-e8-1" title="Phép đồng dạng và tỉ số đồng dạng (§8, mục 2)">
-Phép f của E²: x'₁ = -3x₂ + 1, x'₂ = 3x₁. Chứng minh f là phép đồng dạng, tìm tỉ số đồng dạng và kiểm tra với M(0,0), N(1,1).
+*(Trọn bộ $10$ bài tập thuộc §8 còn lại của cụm bài tập §6, §7, §8 cuối Chương II, trang 144–146 — khép kín hoàn toàn $21/21$ bài từ 2.42 đến 2.62 cùng với Bài 2.6 và Bài 2.7).*
 
+<Exercise id="exr-e8-48" title="Bài tập 2.48 (Quan hệ bao hàm các định lí của ba nền hình học trên En — tr. 144)">
+Trên $\mathcal{E}^n$ chứng minh rằng mỗi định lí của hình học affine (thực) là một định lí của hình học đồng dạng và cũng là một định lí của hình học Ơclit, nhưng ngược lại có thể không đúng.
 
 <Hint>
-f là đồng dạng tỉ số k khi d(M',N') = k·d(M,N), tức AᵀA = k²I.
+Dùng chuỗi bao hàm nhóm con $\mathcal{D}^n \subset \mathcal{S}^n \subset \mathcal{A}^n$ (Định lí 2c) cho chiều thuận, và chỉ ra phản ví dụ cụ thể cho từng chiều ngược lại (từ hình học Ơclit sang đồng dạng, và từ hình học đồng dạng sang affine).
 </Hint>
 
 <Solution>
-A = [[0,-3],[3,0]] có AᵀA = 9I nên k = 3.
+**1. Chứng minh chiều thuận:**
 
-M' = (1,0), N' = (-2,3): d(M',N') = 3√2 = 3·d(M,N) với d(M,N) = √2.
+Theo Định lí 2c (§8), giữa nhóm các phép dời hình $\mathcal{D}^n$, nhóm các phép đồng dạng $\mathcal{S}^n$ và nhóm các phép biến đổi affine $\mathcal{A}^n$ của $\mathcal{E}^n$ luôn có quan hệ nhóm con:
+$$
+\mathcal{D}^n \subset \mathcal{S}^n \subset \mathcal{A}^n.
+$$
+Mỗi định lí của hình học affine khẳng định một tính chất bất biến dưới tác động của mọi phép biến đổi thuộc $\mathcal{A}^n$. Vì mọi phép đồng dạng $f \in \mathcal{S}^n$ đều thuộc $\mathcal{A}^n$ và mọi phép dời hình $g \in \mathcal{D}^n$ đều thuộc $\mathcal{S}^n \subset \mathcal{A}^n$, tính chất đó tự động bất biến qua $\mathcal{S}^n$ và qua $\mathcal{D}^n$. Vậy mỗi định lí của hình học affine đều là định lí của hình học đồng dạng và cũng là định lí của hình học Ơclit.
 
-**Đáp án:** Phép đồng dạng tỉ số 3
+**2. Chiều ngược lại có thể không đúng:**
+
+- **Định lí của hình học đồng dạng (và Ơclit) nhưng không phải định lí của hình học affine:** Chẳng hạn định lí *"ba đường cao của một tam giác đồng quy"* (hoặc *định lí Pitago*). Trong $\mathcal{E}^2$, qua phép biến đổi affine $h(x_1, x_2) = (2x_1, x_2) \in \mathcal{A}^2 \setminus \mathcal{S}^2$, tính vuông góc không được bảo toàn nên ảnh của đường cao tam giác không còn là đường cao của tam giác ảnh; khái niệm đường cao và góc vuông không tồn tại trong hình học affine thuần túy.
+- **Tính chất bất biến của hình học Ơclit nhưng không thuộc hình học đồng dạng:** Chẳng hạn tính chất bảo toàn khoảng cách $d(A, B) = 1$ (hoặc *"hai đường tròn cùng bán kính bằng $1$ luôn bằng nhau"*): qua phép vị tự $V_O^2 \in \mathcal{S}^n \setminus \mathcal{D}^n$ tỉ số $k = 2$, khoảng cách $d(A, B) = 1$ biến thành $d(A', B') = 2 \neq 1$.
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e8-49" title="Bài tập 2.49 (Khái niệm đa giác lồi đều và phân loại đồng dạng trong E2 — tr. 144)">
+Trong $\mathcal{E}^2$ chứng minh rằng khái niệm đa giác lồi đều $n$ cạnh ($n \ge 3$) là một khái niệm đồng dạng. Hãy phân loại đồng dạng tập hợp các đa giác lồi đều đó.
+
+<Hint>
+Kiểm tra ảnh của một đa giác lồi đều $n$ cạnh qua phép đồng dạng tỉ số $k$ vẫn là bao lồi của $n$ đỉnh có $n$ cạnh bằng nhau và $n$ góc bằng nhau. Để phân loại, chứng minh hai đa giác lồi đều đồng dạng khi và chỉ khi chúng có cùng số cạnh $n$.
+</Hint>
+
+<Solution>
+**1. Chứng minh khái niệm đa giác lồi đều $n$ cạnh là khái niệm đồng dạng:**
+
+Trong $\mathcal{E}^2$, một đa giác lồi $P = A_1 A_2 \dots A_n$ ($n \ge 3$, các đỉnh xếp theo chu trình lồi) là *đa giác lồi đều $n$ cạnh* khi và chỉ khi tất cả các cạnh có độ dài bằng nhau và tất cả các góc trong bằng nhau:
+$$
+d(A_1, A_2) = d(A_2, A_3) = \dots = d(A_n, A_1), \qquad \widehat{A_1} = \widehat{A_2} = \dots = \widehat{A_n} = \frac{(n - 2)\pi}{n}.
+$$
+Xét một phép đồng dạng $f \in \mathcal{S}^2$ bất kì có tỉ số $k > 0$, biến các đỉnh $A_i$ thành $A'_i = f(A_i)$.
+- Vì $f \in \mathcal{A}^2$ là phép biến đổi affine song ánh nên $f$ bảo toàn đoạn thẳng và tính lồi, do đó $f(P) = A'_1 A'_2 \dots A'_n$ vẫn là một đa giác lồi $n$ cạnh.
+- Vì $d(A'_i, A'_{i+1}) = k\,d(A_i, A_{i+1})$ nên $n$ cạnh của $f(P)$ vẫn đôi một bằng nhau.
+- Vì phép đồng dạng bảo toàn số đo góc (do $\varphi(\vec{u}) \cdot \varphi(\vec{v}) = k^2(\vec{u} \cdot \vec{v})$ và $|\varphi(\vec{u})| = k|\vec{u}|$), tất cả các góc trong tại $A'_1, \dots, A'_n$ vẫn bằng $\dfrac{(n - 2)\pi}{n}$.
+
+Vậy $f(P)$ cũng là một đa giác lồi đều $n$ cạnh, chứng tỏ khái niệm đa giác lồi đều $n$ cạnh là một khái niệm của hình học đồng dạng.
+
+**2. Phân loại đồng dạng tập hợp tất cả các đa giác lồi đều trong $\mathcal{E}^2$:**
+
+- Nếu hai đa giác lồi đều $P$ (gồm $n$ cạnh) và $Q$ (gồm $m$ cạnh) đồng dạng với nhau qua $f \in \mathcal{S}^2 \subset \mathcal{A}^2$, thì vì phép biến đổi affine bảo toàn tập các đỉnh cực biên của tập lồi (những điểm không là điểm trong của bất kì đoạn thẳng nào nằm trong đa giác), lực lượng tập đỉnh phải bằng nhau, suy ra $n = m$.
+- Ngược lại, giả sử $P = A_1 \dots A_n$ (cạnh $a > 0$) và $Q = B_1 \dots B_n$ (cạnh $b > 0$) là hai đa giác lồi đều có **cùng số cạnh $n$**. Thực hiện trước hết phép vị tự $V$ tỉ số $k = \dfrac{b}{a} > 0$, đa giác $P$ biến thành đa giác lồi đều $P' = A'_1 \dots A'_n$ có cạnh bằng $b$ và mọi góc trong bằng $\alpha_n = \dfrac{(n - 2)\pi}{n}$. Tiếp theo, chọn phép dời hình $g \in \mathcal{D}^2$ sao cho $g(A'_1) = B_1$, tia $g(A'_1 A'_2)$ trùng tia $B_1 B_2$ (suy ra $g(A'_2) = B_2$ vì $A'_1 A'_2 = B_1 B_2 = b$) và nửa mặt phẳng bờ $B_1 B_2$ chứa $g(P')$ trùng với nửa mặt phẳng chứa $Q$. Vì ở mỗi bước tiếp theo đoạn $B_i B_{i+1}$ dài $b$ và tạo với $B_{i-1}B_i$ cùng góc $\alpha_n$ về phía trong đa giác, bằng quy nạp ta có $g(A'_i) = B_i$ với mọi $i = 1, \dots, n$. Hợp thành $h = g \circ V \in \mathcal{S}^2$ biến $P$ thành $Q$, nên $P$ và $Q$ đồng dạng.
+
+**Kết luận:** Tập hợp tất cả các đa giác lồi đều trong $\mathcal{E}^2$ được phân hoạch thành các lớp tương đương đồng dạng $\mathcal{C}_n$ ($n = 3, 4, 5, \dots$), trong đó hai đa giác lồi đều thuộc cùng một lớp đồng dạng khi và chỉ khi chúng có **cùng số cạnh $n$** ($\mathcal{C}_3$ là lớp các tam giác đều, $\mathcal{C}_4$ là lớp các hình vuông, $\mathcal{C}_5$ là lớp các ngũ giác lồi đều...).
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e8-50" title="Bài tập 2.50 (Bản chất đồng dạng và affine của bốn đường đặc biệt trong tam giác — tr. 144)">
+Trong $\mathcal{E}^2$ chứng minh rằng đường trung tuyến, đường cao, đường phân giác, đường trung trực của một tam giác là các khái niệm đồng dạng. Trong các khái niệm nêu trên, khái niệm nào là khái niệm affine? Vì sao?
+
+<Hint>
+Dùng các bất biến của nhóm $\mathcal{S}^2$ (thẳng hàng, trung điểm, số đo góc, tính vuông góc) để chứng minh cả bốn đường đều được bảo toàn qua mọi phép đồng dạng; sau đó xét phép co dãn lệch trục $f(x_1, x_2) = (2x_1, x_2) \in \mathcal{A}^2 \setminus \mathcal{S}^2$ trên tam giác vuông cân để chỉ ra ba đường không bất biến affine.
+</Hint>
+
+<Solution>
+**1. Chứng minh cả bốn đường đều là các khái niệm đồng dạng:**
+
+Xét tam giác $ABC$ trong $\mathcal{E}^2$ và một phép đồng dạng $f \in \mathcal{S}^2$ bất kì biến $\triangle ABC$ thành $\triangle A'B'C'$ ($A' = f(A), B' = f(B), C' = f(C)$). Vì $f \in \mathcal{A}^2$ bảo toàn đường thẳng, đoạn thẳng, trung điểm và đồng thời $f \in \mathcal{S}^2$ bảo toàn mọi số đo góc cũng như tính vuông góc, nên ứng với cạnh $BC$:
+- **Đường trung tuyến $AM$** ($M$ là trung điểm $BC$) biến thành đường thẳng $A'M'$ với $M' = f(M)$ là trung điểm $B'C'$, tức là đường trung tuyến của $\triangle A'B'C'$.
+- **Đường cao $AH$** ($A \in AH$ và $AH \perp BC$) biến thành đường thẳng $A'H'$ đi qua $A'$ và $A'H' \perp B'C'$, tức là đường cao của $\triangle A'B'C'$.
+- **Đường phân giác trong (hoặc ngoài) $AD$** (chia góc $\widehat{BAC}$ thành hai góc bằng nhau $\widehat{BAD} = \widehat{DAC}$) biến thành đường thẳng $A'D'$ thỏa mãn $\widehat{B'A'D'} = \widehat{D'A'C'}$, tức là đường phân giác tương ứng của $\triangle A'B'C'$.
+- **Đường trung trực $d$ của $BC$** (đi qua trung điểm $M$ của $BC$ và $d \perp BC$) biến thành đường thẳng $d' = f(d)$ đi qua trung điểm $M'$ của $B'C'$ và $d' \perp B'C'$, tức là đường trung trực của $B'C'$.
+
+Vậy cả bốn đường đều là các khái niệm đồng dạng.
+
+**2. Xác định khái niệm affine:**
+
+- Duy nhất **đường trung tuyến** là **khái niệm affine**, bởi vì nó được định nghĩa hoàn toàn thông qua đỉnh tam giác, trung điểm của đoạn thẳng (điểm chia đoạn theo tỉ số đơn $-1$) và đường thẳng đi qua hai điểm phân biệt — tất cả đều là các bất biến của nhóm biến đổi affine $\mathcal{A}^2$.
+- Ba khái niệm còn lại (**đường cao, đường phân giác, đường trung trực**) **không phải là khái niệm affine**, vì chúng phụ thuộc vào góc vuông và sự bằng nhau của góc/độ dài. *Phản ví dụ tường minh:* Trong $\mathcal{E}^2$ với mục tiêu trực chuẩn, xét tam giác vuông cân $OAB$ có $O(0, 0)$, $A(2, 0)$, $B(0, 2)$: đường thẳng $d: x_1 - x_2 = 0$ nối $O(0, 0)$ với trung điểm $M(1, 1)$ của cạnh $AB$ đồng thời là **đường cao**, **đường phân giác trong góc $\widehat{AOB}$** và **đường trung trực của cạnh $AB$**. Qua phép biến đổi affine $f(x_1, x_2) = (2x_1, x_2) \in \mathcal{A}^2$, tam giác biến thành $O'(0, 0), A'(4, 0), B'(0, 2)$ còn $d$ biến thành đường thẳng $d' = O'M'$ với $M'(2, 1)$:
+  - $\overrightarrow{O'M'} \cdot \overrightarrow{A'B'} = (2, 1) \cdot (-4, 2) = -6 \neq 0$, nên $d'$ không vuông góc với $A'B'$ (không phải đường cao, cũng không phải đường trung trực của $A'B'$).
+  - $\cos\widehat{A'O'M'} = \dfrac{2}{\sqrt{5}} \neq \dfrac{1}{\sqrt{5}} = \cos\widehat{M'O'B'}$, nên $d'$ cũng không phải đường phân giác của góc $\widehat{A'O'B'}$.
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e8-51" title="Bài tập 2.51 (Phân loại các khái niệm thuộc Hình học Affine, Đồng dạng và Ơclit — tr. 144)">
+Trong các khái niệm liệt kê sau đây, các khái niệm nào là của hình học affine, hình học đồng dạng, hình học Ơclit: *đường tròn, đường elip, đường hypebol, đường parabol, đường thẳng, sự chéo nhau của hai đường thẳng, khoảng cách của hai đường thẳng chéo nhau, hình vuông, hình bình hành, trọng tâm của một tam giác, khối tứ diện đều*?
+
+<Hint>
+Chú ý nguyên lí bao hàm $\mathcal{D}^n \subset \mathcal{S}^n \subset \mathcal{A}^n$: mọi khái niệm affine đều đồng thời thuộc hình học đồng dạng và hình học Ơclit; mọi khái niệm đồng dạng đều thuộc hình học Ơclit. Hãy phân tích từng khái niệm theo nhóm biến đổi rộng nhất bảo toàn nó ($\mathcal{A}^n$, $\mathcal{S}^n$ hay chỉ $\mathcal{D}^n$).
+</Hint>
+
+<Solution>
+Do $\mathcal{D}^n \subset \mathcal{S}^n \subset \mathcal{A}^n$, hình học affine là bộ phận của hình học đồng dạng và hình học đồng dạng là bộ phận của hình học Ơclit. Xét theo nhóm biến đổi rộng nhất giữ bất biến từng khái niệm trong danh sách $11$ khái niệm đã cho:
+
+1. **Nhóm 1 — Các khái niệm của Hình học Affine *(do đó cũng thuộc cả Hình học Đồng dạng và Hình học Ơclit)*, gồm $7$ khái niệm:**
+   - **Đường thẳng:** $1$-phẳng, bất biến qua mọi phép biến đổi thuộc $\mathcal{A}^n$.
+   - **Sự chéo nhau của hai đường thẳng:** điều kiện $\Delta_1 \cap \Delta_2 = \varnothing$ và $\overrightarrow{\Delta_1} \cap \overrightarrow{\Delta_2} = \{\vec{0}\}$ chỉ phụ thuộc vào quan hệ giao và độc lập tuyến tính, bất biến qua $\mathcal{A}^n$.
+   - **Hình bình hành:** tứ giác phẳng có hai cặp cạnh đối song song, bất biến qua $\mathcal{A}^n$.
+   - **Trọng tâm của một tam giác:** tâm tỉ cự của ba đỉnh ứng với bộ hệ số bằng nhau $(1, 1, 1)$, bất biến qua $\mathcal{A}^n$.
+   - **Đường elip, đường hypebol, đường parabol:** ba lớp tương đương affine chính tắc của đường bậc hai thực không suy biến trong mặt phẳng (Chương I, §8), bất biến qua mọi phép biến đổi thuộc $\mathcal{A}^2$.
+
+2. **Nhóm 2 — Các khái niệm của Hình học Đồng dạng *(do đó cũng thuộc Hình học Ơclit, nhưng KHÔNG phải là khái niệm của Hình học Affine)*, gồm $3$ khái niệm:**
+   - **Đường tròn:** tập hợp các điểm trong mặt phẳng cách tâm $I$ một khoảng $R > 0$ không đổi; qua phép đồng dạng tỉ số $k$ biến thành đường tròn bán kính $kR$, nhưng qua phép biến đổi affine lệch trục có thể biến thành elip không tròn.
+   - **Hình vuông:** hình bình hành có một góc vuông và tỉ số hai cạnh kề bằng $1$ — bất biến qua $\mathcal{S}^2$, nhưng qua $\mathcal{A}^2$ biến thành hình bình hành tùy ý.
+   - **Khối tứ diện đều:** bao lồi của $4$ điểm không đồng phẳng trong $\mathcal{E}^3$ có tỉ số độ dài mọi cặp cạnh đều bằng $1$ — bất biến qua $\mathcal{S}^3$, nhưng qua $\mathcal{A}^3$ biến thành khối tứ diện tùy ý.
+
+3. **Nhóm 3 — Khái niệm thuần túy của Hình học Ơclit *(KHÔNG phải là khái niệm của Hình học Đồng dạng hay Hình học Affine)*, gồm $1$ khái niệm:**
+   - **Khoảng cách của hai đường thẳng chéo nhau:** qua phép đồng dạng tỉ số $k \neq 1$, khoảng cách $d(\Delta_1, \Delta_2) > 0$ biến thành $k\,d(\Delta_1, \Delta_2) \neq d(\Delta_1, \Delta_2)$, nên đại lượng này chỉ bất biến đối với nhóm dời hình $\mathcal{D}^n$.
+
+**Tóm tắt theo từng nền hình học:**
+- *Thuộc Hình học Affine ($7$):* đường thẳng, sự chéo nhau của hai đường thẳng, hình bình hành, trọng tâm tam giác, đường elip, đường hypebol, đường parabol.
+- *Thuộc Hình học Đồng dạng ($10$):* toàn bộ $7$ khái niệm affine nêu trên cộng thêm *đường tròn, hình vuông, khối tứ diện đều*.
+- *Thuộc Hình học Ơclit ($11$):* toàn bộ $10$ khái niệm đồng dạng nêu trên cộng thêm *khoảng cách của hai đường thẳng chéo nhau*.
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e8-57" title="Bài tập 2.57 (Sự bảo toàn các loại góc và tính vuông góc của phẳng qua phép đồng dạng — tr. 145)">
+Chứng tỏ rằng phép đồng dạng $f$ của $\mathcal{E}^n$ bảo toàn góc giữa hai đường thẳng, góc giữa hai siêu phẳng, góc giữa đường thẳng và siêu phẳng, và biến hai cái phẳng vuông góc với nhau thành hai cái phẳng cũng vuông góc với nhau.
+
+<Hint>
+Sử dụng hệ thức của phép biến đổi tuyến tính đồng dạng liên kết $\varphi$: $\varphi(\vec{x}) \cdot \varphi(\vec{y}) = k^2(\vec{x} \cdot \vec{y})$ và $|\varphi(\vec{x})| = k|\vec{x}|$ ($k > 0$) để kiểm tra đầu tiên tính bảo toàn vuông góc của hai phẳng và góc giữa hai đường thẳng, sau đó suy ra cho siêu phẳng nhờ đường thẳng pháp tuyến.
+</Hint>
+
+<Solution>
+Giả sử $f \in \mathcal{S}^n$ là phép đồng dạng tỉ số $k > 0$ có phép biến đổi tuyến tính liên kết $\varphi: \overrightarrow{\mathcal{E}^n} \to \overrightarrow{\mathcal{E}^n}$. Theo chứng minh Định lí 2b và Hệ quả, với mọi $\vec{x}, \vec{y} \in \overrightarrow{\mathcal{E}^n}$ ta có:
+$$
+\varphi(\vec{x}) \cdot \varphi(\vec{y}) = k^2(\vec{x} \cdot \vec{y}), \qquad |\varphi(\vec{x})| = k|\vec{x}|,
+$$
+và với mỗi phẳng $\alpha \subset \mathcal{E}^n$, ảnh $f(\alpha)$ là phẳng cùng số chiều có phương $\overrightarrow{f(\alpha)} = \varphi(\overrightarrow{\alpha})$.
+
+1. **Biến hai phẳng vuông góc thành hai phẳng vuông góc:** Giả sử $\alpha \perp \beta$ (tức $\overrightarrow{\alpha} \perp \overrightarrow{\beta}$). Mọi cặp vectơ $\vec{u}' \in \overrightarrow{f(\alpha)}$, $\vec{v}' \in \overrightarrow{f(\beta)}$ đều có dạng $\vec{u}' = \varphi(\vec{u})$, $\vec{v}' = \varphi(\vec{v})$ với $\vec{u} \in \overrightarrow{\alpha}, \vec{v} \in \overrightarrow{\beta}$. Khi đó:
+   $$
+   \vec{u}' \cdot \vec{v}' = \varphi(\vec{u}) \cdot \varphi(\vec{v}) = k^2(\vec{u} \cdot \vec{v}) = 0,
+   $$
+   nên $\overrightarrow{f(\alpha)} \perp \overrightarrow{f(\beta)}$, tức $f(\alpha) \perp f(\beta)$.
+
+2. **Bảo toàn góc giữa hai đường thẳng:** Cho hai đường thẳng $\Delta, \Delta'$ có các vectơ chỉ phương $\vec{a}, \vec{b} \neq \vec{0}$. Các đường thẳng ảnh $f(\Delta), f(\Delta')$ có các vectơ chỉ phương là $\varphi(\vec{a}), \varphi(\vec{b}) \neq \vec{0}$. Côsin góc $\varphi'$ giữa $f(\Delta)$ và $f(\Delta')$ là:
+   $$
+   \cos\varphi' = \frac{|\varphi(\vec{a}) \cdot \varphi(\vec{b})|}{|\varphi(\vec{a})|\,|\varphi(\vec{b})|} = \frac{k^2|\vec{a} \cdot \vec{b}|}{(k|\vec{a}|)(k|\vec{b}|)} = \frac{|\vec{a} \cdot \vec{b}|}{|\vec{a}|\,|\vec{b}|} = \cos\varphi,
+   $$
+   với $\varphi, \varphi' \in \left[0, \dfrac{\pi}{2}\right]$, suy ra $\varphi' = \varphi$.
+
+3. **Bảo toàn góc giữa hai siêu phẳng:** Cho hai siêu phẳng $\alpha, \beta$ và hai đường thẳng $a \perp \alpha$, $b \perp \beta$. Theo phần (1), các đường thẳng ảnh thỏa mãn $f(a) \perp f(\alpha)$ và $f(b) \perp f(\beta)$ đối với hai siêu phẳng ảnh $f(\alpha), f(\beta)$. Theo định nghĩa góc giữa hai siêu phẳng (§5, Mục 3) và phần (2), góc giữa $f(\alpha)$ và $f(\beta)$ bằng góc giữa $f(a)$ và $f(b)$, nên bằng góc giữa $a$ và $b$, tức bằng góc giữa $\alpha$ và $\beta$.
+
+4. **Bảo toàn góc giữa đường thẳng và siêu phẳng:** Cho đường thẳng $d$ và siêu phẳng $\beta$, lấy đường thẳng $b \perp \beta$. Khi đó $f(b) \perp f(\beta)$. Nếu $d \perp \beta$ thì theo (1) ta có $f(d) \perp f(\beta)$, cả hai góc đều bằng $\dfrac{\pi}{2}$. Nếu $d$ không vuông góc với $\beta$, gọi $\varphi$ là góc giữa hai đường thẳng $d, b$; theo phần (2), góc giữa $f(d)$ và $f(b)$ vẫn bằng $\varphi$, nên góc giữa $f(d)$ và $f(\beta)$ là $\theta' = \dfrac{\pi}{2} - \varphi = \theta$.
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e8-58" title="Bài tập 2.58 (Xác định phép biến đổi tuyến tính liên kết và tỉ số đồng dạng trong V3E — tr. 145–146)">
+Trong $V_E^3$ với một cơ sở trực chuẩn $\{\vec{e}_1, \vec{e}_2, \vec{e}_3\}$ cho các vectơ:
+$$
+\vec{a} = (1, -2, 0), \quad \vec{b} = (3, 1, 0), \quad \vec{c} = (3, 1, 1),
+$$
+$$
+\vec{a}' = (-2, -4, 0), \quad \vec{b}' = (-6, 2, 0), \quad \vec{c}' = (-6, 2, 2).
+$$
+
+a) Xác định phép biến đổi tuyến tính $\varphi$ sao cho $\varphi(\vec{a}) = \vec{a}'$, $\varphi(\vec{b}) = \vec{b}'$, $\varphi(\vec{c}) = \vec{c}'$.
+
+b) Giả sử $\varphi$ liên kết với phép affine $f$. Chứng tỏ $f$ là phép đồng dạng và hãy xác định tỉ số đồng dạng của $f$.
+
+<Hint>
+Câu a: Kiểm tra $\{\vec{a}, \vec{b}, \vec{c}\}$ là cơ sở của $V_E^3$, biểu diễn $\vec{e}_1, \vec{e}_2, \vec{e}_3$ qua $\vec{a}, \vec{b}, \vec{c}$ (chú ý $\vec{a} + 2\vec{b} = 7\vec{e}_1$, $\vec{b} - 3\vec{a} = 7\vec{e}_2$, $\vec{c} - \vec{b} = \vec{e}_3$) để tìm $\varphi(\vec{e}_i)$ và lập ma trận của $\varphi$. Câu b: Kiểm tra $|\varphi(\vec{x})| = k|\vec{x}|$ qua Hệ quả ở Mục 2b.
+</Hint>
+
+<Solution>
+**a) Xác định phép biến đổi tuyến tính $\varphi$:**
+
+Xét định thức tọa độ của hệ $\{\vec{a}, \vec{b}, \vec{c}\}$ đối với cơ sở trực chuẩn $\{\vec{e}_1, \vec{e}_2, \vec{e}_3\}$:
+$$
+\begin{vmatrix}
+1 & -2 & 0 \\
+3 & 1 & 0 \\
+3 & 1 & 1
+\end{vmatrix} = 1 \cdot 1 - 3 \cdot (-2) = 7 \neq 0,
+$$
+nên $\{\vec{a}, \vec{b}, \vec{c}\}$ là một cơ sở của $V_E^3$ và tồn tại duy nhất phép biến đổi tuyến tính $\varphi: V_E^3 \to V_E^3$ biến $\vec{a} \mapsto \vec{a}'$, $\vec{b} \mapsto \vec{b}'$, $\vec{c} \mapsto \vec{c}'$.
+
+Biểu diễn các vectơ cơ sở $\{\vec{e}_1, \vec{e}_2, \vec{e}_3\}$ qua $\{\vec{a}, \vec{b}, \vec{c}\}$:
+- $\vec{a} + 2\vec{b} = (1 + 6,\; -2 + 2,\; 0) = (7, 0, 0) = 7\vec{e}_1 \implies \vec{e}_1 = \dfrac{1}{7}(\vec{a} + 2\vec{b})$;
+- $\vec{b} - 3\vec{a} = (3 - 3,\; 1 + 6,\; 0) = (0, 7, 0) = 7\vec{e}_2 \implies \vec{e}_2 = \dfrac{1}{7}(\vec{b} - 3\vec{a})$;
+- $\vec{c} - \vec{b} = (0, 0, 1) = \vec{e}_3$.
+
+Tác động phép biến đổi tuyến tính $\varphi$:
+$$
+\varphi(\vec{e}_1) = \frac{1}{7}(\vec{a}' + 2\vec{b}') = \frac{1}{7}(-14, 0, 0) = (-2, 0, 0),
+$$
+$$
+\varphi(\vec{e}_2) = \frac{1}{7}(\vec{b}' - 3\vec{a}') = \frac{1}{7}(0, 14, 0) = (0, 2, 0),
+$$
+$$
+\varphi(\vec{e}_3) = \vec{c}' - \vec{b}' = (0, 0, 2).
+$$
+Vậy đối với cơ sở trực chuẩn đã cho, $\varphi$ có ma trận đường chéo $M = \begin{bmatrix} -2 & 0 & 0 \\ 0 & 2 & 0 \\ 0 & 0 & 2 \end{bmatrix}$, tức biến mỗi vectơ $\vec{x} = (x_1, x_2, x_3)$ thành $\varphi(\vec{x}) = (-2x_1,\; 2x_2,\; 2x_3)$.
+
+**b) Chứng minh $f$ là phép đồng dạng và tìm tỉ số đồng dạng:**
+
+Với mọi vectơ $\vec{x} = (x_1, x_2, x_3) \in V_E^3$, trong cơ sở trực chuẩn ta có:
+$$
+|\varphi(\vec{x})| = \sqrt{(-2x_1)^2 + (2x_2)^2 + (2x_3)^2} = \sqrt{4(x_1^2 + x_2^2 + x_3^2)} = 2\sqrt{x_1^2 + x_2^2 + x_3^2} = 2|\vec{x}|.
+$$
+Theo Hệ quả ở Mục 2b, phép biến đổi affine $f$ nhận $\varphi$ làm ánh xạ tuyến tính liên kết là một **phép đồng dạng** của $\mathcal{E}^3$ với **tỉ số đồng dạng $k = 2$** *(cụ thể là phép đồng dạng nghịch vì $\det M = -8 < 0$)*.
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e8-59" title="Bài tập 2.59 (Phép vị tự là một phép đồng dạng — tr. 146)">
+Chứng tỏ rằng phép vị tự tâm $S$ tỉ số $k \neq 0$ của $\mathcal{E}^n$ là một phép đồng dạng của $\mathcal{E}^n$ với tỉ số $|k|$.
+
+<Hint>
+Sử dụng định nghĩa phép vị tự $V_S^k(M) = M' \iff \overrightarrow{SM'} = k\overrightarrow{SM}$ và quy tắc Chasles $\overrightarrow{M'N'} = \overrightarrow{SN'} - \overrightarrow{SM'}$.
+</Hint>
+
+<Solution>
+Xét phép vị tự $V_S^k: \mathcal{E}^n \to \mathcal{E}^n$ tâm $S$, tỉ số $k \neq 0$ (theo Chương I §7, $V_S^k$ là một phép biến đổi song ánh của $\mathcal{E}^n$). Với hai điểm bất kì $M, N \in \mathcal{E}^n$, gọi $M' = V_S^k(M)$ và $N' = V_S^k(N)$. Theo định nghĩa phép vị tự:
+$$
+\overrightarrow{SM'} = k\overrightarrow{SM}, \qquad \overrightarrow{SN'} = k\overrightarrow{SN}.
+$$
+Áp dụng quy tắc Chasles:
+$$
+\overrightarrow{M'N'} = \overrightarrow{SN'} - \overrightarrow{SM'} = k\overrightarrow{SN} - k\overrightarrow{SM} = k(\overrightarrow{SN} - \overrightarrow{SM}) = k\overrightarrow{MN}.
+$$
+Lấy độ dài hai vế của đẳng thức vectơ trên:
+$$
+d(M', N') = |\overrightarrow{M'N'}| = |k\overrightarrow{MN}| = |k|\,|\overrightarrow{MN}| = |k|\,d(M, N).
+$$
+Vì $k \neq 0$ nên hằng số $|k| > 0$ là số thực dương cố định. Theo Định nghĩa 2a, phép vị tự $V_S^k$ là một phép đồng dạng của $\mathcal{E}^n$ với tỉ số đồng dạng bằng $|k|$.
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e8-60" title="Bài tập 2.60 (Phương trình phép đồng dạng trong mặt phẳng biến mục tiêu trực chuẩn thành mục tiêu đồng dạng — tr. 146)">
+Viết phương trình của phép đồng dạng tỉ số $k$ ($k > 0$) trong $\mathcal{E}^2$ biến mục tiêu trực chuẩn $\{E_0; \vec{e}_1, \vec{e}_2\}$ thành mục tiêu $\{E'_0; \vec{e}'_1, \vec{e}'_2\}$, biết $\alpha = \widehat{(\vec{e}_1, \vec{e}'_1)}$ và tọa độ trực chuẩn của $E'_0 = (x_0, y_0)$ đối với mục tiêu $\{E_0; \vec{e}_1, \vec{e}_2\}$.
+
+<Hint>
+Từ $|\varphi(\vec{e}_i)| = k$ và $\vec{e}'_1 \perp \vec{e}'_2$, xác định tọa độ của $\vec{e}'_1 = \varphi(\vec{e}_1)$ và $\vec{e}'_2 = \varphi(\vec{e}_2)$ đối với $\{\vec{e}_1, \vec{e}_2\}$ theo góc $\alpha$ (xét đủ trường hợp đồng dạng thuận cùng hướng và đồng dạng nghịch ngược hướng).
+</Hint>
+
+<Solution>
+Gọi $f: \mathcal{E}^2 \to \mathcal{E}^2$ là phép đồng dạng tỉ số $k > 0$ biến $\{E_0; \vec{e}_1, \vec{e}_2\}$ thành $\{E'_0; \vec{e}'_1, \vec{e}'_2\}$, nghĩa là $f(E_0) = E'_0(x_0, y_0)$, $\varphi(\vec{e}_1) = \vec{e}'_1$ và $\varphi(\vec{e}_2) = \vec{e}'_2$.
+
+Theo Định lí 1c và Hệ quả 2b, vì $\{\vec{e}_1, \vec{e}_2\}$ là cơ sở trực chuẩn nên $\{\vec{e}'_1, \vec{e}'_2\}$ là cơ sở trực giao thỏa mãn $|\vec{e}'_1| = |\vec{e}'_2| = k$ và $\vec{e}'_1 \perp \vec{e}'_2$.
+
+Hiểu $\alpha$ là góc lượng giác định hướng từ $\vec{e}_1$ đến $\vec{e}'_1$ trong mục tiêu $\{E_0; \vec{e}_1, \vec{e}_2\}$ *(nếu hiểu $\alpha \in [0, \pi]$ là góc hình học không định hướng thì tọa độ tung của $\vec{e}'_1$ có hai khả năng $\pm k\sin\alpha$, được gộp chung khi cho góc định hướng $\alpha$ nhận giá trị trong $(-\pi, \pi]$)*, ta có:
+$$
+\vec{e}'_1 = (k\cos\alpha,\; k\sin\alpha).
+$$
+Vì $\vec{e}'_2 \perp \vec{e}'_1$ và $|\vec{e}'_2| = k$, có hai khả năng đối với vectơ $\vec{e}'_2$ tương ứng với định hướng của mục tiêu ảnh $\{E'_0; \vec{e}'_1, \vec{e}'_2\}$ so với $\{E_0; \vec{e}_1, \vec{e}_2\}$:
+
+1. **Trường hợp 1 (Phép đồng dạng thuận — $(\vec{e}'_1, \vec{e}'_2)$ cùng hướng với $(\vec{e}_1, \vec{e}_2)$):**
+   Khi đó $\vec{e}'_2 = (-k\sin\alpha,\; k\cos\alpha)$. Từ $[x'] = A[x] + [x_0]$ với hai cột của $A$ là $\vec{e}'_1, \vec{e}'_2$, phương trình của $f$ là:
+   $$
+   \begin{cases}
+   x' = k(x\cos\alpha - y\sin\alpha) + x_0, \\
+   y' = k(x\sin\alpha + y\cos\alpha) + y_0.
+   \end{cases}
+   $$
+
+2. **Trường hợp 2 (Phép đồng dạng nghịch — $(\vec{e}'_1, \vec{e}'_2)$ ngược hướng với $(\vec{e}_1, \vec{e}_2)$):**
+   Khi đó $\vec{e}'_2 = (k\sin\alpha,\; -k\cos\alpha)$, và phương trình của $f$ là:
+   $$
+   \begin{cases}
+   x' = k(x\cos\alpha + y\sin\alpha) + x_0, \\
+   y' = k(x\sin\alpha - y\cos\alpha) + y_0.
+   \end{cases}
+   $$
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e8-61" title="Bài tập 2.61 (Sự tồn tại điểm kép duy nhất của mọi phép đồng dạng không phải phép đẳng cự — tr. 146)">
+Chứng minh rằng bất kì một phép đồng dạng nào trong mặt phẳng mà không phải là phép đẳng cự đều có một điểm kép (duy nhất).
+
+<Hint>
+Viết phương trình phép đồng dạng tỉ số $k > 0$ ($k \neq 1$) dưới dạng $[x'] = A[x] + [b]$ trong mục tiêu trực chuẩn. Để chứng minh hệ $(I_2 - A)[x] = [b]$ có nghiệm duy nhất, chứng tỏ $\det(I_2 - A) \neq 0$ bằng phản chứng qua điều kiện $|\varphi(\vec{u})| = k|\vec{u}|$ (hoặc tính trực tiếp định thức theo dạng chính tắc của ma trận trực giao $Q = \dfrac{1}{k}A$).
+</Hint>
+
+<Solution>
+Giả sử $f: \mathcal{E}^2 \to \mathcal{E}^2$ là một phép đồng dạng tỉ số $k > 0$ không phải là phép đẳng cự, tức là $k \neq 1$. Chọn một mục tiêu trực chuẩn trong $\mathcal{E}^2$, phương trình của $f$ có dạng:
+$$
+[x'] = A[x] + [b],
+$$
+trong đó $A$ là ma trận của phép biến đổi tuyến tính liên kết $\varphi$ thỏa mãn $|\varphi(\vec{u})| = k|\vec{u}|$ với mọi $\vec{u} \in \overrightarrow{\mathcal{E}^2}$.
+
+Điểm $M(x)$ là điểm kép của $f$ khi và chỉ khi $f(M) = M \iff [x] = A[x] + [b] \iff (I_2 - A)[x] = [b]$. Ta chứng minh ma trận $I_2 - A$ không suy biến ($\det(I_2 - A) \neq 0$):
+
+- **Cách 1 (Chứng minh tổng quát đúng trên mọi không gian $\mathcal{E}^n$):** Giả sử phản chứng $\det(I_2 - A) = 0$. Khi đó hệ phương trình tuyến tính thuần nhất $(I_2 - A)[u] = [0]$ có ít nhất một nghiệm khác không $[u] \neq [0]$, nghĩa là tồn tại vectơ $\vec{u} \neq \vec{0}$ sao cho $\varphi(\vec{u}) = \vec{u}$. Lấy độ dài hai vế và áp dụng Hệ quả 2b:
+  $$
+  |\vec{u}| = |\varphi(\vec{u})| = k|\vec{u}|.
+  $$
+  Vì $\vec{u} \neq \vec{0}$ nên $|\vec{u}| > 0$, chia hai vế cho $|\vec{u}|$ ta được $k = 1$, mâu thuẫn với giả thiết $f$ không phải là phép đẳng cự ($k \neq 1$). Vậy $\det(I_2 - A) \neq 0$.
+
+- **Cách 2 (Tính trực tiếp định thức cấp $2$ trong $\mathcal{E}^2$):** Đặt $Q = \dfrac{1}{k}A$ thì $Q^* Q = I_2$ ($A = kQ$). Chọn mục tiêu trực chuẩn thích hợp theo §6 Mục 4:
+  - Nếu $\det Q = 1$: $Q = \begin{bmatrix} \cos\varphi & -\sin\varphi \\ \sin\varphi & \cos\varphi \end{bmatrix}$ cho $\det(I_2 - kQ) = (1 - k\cos\varphi)^2 + k^2\sin^2\varphi = 1 - 2k\cos\varphi + k^2 \ge (1 - k)^2 > 0$ (do $k \neq 1$).
+  - Nếu $\det Q = -1$: $Q = \begin{bmatrix} 1 & 0 \\ 0 & -1 \end{bmatrix}$ cho $\det(I_2 - kQ) = (1 - k)(1 + k) = 1 - k^2 \neq 0$ (do $k > 0$ và $k \neq 1$).
+
+Vì $\det(I_2 - A) \neq 0$, hệ phương trình $(I_2 - A)[x] = [b]$ luôn có một nghiệm duy nhất, tức phép đồng dạng $f$ luôn có **một điểm kép duy nhất** *(gọi là tâm của phép đồng dạng $f$)*.
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e8-62" title="Bài tập 2.62 (Khảo sát phép biến đổi đồng dạng cụ thể trong mặt phẳng — tr. 146)">
+Trong $\mathcal{E}^2$ với mục tiêu trực chuẩn cho trước, hãy xét tính chất của phép biến đổi $f$ cho bởi phương trình sau đây:
+$$
+\begin{cases}
+x'_1 = 8x_1 - x_2 + 1, \\
+x'_2 = x_1 + 8x_2.
+\end{cases}
+$$
+
+<Hint>
+Xét ma trận phần tuyến tính $A = \begin{bmatrix} 8 & -1 \\ 1 & 8 \end{bmatrix}$, tính $A^* A$ và $\det A$ để chứng tỏ $f$ là phép đồng dạng thuận, xác định tỉ số đồng dạng $k$, góc quay $\varphi$ và tọa độ điểm kép duy nhất $I$.
+</Hint>
+
+<Solution>
+Phương trình của $f$ có dạng ma trận $[x'] = A[x] + [b]$ với:
+$$
+A = \begin{bmatrix} 8 & -1 \\ 1 & 8 \end{bmatrix}, \qquad [b] = \begin{bmatrix} 1 \\ 0 \end{bmatrix}.
+$$
+
+1. **Nhận diện phép đồng dạng và tỉ số đồng dạng:** Ta tính:
+   $$
+   A^* A = \begin{bmatrix} 8 & 1 \\ -1 & 8 \end{bmatrix} \begin{bmatrix} 8 & -1 \\ 1 & 8 \end{bmatrix} = \begin{bmatrix} 65 & 0 \\ 0 & 65 \end{bmatrix} = 65 I_2, \qquad \det A = 64 - (-1) = 65 > 0.
+   $$
+   Do đó $|\varphi(\vec{x})| = \sqrt{65}\,|\vec{x}|$ với mọi $\vec{x} \in \overrightarrow{\mathcal{E}^2}$. Vậy $f$ là một **phép đồng dạng thuận** (bảo toàn hướng) với tỉ số đồng dạng $k = \sqrt{65} \neq 1$.
+
+2. **Tìm điểm kép duy nhất (tâm đồng dạng) và cấu trúc hình học:** Giải hệ phương trình $f(x) = x$:
+   $$
+   \begin{cases}
+   x_1 = 8x_1 - x_2 + 1, \\
+   x_2 = x_1 + 8x_2
+   \end{cases}
+   \iff
+   \begin{cases}
+   7x_1 - x_2 = -1, \\
+   x_1 + 7x_2 = 0.
+   \end{cases}
+   $$
+   Từ phương trình thứ hai rút $x_1 = -7x_2$, thế vào phương trình thứ nhất được $-50x_2 = -1 \implies x_2 = \dfrac{1}{50}$ và $x_1 = -\dfrac{7}{50}$.
+
+   Đặt $A = \sqrt{65}\begin{bmatrix} \frac{8}{\sqrt{65}} & -\frac{1}{\sqrt{65}} \\ \frac{1}{\sqrt{65}} & \frac{8}{\sqrt{65}} \end{bmatrix} = \sqrt{65}\begin{bmatrix} \cos\varphi & -\sin\varphi \\ \sin\varphi & \cos\varphi \end{bmatrix}$ với góc nhọn $\varphi = \arccos\dfrac{8}{\sqrt{65}} \in \left(0, \dfrac{\pi}{2}\right)$ ($\sin\varphi = \dfrac{1}{\sqrt{65}}$).
+
+**Kết luận:** Phép biến đổi $f$ là **phép đồng dạng thuận tỉ số $k = \sqrt{65}$**, có điểm kép duy nhất $I\left(-\dfrac{7}{50}, \dfrac{1}{50}\right)$, và chính là tích giao hoán của phép vị tự tâm $I$ tỉ số $\sqrt{65}$ với phép quay tâm $I$ góc quay $\varphi = \arccos\dfrac{8}{\sqrt{65}}$.
 </Solution>
 </Exercise>
 
 <KeyTakeaways>
-- Phép đồng dạng là phép biến đổi affine nhân mọi khoảng cách với cùng một hệ số k dương.
-- Nhóm các phép biến đổi đồng dạng chứa nhóm đẳng cự như một nhóm con chuẩn tắc.
+- Một ánh xạ $\varphi: \overrightarrow{\mathcal{E}} \to \overrightarrow{\mathcal{E}}$ thỏa mãn $\varphi(\vec{x}) \cdot \varphi(\vec{y}) = k(\vec{x} \cdot \vec{y})$ ($k \neq 0$) tự động là phép biến đổi tuyến tính đồng dạng (với $k > 0$), biến cơ sở trực chuẩn thành cơ sở trực giao.
+- Mọi phép đồng dạng $f: \mathcal{E}^n \to \mathcal{E}^n$ ($d(f(M), f(N)) = k\,d(M, N)$, $k > 0$) đều là phép biến đổi affine với $|\varphi(\vec{x})| = k|\vec{x}|$, và mọi phép đồng dạng với $k \neq 1$ đều có một điểm kép duy nhất.
+- Chuỗi bao hàm nhóm con $\mathcal{D}^n \subset \mathcal{S}^n \subset \mathcal{A}^n$ thiết lập sự phân tầng chặt chẽ: *Hình học Affine $\subset$ Hình học Đồng dạng $\subset$ Hình học Ơclit*, trong đó hình học đồng dạng giữ bất biến tỉ số độ dài các đoạn thẳng và số đo góc.
 </KeyTakeaways>

@@ -2,7 +2,7 @@
   "stats": {
     "totalLessons": 122,
     "totalTerms": 67,
-    "totalBacklinks": 514,
+    "totalBacklinks": 519,
     "termsWithBacklinks": 67,
     "lessonsWithBacklinks": 116
   },
@@ -2467,6 +2467,14 @@
         "count": 11
       },
       {
+        "lessonId": "hinh-hoc-dong-dang",
+        "lessonCode": "HHAVE 2.8",
+        "lessonTitle": "Hình học Đồng dạng",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/hinh-hoc-dong-dang",
+        "count": 10
+      },
+      {
         "lessonId": "anh-xa-afin-va-phep-bien-doi-afin",
         "lessonCode": "HHAVE 1.6",
         "lessonTitle": "Ánh xạ Affine và Phép Biến đổi Affine",
@@ -2571,6 +2579,14 @@
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/hinh-hoc-euclide",
         "count": 1
+      },
+      {
+        "lessonId": "hinh-hoc-dong-dang",
+        "lessonCode": "HHAVE 2.8",
+        "lessonTitle": "Hình học Đồng dạng",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/hinh-hoc-dong-dang",
+        "count": 1
       }
     ],
     "tap-loi": [
@@ -2589,6 +2605,14 @@
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/nhom-cac-phep-bien-doi-afin-va-hinh-hoc-afin",
         "count": 8
+      },
+      {
+        "lessonId": "hinh-hoc-dong-dang",
+        "lessonCode": "HHAVE 2.8",
+        "lessonTitle": "Hình học Đồng dạng",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/hinh-hoc-dong-dang",
+        "count": 3
       },
       {
         "lessonId": "khong-gian-euclide",
@@ -2667,6 +2691,14 @@
         "count": 25
       },
       {
+        "lessonId": "hinh-hoc-dong-dang",
+        "lessonCode": "HHAVE 2.8",
+        "lessonTitle": "Hình học Đồng dạng",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/hinh-hoc-dong-dang",
+        "count": 14
+      },
+      {
         "lessonId": "cac-sieu-mat-bac-hai-trong-khong-gian-afin",
         "lessonCode": "HHAVE 1.8",
         "lessonTitle": "Các Siêu mặt Bậc hai trong Không gian Affine",
@@ -2689,14 +2721,6 @@
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/anh-xa-dang-cu-va-phep-bien-doi-dang-cu",
         "count": 6
-      },
-      {
-        "lessonId": "hinh-hoc-dong-dang",
-        "lessonCode": "HHAVE 2.8",
-        "lessonTitle": "Hình học Đồng dạng",
-        "subjectId": "hinh-hoc-affine",
-        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/hinh-hoc-dong-dang",
-        "count": 2
       },
       {
         "lessonId": "mo-hinh-xa-anh-cua-khong-gian-euclide",
@@ -2839,6 +2863,14 @@
         "count": 3
       },
       {
+        "lessonId": "hinh-hoc-dong-dang",
+        "lessonCode": "HHAVE 2.8",
+        "lessonTitle": "Hình học Đồng dạng",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/hinh-hoc-dong-dang",
+        "count": 2
+      },
+      {
         "lessonId": "khong-gian-affine",
         "lessonCode": "HHAVE 1.1",
         "lessonTitle": "Khái niệm Không gian Affine và Quy tắc Chasles",
@@ -2871,6 +2903,14 @@
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/anh-xa-dang-cu-va-phep-bien-doi-dang-cu",
         "count": 24
+      },
+      {
+        "lessonId": "hinh-hoc-dong-dang",
+        "lessonCode": "HHAVE 2.8",
+        "lessonTitle": "Hình học Đồng dạng",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/hinh-hoc-dong-dang",
+        "count": 9
       },
       {
         "lessonId": "goc-trong-khong-gian-euclide",
@@ -4673,7 +4713,12 @@
       "tam-ti-cu"
     ],
     "hinh-hoc-dong-dang": [
-      "phep-bien-doi-afin"
+      "phep-bien-doi-afin",
+      "sieu-phang",
+      "muc-tieu-truc-chuan",
+      "tap-loi",
+      "khong-gian-euclide",
+      "tam-ti-cu"
     ],
     "sieu-mat-bac-hai-trong-khong-gian-euclide": [
       "sieu-mat-bac-hai",
