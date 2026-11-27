@@ -160,8 +160,15 @@ $$
 </Proof>
 
 <Example id="ex-s6-7" title="Minh họa phép tịnh tiến và bảo tồn tỉ số đơn trên R^2">
-- Phép tịnh tiến $t_{\vec{v}}$ theo $\vec{v} = (2, 1)$ trong $\R^2$ biến $M(x, y)$ thành $M'(x + 2, y + 1)$ với $\varphi = \id_{\R^2}$; đường thẳng $y = 3x$ (qua $(0, 0)$ phương $(1, 3)$) biến thành đường thẳng $y - 1 = 3(x - 2) \iff 3x - y - 5 = 0$ (qua $(2, 1)$ cùng phương $(1, 3)$).
-- Xét phép biến đổi affine $f(x_1, x_2) = (x_1 - x_2 + 1,\; x_1 + x_2 + 2)$ và ba điểm thẳng hàng $P(0, 0), Q(1, 0), R(2, 0)$ có $\overrightarrow{PQ} = \dfrac{1}{2}\overrightarrow{PR}$, tức $(PQR) = \dfrac{1}{2}$. Các ảnh $P'(1, 2), Q'(2, 3), R'(3, 4)$ có $\overrightarrow{P'Q'} = (1, 1) = \dfrac{1}{2}(2, 2) = \dfrac{1}{2}\overrightarrow{P'R'}$, nên $(P'Q'R') = \dfrac{1}{2} = (PQR)$.
+**Đề bài:** Trên mặt phẳng affine $\R^2$ với mục tiêu chuẩn tắc:
+
+1. Cho phép tịnh tiến $t_{\vec{v}}$ theo vectơ $\vec{v} = (2, 1)$. Tìm ảnh $M'$ của điểm $M(x, y)$ và lập phương trình ảnh của đường thẳng $y = 3x$ qua $t_{\vec{v}}$.
+2. Cho phép biến đổi affine $f(x_1, x_2) = (x_1 - x_2 + 1,\; x_1 + x_2 + 2)$ và ba điểm thẳng hàng $P(0, 0), Q(1, 0), R(2, 0)$. Tính $(PQR)$ và $(P'Q'R')$ để kiểm chứng tính bảo tồn tỉ số đơn.
+
+**Lời giải:**
+
+1. Phép tịnh tiến $t_{\vec{v}}$ theo $\vec{v} = (2, 1)$ biến $M(x, y)$ thành $M'(x + 2, y + 1)$ với $\varphi = \id_{\R^2}$. Đường thẳng $y = 3x$ (đi qua $(0, 0)$, có phương sinh bởi $(1, 3)$) biến thành đường thẳng đi qua $(2, 1)$ cùng phương $(1, 3)$, có phương trình $y - 1 = 3(x - 2) \iff 3x - y - 5 = 0$.
+2. Với $P(0, 0), Q(1, 0), R(2, 0)$, ta có $\overrightarrow{PQ} = (1, 0) = \dfrac{1}{2}(2, 0) = \dfrac{1}{2}\overrightarrow{PR}$, nên $(PQR) = \dfrac{1}{2}$. Qua $f$, các điểm ảnh lần lượt là $P'(1, 2), Q'(2, 3), R'(3, 4)$, thỏa mãn $\overrightarrow{P'Q'} = (1, 1) = \dfrac{1}{2}(2, 2) = \dfrac{1}{2}\overrightarrow{P'R'}$, suy ra $(P'Q'R') = \dfrac{1}{2} = (PQR)$.
 </Example>
 
 ## 5. Phương trình của Phép Biến đổi Affine
@@ -214,9 +221,9 @@ trong đó $[b]$ là ma trận cột tọa độ của điểm $E'_0 = t_{\vec{v
 </Example>
 
 <Example id="ex-s6-9b" title="Thí dụ 2: Lập phương trình phép biến đổi affine trên mặt phẳng A^2">
-Trong mặt phẳng affine $\mathcal{A}^2$ đối với mục tiêu đã chọn, hãy lập phương trình của phép biến đổi affine $f$ biến ba điểm $A(1, 0)$, $B(0, 2)$, $C(-3, 0)$ lần lượt thành $A'(2, 3)$, $B'(-1, 4)$, $C'(-2, -1)$.
+**Đề bài:** Trong mặt phẳng affine $\mathcal{A}^2$ đối với mục tiêu đã chọn, hãy lập phương trình của phép biến đổi affine $f$ biến ba điểm $A(1, 0)$, $B(0, 2)$, $C(-3, 0)$ lần lượt thành $A'(2, 3)$, $B'(-1, 4)$, $C'(-2, -1)$.
 
-**Giải:** Phương trình tổng quát của phép affine $f$ trên $\mathcal{A}^2$ có dạng:
+**Lời giải:** Phương trình tổng quát của phép affine $f$ trên $\mathcal{A}^2$ có dạng:
 
 $$
 \begin{cases}
@@ -285,7 +292,9 @@ Trong phương trình $[x'] = B[x] + [b]$ của phép biến đổi affine $f$ �
 </Remark>
 
 <Example id="ex-s6-11" title="Minh họa công thức đổi ma trận B' = (C*)^{-1} B C*">
-Xét phép affine $f$ ở <Ref to="ex-s6-9b" /> có ma trận $B = \begin{bmatrix} 1 & -1 \\ 1 & 1 \end{bmatrix}$ đối với cơ sở nền $\{\vec{e}_1, \vec{e}_2\}$. Nếu đổi sang mục tiêu mới cùng gốc với cơ sở nền $\vec{e}'_1 = \vec{e}_1,\; \vec{e}'_2 = 2\vec{e}_2$, thì $C = C^* = \begin{bmatrix} 1 & 0 \\ 0 & 2 \end{bmatrix}$ và:
+**Đề bài:** Xét phép biến đổi affine $f$ ở <Ref to="ex-s6-9b" /> có ma trận $B = \begin{bmatrix} 1 & -1 \\ 1 & 1 \end{bmatrix}$ đối với cơ sở nền $\{\vec{e}_1, \vec{e}_2\}$. Nếu đổi sang mục tiêu mới cùng gốc với cơ sở nền $\vec{e}'_1 = \vec{e}_1,\; \vec{e}'_2 = 2\vec{e}_2$, hãy tìm ma trận $B'$ của $f$ đối với mục tiêu mới bằng công thức <Ref to="thm-s6-10" /> và kiểm chứng trực tiếp qua ánh xạ tuyến tính liên kết $\varphi$.
+
+**Lời giải:** Ma trận chuyển từ $\{\vec{e}_1, \vec{e}_2\}$ sang $\{\vec{e}'_1, \vec{e}'_2\}$ là $C = C^* = \begin{bmatrix} 1 & 0 \\ 0 & 2 \end{bmatrix}$. Áp dụng <Ref to="thm-s6-10" />:
 
 $$
 B' = (C^*)^{-1} B C^* = \begin{bmatrix} 1 & 0 \\ 0 & 1/2 \end{bmatrix} \begin{bmatrix} 1 & -1 \\ 1 & 1 \end{bmatrix} \begin{bmatrix} 1 & 0 \\ 0 & 2 \end{bmatrix} = \begin{bmatrix} 1 & -2 \\ 1/2 & 1 \end{bmatrix}.
@@ -336,10 +345,15 @@ $$
 </Proof>
 
 <Example id="ex-s6-14" title="Ảnh của tam giác đơn vị và hình vuông đơn vị qua phép biến đổi affine">
-Với phép biến đổi affine $f(x_1, x_2) = (x_1 - x_2 + 1,\; x_1 + x_2 + 2)$ ở <Ref to="ex-s6-9b" />:
+**Đề bài:** Trong $\R^2$, cho phép biến đổi affine $f(x_1, x_2) = (x_1 - x_2 + 1,\; x_1 + x_2 + 2)$ (ở <Ref to="ex-s6-9b" />) và ba điểm $A_0(0, 0), A_1(1, 0), A_2(0, 1)$.
 
-- Tam giác đơn vị ($2$-đơn hình) $S(A_0, A_1, A_2)$ với $A_0(0, 0), A_1(1, 0), A_2(0, 1)$ biến thành tam giác $S(A'_0, A'_1, A'_2)$ với $A'_0(1, 2), A'_1(2, 3), A'_2(0, 3)$. Điểm $M\left(\dfrac{1}{4}, \dfrac{1}{4}\right)$ ứng với $(t_0, t_1, t_2) = \left(\dfrac{1}{2}, \dfrac{1}{4}, \dfrac{1}{4}\right)$ có ảnh $f(M) = \left(1, \dfrac{5}{2}\right)$, khớp chính xác với $\dfrac{1}{2}(1, 2) + \dfrac{1}{4}(2, 3) + \dfrac{1}{4}(0, 3) = \left(1, \dfrac{5}{2}\right)$.
-- Hình vuông đơn vị ($2$-hộp) $H(A_0, A_1, A_2) = [0, 1]^2$ biến thành hình bình hành $H(A'_0, A'_1, A'_2)$ có $4$ đỉnh $(1, 2), (2, 3), (0, 3)$ và $f(1, 1) = (1, 4)$.
+1. Xác định ảnh của tam giác đơn vị ($2$-đơn hình) $S(A_0, A_1, A_2)$ qua $f$, đồng thời kiểm chứng sự bảo toàn bộ hệ số tâm tỉ cự tại điểm $M\left(\dfrac{1}{4}, \dfrac{1}{4}\right)$.
+2. Xác định ảnh của hình vuông đơn vị ($2$-hộp) $H(A_0, A_1, A_2) = [0, 1]^2$ và tọa độ cả bốn đỉnh của hình hộp ảnh.
+
+**Lời giải:**
+
+1. Theo <Ref to="thm-s6-12" />, $2$-đơn hình $S(A_0, A_1, A_2)$ biến thành tam giác $S(A'_0, A'_1, A'_2)$ với $A'_0(1, 2), A'_1(2, 3), A'_2(0, 3)$. Điểm $M\left(\dfrac{1}{4}, \dfrac{1}{4}\right)$ ứng với bộ hệ số $(t_0, t_1, t_2) = \left(\dfrac{1}{2}, \dfrac{1}{4}, \dfrac{1}{4}\right)$ có ảnh $f(M) = \left(1, \dfrac{5}{2}\right)$, khớp chính xác với $\dfrac{1}{2}(1, 2) + \dfrac{1}{4}(2, 3) + \dfrac{1}{4}(0, 3) = \left(1, \dfrac{5}{2}\right)$.
+2. Hình vuông đơn vị ($2$-hộp) $H(A_0, A_1, A_2) = [0, 1]^2$ biến thành hình bình hành $H(A'_0, A'_1, A'_2)$ có $4$ đỉnh là $A'_0(1, 2), A'_1(2, 3), A'_2(0, 3)$ và $f(1, 1) = (1, 4)$.
 </Example>
 
 ## 8. Bài tập Vận dụng và Củng cố

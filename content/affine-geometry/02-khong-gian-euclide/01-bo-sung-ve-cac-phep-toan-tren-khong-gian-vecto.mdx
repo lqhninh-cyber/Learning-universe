@@ -97,21 +97,24 @@ Trong không gian vectơ Ơclit $V$, kí hiệu $\vec{a}^2 = \vec{a} \cdot \vec{
 </Definition>
 
 <Example id="ex-e1-2" title="Ví dụ trên không gian vectơ thực hai chiều">
-1. Trên $V = \mathbb{R}^2$, phép toán $\vec{x} \cdot \vec{y} = x_1 y_1 + x_2 y_2$ với $\vec{x} = (x_1, x_2), \vec{y} = (y_1, y_2)$ là một tích vô hướng. Với $\vec{a} = (1, 2)$ và $\vec{b} = (3, -1)$, ta có:
+**Đề bài:** Trên không gian vectơ thực $V = \mathbb{R}^2$:
+
+1. Với tích vô hướng chính tắc $\vec{x} \cdot \vec{y} = x_1 y_1 + x_2 y_2$ ($\vec{x} = (x_1, x_2), \vec{y} = (y_1, y_2)$), cho $\vec{a} = (1, 2)$, $\vec{b} = (3, -1)$ và $\vec{c} = (2, -1)$. Tính $\vec{a} \cdot \vec{b}$, $|\vec{a}|$, $|\vec{b}|$, $\cos\widehat{(\vec{a}, \vec{b})}$ và kiểm tra quan hệ trực giao giữa $\vec{a}$ và $\vec{c}$.
+2. Chứng minh phép toán $\langle \vec{x}, \vec{y} \rangle = 2x_1 y_1 + x_1 y_2 + x_2 y_1 + 3x_2 y_2$ là một tích vô hướng trên $\mathbb{R}^2$. Đối với tích vô hướng này, kiểm tra tính vuông góc của $\vec{u} = (1, -1)$, $\vec{v} = (2, 1)$ và tính độ dài của $\vec{u}$.
+
+**Lời giải:**
+
+1. Theo tích vô hướng $\vec{x} \cdot \vec{y} = x_1 y_1 + x_2 y_2$, với $\vec{a} = (1, 2)$ và $\vec{b} = (3, -1)$, ta có:
    $$
    \vec{a} \cdot \vec{b} = 1 \cdot 3 + 2 \cdot (-1) = 1, \qquad |\vec{a}| = \sqrt{1^2 + 2^2} = \sqrt{5}, \qquad |\vec{b}| = \sqrt{3^2 + (-1)^2} = \sqrt{10},
    $$
-   do đó $\cos\widehat{(\vec{a}, \vec{b})} = \dfrac{1}{\sqrt{50}} = \dfrac{\sqrt{2}}{10}$. Với $\vec{c} = (2, -1)$ thì $\vec{a} \cdot \vec{c} = 1 \cdot 2 + 2 \cdot (-1) = 0$ nên $\vec{a} \perp \vec{c}$.
+   do đó $\cos\widehat{(\vec{a}, \vec{b})} = \dfrac{1}{\sqrt{50}} = \dfrac{\sqrt{2}}{10}$. Mặt khác, với $\vec{c} = (2, -1)$ thì $\vec{a} \cdot \vec{c} = 1 \cdot 2 + 2 \cdot (-1) = 0$, nên $\vec{a} \perp \vec{c}$.
 
-2. Trên cùng không gian vectơ $\mathbb{R}^2$, ta cũng có thể trang bị một tích vô hướng khác bởi công thức:
-   $$
-   \langle \vec{x}, \vec{y} \rangle = 2x_1 y_1 + x_1 y_2 + x_2 y_1 + 3x_2 y_2.
-   $$
-   Thật vậy, tính đối xứng và tuyến tính theo từng biến là hiển nhiên, còn với mọi $\vec{x} = (x_1, x_2)$ ta có:
+2. Với phép toán $\langle \vec{x}, \vec{y} \rangle = 2x_1 y_1 + x_1 y_2 + x_2 y_1 + 3x_2 y_2$, tính đối xứng và tuyến tính theo từng biến là hiển nhiên, còn với mọi $\vec{x} = (x_1, x_2)$ ta có:
    $$
    \langle \vec{x}, \vec{x} \rangle = 2x_1^2 + 2x_1 x_2 + 3x_2^2 = 2\left(x_1 + \frac{1}{2}x_2\right)^2 + \frac{5}{2}x_2^2 \ge 0,
    $$
-   dấu $"="$ chỉ xảy ra khi $x_2 = 0$ và $x_1 + \frac{1}{2}x_2 = 0 \iff x_1 = x_2 = 0$. Theo tích vô hướng mới này, hai vectơ $\vec{u} = (1, -1)$ và $\vec{v} = (2, 1)$ thỏa mãn $\langle \vec{u}, \vec{v} \rangle = 2(2) + 1(1) + (-1)(2) + 3(-1)(1) = 0$ nên $\vec{u} \perp \vec{v}$, đồng thời độ dài của $\vec{u}$ bằng $\sqrt{\langle \vec{u}, \vec{u} \rangle} = \sqrt{3}$.
+   dấu $"="$ chỉ xảy ra khi $x_2 = 0$ và $x_1 + \frac{1}{2}x_2 = 0 \iff x_1 = x_2 = 0$; vậy $\langle \cdot, \cdot \rangle$ là một tích vô hướng trên $\mathbb{R}^2$. Theo tích vô hướng mới này, hai vectơ $\vec{u} = (1, -1)$ và $\vec{v} = (2, 1)$ thỏa mãn $\langle \vec{u}, \vec{v} \rangle = 2(2) + 1(1) + (-1)(2) + 3(-1)(1) = 0$ nên $\vec{u} \perp \vec{v}$, đồng thời độ dài của $\vec{u}$ bằng $\sqrt{\langle \vec{u}, \vec{u} \rangle} = \sqrt{3}$.
 </Example>
 
 ## 3. Tích có hướng của hai vectơ trong không gian vectơ Ơclit ba chiều
@@ -155,14 +158,21 @@ Với mọi vectơ $\vec{a}, \vec{b}, \vec{c} \in V_E^3$ và mọi số thực $
 </Proof>
 
 <Example id="ex-e1-5" title="Ví dụ minh họa tích có hướng">
-Trong $V_E^3$, giả sử $\{\vec{e}_1, \vec{e}_2, \vec{e}_3\}$ là bộ ba vectơ đơn vị đôi một vuông góc tạo thành một tam diện thuận. Khi đó $\widehat{(\vec{e}_1, \vec{e}_2)} = \dfrac{\pi}{2}$, $|\vec{e}_1|\,|\vec{e}_2|\sin\dfrac{\pi}{2} = 1$, và $\vec{e}_3$ vuông góc với cả $\vec{e}_1, \vec{e}_2$ theo chiều thuận nên:
-$$
-\vec{e}_1 \wedge \vec{e}_2 = \vec{e}_3, \qquad \vec{e}_2 \wedge \vec{e}_3 = \vec{e}_1, \qquad \vec{e}_3 \wedge \vec{e}_1 = \vec{e}_2.
-$$
-Theo tính chất phản giao hoán và tính phân phối, với $\vec{a} = 2\vec{e}_1 - \vec{e}_2$ và $\vec{b} = \vec{e}_2 + 3\vec{e}_3$, ta tính được ngay mà chưa cần lập công thức định thức:
-$$
-\vec{a} \wedge \vec{b} = (2\vec{e}_1 - \vec{e}_2) \wedge (\vec{e}_2 + 3\vec{e}_3) = 2(\vec{e}_1 \wedge \vec{e}_2) + 6(\vec{e}_1 \wedge \vec{e}_3) - (\vec{e}_2 \wedge \vec{e}_2) - 3(\vec{e}_2 \wedge \vec{e}_3) = -3\vec{e}_1 - 6\vec{e}_2 + 2\vec{e}_3.
-$$
+**Đề bài:** Trong $V_E^3$, cho bộ ba vectơ đơn vị đôi một vuông góc $\{\vec{e}_1, \vec{e}_2, \vec{e}_3\}$ tạo thành một tam diện thuận.
+
+1. Xác định các tích có hướng cơ sở $\vec{e}_1 \wedge \vec{e}_2$, $\vec{e}_2 \wedge \vec{e}_3$ và $\vec{e}_3 \wedge \vec{e}_1$.
+2. Áp dụng các tính chất đại số của tích có hướng, tính $\vec{a} \wedge \vec{b}$ với $\vec{a} = 2\vec{e}_1 - \vec{e}_2$ và $\vec{b} = \vec{e}_2 + 3\vec{e}_3$.
+
+**Lời giải:**
+
+1. Vì $\widehat{(\vec{e}_1, \vec{e}_2)} = \dfrac{\pi}{2}$, $|\vec{e}_1|\,|\vec{e}_2|\sin\dfrac{\pi}{2} = 1$, và $\vec{e}_3$ vuông góc với cả $\vec{e}_1, \vec{e}_2$ theo chiều thuận nên:
+   $$
+   \vec{e}_1 \wedge \vec{e}_2 = \vec{e}_3, \qquad \vec{e}_2 \wedge \vec{e}_3 = \vec{e}_1, \qquad \vec{e}_3 \wedge \vec{e}_1 = \vec{e}_2.
+   $$
+2. Theo tính chất phản giao hoán và tính phân phối của tích có hướng, ta tính được ngay mà chưa cần lập công thức định thức:
+   $$
+   \vec{a} \wedge \vec{b} = (2\vec{e}_1 - \vec{e}_2) \wedge (\vec{e}_2 + 3\vec{e}_3) = 2(\vec{e}_1 \wedge \vec{e}_2) + 6(\vec{e}_1 \wedge \vec{e}_3) - (\vec{e}_2 \wedge \vec{e}_2) - 3(\vec{e}_2 \wedge \vec{e}_3) = -3\vec{e}_1 - 6\vec{e}_2 + 2\vec{e}_3.
+   $$
 </Example>
 
 ## 4. Tích hỗn hợp của ba vectơ trong không gian vectơ Ơclit ba chiều
@@ -218,14 +228,19 @@ Trong không gian vectơ Ơclit ba chiều $V_E^3$:
 </Proof>
 
 <Example id="ex-e1-8" title="Ví dụ minh họa tích hỗn hợp">
-Giả sử $\{\vec{e}_1, \vec{e}_2, \vec{e}_3\}$ là ba vectơ đơn vị đôi một vuông góc tạo thành tam diện thuận trong $V_E^3$.
+**Đề bài:** Cho $\{\vec{e}_1, \vec{e}_2, \vec{e}_3\}$ là ba vectơ đơn vị đôi một vuông góc tạo thành tam diện thuận trong $V_E^3$, cùng các vectơ $\vec{a} = \vec{e}_1$, $\vec{b} = \vec{e}_1 + 2\vec{e}_2$, $\vec{c} = \vec{e}_1 + \vec{e}_2 + 3\vec{e}_3$ và $\vec{d} = 2\vec{a} - 3\vec{b}$.
 
-1. Xét $\vec{a} = \vec{e}_1$, $\vec{b} = \vec{e}_1 + 2\vec{e}_2$, $\vec{c} = \vec{e}_1 + \vec{e}_2 + 3\vec{e}_3$. Ta có:
+1. Tính tích hỗn hợp $(\vec{a}, \vec{b}, \vec{c})$, xác định định hướng của tam diện $(\vec{a}, \vec{b}, \vec{c})$, thể tích $V$ của hình hộp dựng trên ba vectơ đó và suy ra $(\vec{a}, \vec{c}, \vec{b})$.
+2. Tính tích hỗn hợp $(\vec{a}, \vec{b}, \vec{d})$.
+
+**Lời giải:**
+
+1. Ta có:
    $$
    \vec{a} \wedge \vec{b} = \vec{e}_1 \wedge (\vec{e}_1 + 2\vec{e}_2) = 2(\vec{e}_1 \wedge \vec{e}_2) = 2\vec{e}_3,
    $$
    suy ra $(\vec{a}, \vec{b}, \vec{c}) = (2\vec{e}_3) \cdot (\vec{e}_1 + \vec{e}_2 + 3\vec{e}_3) = 6 > 0$. Vậy $(\vec{a}, \vec{b}, \vec{c})$ là một tam diện thuận và hình hộp dựng trên chúng có thể tích $V = 6$; nếu đổi chỗ $\vec{b}, \vec{c}$ thì $(\vec{a}, \vec{c}, \vec{b}) = -6$.
-2. Với $\vec{d} = 2\vec{a} - 3\vec{b}$, ba vectơ $\vec{a}, \vec{b}, \vec{d}$ phụ thuộc tuyến tính nên tích hỗn hợp của chúng bằng $(\vec{a} \wedge \vec{b}) \cdot \vec{d} = (2\vec{e}_3) \cdot (-\vec{e}_1 - 6\vec{e}_2) = 0$.
+2. Vì $\vec{d} = 2\vec{a} - 3\vec{b}$ nên ba vectơ $\vec{a}, \vec{b}, \vec{d}$ phụ thuộc tuyến tính; kiểm tra trực tiếp được $(\vec{a}, \vec{b}, \vec{d}) = (\vec{a} \wedge \vec{b}) \cdot \vec{d} = (2\vec{e}_3) \cdot (-\vec{e}_1 - 6\vec{e}_2) = 0$.
 </Example>
 
 ## Bài tập

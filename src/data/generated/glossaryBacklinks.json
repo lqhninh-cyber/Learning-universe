@@ -2,7 +2,7 @@
   "stats": {
     "totalLessons": 122,
     "totalTerms": 67,
-    "totalBacklinks": 508,
+    "totalBacklinks": 511,
     "termsWithBacklinks": 67,
     "lessonsWithBacklinks": 116
   },
@@ -2223,6 +2223,14 @@
         "count": 6
       },
       {
+        "lessonId": "toa-do-afin-va-muc-tieu-afin",
+        "lessonCode": "HHAVE 1.2",
+        "lessonTitle": "Tọa độ Affine và Mục tiêu Affine",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/toa-do-afin-va-muc-tieu-afin",
+        "count": 5
+      },
+      {
         "lessonId": "cac-phang-trong-khong-gian-euclide",
         "lessonCode": "HHAVE 2.4",
         "lessonTitle": "Các Phẳng trong Không gian Ơclit",
@@ -2231,12 +2239,12 @@
         "count": 5
       },
       {
-        "lessonId": "toa-do-afin-va-muc-tieu-afin",
-        "lessonCode": "HHAVE 1.2",
-        "lessonTitle": "Tọa độ Affine và Mục tiêu Affine",
+        "lessonId": "goc-trong-khong-gian-euclide",
+        "lessonCode": "HHAVE 2.5",
+        "lessonTitle": "Góc trong Không gian Ơclit",
         "subjectId": "hinh-hoc-affine",
-        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/toa-do-afin-va-muc-tieu-afin",
-        "count": 4
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/goc-trong-khong-gian-euclide",
+        "count": 3
       },
       {
         "lessonId": "khong-gian-xa-anh",
@@ -2286,7 +2294,7 @@
         "lessonTitle": "Tọa độ Affine và Mục tiêu Affine",
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/toa-do-afin-va-muc-tieu-afin",
-        "count": 23
+        "count": 24
       },
       {
         "lessonId": "anh-xa-afin-va-phep-bien-doi-afin",
@@ -2337,6 +2345,14 @@
         "count": 3
       },
       {
+        "lessonId": "goc-trong-khong-gian-euclide",
+        "lessonCode": "HHAVE 2.5",
+        "lessonTitle": "Góc trong Không gian Ơclit",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/goc-trong-khong-gian-euclide",
+        "count": 3
+      },
+      {
         "lessonId": "tap-loi-trong-khong-gian-afin-thuc",
         "lessonCode": "HHAVE 1.5",
         "lessonTitle": "Tập Lồi trong Không gian Affine Thực",
@@ -2376,7 +2392,7 @@
         "lessonTitle": "Các Phẳng trong Không gian Affine",
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/cac-phang-trong-khong-gian-afin",
-        "count": 38
+        "count": 39
       },
       {
         "lessonId": "phuong-trinh-cua-m-phang-trong-khong-gian-xa-anh",
@@ -2385,6 +2401,14 @@
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-xa-anh/phuong-trinh-cua-m-phang-trong-khong-gian-xa-anh",
         "count": 31
+      },
+      {
+        "lessonId": "goc-trong-khong-gian-euclide",
+        "lessonCode": "HHAVE 2.5",
+        "lessonTitle": "Góc trong Không gian Ơclit",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/goc-trong-khong-gian-euclide",
+        "count": 26
       },
       {
         "lessonId": "nguyen-tac-doi-ngau-trong-khong-gian-xa-anh",
@@ -2416,7 +2440,7 @@
         "lessonTitle": "Các Siêu mặt Bậc hai trong Không gian Affine",
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/cac-sieu-mat-bac-hai-trong-khong-gian-afin",
-        "count": 18
+        "count": 17
       },
       {
         "lessonId": "tap-loi-trong-khong-gian-afin-thuc",
@@ -2457,14 +2481,6 @@
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-xa-anh/anh-xa-xa-anh-va-bien-doi-xa-anh",
         "count": 7
-      },
-      {
-        "lessonId": "goc-trong-khong-gian-euclide",
-        "lessonCode": "HHAVE 2.5",
-        "lessonTitle": "Góc trong Không gian Ơclit",
-        "subjectId": "hinh-hoc-affine",
-        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/goc-trong-khong-gian-euclide",
-        "count": 6
       },
       {
         "lessonId": "sieu-mat-bac-hai-trong-khong-gian-euclide",
@@ -2514,7 +2530,7 @@
         "lessonTitle": "Tâm Tỉ Cự của một Hệ Điểm",
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/tam-ti-cu-cua-mot-he-diem",
-        "count": 54
+        "count": 55
       },
       {
         "lessonId": "nhom-cac-phep-bien-doi-afin-va-hinh-hoc-afin",
@@ -2530,7 +2546,7 @@
         "lessonTitle": "Ánh xạ Affine và Phép Biến đổi Affine",
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/anh-xa-afin-va-phep-bien-doi-afin",
-        "count": 1
+        "count": 2
       },
       {
         "lessonId": "khong-gian-euclide",
@@ -2624,7 +2640,7 @@
         "lessonTitle": "Ánh xạ Affine và Phép Biến đổi Affine",
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/anh-xa-afin-va-phep-bien-doi-afin",
-        "count": 57
+        "count": 58
       },
       {
         "lessonId": "nhom-cac-phep-bien-doi-afin-va-hinh-hoc-afin",
@@ -2690,7 +2706,7 @@
         "lessonTitle": "Các Siêu mặt Bậc hai trong Không gian Affine",
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/cac-sieu-mat-bac-hai-trong-khong-gian-afin",
-        "count": 70
+        "count": 71
       },
       {
         "lessonId": "sieu-mat-bac-hai-trong-khong-gian-xa-anh",
@@ -2751,6 +2767,14 @@
         "count": 17
       },
       {
+        "lessonId": "goc-trong-khong-gian-euclide",
+        "lessonCode": "HHAVE 2.5",
+        "lessonTitle": "Góc trong Không gian Ơclit",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/goc-trong-khong-gian-euclide",
+        "count": 10
+      },
+      {
         "lessonId": "mo-hinh-xa-anh-cua-khong-gian-euclide",
         "lessonCode": "HHAVE 3.11",
         "lessonTitle": "Mô hình Xạ ảnh của Không gian Ơclit",
@@ -2765,14 +2789,6 @@
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/muc-tieu-truc-chuan-toa-do-truc-chuan",
         "count": 5
-      },
-      {
-        "lessonId": "goc-trong-khong-gian-euclide",
-        "lessonCode": "HHAVE 2.5",
-        "lessonTitle": "Góc trong Không gian Ơclit",
-        "subjectId": "hinh-hoc-affine",
-        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/goc-trong-khong-gian-euclide",
-        "count": 3
       },
       {
         "lessonId": "sieu-mat-bac-hai-trong-khong-gian-euclide",
@@ -2830,7 +2846,15 @@
         "lessonTitle": "Mục tiêu Trực chuẩn và Tọa độ Trực chuẩn",
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/muc-tieu-truc-chuan-toa-do-truc-chuan",
-        "count": 28
+        "count": 29
+      },
+      {
+        "lessonId": "goc-trong-khong-gian-euclide",
+        "lessonCode": "HHAVE 2.5",
+        "lessonTitle": "Góc trong Không gian Ơclit",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/goc-trong-khong-gian-euclide",
+        "count": 8
       },
       {
         "lessonId": "sieu-mat-bac-hai-trong-khong-gian-euclide",
@@ -4602,7 +4626,10 @@
     ],
     "goc-trong-khong-gian-euclide": [
       "sieu-phang",
-      "khong-gian-euclide"
+      "khong-gian-euclide",
+      "muc-tieu-truc-chuan",
+      "khong-gian-afin",
+      "muc-tieu-afin"
     ],
     "anh-xa-dang-cu-va-phep-bien-doi-dang-cu": [
       "anh-xa-dang-cu",

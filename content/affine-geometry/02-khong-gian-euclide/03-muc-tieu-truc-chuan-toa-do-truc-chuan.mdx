@@ -76,20 +76,25 @@ $$
 </Proof>
 
 <Example id="ex-e3-3" title="Ví dụ đổi mục tiêu trực chuẩn trong mặt phẳng Ơclit">
-Trong $\mathcal{E}^2$ với mục tiêu trực chuẩn $\{O; \vec{e}_1, \vec{e}_2\}$, xét mục tiêu mới $\{O'; \vec{e}'_1, \vec{e}'_2\}$ với $O'(1, 0)$, $\vec{e}'_1 = \left(\dfrac{3}{5}, \dfrac{4}{5}\right)$ và $\vec{e}'_2 = \left(-\dfrac{4}{5}, \dfrac{3}{5}\right)$.
+**Đề bài:** Trong $\mathcal{E}^2$ với mục tiêu trực chuẩn $\{O; \vec{e}_1, \vec{e}_2\}$, xét hệ $\{O'; \vec{e}'_1, \vec{e}'_2\}$ với $O'(1, 0)$, $\vec{e}'_1 = \left(\dfrac{3}{5}, \dfrac{4}{5}\right)$ và $\vec{e}'_2 = \left(-\dfrac{4}{5}, \dfrac{3}{5}\right)$.
 
-Ta kiểm tra được $|\vec{e}'_1|^2 = \dfrac{9 + 16}{25} = 1 = |\vec{e}'_2|^2$ và $\vec{e}'_1 \cdot \vec{e}'_2 = 0$, nên $\{O'; \vec{e}'_1, \vec{e}'_2\}$ là mục tiêu trực chuẩn với ma trận chuyển trực giao:
-$$
-C = \begin{bmatrix} \frac{3}{5} & \frac{4}{5} \\ -\frac{4}{5} & \frac{3}{5} \end{bmatrix}, \qquad C^* = \begin{bmatrix} \frac{3}{5} & -\frac{4}{5} \\ \frac{4}{5} & \frac{3}{5} \end{bmatrix}.
-$$
-Công thức đổi tọa độ $[x] = C^*[x'] + [a_0]$ là:
-$$
-\begin{cases}
-x_1 = \frac{3}{5}x'_1 - \frac{4}{5}x'_2 + 1, \\
-x_2 = \frac{4}{5}x'_1 + \frac{3}{5}x'_2.
-\end{cases}
-$$
-Chẳng hạn điểm $M$ có tọa độ mới $(x'_1, x'_2) = (5, -5)$ sẽ có tọa độ cũ là $x_1 = 3 + 4 + 1 = 8$, $x_2 = 4 - 3 = 1$, tức $M(8, 1)$.
+1. Kiểm tra $\{O'; \vec{e}'_1, \vec{e}'_2\}$ là một mục tiêu trực chuẩn, lập ma trận chuyển $C$ và viết công thức đổi tọa độ $[x] = C^*[x'] + [a_0]$.
+2. Tìm tọa độ của điểm $M$ đối với mục tiêu cũ $\{O; \vec{e}_1, \vec{e}_2\}$, biết tọa độ của $M$ đối với mục tiêu mới là $(x'_1, x'_2) = (5, -5)$.
+
+**Lời giải:**
+
+1. Ta kiểm tra được $|\vec{e}'_1|^2 = \dfrac{9 + 16}{25} = 1 = |\vec{e}'_2|^2$ và $\vec{e}'_1 \cdot \vec{e}'_2 = 0$, nên $\{O'; \vec{e}'_1, \vec{e}'_2\}$ là mục tiêu trực chuẩn với ma trận chuyển trực giao:
+   $$
+   C = \begin{bmatrix} \frac{3}{5} & \frac{4}{5} \\ -\frac{4}{5} & \frac{3}{5} \end{bmatrix}, \qquad C^* = \begin{bmatrix} \frac{3}{5} & -\frac{4}{5} \\ \frac{4}{5} & \frac{3}{5} \end{bmatrix}.
+   $$
+   Với $[a_0] = (1, 0)^*$, công thức đổi tọa độ $[x] = C^*[x'] + [a_0]$ là:
+   $$
+   \begin{cases}
+   x_1 = \frac{3}{5}x'_1 - \frac{4}{5}x'_2 + 1, \\
+   x_2 = \frac{4}{5}x'_1 + \frac{3}{5}x'_2.
+   \end{cases}
+   $$
+2. Thay tọa độ mới $(x'_1, x'_2) = (5, -5)$ của điểm $M$ vào công thức trên, ta được tọa độ cũ là $x_1 = 3 + 4 + 1 = 8$ và $x_2 = 4 - 3 = 1$, tức $M(8, 1)$.
 </Example>
 
 ## 4. Khoảng cách giữa hai điểm
@@ -136,7 +141,9 @@ Với mọi điểm $M, N, P \in \mathcal{E}^n$:
 </Proof>
 
 <Example id="ex-e3-6" title="Ví dụ tính khoảng cách và kiểm tra điểm thuộc đoạn thẳng">
-Trong $\mathcal{E}^3$ với mục tiêu trực chuẩn, cho ba điểm $M(1, 2, 2)$, $N(4, 6, 14)$ và $P(7, 10, 26)$. Ta có:
+**Đề bài:** Trong $\mathcal{E}^3$ với mục tiêu trực chuẩn, cho ba điểm $M(1, 2, 2)$, $N(4, 6, 14)$ và $P(7, 10, 26)$. Hãy tính các khoảng cách $d(M, N)$, $d(N, P)$, $d(M, P)$ và xét vị trí của điểm $N$ đối với đoạn thẳng $MP$.
+
+**Lời giải:** Áp dụng công thức khoảng cách theo tọa độ trực chuẩn (<Ref to="thm-e3-5" />), ta có:
 $$
 d(M, N) = \sqrt{(4 - 1)^2 + (6 - 2)^2 + (14 - 2)^2} = \sqrt{9 + 16 + 144} = \sqrt{169} = 13,
 $$
@@ -172,7 +179,9 @@ Thay $\vec{b} = \vec{a}$ ta được $|\vec{a}|^2 = \vec{a} \cdot \vec{a} = \sum
 </Proof>
 
 <Example id="ex-e3-8" title="Ví dụ tính tích vô hướng và góc trong tọa độ trực chuẩn">
-Trong $V_E^3$ với cơ sở trực chuẩn, cho $\vec{a} = (1, 2, 2)$ và $\vec{b} = (3, 0, 4)$. Khi đó:
+**Đề bài:** Trong $V_E^3$ với cơ sở trực chuẩn, cho hai vectơ $\vec{a} = (1, 2, 2)$ và $\vec{b} = (3, 0, 4)$. Hãy tính tích vô hướng $\vec{a} \cdot \vec{b}$, độ dài của từng vectơ và $\cos\widehat{(\vec{a}, \vec{b})}$.
+
+**Lời giải:** Áp dụng <Ref to="thm-e3-7" />, ta có:
 $$
 \vec{a} \cdot \vec{b} = 1 \cdot 3 + 2 \cdot 0 + 2 \cdot 4 = 11, \qquad |\vec{a}| = \sqrt{1^2 + 2^2 + 2^2} = 3, \qquad |\vec{b}| = \sqrt{3^2 + 0^2 + 4^2} = 5,
 $$
@@ -220,7 +229,9 @@ $$
 </Proof>
 
 <Example id="ex-e3-10" title="Ví dụ tính tích có hướng, góc và diện tích hình bình hành">
-Trong $V_E^3$ với cơ sở trực chuẩn thuận, cho $\vec{a} = (1, 2, 3)$ và $\vec{b} = (4, 5, 6)$. Ta tính ba định thức cấp $2$:
+**Đề bài:** Trong $V_E^3$ với cơ sở trực chuẩn thuận, cho hai vectơ $\vec{a} = (1, 2, 3)$ và $\vec{b} = (4, 5, 6)$. Hãy tìm tọa độ tích có hướng $\vec{a} \wedge \vec{b}$ (kiểm tra tính vuông góc với $\vec{a}, \vec{b}$), tính diện tích hình bình hành dựng trên $\vec{a}, \vec{b}$ và tính $\sin\widehat{(\vec{a}, \vec{b})}$.
+
+**Lời giải:** Áp dụng <Ref to="thm-e3-9" />, ta tính ba định thức cấp $2$:
 $$
 \begin{vmatrix} 2 & 3 \\ 5 & 6 \end{vmatrix} = -3, \qquad \begin{vmatrix} 3 & 1 \\ 6 & 4 \end{vmatrix} = 6, \qquad \begin{vmatrix} 1 & 2 \\ 4 & 5 \end{vmatrix} = -3,
 $$
@@ -260,7 +271,9 @@ $$
 </Proof>
 
 <Example id="ex-e3-13" title="Ví dụ tính thể tích hình hộp bằng định thức">
-Trong $V_E^3$ với cơ sở trực chuẩn thuận, cho $\vec{a} = (1, 0, 0)$, $\vec{b} = (1, 2, 0)$ và $\vec{c} = (1, 1, 3)$. Định thức tọa độ có dạng tam giác dưới:
+**Đề bài:** Trong $V_E^3$ với cơ sở trực chuẩn thuận, cho ba vectơ $\vec{a} = (1, 0, 0)$, $\vec{b} = (1, 2, 0)$ và $\vec{c} = (1, 1, 3)$. Hãy tính tích hỗn hợp $(\vec{a}, \vec{b}, \vec{c})$, từ đó tìm thể tích hình hộp dựng trên ba vectơ và xét định hướng của tam diện $(\vec{a}, \vec{b}, \vec{c})$.
+
+**Lời giải:** Theo <Ref to="thm-e3-12" />, định thức tọa độ có dạng tam giác dưới:
 $$
 (\vec{a}, \vec{b}, \vec{c}) = \begin{vmatrix}
 1 & 0 & 0 \\

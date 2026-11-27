@@ -121,6 +121,7 @@ Khi thực hiện khôi phục chuẩn hóa các bài giảng Toán từ giáo t
 
 4. **Chống cắt ngắn & Bảo toàn:**
    - Khôi phục **100%** Định nghĩa, Định lý / Điều kiện giả thiết, **toàn bộ các bước Chứng minh trung gian** (không cắt gọt), Ví dụ / Thí dụ, Chú ý / Hệ quả và **trọn bộ Bài tập gốc** (nếu bản in gốc sai chính tả hoặc nhầm chỉ số, đính chính chuẩn xác kèm ghi chú ngắn trong ngoặc; đồng thời cập nhật chính xác trường `pages` trong frontmatter).
+   - Mọi `<Example>` dạng bài toán (tính toán, chứng minh, đổi mục tiêu, lập phương trình...) bắt buộc phải nêu đầy đủ **Đề bài** (giả thiết + yêu cầu rõ ràng, không đưa thêm dữ kiện mới bất ngờ ở cuối) trước phần **Lời giải**; chỉ các ví dụ minh họa khái niệm thuần túy mới viết dạng tường thuật.
    - Bảo toàn **100%** các component tương tác (`<...Figure />`, `<...Canvas />`), thẻ `<GlossaryTerm>`, và các `id` khối định lý/định nghĩa được tham chiếu bởi `InlineTheoremViz` (như `thm-s4-1`, `def-e1-3`, `def-e2-1`, `thm-p7-13`, `thm-p10-6`...).
    - Thay thế các bài tập tự chế bị lỗi cú pháp hoặc trùng lặp bằng bài tập gốc (chỉ giữ lại bài tập tự chế nếu bài đó đang gắn trực tiếp component tương tác).
 

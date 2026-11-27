@@ -1,17 +1,23 @@
 ---
 id: goc-trong-khong-gian-euclide
-title: "Góc trong Không gian Ơclit"
-description: "Định nghĩa góc giữa hai đường thẳng, góc giữa đường thẳng và phẳng, góc giữa hai phẳng."
-estimatedMinutes: 45
+title: 'Góc trong Không gian Ơclit'
+description: 'Góc giữa hai vectơ, định lí hàm số côsin, góc giữa hai đường thẳng, góc giữa hai siêu phẳng và góc giữa đường thẳng với siêu phẳng.'
+estimatedMinutes: 55
 level: intermediate
-prerequisites: []
+prerequisites:
+  - bo-sung-ve-cac-phep-toan-tren-khong-gian-vecto
+  - khong-gian-euclide
+  - muc-tieu-truc-chuan-toa-do-truc-chuan
+  - cac-phang-trong-khong-gian-euclide
 tags:
-  - "góc"
-  - "độ đo góc"
-  - "trực giao"
+  - 'góc giữa hai vectơ'
+  - 'định lí hàm số côsin'
+  - 'góc giữa hai đường thẳng'
+  - 'góc giữa hai siêu phẳng'
+  - 'góc giữa đường thẳng và siêu phẳng'
 sources:
   - source: gt-hhcc-nmh-2004
-    pages: '113-120'
+    pages: '104-106'
     sections: '§5'
 status: published
 version: 1.0.0
@@ -24,136 +30,300 @@ authoring:
 
 ## 1. Góc giữa hai vectơ
 
-<Definition id="def-e5-1" title="Định nghĩa">
-Trong $\mathbb{E} ^{n}$, góc giữa hai vectơ $\vec{u}$, $\vec{v}$ khác $\vec{0}$ là số φ với
- 
-
+<Definition id="def-e5-1" title="Định nghĩa góc giữa hai vectơ">
+Trong <GlossaryTerm termId="khong-gian-euclide">không gian Ơclit</GlossaryTerm> $\mathcal{E}^n$ (liên kết với không gian vectơ Ơclit $\overrightarrow{\mathcal{E}^n}$), cho hai vectơ $\vec{u}, \vec{v}$ đều khác $\vec{0}$. Ta gọi *góc giữa hai vectơ* $\vec{u}, \vec{v}$ đó, kí hiệu $\widehat{(\vec{u}, \vec{v})}$, là số thực $\varphi$ xác định duy nhất bởi $0 \le \varphi \le \pi$ và:
 $$
-0 \le \varphi \le π và cos \varphi = \vec{u}·\vec{v} / (|\vec{u}||\vec{v}|).
+\cos\varphi = \frac{\vec{u} \cdot \vec{v}}{|\vec{u}|\,|\vec{v}|}.
 $$
-
- 
-Suy ra:
-
-a) nếu $\vec{u}$, $\vec{v}$ phụ thuộc tuyến tính thì $\varphi = 0$ hoặc $\varphi = π$ (vì $\vec{v} = \lambda \vec{u}$ cho $cos \varphi = \lambda |\vec{u}|^{2}/(| \lambda ||\vec{u}|^{2}) = \pm 1)$;
-
-b) nếu $\vec{u} \perp \vec{v}$ thì $\varphi = \frac{π}{2}$;
-
-c) với ba điểm A, B, C bất kì: **$BC^{2} = AB^{2} + AC^{2} -$ 2·AB·AC·cosÂ**, trong đó Â là góc giữa $\vect{AB}$ và $\vect{AC}$ (vì $\vect{BC}^{2} = (\vect{AC} - \vect{AB})^{2} = AC^{2} + AB^{2} - 2\vect{AB}·\vect{AC})$.
+*(Nhờ bất đẳng thức Cauchy–Bunyakovsky–Schwarz $-1 \le \dfrac{\vec{u} \cdot \vec{v}}{|\vec{u}|\,|\vec{v}|} \le 1$ và tính song ánh của hàm số $\cos$ trên đoạn $[0, \pi]$, số thực $\varphi$ luôn tồn tại và duy nhất).*
 </Definition>
 
-<Example id="ex-e5-2" title="Ví dụ">
-$$
-\vec{u} = (1,1,0), \vec{v} = (0,1,1): cos \varphi = 1/(\sqrt{2}·\sqrt{2}) = \frac{1}{2}, \varphi = \frac{π}{3}.
-$$
+Từ định nghĩa trên, ta suy ra ngay các tính chất nền tảng sau đây:
 
- Với $A(0,0), B(2,0), C(1,1): BC^{2} = 2; AB = 2, AC = \sqrt{2}$, Â $= \frac{π}{4}$ nên $AB^{2} + AC^{2} -$ 2·AB·AC·cosÂ $= 4 + 2 - 2·2·\sqrt{2}·(\frac{\sqrt{2}}{2}) = 2.$
+<Theorem id="thm-e5-1" title="Các hệ quả trực tiếp và định lí hàm số côsin">
+Trong không gian Ơclit $\mathcal{E}^n$, với các vectơ $\vec{u}, \vec{v} \neq \vec{0}$ và góc $\varphi = \widehat{(\vec{u}, \vec{v})}$:
+
+1. **a)** Nếu $\vec{u}, \vec{v}$ phụ thuộc tuyến tính thì $\varphi = 0$ (khi $\vec{u}, \vec{v}$ cùng hướng) hoặc $\varphi = \pi$ (khi $\vec{u}, \vec{v}$ ngược hướng), và ngược lại.
+2. **b)** Nếu $\vec{u} \perp \vec{v}$ thì $\varphi = \dfrac{\pi}{2}$ (và ngược lại).
+3. **c) Định lí hàm số côsin:** Đối với ba điểm $A, B, C$ bất kì trong $\mathcal{E}^n$ (với $A \neq B$, $A \neq C$, kí hiệu độ dài $AB = d(A, B)$, $AC = d(A, C)$, $BC = d(B, C)$ và $\widehat{A} = \widehat{(\overrightarrow{AB}, \overrightarrow{AC})}$ là góc giữa hai vectơ $\overrightarrow{AB}, \overrightarrow{AC}$), ta có công thức:
+   $$
+   BC^2 = AB^2 + AC^2 - 2\,AB \cdot AC \cos\widehat{A}.
+   $$
+</Theorem>
+
+<Proof>
+1. **Chứng minh a):** Vì $\vec{u} \neq \vec{0}$ và $\vec{v} \neq \vec{0}$, nếu $\vec{u}, \vec{v}$ phụ thuộc tuyến tính thì tồn tại $\lambda \in \mathbb{R} \setminus \{0\}$ sao cho $\vec{v} = \lambda\vec{u}$. Khi đó:
+   $$
+   \cos\varphi = \frac{\vec{u} \cdot (\lambda\vec{u})}{|\vec{u}|\,|\lambda\vec{u}|} = \frac{\lambda\vec{u}^2}{|\lambda|\,|\vec{u}|^2} = \frac{\lambda}{|\lambda|} = \pm 1.
+   $$
+   Do $0 \le \varphi \le \pi$, nếu $\lambda > 0$ thì $\cos\varphi = 1 \iff \varphi = 0$; nếu $\lambda < 0$ thì $\cos\varphi = -1 \iff \varphi = \pi$. Ngược lại, nếu $\varphi = 0$ hoặc $\varphi = \pi$ thì $|\vec{u} \cdot \vec{v}| = |\vec{u}|\,|\vec{v}|$, theo điều kiện xảy ra dấu $"="$ của bất đẳng thức Cauchy–Bunyakovsky–Schwarz thì $\vec{u}, \vec{v}$ phụ thuộc tuyến tính.
+
+2. **Chứng minh b):** Theo định nghĩa trực giao, $\vec{u} \perp \vec{v} \iff \vec{u} \cdot \vec{v} = 0 \iff \cos\varphi = 0$; vì $0 \le \varphi \le \pi$ nên $\cos\varphi = 0 \iff \varphi = \dfrac{\pi}{2}$.
+
+3. **Chứng minh c):** Theo quy tắc Chasles $\overrightarrow{BC} = \overrightarrow{AC} - \overrightarrow{AB}$, bình phương vô hướng hai vế ta có:
+   $$
+   \overrightarrow{BC}^2 = (\overrightarrow{AC} - \overrightarrow{AB})^2 = \overrightarrow{AC}^2 + \overrightarrow{AB}^2 - 2\overrightarrow{AB} \cdot \overrightarrow{AC}.
+   $$
+   Thay $\overrightarrow{BC}^2 = BC^2$, $\overrightarrow{AB}^2 = AB^2$, $\overrightarrow{AC}^2 = AC^2$ và $\overrightarrow{AB} \cdot \overrightarrow{AC} = |\overrightarrow{AB}|\,|\overrightarrow{AC}|\cos\widehat{A} = AB \cdot AC \cos\widehat{A}$, ta thu được:
+   $$
+   BC^2 = AB^2 + AC^2 - 2\,AB \cdot AC \cos\widehat{A}.
+   $$
+</Proof>
+
+<Example id="ex-e5-2" title="Ví dụ tính góc giữa hai vectơ và áp dụng định lí hàm số côsin">
+Trong $\mathcal{E}^3$ với <GlossaryTerm termId="muc-tieu-truc-chuan">mục tiêu trực chuẩn</GlossaryTerm>, cho $\vec{u} = (1, 1, 0)$ và $\vec{v} = (0, 1, 1)$. Ta có $\vec{u} \cdot \vec{v} = 1$, $|\vec{u}| = |\vec{v}| = \sqrt{2}$, nên $\cos\varphi = \dfrac{1}{\sqrt{2} \cdot \sqrt{2}} = \dfrac{1}{2}$, suy ra $\varphi = \dfrac{\pi}{3}$.
+
+Với ba điểm $A(0, 0, 0)$, $B(2, 0, 0)$ và $C(1, 1, 0)$, ta có $AB = 2$, $AC = \sqrt{2}$ và $\cos\widehat{A} = \dfrac{\overrightarrow{AB} \cdot \overrightarrow{AC}}{AB \cdot AC} = \dfrac{2}{2\sqrt{2}} = \dfrac{\sqrt{2}}{2}$ ($\widehat{A} = \dfrac{\pi}{4}$). Công thức hàm số côsin cho $BC^2 = 2^2 + (\sqrt{2})^2 - 2 \cdot 2 \cdot \sqrt{2} \cdot \dfrac{\sqrt{2}}{2} = 4 + 2 - 4 = 2$, khớp với $d(B, C)^2 = (1 - 2)^2 + 1^2 = 2$.
 </Example>
 
 ## 2. Góc giữa hai đường thẳng
 
-<Definition id="def-e5-3" title="Định nghĩa">
-Hai đường thẳng Δ, Δ′ trong $\mathbb{E} ^{n}$ có phương $V$, $V$′; lấy $\vec{a} \in V, \vec{b} \in V'$ khác $\vec{0}$.
+<Definition id="def-e5-3" title="Định nghĩa góc giữa hai đường thẳng">
+Trong $\mathcal{E}^n$ cho hai đường thẳng $\Delta$ và $\Delta'$ lần lượt có phương là các không gian vectơ một chiều $V = \overrightarrow{\Delta}$ và $V' = \overrightarrow{\Delta'}$. Gọi $\vec{a}, \vec{b}$ là các vectơ khác vectơ $\vec{0}$ lần lượt lấy trên $V$ và $V'$.
 
-*Góc giữa hai đường thẳng* là số φ với
- 
-
+Ta gọi *góc $\varphi$ giữa hai đường thẳng* $\Delta$ và $\Delta'$ nói trên là số thực $\varphi$ thỏa mãn $0 \le \varphi \le \dfrac{\pi}{2}$ và:
 $$
-0 \le \varphi \le \frac{π}{2} và cos \varphi = |\vec{a}·\vec{b}| / (|\vec{a}||\vec{b}|).
+\cos\varphi = \frac{|\vec{a} \cdot \vec{b}|}{|\vec{a}|\,|\vec{b}|}.
 $$
-
- 
-Định nghĩa không phụ thuộc cách chọn $\vec{a}$, $\vec{b}$ (thay bằng λ$\vec{a}$, μ$\vec{b}$ với $\lambda , μ \neq 0)$.
-
-Nếu $Δ // Δ'$ thì $\varphi = 0$; nếu $Δ \perp Δ'$ thì $\varphi = \frac{π}{2}$.
 </Definition>
 
-<Example id="ex-e5-4" title="Ví dụ">
-Δ có phương (1,0), Δ′ có phương $(1,1)$ trong $\mathbb{E} ^{2}$: 
+<Proposition id="prop-e5-3" title="Tính xác định tốt và các trường hợp đặc biệt của góc giữa hai đường thẳng">
+1. Định nghĩa góc $\varphi$ ở trên không phụ thuộc vào việc chọn các vectơ chỉ phương $\vec{a} \in V \setminus \{\vec{0}\}$ và $\vec{b} \in V' \setminus \{\vec{0}\}$, và áp dụng cho mọi cặp đường thẳng trong $\mathcal{E}^n$ (kể cả khi chúng không cắt nhau hay chéo nhau).
+2. Nếu $\Delta \parallel \Delta'$ (hoặc $\Delta \equiv \Delta'$) thì $\varphi = 0$ (và ngược lại).
+3. Nếu $\Delta \perp \Delta'$ thì $\varphi = \dfrac{\pi}{2}$ (và ngược lại).
+</Proposition>
 
-$$
-\begin{cases} cos \varphi = \frac{1}{\sqrt{2}} \\ \varphi = \frac{π}{4}. \end{cases}
-$$
+<Proof>
+1. Mọi vectơ khác $\vec{0}$ trên $V$ và $V'$ đều có dạng $\vec{a}' = \lambda\vec{a}$ với $\lambda \neq 0$ và $\vec{b}' = \mu\vec{b}$ với $\mu \neq 0$. Khi thay $\vec{a}, \vec{b}$ bằng $\vec{a}', \vec{b}'$, ta có:
+   $$
+   \frac{|\vec{a}' \cdot \vec{b}'|}{|\vec{a}'|\,|\vec{b}'|} = \frac{|(\lambda\vec{a}) \cdot (\mu\vec{b})|}{|\lambda\vec{a}|\,|\mu\vec{b}|} = \frac{|\lambda|\,|\mu|\,|\vec{a} \cdot \vec{b}|}{|\lambda|\,|\vec{a}| \cdot |\mu|\,|\vec{b}|} = \frac{|\vec{a} \cdot \vec{b}|}{|\vec{a}|\,|\vec{b}|}.
+   $$
+   Vì $0 \le \dfrac{|\vec{a} \cdot \vec{b}|}{|\vec{a}|\,|\vec{b}|} \le 1$ và hàm $\cos$ là song ánh từ $\left[0, \dfrac{\pi}{2}\right]$ lên $[0, 1]$, góc $\varphi$ hoàn toàn xác định duy nhất.
+2. Hai đường thẳng song song hoặc trùng nhau khi và chỉ khi $V = V' \iff \vec{b} = \lambda\vec{a}$ ($\lambda \neq 0$) $\iff \cos\varphi = 1 \iff \varphi = 0$.
+3. Hai đường thẳng vuông góc với nhau theo định nghĩa ở §4 Mục 1a khi và chỉ khi $V \perp V' \iff \vec{a} \cdot \vec{b} = 0 \iff \cos\varphi = 0 \iff \varphi = \dfrac{\pi}{2}$.
+</Proof>
 
- Thay phương $(1,1)$ bằng $(-2,-2)$ thì $cos \varphi = |-2|/(1·2\sqrt{2}) = \frac{1}{\sqrt{2}}$, không đổi.
+<Example id="ex-e5-4" title="Ví dụ góc giữa hai đường thẳng">
+Trong $\mathcal{E}^2$ với mục tiêu trực chuẩn, đường thẳng $\Delta$ có vectơ chỉ phương $\vec{a} = (1, 0)$ và đường thẳng $\Delta'$ có vectơ chỉ phương $\vec{b} = (1, 1)$. Khi đó $\cos\varphi = \dfrac{|1 \cdot 1 + 0 \cdot 1|}{1 \cdot \sqrt{2}} = \dfrac{\sqrt{2}}{2}$, suy ra $\varphi = \dfrac{\pi}{4}$. Nếu chọn vectơ chỉ phương khác của $\Delta'$ là $\vec{b}' = (-2, -2)$ thì $\cos\varphi = \dfrac{|-2|}{1 \cdot 2\sqrt{2}} = \dfrac{\sqrt{2}}{2}$, giá trị góc $\varphi = \dfrac{\pi}{4}$ không thay đổi.
 </Example>
 
 ## 3. Góc giữa hai siêu phẳng
 
-<Definition id="def-e5-5" title="Định nghĩa">
-Trong $\mathbb{E} ^{n}$, gọi a, b là các đường thẳng lần lượt trực giao với siêu phẳng α, β.
-
-*Góc giữa hai siêu phẳng* α, β là góc giữa hai đường thẳng a và b (không phụ thuộc cách chọn a, b).
+<Definition id="def-e5-5" title="Định nghĩa góc giữa hai siêu phẳng">
+Trong $\mathcal{E}^n$ cho hai siêu phẳng $\alpha$ và $\beta$. Gọi $a, b$ lần lượt là các đường thẳng trực giao (bù vuông góc) với $\alpha$ và $\beta$. Khi đó góc giữa hai đường thẳng $a$ và $b$ được gọi là *góc giữa hai siêu phẳng* $\alpha$ và $\beta$.
 </Definition>
 
-<Example id="ex-e5-6" title="Ví dụ">
-Trong $\mathbb{E} ^{3}$, mặt phẳng $x = 0$ (pháp tuyến $(1,0,0))$ và $x + y = 0$ (pháp tuyến $(1,1,0))$: 
+<Proposition id="prop-e5-5" title="Tính không phụ thuộc vào cách chọn đường pháp tuyến và công thức tọa độ">
+1. Định nghĩa góc giữa hai siêu phẳng $\alpha, \beta$ không phụ thuộc vào việc chọn cụ thể hai đường thẳng $a \perp \alpha$ và $b \perp \beta$ (nghĩa là có thể thay bằng bất kì $a' \perp \alpha$ và $b' \perp \beta$).
+2. Đối với mục tiêu trực chuẩn, nếu hai siêu phẳng có phương trình $\alpha: \sum_{i=1}^n a_i x_i + a_0 = 0$ và $\beta: \sum_{i=1}^n b_i x_i + b_0 = 0$ với các vectơ pháp tuyến $\vec{n}_1 = (a_1, \dots, a_n) \neq \vec{0}$ và $\vec{n}_2 = (b_1, \dots, b_n) \neq \vec{0}$, thì góc $\varphi \in \left[0, \dfrac{\pi}{2}\right]$ giữa $\alpha$ và $\beta$ được xác định bởi:
+   $$
+   \cos\varphi = \frac{|\vec{n}_1 \cdot \vec{n}_2|}{|\vec{n}_1|\,|\vec{n}_2|} = \frac{\left|\sum_{i=1}^n a_i b_i\right|}{\sqrt{\sum_{i=1}^n a_i^2}\sqrt{\sum_{i=1}^n b_i^2}}.
+   $$
+</Proposition>
 
+<Proof>
+1. Theo Hệ quả ở §4 Mục 1d, mọi đường thẳng $a'$ trực giao (bù vuông góc) với siêu phẳng $\alpha$ đều có cùng phương một chiều $\overrightarrow{a'} = \overrightarrow{\alpha}^\perp = \overrightarrow{a}$; tương tự mọi $b' \perp \beta$ đều có phương $\overrightarrow{b'} = \overrightarrow{\beta}^\perp = \overrightarrow{b}$. Vì góc giữa hai đường thẳng chỉ phụ thuộc vào phương của chúng nên góc giữa $a', b'$ luôn bằng góc giữa $a, b$.
+2. Theo §4 Mục 3a, $\vec{n}_1$ là vectơ chỉ phương của đường thẳng $a \perp \alpha$ và $\vec{n}_2$ là vectơ chỉ phương của đường thẳng $b \perp \beta$. Áp dụng trực tiếp công thức góc giữa hai đường thẳng ở Mục 2 và biểu thức tọa độ trực chuẩn của tích vô hướng thu được công thức trên.
+</Proof>
+
+<Remark id="rem-e5-5" title="Chú ý về hai mặt phẳng vuông góc trong hình học phổ thông">
+Khi góc giữa hai siêu phẳng $\alpha$ và $\beta$ bằng $\varphi = \dfrac{\pi}{2}$ (tức $\vec{n}_1 \cdot \vec{n}_2 = 0$), trong hình học phổ thông (ứng với $n = 3$) người ta thường gọi tắt là *"hai mặt phẳng vuông góc với nhau"*. Cần phân biệt rõ khái niệm góc giữa hai siêu phẳng bằng $\dfrac{\pi}{2}$ này (sự vuông góc không hoàn toàn khi $n \ge 3$) với khái niệm hai phẳng vuông góc hoàn toàn $\overrightarrow{\alpha} \perp \overrightarrow{\beta}$ đã học ở §4 Mục 1a.
+</Remark>
+
+<Example id="ex-e5-6" title="Ví dụ tính góc giữa hai mặt phẳng trong không gian ba chiều">
+Trong $\mathcal{E}^3$ với mục tiêu trực chuẩn, cho mặt phẳng $\alpha: x_1 - x_2 + 2x_3 - 1 = 0$ (pháp tuyến $\vec{n}_1 = (1, -1, 2)$) và mặt phẳng $\beta: 2x_1 + x_2 - x_3 + 3 = 0$ (pháp tuyến $\vec{n}_2 = (2, 1, -1)$). Ta có:
 $$
-\begin{cases} cos \varphi = \frac{1}{\sqrt{2}} \\ \varphi = \frac{π}{4}. \end{cases}
+\cos\varphi = \frac{|1 \cdot 2 + (-1) \cdot 1 + 2 \cdot (-1)|}{\sqrt{1 + 1 + 4}\sqrt{4 + 1 + 1}} = \frac{|-1|}{6} = \frac{1}{6},
 $$
+nên góc giữa hai mặt phẳng là $\varphi = \arccos\dfrac{1}{6}$.
 </Example>
 
 ## 4. Góc giữa đường thẳng và siêu phẳng
 
-<Theorem id="thm-e5-7" title="Định nghĩa">
-Đường thẳng a và siêu phẳng β: nếu $a \perp \beta$ thì góc giữa chúng là góc vuông.
+<Definition id="def-e5-7" title="Định nghĩa góc giữa đường thẳng và siêu phẳng">
+Trong $\mathcal{E}^n$ cho đường thẳng $a$ và siêu phẳng $\beta$:
 
-Nếu a không vuông góc với β, lấy đường thẳng $a' \perp \beta$, gọi φ là góc giữa a và a′; góc giữa a và β là $\theta \ge 0$ với $\theta = \frac{π}{2} - \varphi$.
+- Nếu $a \perp \beta$, ta nói rằng *góc giữa đường thẳng $a$ và siêu phẳng $\beta$* là góc vuông ($\theta = \dfrac{\pi}{2}$).
+- Nếu $a$ không vuông góc với $\beta$, ta lấy một đường thẳng $a' \perp \beta$ và gọi $\varphi \in \left(0, \dfrac{\pi}{2}\right]$ là góc giữa hai đường thẳng $a$ và $a'$. Khi đó *góc giữa đường thẳng $a$ và siêu phẳng $\beta$* được xác định là góc $\theta$ thỏa mãn $0 \le \theta < \dfrac{\pi}{2}$ và:
+  $$
+  \theta = \frac{\pi}{2} - \varphi.
+  $$
+*(Gộp chung cả hai trường hợp, với $\varphi \in \left[0, \dfrac{\pi}{2}\right]$ là góc giữa $a$ và đường pháp tuyến $a' \perp \beta$, góc giữa $a$ và $\beta$ luôn là $\theta = \dfrac{\pi}{2} - \varphi \in \left[0, \dfrac{\pi}{2}\right]$; định nghĩa không phụ thuộc cách chọn $a' \perp \beta$ vì mọi $a' \perp \beta$ có cùng phương $\overrightarrow{\beta}^\perp$).*
+</Definition>
 
-Nếu $\vec{u}$ là vectơ chỉ phương của a và $\vec{n}$ là vectơ pháp tuyến của β thì
- 
-
+<Theorem id="thm-e5-7" title="Công thức tính góc giữa đường thẳng và siêu phẳng">
+Nếu đối với một mục tiêu trực chuẩn, đường thẳng $a$ có vectơ chỉ phương là $\vec{u} \neq \vec{0}$ và siêu phẳng $\beta$ có vectơ pháp tuyến là $\vec{n} \neq \vec{0}$, thì góc $\theta \in \left[0, \dfrac{\pi}{2}\right]$ giữa $a$ và $\beta$ được tính bởi:
 $$
-sin \theta = cos \varphi = |\vec{u}·\vec{n}| / (|\vec{u}||\vec{n}|), cos \theta = \sqrt{1 - (\vec{u}·\vec{n})^{2} / (\vec{u}^{2}\vec{n}^{2})}.
+\sin\theta = \frac{|\vec{u} \cdot \vec{n}|}{|\vec{u}|\,|\vec{n}|}, \qquad \cos\theta = \sqrt{1 - \sin^2\theta} = \sqrt{1 - \frac{(\vec{u} \cdot \vec{n})^2}{\vec{u}^2\,\vec{n}^2}}.
 $$
 </Theorem>
 
-<Example id="ex-e5-8" title="Ví dụ">
-Trong $\mathbb{E} ^{3}$, đường thẳng a phương $\vec{u} = (1,1,1)$ và mặt phẳng β: 
+<Proof>
+Đường thẳng $a' \perp \beta$ nhận vectơ pháp tuyến $\vec{n}$ của $\beta$ làm vectơ chỉ phương. Gọi $\varphi \in \left[0, \dfrac{\pi}{2}\right]$ là góc giữa hai đường thẳng $a$ và $a'$:
+- Nếu $a \perp \beta$ thì $\vec{u}$ cùng phương với $\vec{n}$, nên $\theta = \dfrac{\pi}{2}$ ($\sin\theta = 1, \cos\theta = 0$), đồng thời $\dfrac{|\vec{u} \cdot \vec{n}|}{|\vec{u}|\,|\vec{n}|} = 1$, hai công thức đều nghiệm đúng.
+- Nếu $a$ không vuông góc với $\beta$ thì $\theta = \dfrac{\pi}{2} - \varphi \in \left[0, \dfrac{\pi}{2}\right)$. Áp dụng công thức góc giữa hai đường thẳng ở Mục 2 cho $a$ và $a'$:
+  $$
+  \sin\theta = \sin\left(\frac{\pi}{2} - \varphi\right) = \cos\varphi = \frac{|\vec{u} \cdot \vec{n}|}{|\vec{u}|\,|\vec{n}|}.
+  $$
+  Vì $0 \le \theta \le \dfrac{\pi}{2}$ nên $\cos\theta \ge 0$, suy ra:
+  $$
+  \cos\theta = \sqrt{1 - \sin^2\theta} = \sqrt{1 - \frac{(\vec{u} \cdot \vec{n})^2}{\vec{u}^2\,\vec{n}^2}}.
+  $$
+*(Ý nghĩa hình học: khi $a \parallel \beta$ hoặc $a \subset \beta$ thì $\vec{u} \perp \vec{n} \implies \sin\theta = 0 \iff \theta = 0$; khi $a$ cắt $\beta$ tại $I$ và không vuông góc với $\beta$, gọi $a_0$ là đường thẳng hình chiếu vuông góc của $a$ lên $\beta$ thì $\theta$ chính là góc giữa hai đường thẳng $a$ và $a_0$).*
+</Proof>
 
+<Example id="ex-e5-8" title="Ví dụ tính góc giữa đường thẳng và mặt phẳng">
+Trong $\mathcal{E}^3$ với mục tiêu trực chuẩn, xét đường thẳng $a$ có vectơ chỉ phương $\vec{u} = (1, 2, 2)$ và mặt phẳng $\beta: 2x_1 - x_2 + 2x_3 + 1 = 0$ có vectơ pháp tuyến $\vec{n} = (2, -1, 2)$. Ta có $|\vec{u}| = 3$, $|\vec{n}| = 3$ và $|\vec{u} \cdot \vec{n}| = |2 - 2 + 4| = 4$, nên:
 $$
-z = 0 (\vec{n} = (0,0,1)): sin \theta = \frac{1}{\sqrt{3}}, cos \theta = \sqrt{1 - \frac{1}{3}} = \sqrt{\frac{2}{3}}.
+\sin\theta = \frac{4}{3 \cdot 3} = \frac{4}{9}, \qquad \cos\theta = \sqrt{1 - \frac{16}{81}} = \frac{\sqrt{65}}{9}.
 $$
-
- (Khi $a \perp \beta , \vec{u} // \vec{n}$ nên $sin \theta = 1, \theta = \frac{π}{2}.)$
 </Example>
 
-## Bài tập vận dụng và củng cố
+## Bài tập
 
-<Exercise id="exr-e5-1" title="Góc giữa hai vectơ (§5, mục 1)">
-Tính góc giữa u = (1,1,0) và v = (0,1,1) trong E³.
+*(Trọn bộ $4$ bài tập thuộc §5 trong cụm bài tập §4, §5 cuối Chương II, trang 138–142 — khép kín hoàn toàn $25/25$ bài từ 2.17 đến 2.41 cùng với Bài 2.4).*
 
+<Exercise id="exr-e5-22" title="Bài tập 2.22 (Mặt phẳng chứa một đường thẳng và vuông góc với một mặt phẳng cho trước trong E3 — tr. 138)">
+Trong $\mathcal{E}^3$ (với mục tiêu trực chuẩn), viết phương trình mặt phẳng chứa đường thẳng $d$ có phương trình:
+$$
+\frac{x - x_0}{a} = \frac{y - y_0}{b} = \frac{z - z_0}{c} \qquad (a^2 + b^2 + c^2 > 0)
+$$
+và vuông góc với mặt phẳng $(\beta): Ax + By + Cz + D = 0$ ($A^2 + B^2 + C^2 > 0$).
 
 <Hint>
-cos  $ varphi$  = (u·v)/(|u||v|), 0  $ le$   $ varphi$   $ le$  π.
+Hai mặt phẳng trong $\mathcal{E}^3$ vuông góc với nhau (theo nghĩa góc giữa hai siêu phẳng ở Mục 3 bằng $\dfrac{\pi}{2}$) khi và chỉ khi hai vectơ pháp tuyến của chúng trực giao. Mặt phẳng $(\alpha)$ cần tìm đi qua $M_0(x_0, y_0, z_0)$ và có pháp tuyến $\vec{m}$ trực giao với cả $\vec{u} = (a, b, c)$ lẫn $\vec{n} = (A, B, C)$; biện luận riêng hai trường hợp $\vec{u} \wedge \vec{n} \neq \vec{0}$ và $\vec{u} \wedge \vec{n} = \vec{0}$.
 </Hint>
 
 <Solution>
-u·v = 1 và |u| = |v| = √2 nên cos  $ varphi$  = 1/2.
+Đường thẳng $d$ đi qua điểm $M_0(x_0, y_0, z_0)$ và có vectơ chỉ phương $\vec{u} = (a, b, c) \neq \vec{0}$ *(theo quy ước phương trình chính tắc: nếu một mẫu số bằng $0$ thì tử số tương ứng bằng $0$)*. Mặt phẳng $(\beta)$ có vectơ pháp tuyến $\vec{n} = (A, B, C) \neq \vec{0}$.
 
-**Đáp án:** 60° (π/3)
+Một mặt phẳng $(\alpha)$ trong $\mathcal{E}^3$ chứa đường thẳng $d$ và vuông góc với mặt phẳng $(\beta)$ (tức góc giữa hai siêu phẳng $(\alpha)$ và $(\beta)$ bằng $\dfrac{\pi}{2}$) khi và chỉ khi $(\alpha)$ đi qua $M_0(x_0, y_0, z_0)$ và vectơ pháp tuyến $\vec{m} = (P, Q, R) \neq (0, 0, 0)$ của $(\alpha)$ vuông góc với cả $\vec{u}$ lẫn $\vec{n}$:
+$$
+\vec{m} \cdot \vec{u} = Pa + Qb + Rc = 0, \qquad \vec{m} \cdot \vec{n} = PA + QB + RC = 0.
+$$
+
+- **Trường hợp 1 ($d$ không vuông góc với $(\beta)$, tức $\vec{u}$ và $\vec{n}$ không cộng tuyến: $\vec{u} \wedge \vec{n} \neq \vec{0}$):**
+
+  Khi đó mọi vectơ pháp tuyến $\vec{m}$ đều tỉ lệ với tích có hướng:
+  $$
+  \vec{u} \wedge \vec{n} = (bC - cB,\; cA - aC,\; aB - bA) \neq (0, 0, 0).
+  $$
+  Vậy tồn tại **duy nhất** một mặt phẳng $(\alpha)$ thỏa mãn đề bài, có phương trình tổng quát:
+  $$
+  (bC - cB)(x - x_0) + (cA - aC)(y - y_0) + (aB - bA)(z - z_0) = 0,
+  $$
+  hay viết gọn dưới dạng định thức cấp $3$:
+  $$
+  \begin{vmatrix}
+  x - x_0 & y - y_0 & z - z_0 \\
+  a & b & c \\
+  A & B & C
+  \end{vmatrix} = 0.
+  $$
+
+- **Trường hợp 2 ($d \perp (\beta)$, tức $\vec{u} = k\vec{n}$ với $k \neq 0$):**
+
+  Khi đó hai điều kiện $\vec{m} \cdot \vec{u} = 0$ và $\vec{m} \cdot \vec{n} = 0$ trùng làm một phương trình duy nhất $PA + QB + RC = 0$. Mọi mặt phẳng đi qua $d$ đều có pháp tuyến vuông góc với $\vec{u} = k\vec{n}$ nên tự động vuông góc với $(\beta)$. Do đó bài toán có **vô số** nghiệm, gồm toàn bộ chùm mặt phẳng chứa đường thẳng $d$:
+  $$
+  P(x - x_0) + Q(y - y_0) + R(z - z_0) = 0 \qquad \bigl(PA + QB + RC = 0,\; P^2 + Q^2 + R^2 > 0\bigr).
+  $$
 </Solution>
 </Exercise>
 
-<Exercise id="exr-e5-2" title="Góc giữa đường thẳng và siêu phẳng (§5, mục 4)">
-Tính sin của góc  $ theta$  giữa đường thẳng có phương u = (1,2,2) và mặt phẳng 2x - y + 2z + 1 = 0 trong E³.
-
+<Exercise id="exr-e5-30" title="Bài tập 2.30 (Độ dài đường chéo và góc của hình lập phương n chiều — tr. 140)">
+Hãy tìm độ dài đường chéo của hình "lập phương $n$ chiều" cạnh $a > 0$ trong không gian $\mathcal{E}^n$.
 
 <Hint>
-sin  $ theta$  = |u·n|/(|u||n|) với n là vectơ pháp tuyến.
+Xuất phát từ một đỉnh $A_0$ của hình lập phương $n$ chiều với $n$ vectơ cạnh $\vec{u}_1, \dots, \vec{u}_n$ có cùng độ dài $a$ và đôi một tạo góc $\dfrac{\pi}{2}$ ($\vec{u}_i \cdot \vec{u}_j = 0$ khi $i \neq j$); biểu diễn vectơ nối hai đỉnh đối diện và lấy bình phương vô hướng.
 </Hint>
 
 <Solution>
-n = (2, -1, 2).
+Trong $\mathcal{E}^n$, hình lập phương $n$ chiều cạnh $a > 0$ xuất phát từ một đỉnh $A_0$ được xác định bởi $n$ đoạn cạnh $A_0 A_1, A_0 A_2, \dots, A_0 A_n$ cùng có độ dài $a$ và đôi một vuông góc (góc giữa hai cạnh bất kì bằng $\dfrac{\pi}{2}$). Đặt $\vec{u}_i = \overrightarrow{A_0 A_i}$ ($i = 1, \dots, n$), ta có:
+$$
+\vec{u}_i^2 = |\vec{u}_i|^2 = a^2 \quad (i = 1, \dots, n), \qquad \vec{u}_i \cdot \vec{u}_j = 0 \quad (i \neq j).
+$$
+Tập hợp các điểm $M$ thuộc khối lập phương $n$ chiều được cho bởi $\overrightarrow{A_0 M} = \sum_{i=1}^n t_i \vec{u}_i$ với $0 \le t_i \le 1$ ($i = 1, \dots, n$), trong đó $2^n$ đỉnh ứng với các bộ hệ số $(t_1, \dots, t_n) \in \{0, 1\}^n$.
 
-u·n = 2 - 2 + 4 = 4, |u| = 3, |n| = 3.
+Một *đường chéo chính* của hình lập phương nối một đỉnh $P$ ứng với $(t_1, \dots, t_n) \in \{0, 1\}^n$ với đỉnh đối diện xuyên tâm $P'$ ứng với $(1 - t_1, \dots, 1 - t_n)$. Khi đó vectơ đường chéo $\overrightarrow{PP'}$ có biểu diễn:
+$$
+\overrightarrow{PP'} = \sum_{i=1}^n (1 - 2t_i)\vec{u}_i = \sum_{i=1}^n \varepsilon_i \vec{u}_i, \qquad \varepsilon_i = 1 - 2t_i \in \{-1, 1\}.
+$$
+Bình phương vô hướng hai vế và sử dụng $\varepsilon_i^2 = 1$ cùng $\vec{u}_i \cdot \vec{u}_j = 0$ ($i \neq j$):
+$$
+d(P, P')^2 = \overrightarrow{PP'}^2 = \left(\sum_{i=1}^n \varepsilon_i \vec{u}_i\right)^2 = \sum_{i=1}^n \varepsilon_i^2 \vec{u}_i^2 + 2\sum_{1 \le i < j \le n} \varepsilon_i \varepsilon_j (\vec{u}_i \cdot \vec{u}_j) = \sum_{i=1}^n a^2 = n a^2.
+$$
+Vậy mọi đường chéo chính của hình lập phương $n$ chiều cạnh $a$ đều có độ dài bằng:
+$$
+d = a\sqrt{n}.
+$$
+*(Nhận xét bổ sung về góc: góc $\varphi$ giữa một đường chéo chính và một cạnh bất kì của hình lập phương thỏa mãn $\cos\varphi = \dfrac{|\overrightarrow{PP'} \cdot \vec{u}_k|}{|\overrightarrow{PP'}|\,|\vec{u}_k|} = \dfrac{a^2}{(a\sqrt{n}) \cdot a} = \dfrac{1}{\sqrt{n}}$).*
+</Solution>
+</Exercise>
 
-**Đáp án:** sin  $ theta$  = 4/9
+<Exercise id="exr-e5-35" title="Bài tập 2.35 (Định lí Pitago cho đường thẳng vuông góc với siêu phẳng trong En — tr. 141)">
+Trong $\mathcal{E}^n$ cho đường thẳng $d$ vuông góc với siêu phẳng $\alpha$ và cắt siêu phẳng đó tại điểm $M$. Gọi $A$ là một điểm tùy ý thuộc $d$ và $B$ là một điểm tùy ý trên $\alpha$. Chứng minh định lí Pitago:
+$$
+d(M, A)^2 + d(M, B)^2 = d(A, B)^2.
+$$
+
+<Hint>
+Sử dụng tính chất $d \perp \alpha \implies \overrightarrow{MA} \perp \overrightarrow{MB}$ (tức góc $\widehat{AMB} = \dfrac{\pi}{2}$ khi $A \neq M, B \neq M$) và định lí hàm số côsin ở Mục 1c (hoặc khai triển trực tiếp $\overrightarrow{AB}^2 = (\overrightarrow{MB} - \overrightarrow{MA})^2$).
+</Hint>
+
+<Solution>
+- Nếu $A \equiv M$ thì $d(M, A) = 0$ và $d(M, B) = d(A, B)$, đẳng thức hiển nhiên đúng; tương tự nếu $B \equiv M$ thì $d(M, B) = 0$ và $d(M, A) = d(A, B)$, đẳng thức cũng đúng.
+- Giả sử $A \neq M$ và $B \neq M$. Vì $M, A \in d$ nên $\overrightarrow{MA} \in \overrightarrow{d} \setminus \{\vec{0}\}$; vì $M, B \in \alpha$ nên $\overrightarrow{MB} \in \overrightarrow{\alpha} \setminus \{\vec{0}\}$. Do đường thẳng $d$ vuông góc với siêu phẳng $\alpha$ nên $\overrightarrow{d} \perp \overrightarrow{\alpha}$, suy ra $\overrightarrow{MA} \perp \overrightarrow{MB}$.
+
+  Theo Mục 1b, góc giữa hai vectơ $\overrightarrow{MA}$ và $\overrightarrow{MB}$ bằng $\widehat{AMB} = \dfrac{\pi}{2}$, tức $\cos\widehat{AMB} = 0$. Áp dụng định lí hàm số côsin ở Mục 1c cho ba điểm $M, A, B$:
+  $$
+  d(A, B)^2 = d(M, A)^2 + d(M, B)^2 - 2\,d(M, A)\,d(M, B)\cos\frac{\pi}{2} = d(M, A)^2 + d(M, B)^2.
+  $$
+  *(Cách viết gộp cho cả trường hợp suy biến: $\overrightarrow{AB} = \overrightarrow{MB} - \overrightarrow{MA}$ với $\overrightarrow{MA} \cdot \overrightarrow{MB} = 0 \implies d(A, B)^2 = (\overrightarrow{MB} - \overrightarrow{MA})^2 = \overrightarrow{MA}^2 + \overrightarrow{MB}^2 = d(M, A)^2 + d(M, B)^2$).*
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e5-41" title="Bài tập 2.41 (Trang bị cấu trúc không gian Ơclit làm trực chuẩn hóa một mục tiêu affine cho trước — tr. 142)">
+Cho không gian affine thực $n$ chiều $\mathcal{A}^n$ với $n \ge 1$ và một hệ tọa độ affine $\{O; \vec{e}_1, \vec{e}_2, \dots, \vec{e}_n\}$ của $\mathcal{A}^n$. Chứng tỏ rằng có thể biến $\mathcal{A}^n$ trở thành một không gian Ơclit $n$ chiều mà hệ tọa độ đã cho trở thành hệ tọa độ trực chuẩn của không gian Ơclit.
+
+<Hint>
+Trên không gian vectơ thực liên kết $V = \overrightarrow{\mathcal{A}^n}$, biểu diễn mỗi vectơ theo cơ sở $\{\vec{e}_1, \dots, \vec{e}_n\}$, định nghĩa phép toán $\vec{x} \cdot \vec{y} = \sum_{i=1}^n x_i y_i$, kiểm tra đủ $4$ tiên đề tích vô hướng và tính $\vec{e}_i \cdot \vec{e}_j = \delta_{ij}$.
+</Hint>
+
+<Solution>
+Gọi $V = \overrightarrow{\mathcal{A}^n}$ là không gian vectơ thực $n$ chiều liên kết với không gian affine $\mathcal{A}^n$. Vì $\{O; \vec{e}_1, \vec{e}_2, \dots, \vec{e}_n\}$ là một mục tiêu affine của $\mathcal{A}^n$ nên hệ $\{\vec{e}_1, \vec{e}_2, \dots, \vec{e}_n\}$ là một cơ sở của $V$.
+
+Do đó mọi cặp vectơ $\vec{x}, \vec{y} \in V$ đều được biểu diễn một cách duy nhất dưới dạng:
+$$
+\vec{x} = \sum_{i=1}^n x_i\vec{e}_i, \qquad \vec{y} = \sum_{i=1}^n y_i\vec{e}_i \qquad (x_i, y_i \in \mathbb{R}).
+$$
+Ta xác định trên $V$ một ánh xạ $f: V \times V \to \mathbb{R}$, kí hiệu $f(\vec{x}, \vec{y}) = \vec{x} \cdot \vec{y}$, bởi công thức:
+$$
+\vec{x} \cdot \vec{y} = \sum_{i=1}^n x_i y_i = x_1 y_1 + x_2 y_2 + \dots + x_n y_n.
+$$
+Ta kiểm tra $f$ thỏa mãn đầy đủ $4$ tiên đề của tích vô hướng (§1, Mục 1):
+1. **Tính đối xứng:** $\vec{x} \cdot \vec{y} = \sum_{i=1}^n x_i y_i = \sum_{i=1}^n y_i x_i = \vec{y} \cdot \vec{x}$ với mọi $\vec{x}, \vec{y} \in V$.
+2. **Tính phân phối:** Với $\vec{z} = \sum_{i=1}^n z_i\vec{e}_i \in V$, vectơ $\vec{y} + \vec{z}$ có tọa độ $(y_1 + z_1, \dots, y_n + z_n)$ đối với cơ sở $\{\vec{e}_i\}$, nên:
+   $$
+   \vec{x} \cdot (\vec{y} + \vec{z}) = \sum_{i=1}^n x_i(y_i + z_i) = \sum_{i=1}^n x_i y_i + \sum_{i=1}^n x_i z_i = \vec{x} \cdot \vec{y} + \vec{x} \cdot \vec{z}.
+   $$
+3. **Tính kết hợp với số thực:** Với mọi $\lambda \in \mathbb{R}$, vectơ $\lambda\vec{x}$ có tọa độ $(\lambda x_1, \dots, \lambda x_n)$ nên:
+   $$
+   (\lambda\vec{x}) \cdot \vec{y} = \sum_{i=1}^n (\lambda x_i)y_i = \lambda \sum_{i=1}^n x_i y_i = \lambda(\vec{x} \cdot \vec{y}).
+   $$
+4. **Tính xác định dương:** Với mọi $\vec{x} \in V$, ta có $\vec{x} \cdot \vec{x} = \sum_{i=1}^n x_i^2 \ge 0$; hơn nữa $\vec{x} \cdot \vec{x} = 0 \iff x_1 = x_2 = \dots = x_n = 0 \iff \vec{x} = \sum_{i=1}^n 0\vec{e}_i = \vec{0}$.
+
+Như vậy $V$ trang bị tích vô hướng vừa định nghĩa trở thành một không gian vectơ Ơclit $n$ chiều $V_E^n$, và không gian affine $\mathcal{A}^n$ liên kết với $V_E^n$ trở thành một không gian Ơclit $n$ chiều $\mathcal{E}^n$.
+
+Cuối cùng, mỗi vectơ cơ sở $\vec{e}_i$ ($1 \le i \le n$) có tọa độ gồm số $1$ ở vị trí thứ $i$ và số $0$ ở mọi vị trí khác đối với chính cơ sở $\{\vec{e}_1, \dots, \vec{e}_n\}$, nên theo công thức trên:
+$$
+\vec{e}_i \cdot \vec{e}_j = \delta_{ij} = \begin{cases} 1, & i = j, \\ 0, & i \neq j \end{cases} \quad (i, j = 1, 2, \dots, n),
+$$
+nghĩa là $|\vec{e}_i| = 1$ và hai vectơ cơ sở bất kì khác nhau tạo với nhau góc $\dfrac{\pi}{2}$. Vậy mục tiêu affine $\{O; \vec{e}_1, \vec{e}_2, \dots, \vec{e}_n\}$ trở thành mục tiêu trực chuẩn của không gian Ơclit vừa xây dựng *(và theo công thức biểu thức tọa độ ở §3 Mục 5, đây cũng là tích vô hướng duy nhất trên $V$ có tính chất đó)*.
 </Solution>
 </Exercise>
 
 <KeyTakeaways>
-- Góc giữa hai đường thẳng được xác định qua góc giữa hai vectơ chỉ phương của chúng.
-- Hai phẳng vuông góc khi và chỉ khi vectơ pháp tuyến của chúng trực giao.
+- Góc giữa hai vectơ khác vectơ-không $\vec{u}, \vec{v}$ thuộc đoạn $[0, \pi]$ với $\cos\varphi = \dfrac{\vec{u} \cdot \vec{v}}{|\vec{u}|\,|\vec{v}|}$, dẫn tới định lí hàm số côsin $BC^2 = AB^2 + AC^2 - 2\,AB \cdot AC \cos\widehat{A}$.
+- Góc giữa hai đường thẳng $\Delta, \Delta'$ và góc giữa hai siêu phẳng $\alpha, \beta$ đều thuộc đoạn $\left[0, \dfrac{\pi}{2}\right]$, tính qua giá trị tuyệt đối tích vô hướng của cặp vectơ chỉ phương hoặc cặp vectơ pháp tuyến: $\cos\varphi = \dfrac{|\vec{a} \cdot \vec{b}|}{|\vec{a}|\,|\vec{b}|}$.
+- Góc $\theta \in \left[0, \dfrac{\pi}{2}\right]$ giữa đường thẳng $a$ (chỉ phương $\vec{u}$) và siêu phẳng $\beta$ (pháp tuyến $\vec{n}$) là phần phụ $\theta = \dfrac{\pi}{2} - \varphi$ của góc giữa $a$ với đường pháp tuyến của $\beta$, có công thức $\sin\theta = \dfrac{|\vec{u} \cdot \vec{n}|}{|\vec{u}|\,|\vec{n}|}$.
 </KeyTakeaways>

@@ -75,9 +75,12 @@ Vì $\dim \overrightarrow{\alpha} = m$ nên bộ ba $(\alpha, f', \overrightarro
 </Proof>
 
 <Example id="ex-s3-3" title="Minh họa 2-phẳng (siêu phẳng) trong không gian ba chiều">
-Trong $\mathcal{A}^3 = \R^3$, lấy điểm $I(1, 0, 0)$ và không gian con $\overrightarrow{\alpha} = \operatorname{span}\{(1, 1, 0), (0, 1, 1)\}$ ($\dim \overrightarrow{\alpha} = 2$).
+**Đề bài:** Trong $\mathcal{A}^3 = \R^3$, cho cái phẳng $\alpha$ đi qua điểm $I(1, 0, 0)$ có phương $\overrightarrow{\alpha} = \operatorname{span}\{(1, 1, 0), (0, 1, 1)\}$. Hãy xác định số chiều của $\alpha$, xét xem các điểm $K(2, 1, 0)$, $M(1, 0, 1)$ có thuộc $\alpha$ hay không và nhận xét về việc chọn điểm đi qua xác định $\alpha$.
 
-Khi đó $\alpha$ là một $2$-phẳng, đồng thời cũng là siêu phẳng của $\mathcal{A}^3$ vì $2 = 3 - 1$. Điểm $K(2, 1, 0) \in \alpha$ vì $\overrightarrow{IK} = (1, 1, 0) \in \overrightarrow{\alpha}$, còn điểm $M(1, 0, 1) \notin \alpha$ vì $\overrightarrow{IM} = (0, 0, 1)$ không biểu diễn được dưới dạng $a(1, 1, 0) + b(0, 1, 1) = (a, a + b, b)$. Theo chú ý ở Mục 1, ta có thể dùng $K$ thay cho $I$ để xác định cùng phẳng $\alpha$.
+**Lời giải:** Vì hai vectơ $(1, 1, 0)$ và $(0, 1, 1)$ độc lập tuyến tính nên $\dim \overrightarrow{\alpha} = 2$; do đó $\alpha$ là một $2$-phẳng, đồng thời cũng là siêu phẳng của $\mathcal{A}^3$ vì $2 = 3 - 1$.
+
+- Với $K(2, 1, 0)$: $\overrightarrow{IK} = (1, 1, 0) \in \overrightarrow{\alpha}$ nên $K \in \alpha$. Theo chú ý ở Mục 1, ta có thể dùng $K$ thay cho $I$ để xác định cùng phẳng $\alpha$.
+- Với $M(1, 0, 1)$: $\overrightarrow{IM} = (0, 0, 1)$ không biểu diễn được dưới dạng $a(1, 1, 0) + b(0, 1, 1) = (a, a + b, b)$, nên $M \notin \alpha$.
 </Example>
 
 ## 3. Xác định $m$-Phẳng qua Hệ Điểm Độc lập
@@ -197,17 +200,20 @@ $$
 Đường thẳng này đi qua điểm $A$ và có phương là không gian vectơ một chiều sinh bởi vectơ chỉ phương $\overrightarrow{AB} = (b_1 - a_1, b_2 - a_2, \dots, b_n - a_n)$.
 
 <Example id="ex-s3-9" title="Phương trình tham số đường thẳng trong R^3">
-Trong $\R^3$, đường thẳng đi qua hai điểm $A(1, 2, 3)$ và $B(2, 0, 5)$ có vectơ chỉ phương $\overrightarrow{AB} = (1, -2, 2)$, nên có phương trình tham số:
+**Đề bài:** Trong $\R^3$, lập phương trình tham số của đường thẳng đi qua hai điểm $A(1, 2, 3)$ và $B(2, 0, 5)$, đồng thời tìm tọa độ điểm nằm trên đường thẳng $AB$ ứng với giá trị tham số $t = 2$.
+
+**Lời giải:** Đường thẳng đi qua $A(1, 2, 3)$ và $B(2, 0, 5)$ nhận $\overrightarrow{AB} = (1, -2, 2)$ làm vectơ chỉ phương, nên có phương trình tham số (chọn $A$ làm điểm đi qua):
 
 $$
 \begin{cases}
 x = 1 + t \\
 y = 2 - 2t \\
-z = 3 + 2t.
+z = 3 + 2t
 \end{cases}
+\quad (t \in \R).
 $$
 
-Chẳng hạn ứng với $t = 2$, ta thu được điểm $(3, -2, 7)$ nằm trên đường thẳng $AB$.
+Thay $t = 2$ vào hệ phương trình tham số trên, ta thu được điểm $(3, -2, 7)$ nằm trên đường thẳng $AB$.
 </Example>
 
 ## 5. Phương trình Tổng quát của $m$-Phẳng trong $\mathcal{A}^n$
@@ -255,7 +261,7 @@ $$
 </Remark>
 
 <Example id="ex-s3-12" title="Lập phương trình tham số và tổng quát của mặt phẳng trong A^5 (tr. 18)">
-Trong không gian affine $\mathcal{A}^5$ với mục tiêu $\{O; \vec{e}_i\}$ cho trước, cho mặt phẳng $\alpha$ đi qua điểm $M_0(2, 0, 1, 0, -1)$ có phương $\overrightarrow{\alpha}$ nhận $\{\vec{a}, \vec{b}\}$ làm cơ sở, trong đó
+**Đề bài:** Trong không gian affine $\mathcal{A}^5$ với mục tiêu $\{O; \vec{e}_i\}$ cho trước, cho mặt phẳng $\alpha$ đi qua điểm $M_0(2, 0, 1, 0, -1)$ có phương $\overrightarrow{\alpha}$ nhận $\{\vec{a}, \vec{b}\}$ làm cơ sở, trong đó
 
 $$
 \vec{a} = \vec{e}_1 + \vec{e}_2 + 2\vec{e}_3 + \vec{e}_4 + \vec{e}_5, \qquad \vec{b} = \vec{e}_1 + 2\vec{e}_2 + \vec{e}_3 - 2\vec{e}_4 + 3\vec{e}_5.
@@ -263,7 +269,7 @@ $$
 
 Hãy lập phương trình tham số và phương trình tổng quát của mặt phẳng $\alpha$.
 
-*Giải:* Với điểm $M(x_1, x_2, x_3, x_4, x_5) \in \mathcal{A}^5$, ta có:
+**Lời giải:** Với điểm $M(x_1, x_2, x_3, x_4, x_5) \in \mathcal{A}^5$, ta có:
 
 $$
 M \in \alpha \iff \overrightarrow{M_0M} = t_1\vec{a} + t_2\vec{b} \iff
@@ -381,10 +387,12 @@ $$
 </Proof>
 
 <Example id="ex-s3-16" title="Phân biệt song song và chéo nhau hoàn toàn trong R^3">
-Trong $\R^3$, xét trục $Ox$ đi qua $O(0, 0, 0)$ có phương $\operatorname{span}\{(1, 0, 0)\}$:
+**Đề bài:** Trong $\R^3$, cho trục $Ox$ đi qua $O(0, 0, 0)$ có phương $\operatorname{span}\{(1, 0, 0)\}$, đường thẳng $d_1$ đi qua $(0, 1, 0)$ có phương $\operatorname{span}\{(1, 0, 0)\}$ và đường thẳng $d_2$ đi qua $B(0, 0, 1)$ có phương $\operatorname{span}\{(0, 1, 0)\}$. Hãy xác định vị trí tương đối giữa $Ox$ với $d_1$, giữa $Ox$ với $d_2$, đồng thời kiểm chứng lại trường hợp $(Ox, d_2)$ bằng tiêu chuẩn vectơ ở <Ref to="thm-s3-15" />.
 
-- Đường thẳng $d_1$ đi qua $(0, 1, 0)$ có phương $\operatorname{span}\{(1, 0, 0)\}$ thỏa mãn $V^1 \cap V^1 = V^1$ ($r = p = q = 1$) nhưng không có điểm chung với $Ox$, nên $Ox \parallel d_1$.
-- Đường thẳng $d_2$ đi qua $B(0, 0, 1)$ có phương $\operatorname{span}\{(0, 1, 0)\}$ có phương chung với $Ox$ chỉ là $\{\vec{0}\}$; điểm trên $Ox$ có dạng $(s, 0, 0)$ còn điểm trên $d_2$ có dạng $(0, u, 1)$ nên $Ox \cap d_2 = \varnothing$, suy ra $Ox$ và $d_2$ **chéo nhau hoàn toàn**. Kiểm tra lại bằng <Ref to="thm-s3-15" /> với $A = O(0, 0, 0) \in Ox$ và $B(0, 0, 1) \in d_2$: vectơ $\overrightarrow{AB} = (0, 0, 1) \notin \operatorname{span}\{(1, 0, 0), (0, 1, 0)\}$, khớp hoàn toàn với kết luận hai đường không cắt nhau.
+**Lời giải:**
+
+- **Đối với $Ox$ và $d_1$:** Hai đường thẳng có cùng phương $V^1 = \operatorname{span}\{(1, 0, 0)\}$ nên $V^1 \cap V^1 = V^1$ ($r = p = q = 1$), nhưng mọi điểm trên $Ox$ có tung độ bằng $0$ còn mọi điểm trên $d_1$ có tung độ bằng $1$ nên $Ox \cap d_1 = \varnothing$; vậy $Ox \parallel d_1$.
+- **Đối với $Ox$ và $d_2$:** Giao hai phương $\operatorname{span}\{(1, 0, 0)\} \cap \operatorname{span}\{(0, 1, 0)\} = \{\vec{0}\}$; mặt khác điểm trên $Ox$ có dạng $(s, 0, 0)$ còn điểm trên $d_2$ có dạng $(0, u, 1)$ nên $Ox \cap d_2 = \varnothing$, suy ra $Ox$ và $d_2$ **chéo nhau hoàn toàn**. Kiểm tra lại bằng <Ref to="thm-s3-15" /> với $A = O(0, 0, 0) \in Ox$ và $B(0, 0, 1) \in d_2$: vectơ $\overrightarrow{AB} = (0, 0, 1) \notin \operatorname{span}\{(1, 0, 0), (0, 1, 0)\}$, khớp hoàn toàn với kết luận hai đường không cắt nhau.
 </Example>
 
 ## 7. Định lí về Số chiều của Tổng và Giao của Hai Cái Phẳng
@@ -429,10 +437,15 @@ $$
 </Proof>
 
 <Example id="ex-s3-19" title="Tính số chiều phẳng tổng của hai đường thẳng trong R^3">
-Trong $\R^3$:
+**Đề bài:** Trong $\R^3$, áp dụng <Ref to="thm-s3-17" /> để tính số chiều và xác định phẳng tổng trong hai trường hợp:
 
-- Hai trục $Ox$ và $Oy$ cắt nhau tại $O$ ($\dim(Ox \cap Oy) = 0$) nên $\dim(Ox + Oy) = 1 + 1 - 0 = 2$ (chính là mặt phẳng $z = 0$).
-- Với $Ox$ và đường thẳng $d_2$ ở <Ref to="ex-s3-16" /> ($Ox \cap d_2 = \varnothing$ và $\dim(\overrightarrow{Ox} \cap \overrightarrow{d_2}) = 0$), áp dụng công thức b) của <Ref to="thm-s3-17" /> ta có $\dim(Ox + d_2) = 1 + 1 - 0 + 1 = 3$, tức phẳng tổng là toàn bộ $\R^3$.
+1. Hai trục tọa độ $Ox$ và $Oy$.
+2. Trục $Ox$ và đường thẳng chéo nhau $d_2$ đã xét ở <Ref to="ex-s3-16" />.
+
+**Lời giải:**
+
+1. Hai trục $Ox$ và $Oy$ cắt nhau tại gốc $O$ nên $\dim(Ox \cap Oy) = 0$. Theo công thức a) của <Ref to="thm-s3-17" />, ta có $\dim(Ox + Oy) = 1 + 1 - 0 = 2$ (phẳng tổng chính là mặt phẳng $z = 0$).
+2. Với $Ox$ và $d_2$ ở <Ref to="ex-s3-16" />, ta có $Ox \cap d_2 = \varnothing$ và $\dim(\overrightarrow{Ox} \cap \overrightarrow{d_2}) = 0$. Áp dụng công thức b) của <Ref to="thm-s3-17" />, ta được $\dim(Ox + d_2) = 1 + 1 - 0 + 1 = 3$, tức phẳng tổng là toàn bộ $\R^3$.
 </Example>
 
 ## 8. Vị trí Tương đối giữa một Siêu phẳng và một $m$-Phẳng
@@ -462,7 +475,15 @@ $$
 </Proof>
 
 <Example id="ex-s3-22" title="Đường thẳng cắt siêu phẳng trong R^3">
-Trong $\R^3$ ($n = 3$), xét siêu phẳng $P: x + y + z = 0$ và đường thẳng $d$ đi qua $(1, 1, 1)$ có phương $\operatorname{span}\{(1, 0, 0)\}$ ($m = 1$). Điểm $(1 + t, 1, 1) \in P \iff (1 + t) + 1 + 1 = 0 \iff t = -3$, nên $d$ cắt $P$ tại điểm duy nhất $(-2, 1, 1)$, tức là một $(1 - 1) = 0$-phẳng, đúng như <Ref to="thm-s3-20" />.
+**Đề bài:** Trong $\R^3$ ($n = 3$), cho siêu phẳng $P: x + y + z = 0$ và đường thẳng $d$ đi qua $(1, 1, 1)$ có phương $\operatorname{span}\{(1, 0, 0)\}$ ($m = 1$). Tìm giao của $d$ và $P$, từ đó đối chiếu với kết luận của <Ref to="thm-s3-20" />.
+
+**Lời giải:** Mọi điểm trên đường thẳng $d$ có dạng $(1 + t, 1, 1)$ ($t \in \R$). Thay vào phương trình của $P$, ta có:
+
+$$
+(1 + t) + 1 + 1 = 0 \iff t = -3.
+$$
+
+Vậy $d$ cắt siêu phẳng $P$ tại điểm duy nhất $(-2, 1, 1)$, tức là một $(1 - 1) = 0$-phẳng, đúng với kết luận của <Ref to="thm-s3-20" />.
 </Example>
 
 ## 9. Bài tập Vận dụng và Củng cố

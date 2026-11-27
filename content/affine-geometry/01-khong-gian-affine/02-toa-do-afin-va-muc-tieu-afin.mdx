@@ -159,13 +159,35 @@ $$
 </Proof>
 
 <Example id="ex-s2-4" title="Ví dụ minh họa đổi mục tiêu trên mặt phẳng">
-Trong $\R^2$ với mục tiêu chuẩn tắc, lấy mục tiêu mới $E'_0(1, 1)$, $E'_1(2, 1)$, $E'_2(1, 3)$. Khi đó $\vec{e}'_1 = \vect{E'_0E'_1} = (1, 0)$, $\vec{e}'_2 = \vect{E'_0E'_2} = (0, 2)$ và $[a_0] = (1, 1)^{\mathsf{T}}$. Ma trận chuyển (hàng thứ $i$ là $(a_{i1} - a_{01}, a_{i2} - a_{02})$) là
+**Đề bài:** Trong không gian affine $\mathbb{R}^2$ với mục tiêu chuẩn tắc, xét mục tiêu mới $\{E'_0; E'_1, E'_2\}$ với $E'_0(1, 1)$, $E'_1(2, 1)$, $E'_2(1, 3)$ và điểm $X(3, 5)$.
+
+1. Lập ma trận chuyển mục tiêu $C$, kiểm tra tính không suy biến và viết công thức đổi mục tiêu thuận và ngược.
+2. Tìm tọa độ của điểm $X$ đối với mục tiêu mới và kiểm tra lại kết quả bằng định nghĩa tọa độ affine.
+
+**Lời giải:**
+
+1. Đối với mục tiêu chuẩn tắc, gốc mới $E'_0(1, 1)$ có ma trận cột tọa độ $[a_0] = \begin{pmatrix} 1 \\ 1 \end{pmatrix} = (1, 1)^*$, và hai vectơ cơ sở nền mới là:
 
 $$
-C = \begin{pmatrix} 1 & 0 \\ 0 & 2 \end{pmatrix}, \quad \det C = 2 \neq 0.
+\vec{e}'_1 = \overrightarrow{E'_0E'_1} = (2 - 1,\; 1 - 1) = (1, 0), \qquad \vec{e}'_2 = \overrightarrow{E'_0E'_2} = (1 - 1,\; 3 - 1) = (0, 2).
 $$
 
-Áp dụng <Ref to="thm-s2-2" />, công thức đổi mục tiêu thuận cho $x_1 = 1 + x'_1$, $x_2 = 1 + 2x'_2$, và công thức ngược là
+Ma trận chuyển mục tiêu $C$ (hàng thứ $i$ là $(a_{i1} - a_{01},\; a_{i2} - a_{02})$) là:
+
+$$
+C = \begin{pmatrix} 1 & 0 \\ 0 & 2 \end{pmatrix}, \quad \det C = 2 \neq 0,
+$$
+
+nên ma trận $C$ không suy biến và $\{E'_0; E'_1, E'_2\}$ là một mục tiêu affine của $\mathbb{R}^2$. Vì $C$ là ma trận đường chéo nên chuyển vị $C^* = C = \begin{pmatrix} 1 & 0 \\ 0 & 2 \end{pmatrix}$ và $(C^*)^{-1} = \begin{pmatrix} 1 & 0 \\ 0 & 1/2 \end{pmatrix}$. Áp dụng <Ref to="thm-s2-2" /> ($[x] = C^*[x'] + [a_0]$ và $[x'] = (C^*)^{-1}[x] - (C^*)^{-1}[a_0]$), công thức đổi mục tiêu thuận là:
+
+$$
+\begin{cases}
+x_1 = 1 + x'_1 \\[4pt]
+x_2 = 1 + 2x'_2,
+\end{cases}
+$$
+
+và công thức đổi mục tiêu ngược là:
 
 $$
 \begin{cases}
@@ -174,10 +196,10 @@ x'_2 = \dfrac{x_2 - 1}{2}.
 \end{cases}
 $$
 
-Chẳng hạn, điểm $X(3, 5)$ có tọa độ mới là $(2, 2)$; kiểm tra lại:
+2. Thay tọa độ của điểm $X(3, 5)$ vào công thức đổi mục tiêu ngược, ta được $x'_1 = 3 - 1 = 2$ và $x'_2 = \dfrac{5 - 1}{2} = 2$, tức tọa độ của $X$ đối với mục tiêu mới là $X'(2, 2)$. Kiểm tra lại bằng định nghĩa tọa độ affine (<Ref to="def-toa-do-afin" />):
 
 $$
-2(1, 0) + 2(0, 2) = (2, 4) = \vect{E'_0X} = (3 - 1, 5 - 1).
+2\vec{e}'_1 + 2\vec{e}'_2 = 2(1, 0) + 2(0, 2) = (2, 4) = \overrightarrow{E'_0X} = (3 - 1,\; 5 - 1).
 $$
 </Example>
 

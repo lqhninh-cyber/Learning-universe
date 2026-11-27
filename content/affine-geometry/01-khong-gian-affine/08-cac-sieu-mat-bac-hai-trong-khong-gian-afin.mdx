@@ -60,13 +60,15 @@ $$
 Vì các hệ số $a_{ij}$ không đồng thời bằng $0$ nên hạng của ma trận $A$ thỏa mãn $\operatorname{rank} A \ge 1$.
 
 <Example id="ex-s8-2" title="Thí dụ: Viết phương trình mặt bậc hai trong A^3 dưới dạng ma trận">
-Trong $\mathcal{A}^3$, xét mặt bậc hai $(S)$ có phương trình:
+**Đề bài:** Trong $\mathcal{A}^3$, cho mặt bậc hai $(S)$ có phương trình:
 
 $$
-x^2 - 2y^2 + z^2 + 4xy - 8xz - 4yz - 14x - 4y + 14z + 16 = 0,
+x^2 - 2y^2 + z^2 + 4xy - 8xz - 4yz - 14x - 4y + 14z + 16 = 0.
 $$
 
-hay viết theo các biến $(x_1, x_2, x_3)$:
+Hãy viết phương trình của $(S)$ dưới dạng ma trận $(2)$.
+
+**Lời giải:** Đổi ký hiệu biến sang $(x_1, x_2, x_3)$, phương trình của $(S)$ là:
 
 $$
 x_1^2 - 2x_2^2 + x_3^2 + 4x_1 x_2 - 8x_1 x_3 - 4x_2 x_3 - 14x_1 - 4x_2 + 14x_3 + 16 = 0.
@@ -125,10 +127,12 @@ Ta có $(A')^* = (B^* A B)^* = B^* A^* (B^*)^* = B^* A B = A'$, và vì $\det B 
 </Proof>
 
 <Example id="ex-s8-5" title="Ví dụ: Ảnh của đường tròn qua phép biến đổi affine">
-Xét đường tròn $(S): x^2 + y^2 - 1 = 0$ (có $A = I_2$, $[a] = [0]$, $a_0 = -1$) và phép biến đổi affine viết ngược $[x] = B[x'] + [b]$ với $B = \operatorname{diag}(2, 1)$ và $[b] = (1, 0)^{\mathsf{T}}$. Áp dụng công thức $(4)$:
+**Đề bài:** Trong $\mathcal{A}^2$, cho đường tròn $(S): x^2 + y^2 - 1 = 0$ và phép biến đổi affine viết theo chiều ngược $[x] = B[x'] + [b]$ với $B = \operatorname{diag}(2, 1)$ và $[b] = (1, 0)^*$. Hãy lập phương trình ảnh $(S')$ của $(S)$ bằng công thức ma trận $(4)$ và kiểm tra lại trực tiếp bằng phép thế tọa độ.
+
+**Lời giải:** Đường tròn $(S)$ có $A = I_2$, $[a] = [0]$, $a_0 = -1$. Áp dụng công thức $(4)$:
 
 $$
-A' = B^* A B = \operatorname{diag}(4, 1), \qquad [a'] = B^*(A[b] + [a]) = (2, 0)^{\mathsf{T}}, \qquad a'_0 = [b]^* A [b] + 0 - 1 = 1 - 1 = 0,
+A' = B^* A B = \operatorname{diag}(4, 1), \qquad [a'] = B^*(A[b] + [a]) = (2, 0)^*, \qquad a'_0 = [b]^* A [b] + 0 - 1 = 1 - 1 = 0,
 $$
 
 nên ảnh $(S')$ có phương trình $4x'^2 + 4x' + y'^2 = 0$. Kiểm tra trực tiếp bằng phép thế $x = 2x' + 1, y = y'$:
@@ -178,8 +182,15 @@ Mỗi nghiệm thực $t_0$ của $(6)$ khi thay vào $(5)$ xác định tọa �
 </Definition>
 
 <Example id="ex-s8-7" title="Ví dụ: Giao của đường thẳng với parabol và đường tròn">
-- Với parabol $(S): x^2 - y = 0$ (có $A = \operatorname{diag}(1, 0)$, $[a] = \left(0, -\dfrac{1}{2}\right)^{\mathsf{T}}$, $a_0 = 0$) và đường thẳng $x = 0$ đi qua $B(0, 0)$ có vectơ chỉ phương $\vec{c} = (0, 1)$: ta tính được $[c]^* A [c] = 0$, $P = -\dfrac{1}{2} \neq 0$, $Q = 0$. Phương trình $(6)$ là $-t = 0 \iff t = 0$, nên đường thẳng cắt $(S)$ tại điểm duy nhất $(0, 0)$.
-- Với đường tròn $x^2 + y^2 - 1 = 0$ và đường thẳng qua $O(0, 0)$ theo phương $\vec{c} = (1, 0)$: $[c]^* A [c] = 1 \neq 0$, $P = 0$, $Q = -1$, nên $(6)$ là $t^2 - 1 = 0 \iff t = \pm 1$, cho hai giao điểm phân biệt $(1, 0)$ và $(-1, 0)$.
+**Đề bài:** Trong $\mathcal{A}^2$, sử dụng phương trình giao điểm theo tham số $(6)$ để tìm giao điểm của đường thẳng với đường bậc hai trong hai trường hợp:
+
+1. Parabol $(S): x^2 - y = 0$ và đường thẳng $x = 0$ đi qua $B(0, 0)$ có vectơ chỉ phương $\vec{c} = (0, 1)$.
+2. Đường tròn $x^2 + y^2 - 1 = 0$ và đường thẳng đi qua $O(0, 0)$ theo phương $\vec{c} = (1, 0)$.
+
+**Lời giải:**
+
+1. Parabol $(S): x^2 - y = 0$ có $A = \operatorname{diag}(1, 0)$, $[a] = \left(0, -\dfrac{1}{2}\right)^*$, $a_0 = 0$. Với $B(0, 0)$ và $\vec{c} = (0, 1)$, ta tính được $[c]^* A [c] = 0$, $P = -\dfrac{1}{2} \neq 0$, $Q = 0$. Phương trình $(6)$ là $-t = 0 \iff t = 0$, nên đường thẳng cắt $(S)$ tại điểm duy nhất $(0, 0)$.
+2. Đường tròn $x^2 + y^2 - 1 = 0$ có $A = I_2$, $[a] = [0]$, $a_0 = -1$. Với điểm đi qua $O(0, 0)$ và $\vec{c} = (1, 0)$, ta có $[c]^* A [c] = 1 \neq 0$, $P = 0$, $Q = -1$, nên phương trình $(6)$ là $t^2 - 1 = 0 \iff t = \pm 1$, cho hai giao điểm phân biệt $(1, 0)$ và $(-1, 0)$.
 </Example>
 
 ## 5. Tâm của Siêu mặt Bậc hai
@@ -235,8 +246,14 @@ Biện luận hệ $(8)$:
 </Proof>
 
 <Example id="ex-s8-11" title="Các thí dụ xác định tâm của đường bậc hai trong A^2">
-- **a)** Trong $\mathcal{A}^2$, tìm tâm của đường bậc hai $(S): 3x^2 - 2xy + 3y^2 + 2x - 4y + 1 = 0$.
-  *Giải:* Viết phương trình dưới dạng ma trận:
+**Đề bài:** Trong $\mathcal{A}^2$, tìm tâm (nếu có) của các đường bậc hai sau:
+
+- **a)** $(S): 3x^2 - 2xy + 3y^2 + 2x - 4y + 1 = 0$.
+- **b)** $(S): x^2 - 2xy + y^2 + 4x - 6y + 1 = 0$.
+
+**Lời giải:**
+
+- **a)** Viết phương trình dưới dạng ma trận:
 
 $$
 \begin{bmatrix} x & y \end{bmatrix} \begin{bmatrix} 3 & -1 \\ -1 & 3 \end{bmatrix} \begin{bmatrix} x \\ y \end{bmatrix} + 2\begin{bmatrix} 1 & -2 \end{bmatrix} \begin{bmatrix} x \\ y \end{bmatrix} + 1 = 0,
@@ -254,8 +271,7 @@ $$
 
   Vậy tâm của đường bậc hai $(S)$ là điểm duy nhất $O\left(-\dfrac{1}{8},\; \dfrac{5}{8}\right)$ (đây là đường elip nhận $O$ làm tâm).
 
-- **b)** Trong $\mathcal{A}^2$, tìm tâm của đường bậc hai $(S): x^2 - 2xy + y^2 + 4x - 6y + 1 = 0$.
-  *Giải:* Ta có $A = \begin{bmatrix} 1 & -1 \\ -1 & 1 \end{bmatrix}$ ($\det A = 0$) và $[a] = \begin{bmatrix} 2 \\ -3 \end{bmatrix}$. Hệ tìm tâm $(8)$ là:
+- **b)** Ta có $A = \begin{bmatrix} 1 & -1 \\ -1 & 1 \end{bmatrix}$ ($\det A = 0$) và $[a] = \begin{bmatrix} 2 \\ -3 \end{bmatrix}$. Hệ tìm tâm $(8)$ là:
 
 $$
 \begin{bmatrix} 1 & -1 \\ -1 & 1 \end{bmatrix} \begin{bmatrix} x \\ y \end{bmatrix} + \begin{bmatrix} 2 \\ -3 \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \end{bmatrix}
@@ -290,8 +306,15 @@ $$
 </Corollary>
 
 <Example id="ex-s8-13" title="Ví dụ: Điểm kì dị của mặt nón và mặt cầu trong A^3">
-- Mặt nón $(S): x^2 + y^2 - z^2 = 0$ có $A = \operatorname{diag}(1, 1, -1)$, $[a] = [0]$, $a_0 = 0$. Hệ $A[x] + [a] = 0$ cho nghiệm duy nhất $O(0, 0, 0)$, và $O$ thỏa mãn phương trình của $(S)$, nên $O(0, 0, 0)$ là **điểm kì dị** (đỉnh nón).
-- Ngược lại, mặt cầu $x^2 + y^2 + z^2 - 1 = 0$ có tâm duy nhất $O(0, 0, 0)$, nhưng $0^2 + 0^2 + 0^2 - 1 = -1 \neq 0$ ($O$ không thuộc mặt cầu) nên mặt cầu không có điểm kì dị.
+**Đề bài:** Trong $\mathcal{A}^3$, tìm điểm kì dị (nếu có) của hai mặt bậc hai sau:
+
+1. Mặt nón $(S): x^2 + y^2 - z^2 = 0$.
+2. Mặt cầu $x^2 + y^2 + z^2 - 1 = 0$.
+
+**Lời giải:**
+
+1. Mặt nón $(S): x^2 + y^2 - z^2 = 0$ có $A = \operatorname{diag}(1, 1, -1)$, $[a] = [0]$, $a_0 = 0$. Hệ tìm tâm $A[x] + [a] = 0$ có nghiệm duy nhất $O(0, 0, 0)$, và $O$ thỏa mãn phương trình của $(S)$, nên $O(0, 0, 0)$ là **điểm kì dị** (đỉnh nón).
+2. Mặt cầu $x^2 + y^2 + z^2 - 1 = 0$ có tâm duy nhất $O(0, 0, 0)$, nhưng $0^2 + 0^2 + 0^2 - 1 = -1 \neq 0$ ($O$ không thuộc mặt cầu), nên mặt cầu không có điểm kì dị.
 </Example>
 
 ## 7. Phương Tiệm cận, Đường Tiệm cận và Siêu phẳng Kính Liên hợp
@@ -354,21 +377,32 @@ Cuối cùng, mọi tâm $O$ của $(S)$ đều thỏa mãn $A[x] + [a] = 0$, n�
 </Proof>
 
 <Example id="ex-s8-17" title="Ví dụ: Đường tiệm cận và đường kính liên hợp của hypebol xy - 1 = 0">
-Xét hypebol $(S): xy - 1 = 0$ trong $\mathcal{A}^2$, có $A = \begin{bmatrix} 0 & 1/2 \\ 1/2 & 0 \end{bmatrix}$, $[a] = [0]$, $a_0 = -1$.
+**Đề bài:** Trong $\mathcal{A}^2$, cho hypebol $(S): xy - 1 = 0$.
 
-- **Phương tiệm cận và đường tiệm cận:** $[c]^* A [c] = c_1 c_2 = 0 \iff c_1 = 0$ hoặc $c_2 = 0$, nên có hai phương tiệm cận là $\vec{c}_1 = (1, 0)$ và $\vec{c}_2 = (0, 1)$. Tâm của $(S)$ là $O(0, 0)$ (nghiệm của $A[x] = 0$). Hai đường thẳng $y = 0$ (qua $O$, phương $(1, 0)$) và $x = 0$ (qua $O$, phương $(0, 1)$) đều không cắt $xy = 1$, nên là hai đường tiệm cận của $(S)$.
-- **Đường kính liên hợp với phương $\vec{c} = (1, 1)$:** Vì $[c]^* A [c] = 1 \neq 0$, phương trình $(9)$ cho $\begin{bmatrix} 1 & 1 \end{bmatrix}\begin{bmatrix} y/2 \\ x/2 \end{bmatrix} = 0 \iff x + y = 0$ (đi qua tâm $O$). Kiểm tra: mọi dây cung $x - y = k$ (phương $(1, 1)$) cắt $xy = 1$ tại hai điểm có $x_1 + x_2 = k,\; y_1 + y_2 = -k$, nên trung điểm $\left(\dfrac{k}{2}, -\dfrac{k}{2}\right)$ luôn nằm trên $x + y = 0$.
+1. Tìm các phương tiệm cận, tâm và phương trình các đường tiệm cận của $(S)$.
+2. Lập phương trình đường kính của $(S)$ liên hợp với phương $\vec{c} = (1, 1)$ và kiểm chứng trực tiếp trên họ dây cung song song với $\vec{c}$.
+
+**Lời giải:** Hypebol $(S)$ có $A = \begin{bmatrix} 0 & 1/2 \\ 1/2 & 0 \end{bmatrix}$, $[a] = [0]$, $a_0 = -1$.
+
+1. **Phương tiệm cận và đường tiệm cận:** Điều kiện $[c]^* A [c] = c_1 c_2 = 0 \iff c_1 = 0$ hoặc $c_2 = 0$, nên có hai phương tiệm cận sinh bởi $\vec{c}_1 = (1, 0)$ và $\vec{c}_2 = (0, 1)$. Tâm của $(S)$ là $O(0, 0)$ (nghiệm duy nhất của $A[x] = 0$). Hai đường thẳng $y = 0$ (qua $O$, phương $(1, 0)$) và $x = 0$ (qua $O$, phương $(0, 1)$) đều không cắt $xy = 1$, nên là hai đường tiệm cận của $(S)$.
+2. **Đường kính liên hợp với phương $\vec{c} = (1, 1)$:** Vì $[c]^* A [c] = 1 \neq 0$, phương trình $(9)$ cho $\begin{bmatrix} 1 & 1 \end{bmatrix}\begin{bmatrix} y/2 \\ x/2 \end{bmatrix} = 0 \iff x + y = 0$ (đi qua tâm $O$). Kiểm tra: mọi dây cung $x - y = k$ (phương $(1, 1)$) cắt $xy = 1$ tại hai điểm có $x_1 + x_2 = k,\; y_1 + y_2 = -k$, nên trung điểm $\left(\dfrac{k}{2}, -\dfrac{k}{2}\right)$ luôn nằm trên đường kính $x + y = 0$.
 </Example>
 
 <Example id="ex-s8-18" title="Các thí dụ tìm phương tiệm cận và siêu phẳng kính liên hợp">
-1. **Thí dụ 1 (Đường bậc hai không có phương tiệm cận):** Trong $\mathcal{A}^2$, tìm phương tiệm cận của $(S'): 3x^2 - 2xy + 3y^2 + 2x - 4y + 1 = 0$.
-   *Giải:* Cho phần bậc hai triệt tiêu: $3x^2 - 2xy + 3y^2 = 0$. Nếu $x = 0 \implies y = 0$ (loại vì $\vec{c} \neq \vec{0}$). Với $x \neq 0$, đặt $k = \dfrac{y}{x}$ ta được $3k^2 - 2k + 3 = 0$ ($\Delta' = 1 - 9 = -8 < 0$, vô nghiệm thực). Vậy đường bậc hai $(S')$ không có phương tiệm cận (đây là đường elip).
+**Đề bài:**
 
-2. **Thí dụ 2 (Đường bậc hai có một phương tiệm cận kép):** Trong $\mathcal{A}^2$, tìm phương tiệm cận của $(G): x^2 - 2xy + y^2 + 4x - 6y + 1 = 0$.
-   *Giải:* Phần bậc hai triệt tiêu cho $x^2 - 2xy + y^2 = 0$; với $x \neq 0$, đặt $\lambda = \dfrac{y}{x}$ ta được $\lambda^2 - 2\lambda + 1 = 0 \iff \lambda_1 = \lambda_2 = 1$. Đường cong $(G)$ có hai phương tiệm cận trùng nhau, tức chỉ có một phương tiệm cận duy nhất với vectơ chỉ phương $\vec{c} = (1, 1)$ (đây là đường parabol).
+1. Trong $\mathcal{A}^2$, tìm phương tiệm cận của đường bậc hai $(S'): 3x^2 - 2xy + 3y^2 + 2x - 4y + 1 = 0$.
+2. Trong $\mathcal{A}^2$, tìm phương tiệm cận của đường bậc hai $(G): x^2 - 2xy + y^2 + 4x - 6y + 1 = 0$.
+3. Trong $\mathcal{A}^3$, tìm phương tiệm cận của mặt bậc hai $(\mathscr{H}): x^2 + 3y^2 - z^2 + 5x + 2y - 9 = 0$.
+4. Trong $\mathcal{A}^3$, cho mặt bậc hai $(S): x^2 - 2y^2 + z^2 + 4xy - 8xz - 4yz - 14x - 4y + 14z + 16 = 0$ (ở <Ref to="ex-s8-2" />) và phương $\vec{c} = (1, 2, 3)$. Tìm siêu phẳng kính của $(S)$ liên hợp với $\vec{c}$ và chứng tỏ siêu phẳng này đi qua tâm của $(S)$.
 
-3. **Thí dụ 3 (Mặt bậc hai có vô số phương tiệm cận tạo thành mặt nón):** Trong $\mathcal{A}^3$, tìm phương tiệm cận của mặt bậc hai $(\mathscr{H}): x^2 + 3y^2 - z^2 + 5x + 2y - 9 = 0$.
-   *Giải:* Phương tiệm cận $\vec{c} = (x, y, z) \neq \vec{0}$ của $(\mathscr{H})$ được xác định bởi:
+**Lời giải:**
+
+1. **Đối với $(S')$ (đường bậc hai không có phương tiệm cận):** Cho phần bậc hai triệt tiêu: $3x^2 - 2xy + 3y^2 = 0$. Nếu $x = 0 \implies y = 0$ (loại vì $\vec{c} \neq \vec{0}$). Với $x \neq 0$, đặt $k = \dfrac{y}{x}$ ta được $3k^2 - 2k + 3 = 0$ ($\Delta' = 1 - 9 = -8 < 0$, vô nghiệm thực). Vậy đường bậc hai $(S')$ không có phương tiệm cận (đây là đường elip).
+
+2. **Đối với $(G)$ (đường bậc hai có một phương tiệm cận kép):** Phần bậc hai triệt tiêu cho $x^2 - 2xy + y^2 = 0$; với $x \neq 0$, đặt $\lambda = \dfrac{y}{x}$ ta được $\lambda^2 - 2\lambda + 1 = 0 \iff \lambda_1 = \lambda_2 = 1$. Đường cong $(G)$ có hai phương tiệm cận trùng nhau, tức chỉ có một phương tiệm cận duy nhất với vectơ chỉ phương $\vec{c} = (1, 1)$ (đây là đường parabol).
+
+3. **Đối với $(\mathscr{H})$ (mặt bậc hai có vô số phương tiệm cận tạo thành mặt nón):** Phương tiệm cận $\vec{c} = (x, y, z) \neq \vec{0}$ của $(\mathscr{H})$ được xác định bởi:
 
 $$
 x^2 + 3y^2 - z^2 = 0. \tag{*}
@@ -376,8 +410,7 @@ $$
 
    Đây là phương trình của một mặt nón bậc hai thực đỉnh $O$. Do đó $(\mathscr{H})$ có vô số phương tiệm cận; chẳng hạn ta có thể chọn $\vec{c}_1 = (1, 1, 2)$ làm vectơ chỉ phương cho một đường sinh của mặt nón đó (mọi vectơ $k\vec{c}_1$ với $k \neq 0$ đều chỉ cùng phương đường sinh này), cùng vô số vectơ khác thỏa mãn $(*)$.
 
-4. **Thí dụ 4 (Tìm siêu phẳng kính liên hợp và kiểm chứng đi qua tâm trong $\mathcal{A}^3$):** Trong $\mathcal{A}^3$, xét mặt bậc hai $(S): x^2 - 2y^2 + z^2 + 4xy - 8xz - 4yz - 14x - 4y + 14z + 16 = 0$ (ở <Ref to="ex-s8-2" />) và phương $\vec{c} = (1, 2, 3)$. Tìm siêu phẳng kính của $(S)$ liên hợp với $\vec{c}$ và chứng tỏ siêu phẳng này đi qua tâm của $(S)$.
-   *Giải:* Ta có $[c]^* A [c] = -38 \neq 0$ nên $\vec{c}$ không phải là phương tiệm cận. Áp dụng công thức $(9)$:
+4. **Đối với $(S)$ và phương $\vec{c} = (1, 2, 3)$:** Ta có $[c]^* A [c] = -38 \neq 0$ nên $\vec{c}$ không phải là phương tiệm cận. Áp dụng công thức $(9)$:
 
 $$
 \begin{bmatrix} 1 & 2 & 3 \end{bmatrix}
@@ -516,8 +549,15 @@ Sắp xếp các dấu âm đứng trước (gọi $k$ là số dấu trừ), ba
 </Theorem>
 
 <Example id="ex-s8-20" title="Ví dụ: Đưa đường bậc hai trong A^2 về dạng chuẩn tắc">
-- Đường bậc hai $x^2 + 4y^2 - 2x + 8y + 1 = 0 \iff (x - 1)^2 + 4(y + 1)^2 = 4$. Đặt $X_1 = \dfrac{x - 1}{2},\; X_2 = y + 1$ (phép đổi mục tiêu không suy biến), ta được $X_1^2 + X_2^2 = 1$: dạng **(I)** với $r = 2, k = 0$ (đường elip).
-- Đường bậc hai $y^2 + 4y - 2x + 6 = 0 \iff (y + 2)^2 = 2(x - 1)$. Đặt $X_1 = y + 2,\; X_2 = x - 1$, ta được $X_1^2 = 2X_2$: dạng **(III)** với $r = 1, k = 0$ (đường parabol).
+**Đề bài:** Trong $\mathcal{A}^2$, đưa hai đường bậc hai sau về phương trình chuẩn tắc và xác định dạng cùng cặp chỉ số $(r, k)$:
+
+1. $x^2 + 4y^2 - 2x + 8y + 1 = 0$.
+2. $y^2 + 4y - 2x + 6 = 0$.
+
+**Lời giải:**
+
+1. Biến đổi hoàn thành bình phương: $x^2 + 4y^2 - 2x + 8y + 1 = 0 \iff (x - 1)^2 + 4(y + 1)^2 = 4$. Đặt $X_1 = \dfrac{x - 1}{2},\; X_2 = y + 1$ (phép đổi mục tiêu không suy biến), ta được $X_1^2 + X_2^2 = 1$: dạng **(I)** với $r = 2, k = 0$ (đường elip).
+2. Biến đổi $y^2 + 4y - 2x + 6 = 0 \iff (y + 2)^2 = 2(x - 1)$. Đặt $X_1 = y + 2,\; X_2 = x - 1$, ta được $X_1^2 = 2X_2$: dạng **(III)** với $r = 1, k = 0$ (đường parabol).
 </Example>
 
 ## 9. Sự Phân loại Affine các Siêu mặt Bậc hai
@@ -586,8 +626,15 @@ Trong $\mathcal{A}^3$, phương trình tổng quát của mặt bậc hai là $a
 | 17 | $x_1^2 = 0$ | (II), $(1, 0)$ | Cặp mặt phẳng trùng nhau |
 
 <Example id="ex-s8-24" title="Ví dụ: Nhận diện loại affine của đường hypebol và mặt nón">
-- Đường cong $xy = 1$ trong $\mathcal{A}^2$: đặt $x = u + v,\; y = u - v$ (phép đổi tọa độ không suy biến có định thức $-2 \neq 0$) thì $xy = u^2 - v^2$, suy ra $-v^2 + u^2 = 1$ — dạng **(I)** với $r = 2, k = 1$, tức loại **2)** (đường hypebol).
-- Mặt $x^2 + y^2 - z^2 = 0$ trong $\mathcal{A}^3$: hoán vị biến được $-z^2 + x^2 + y^2 = 0$ — dạng **(II)** với $r = 3, k = 1 \le \dfrac{3}{2}$, tức loại **6)** (mặt nón).
+**Đề bài:** Đưa phương trình về dạng chuẩn tắc để xác định loại affine của các siêu mặt bậc hai sau:
+
+1. Đường cong $xy = 1$ trong $\mathcal{A}^2$.
+2. Mặt bậc hai $x^2 + y^2 - z^2 = 0$ trong $\mathcal{A}^3$.
+
+**Lời giải:**
+
+1. Đối với $xy = 1$ trong $\mathcal{A}^2$: đặt $x = u + v,\; y = u - v$ (phép đổi tọa độ không suy biến có định thức $-2 \neq 0$) thì $xy = u^2 - v^2$, suy ra $-v^2 + u^2 = 1$ — dạng **(I)** với $r = 2, k = 1$, tức loại **2)** (đường hypebol).
+2. Đối với $x^2 + y^2 - z^2 = 0$ trong $\mathcal{A}^3$: hoán vị thứ tự biến được $-z^2 + x^2 + y^2 = 0$ — dạng **(II)** với $r = 3, k = 1 \le \dfrac{3}{2}$, tức loại **6)** (mặt nón).
 </Example>
 
 ## 10. Mặt Kẻ Bậc hai trong $\mathcal{A}^3$
@@ -619,7 +666,9 @@ Thật vậy, nhân vế theo vế hai phương trình xác định $d$ (hoặc 
 </Theorem>
 
 <Example id="ex-s8-27" title="Thí dụ: Lập phương trình hai đường sinh thẳng của hypeboloit một tầng qua M_0(1, -1, 1)">
-Lập phương trình các đường sinh thẳng của mặt hypeboloit một tầng $-x_1^2 + x_2^2 + x_3^2 = 1$ đi qua điểm $M_0(1, -1, 1)$ thuộc mặt đó (kiểm tra: $-1 + 1 + 1 = 1$).
+**Đề bài:** Trong $\mathcal{A}^3$, lập phương trình các đường sinh thẳng của mặt hypeboloit một tầng $-x_1^2 + x_2^2 + x_3^2 = 1$ đi qua điểm $M_0(1, -1, 1)$.
+
+**Lời giải:** Kiểm tra thấy điểm $M_0(1, -1, 1)$ thuộc mặt hypeboloit đã cho vì $-1^2 + (-1)^2 + 1^2 = -1 + 1 + 1 = 1$. Áp dụng <Ref to="thm-s8-26" />:
 
 - **Họ thứ nhất ($d$):** Thay $M_0(1, -1, 1)$ vào hệ phương trình của $d$:
 
@@ -665,7 +714,9 @@ $$
 </Theorem>
 
 <Example id="ex-s8-29" title="Thí dụ: Lập phương trình hai đường sinh thẳng của mặt yên ngựa qua N_0(0, 2, 2)">
-Lập phương trình các đường sinh thẳng của mặt paraboloit hypebolic $-x_1^2 + x_2^2 = 2x_3$ đi qua điểm $N_0(0, 2, 2)$ (kiểm tra: $-0 + 4 = 2 \cdot 2$).
+**Đề bài:** Trong $\mathcal{A}^3$, lập phương trình các đường sinh thẳng của mặt paraboloit hypebolic $-x_1^2 + x_2^2 = 2x_3$ đi qua điểm $N_0(0, 2, 2)$.
+
+**Lời giải:** Kiểm tra thấy điểm $N_0(0, 2, 2)$ thuộc mặt đã cho vì $-0^2 + 2^2 = 4 = 2 \cdot 2$. Áp dụng <Ref to="thm-s8-28" />:
 
 - **Họ thứ nhất ($d$):** Thay $N_0(0, 2, 2)$ vào hệ của $d$: $2p = 2q$ và $2q = 2p \implies$ chọn $(p, q) = (1, 1)$, được:
 
