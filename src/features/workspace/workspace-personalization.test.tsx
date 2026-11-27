@@ -154,9 +154,9 @@ describe('Tính năng Cá nhân hóa Trang Tổng quan (Step 1)', () => {
     const heroConstellation = screen.getByTestId('active-chapter-constellation');
     expect(heroConstellation).toBeInTheDocument();
     expect(within(heroConstellation).getAllByRole('link').length).toBeGreaterThan(0);
-    // Sóng điều hòa trang trí đã gỡ để thẻ chỉ số gọn hơn
+    // Sóng điều hòa trang trí & dòng lời chào cá nhân hóa đã gỡ để Hero tinh gọn hơn
     expect(screen.queryByTestId('dashboard-focus-wave')).not.toBeInTheDocument();
-    expect(screen.getByTestId('hero-personal-greeting')).toBeInTheDocument();
+    expect(screen.queryByTestId('hero-personal-greeting')).not.toBeInTheDocument();
     expect(screen.getByTestId('calendar-sundial-ornament')).toBeInTheDocument();
     expect(screen.getByTestId('hero-time-greeting')).toBeInTheDocument();
     const periodBadge = screen.getByTestId('hero-period-badge');

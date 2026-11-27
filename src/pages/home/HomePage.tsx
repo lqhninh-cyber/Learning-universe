@@ -584,13 +584,6 @@ export function HomePage() {
 
                   {/* Khối câu tục ngữ chủ đạo kiểu ấn phẩm di sản + danh ngôn học thuật */}
                   <div className="max-w-2xl space-y-3.5">
-                    {/* Lời chào cá nhân hóa theo khung giờ + tên học viên */}
-                    <p
-                      data-testid="hero-personal-greeting"
-                      className="font-sans text-sm font-medium text-white/90 drop-shadow-[0_1px_8px_rgba(0,0,0,0.45)] sm:text-[15px]"
-                    >
-                      {timeGreeting.headline}
-                    </p>
                     <div className="relative pl-4 sm:pl-5">
                       {/* Thanh dọc ánh vàng đồng — ngọc bích tạo khung trích dẫn học thuật */}
                       <span
