@@ -2435,6 +2435,14 @@
         "count": 19
       },
       {
+        "lessonId": "sieu-mat-bac-hai-trong-khong-gian-euclide",
+        "lessonCode": "HHAVE 2.9",
+        "lessonTitle": "Siêu mặt Bậc hai trong Không gian Ơclit",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/sieu-mat-bac-hai-trong-khong-gian-euclide",
+        "count": 18
+      },
+      {
         "lessonId": "cac-sieu-mat-bac-hai-trong-khong-gian-afin",
         "lessonCode": "HHAVE 1.8",
         "lessonTitle": "Các Siêu mặt Bậc hai trong Không gian Affine",
@@ -2497,14 +2505,6 @@
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-xa-anh/anh-xa-xa-anh-va-bien-doi-xa-anh",
         "count": 7
-      },
-      {
-        "lessonId": "sieu-mat-bac-hai-trong-khong-gian-euclide",
-        "lessonCode": "HHAVE 2.9",
-        "lessonTitle": "Siêu mặt Bậc hai trong Không gian Ơclit",
-        "subjectId": "hinh-hoc-affine",
-        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/sieu-mat-bac-hai-trong-khong-gian-euclide",
-        "count": 6
       },
       {
         "lessonId": "khong-gian-xa-anh",
@@ -2749,20 +2749,20 @@
         "count": 28
       },
       {
+        "lessonId": "sieu-mat-bac-hai-trong-khong-gian-euclide",
+        "lessonCode": "HHAVE 2.9",
+        "lessonTitle": "Siêu mặt Bậc hai trong Không gian Ơclit",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/sieu-mat-bac-hai-trong-khong-gian-euclide",
+        "count": 22
+      },
+      {
         "lessonId": "cuc-va-sieu-phang-doi-cuc",
         "lessonCode": "HHAVE 3.9",
         "lessonTitle": "Cực và Siêu phẳng Đối cực đối với Siêu mặt Bậc hai",
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-xa-anh/cuc-va-sieu-phang-doi-cuc",
         "count": 18
-      },
-      {
-        "lessonId": "sieu-mat-bac-hai-trong-khong-gian-euclide",
-        "lessonCode": "HHAVE 2.9",
-        "lessonTitle": "Siêu mặt Bậc hai trong Không gian Ơclit",
-        "subjectId": "hinh-hoc-affine",
-        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/sieu-mat-bac-hai-trong-khong-gian-euclide",
-        "count": 12
       },
       {
         "lessonId": "sieu-cau-trong-khong-gian-euclide",
@@ -2831,6 +2831,14 @@
         "count": 7
       },
       {
+        "lessonId": "sieu-mat-bac-hai-trong-khong-gian-euclide",
+        "lessonCode": "HHAVE 2.9",
+        "lessonTitle": "Siêu mặt Bậc hai trong Không gian Ơclit",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/sieu-mat-bac-hai-trong-khong-gian-euclide",
+        "count": 6
+      },
+      {
         "lessonId": "muc-tieu-truc-chuan-toa-do-truc-chuan",
         "lessonCode": "HHAVE 2.3",
         "lessonTitle": "Mục tiêu Trực chuẩn và Tọa độ Trực chuẩn",
@@ -2844,14 +2852,6 @@
         "lessonTitle": "Hình học Ơclit theo Quan điểm Klein",
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/hinh-hoc-euclide",
-        "count": 3
-      },
-      {
-        "lessonId": "sieu-mat-bac-hai-trong-khong-gian-euclide",
-        "lessonCode": "HHAVE 2.9",
-        "lessonTitle": "Siêu mặt Bậc hai trong Không gian Ơclit",
-        "subjectId": "hinh-hoc-affine",
-        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/sieu-mat-bac-hai-trong-khong-gian-euclide",
         "count": 3
       },
       {
@@ -2897,6 +2897,14 @@
         "count": 29
       },
       {
+        "lessonId": "sieu-mat-bac-hai-trong-khong-gian-euclide",
+        "lessonCode": "HHAVE 2.9",
+        "lessonTitle": "Siêu mặt Bậc hai trong Không gian Ơclit",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/sieu-mat-bac-hai-trong-khong-gian-euclide",
+        "count": 26
+      },
+      {
         "lessonId": "anh-xa-dang-cu-va-phep-bien-doi-dang-cu",
         "lessonCode": "HHAVE 2.6",
         "lessonTitle": "Ánh xạ Đẳng cự và Phép Biến đổi Đẳng cự",
@@ -2918,14 +2926,6 @@
         "lessonTitle": "Góc trong Không gian Ơclit",
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/goc-trong-khong-gian-euclide",
-        "count": 8
-      },
-      {
-        "lessonId": "sieu-mat-bac-hai-trong-khong-gian-euclide",
-        "lessonCode": "HHAVE 2.9",
-        "lessonTitle": "Siêu mặt Bậc hai trong Không gian Ơclit",
-        "subjectId": "hinh-hoc-affine",
-        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/sieu-mat-bac-hai-trong-khong-gian-euclide",
         "count": 8
       },
       {
@@ -4721,8 +4721,8 @@
       "tam-ti-cu"
     ],
     "sieu-mat-bac-hai-trong-khong-gian-euclide": [
-      "sieu-mat-bac-hai",
       "muc-tieu-truc-chuan",
+      "sieu-mat-bac-hai",
       "sieu-phang",
       "khong-gian-euclide"
     ],

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-27T17:26:38.535Z",
+  "updatedAt": "2026-11-27T17:48:20.806Z",
   "lessons": {
     "tap-hop-anh-xa-va-cong-cu-so-hoc": {
       "path": "content/algebraic-structures/00-ngon-ngu-va-cong-cu-dai-so/01-tap-hop-anh-xa-va-cong-cu-so-hoc.mdx",
@@ -1160,16 +1160,16 @@
       "path": "content/affine-geometry/02-khong-gian-euclide/09-sieu-mat-bac-hai-trong-khong-gian-euclide.mdx",
       "status": "published",
       "version": "1.0.0",
-      "sha256": "54f03432ce2a247dfc4dfe8b05d65a0786781197d036b1b7780deaaff113cbc6",
+      "sha256": "fa3fc1ba5e61cad8cce555ca183ef0c969492f5f5bb51ed3b8d7fbd675dfac10",
       "numberedBlocks": {
         "thm-e9-1": "2.9.1",
+        "cor-e9-1": "2.9.2",
         "ex-e9-2": "2.9.1",
-        "def-e9-3": "2.9.2",
-        "thm-e9-4": "2.9.3",
-        "thm-e9-5": "2.9.4",
+        "def-e9-3": "2.9.3",
+        "thm-e9-4": "2.9.4",
+        "thm-e9-5": "2.9.5",
         "ex-e9-6": "2.9.2",
-        "exr-e9-1": "2.9.1",
-        "exr-e9-2": "2.9.2"
+        "exr-e9-70": "2.9.1"
       }
     },
     "sieu-cau-trong-khong-gian-euclide": {
