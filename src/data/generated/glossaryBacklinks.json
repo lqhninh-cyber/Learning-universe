@@ -2223,6 +2223,14 @@
         "count": 6
       },
       {
+        "lessonId": "cac-phang-trong-khong-gian-euclide",
+        "lessonCode": "HHAVE 2.4",
+        "lessonTitle": "Các Phẳng trong Không gian Ơclit",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/cac-phang-trong-khong-gian-euclide",
+        "count": 5
+      },
+      {
         "lessonId": "toa-do-afin-va-muc-tieu-afin",
         "lessonCode": "HHAVE 1.2",
         "lessonTitle": "Tọa độ Affine và Mục tiêu Affine",
@@ -2245,14 +2253,6 @@
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-xa-anh/sieu-mat-bac-hai-trong-khong-gian-xa-anh",
         "count": 3
-      },
-      {
-        "lessonId": "cac-phang-trong-khong-gian-euclide",
-        "lessonCode": "HHAVE 2.4",
-        "lessonTitle": "Các Phẳng trong Không gian Ơclit",
-        "subjectId": "hinh-hoc-affine",
-        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/cac-phang-trong-khong-gian-euclide",
-        "count": 1
       },
       {
         "lessonId": "hinh-hoc-euclide",
@@ -2419,6 +2419,14 @@
         "count": 16
       },
       {
+        "lessonId": "cac-phang-trong-khong-gian-euclide",
+        "lessonCode": "HHAVE 2.4",
+        "lessonTitle": "Các Phẳng trong Không gian Ơclit",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/cac-phang-trong-khong-gian-euclide",
+        "count": 14
+      },
+      {
         "lessonId": "sieu-cau-trong-khong-gian-euclide",
         "lessonCode": "HHAVE 2.10",
         "lessonTitle": "Siêu cầu trong Không gian Ơclit",
@@ -2473,14 +2481,6 @@
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-xa-anh/khong-gian-xa-anh",
         "count": 6
-      },
-      {
-        "lessonId": "cac-phang-trong-khong-gian-euclide",
-        "lessonCode": "HHAVE 2.4",
-        "lessonTitle": "Các Phẳng trong Không gian Ơclit",
-        "subjectId": "hinh-hoc-affine",
-        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/cac-phang-trong-khong-gian-euclide",
-        "count": 4
       },
       {
         "lessonId": "sieu-mat-bac-hai-trong-khong-gian-xa-anh",
@@ -2735,6 +2735,14 @@
         "count": 27
       },
       {
+        "lessonId": "cac-phang-trong-khong-gian-euclide",
+        "lessonCode": "HHAVE 2.4",
+        "lessonTitle": "Các Phẳng trong Không gian Ơclit",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/cac-phang-trong-khong-gian-euclide",
+        "count": 14
+      },
+      {
         "lessonId": "mo-hinh-xa-anh-cua-khong-gian-euclide",
         "lessonCode": "HHAVE 3.11",
         "lessonTitle": "Mô hình Xạ ảnh của Không gian Ơclit",
@@ -2749,14 +2757,6 @@
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/muc-tieu-truc-chuan-toa-do-truc-chuan",
         "count": 5
-      },
-      {
-        "lessonId": "cac-phang-trong-khong-gian-euclide",
-        "lessonCode": "HHAVE 2.4",
-        "lessonTitle": "Các Phẳng trong Không gian Ơclit",
-        "subjectId": "hinh-hoc-affine",
-        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/cac-phang-trong-khong-gian-euclide",
-        "count": 3
       },
       {
         "lessonId": "goc-trong-khong-gian-euclide",
@@ -2817,6 +2817,14 @@
         "count": 28
       },
       {
+        "lessonId": "cac-phang-trong-khong-gian-euclide",
+        "lessonCode": "HHAVE 2.4",
+        "lessonTitle": "Các Phẳng trong Không gian Ơclit",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/cac-phang-trong-khong-gian-euclide",
+        "count": 11
+      },
+      {
         "lessonId": "sieu-mat-bac-hai-trong-khong-gian-euclide",
         "lessonCode": "HHAVE 2.9",
         "lessonTitle": "Siêu mặt Bậc hai trong Không gian Ơclit",
@@ -2839,14 +2847,6 @@
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-xa-anh/mo-hinh-xa-anh-cua-khong-gian-euclide",
         "count": 5
-      },
-      {
-        "lessonId": "cac-phang-trong-khong-gian-euclide",
-        "lessonCode": "HHAVE 2.4",
-        "lessonTitle": "Các Phẳng trong Không gian Ơclit",
-        "subjectId": "hinh-hoc-affine",
-        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/cac-phang-trong-khong-gian-euclide",
-        "count": 2
       },
       {
         "lessonId": "bo-sung-ve-cac-phep-toan-tren-khong-gian-vecto",
@@ -4586,8 +4586,8 @@
       "muc-tieu-afin"
     ],
     "cac-phang-trong-khong-gian-euclide": [
-      "sieu-phang",
       "khong-gian-euclide",
+      "sieu-phang",
       "muc-tieu-truc-chuan",
       "khong-gian-afin"
     ],
