@@ -1,17 +1,22 @@
 ---
 id: sieu-cau-trong-khong-gian-euclide
-title: "Siêu cầu trong Không gian Ơclit"
-description: "Tâm và bán kính siêu cầu, phương trình siêu cầu, vị trí tương đối giữa phẳng và siêu cầu."
-estimatedMinutes: 45
+title: 'Siêu cầu trong Không gian Ơclit'
+description: 'Định nghĩa siêu cầu thực và siêu cầu tổng quát, miền trong và miền ngoài, phương chính, siêu tiếp diện, phương tích của một điểm và siêu phẳng đẳng phương trong không gian Ơclit.'
+estimatedMinutes: 60
 level: advanced
-prerequisites: []
+prerequisites:
+  - khong-gian-euclide
+  - muc-tieu-truc-chuan-toa-do-truc-chuan
+  - sieu-mat-bac-hai-trong-khong-gian-euclide
 tags:
-  - "siêu cầu"
-  - "tiếp diện"
-  - "mặt cầu"
+  - 'siêu cầu'
+  - 'siêu tiếp diện'
+  - 'phương tích'
+  - 'siêu phẳng đẳng phương'
+  - 'mặt cầu'
 sources:
   - source: gt-hhcc-nmh-2004
-    pages: '154-162'
+    pages: '128-134'
     sections: '§10'
 status: published
 version: 1.0.0
@@ -24,199 +29,490 @@ authoring:
 
 ## 1. Định nghĩa
 
-<Definition id="def-e10-1" title="Định nghĩa">
-Trong $\mathbb{E} ^{n}$ cho điểm I cố định, tập hợp tất cả những điểm M sao cho $d(I,M) = r (r > 0$ cho trước) gọi là *siêu cầu (thực)* tâm I, bán kính r, kí hiệu $S(I,r) = {M \in \mathbb{E}^{n} | d(I,M) = r}$.
-
-Trong $\mathbb{E} ^{2}$ siêu cầu là đường tròn, trong $\mathbb{E} ^{3}$ là mặt cầu.
+<Definition id="def-e10-1" title="Định nghĩa siêu cầu thực">
+Trong <GlossaryTerm termId="khong-gian-euclide">không gian Ơclit</GlossaryTerm> $\mathcal{E}^n$ cho một điểm $I$ cố định, tập hợp tất cả những điểm $M \in \mathcal{E}^n$ sao cho $d(I, M) = r$ với số thực $r > 0$ cho trước được gọi là *siêu cầu (thực)* tâm $I$, bán kính $r$, kí hiệu:
+$$
+S(I, r) = \{M \in \mathcal{E}^n \mid d(I, M) = r\}.
+$$
+Trong $\mathcal{E}^2$, siêu cầu là *đường tròn*; còn trong $\mathcal{E}^3$, siêu cầu là *mặt cầu*.
 </Definition>
 
 ## 2. Phương trình của siêu cầu thực
 
-Với mục tiêu trực chuẩn, I(a$_{1}$,…,a$_{n}$), M(x$_{1}$,…,x$_{n}$) thuộc $S(I,r)$ khi và chỉ khi $\sum_{i=1}^{n}(x_{i} - a_{i})^{2} = r^{2}$.
-
-Viết lại: $\sum_{i=1}^{n}x^{2}_{i} - 2\sum_{i=1}^{n}a_{i}x_{i} + \sum_{i=1}^{n}a^{2}_{i} - r^{2} = 0 (1)$.
-
-Vậy siêu cầu thực là một siêu mặt bậc hai.
+Giả sử đối với một <GlossaryTerm termId="muc-tieu-truc-chuan">mục tiêu trực chuẩn</GlossaryTerm>, tâm $I$ có tọa độ trực chuẩn là $(a_1, a_2, \dots, a_n)$ và điểm $M$ có tọa độ trực chuẩn là $(x_1, x_2, \dots, x_n)$. Khi đó điều kiện cần và đủ để điểm $M$ nằm trên siêu cầu thực $S(I, r)$ là:
+$$
+\sqrt{\sum_{i=1}^n (x_i - a_i)^2} = r \iff \sum_{i=1}^n (x_i - a_i)^2 = r^2.
+$$
+Khai triển phương trình này, phương trình siêu cầu $S(I, r)$ còn có thể viết dưới dạng:
+$$
+\sum_{i=1}^n x_i^2 - 2\sum_{i=1}^n a_i x_i + \sum_{i=1}^n a_i^2 - r^2 = 0. \tag{1}
+$$
+Vậy siêu cầu thực $S(I, r)$ là một siêu mặt bậc hai trong $\mathcal{E}^n$.
 
 ## 3. Siêu cầu tổng quát
 
-<Definition id="def-e10-2" title="Định nghĩa">
-Siêu mặt bậc hai (S) gọi là *siêu cầu tổng quát* nếu có phương trình
- 
-
+<Definition id="def-e10-2" title="Định nghĩa siêu cầu tổng quát và phân loại">
+Trong không gian Ơclit $\mathcal{E}^n$ với mục tiêu trực chuẩn cho trước, một siêu mặt bậc hai $(S)$ được gọi là *siêu cầu tổng quát* nếu nó xác định bởi phương trình có dạng:
 $$
-\sum_{i=1}^{n} x^{2}_{i} + 2\sum_{i=1}^{n} a_{i}x_{i} + a_{0} = 0 (2) \iff \sum_{i=1}^{n}(x_{i} + a_{i})^{2} = \sum_{i=1}^{n}a^{2}_{i} - a_{0}. (2')
+\sum_{i=1}^n x_i^2 + 2\sum_{i=1}^n a_i x_i + a_0 = 0, \tag{2}
 $$
-
- 
-a) Nếu $\sum_{i=1}^{n}a^{2}_{i} - a_{0} > 0$ thì $(2')$ là *siêu cầu thực* tâm $I(-a_{1}, \dots ,-a_{n})$, bán kính $r = \sqrt{\sum_{i=1}^{n}a^{2}_{i} - a_{0}}$.
-
-b) Nếu $\sum_{i=1}^{n}a^{2}_{i} - a_{0} = 0$ thì (S) là *siêu cầu điểm* tâm I, bán kính 0.
-
-c) Nếu $\sum_{i=1}^{n}a^{2}_{i} - a_{0} < 0$ thì (S) là *siêu cầu ảo* tâm I (không chứa điểm thực nào).
+hay tương đương (bằng cách thêm và bớt $\sum_{i=1}^n a_i^2$):
+$$
+\sum_{i=1}^n (x_i + a_i)^2 = \sum_{i=1}^n a_i^2 - a_0. \tag{2'}
+$$
+Đặt $I(-a_1, -a_2, \dots, -a_n)$ gọi là *tâm* của siêu cầu tổng quát $(S)$. Ta có ba trường hợp:
+1. **a) Siêu cầu thực:** Nếu $\sum_{i=1}^n a_i^2 - a_0 > 0$ thì $(2')$ là phương trình của một *siêu cầu thực* tâm $I(-a_1, -a_2, \dots, -a_n)$ và bán kính:
+   $$
+   r = \sqrt{\sum_{i=1}^n a_i^2 - a_0} > 0.
+   $$
+2. **b) Siêu cầu điểm:** Nếu $\sum_{i=1}^n a_i^2 - a_0 = 0$ thì siêu cầu $(S)$ gọi là *siêu cầu điểm* tâm $I$, bán kính $r = 0$ *(chỉ gồm duy nhất một điểm thực là tâm $I$)*.
+3. **c) Siêu cầu ảo:** Nếu $\sum_{i=1}^n a_i^2 - a_0 < 0$ thì siêu cầu $(S)$ được gọi là *siêu cầu ảo* tâm $I$ vì nó không chứa điểm thực nào.
 </Definition>
 
-<Example id="ex-e10-3" title="Ví dụ">
-Trong $\mathbb{E}^{2}, x^{2} + y^{2} - 2x + 4y + 1 = 0$ có $a_{1} = -1, a_{2} = 2, a_{0} = 1; \sum_{i=1}^{n}a^{2}_{i} - a_{0} = 1 + 4 - 1 = 4 > 0$: đường tròn tâm $I(1,-2)$, bán kính 2 (kiểm tra: 
+<Example id="ex-e10-3" title="Ví dụ phân loại siêu cầu tổng quát trong E2">
+**Đề bài:** Trong $\mathcal{E}^2$ với mục tiêu trực chuẩn, hãy phân loại và tìm tâm, bán kính (nếu có) của ba đường bậc hai sau:
+1. $(S_1): x_1^2 + x_2^2 - 2x_1 + 4x_2 + 1 = 0$;
+2. $(S_2): x_1^2 + x_2^2 = 0$;
+3. $(S_3): x_1^2 + x_2^2 + 1 = 0$.
 
-$$
-(x-1)^{2} + (y+2)^{2} = 4).
-$$
-
- Còn $x^{2} + y^{2} + 1 = 0$ có $\sum_{i=1}^{n}a^{2}_{i} - a_{0} = -1 < 0$ nên là siêu cầu ảo; $x^{2} + y^{2} = 0$ là siêu cầu điểm tâm O.
+**Lời giải:**
+1. Với $(S_1)$, ta có $a_1 = -1$, $a_2 = 2$, $a_0 = 1$, nên $a_1^2 + a_2^2 - a_0 = 1 + 4 - 1 = 4 > 0$. Viết lại $(x_1 - 1)^2 + (x_2 + 2)^2 = 4$: đây là **đường tròn thực** (siêu cầu thực trong $\mathcal{E}^2$) tâm $I(1, -2)$, bán kính $r = 2$.
+2. Với $(S_2)$, ta có $a_1 = a_2 = a_0 = 0$ nên $a_1^2 + a_2^2 - a_0 = 0$: đây là **siêu cầu điểm** tâm $O(0, 0)$, bán kính $r = 0$.
+3. Với $(S_3)$, ta có $a_1 = a_2 = 0$, $a_0 = 1$ nên $a_1^2 + a_2^2 - a_0 = -1 < 0$: đây là **siêu cầu ảo** tâm $O(0, 0)$ (không có điểm thực).
 </Example>
 
 ## 4. Miền trong và miền ngoài của siêu cầu thực
 
-<Theorem id="thm-e10-4" title="Định nghĩa và tính chất">
-Cho $S(I,r)$.
+<Theorem id="thm-e10-4" title="Định nghĩa và tính chất miền trong, miền ngoài của siêu cầu thực">
+Cho siêu cầu thực $S(I, r)$ trong $\mathcal{E}^n$:
+- *Miền trong* của siêu cầu $S(I, r)$ là tập hợp các điểm $T \in \mathcal{E}^n$ thỏa mãn $d(I, T) < r$.
+- *Miền ngoài* của siêu cầu $S(I, r)$ là tập hợp các điểm $N \in \mathcal{E}^n$ thỏa mãn $d(I, N) > r$.
 
-*Miền trong* là tập các điểm T với $d(I,T) < r$; *miền ngoài* là tập các điểm N với $d(I,N) > r$.
-
-Miền trong là một tập lồi; còn đoạn thẳng nối một điểm thuộc miền trong với một điểm thuộc miền ngoài cắt mặt cầu $S(I,r)$ tại một điểm.
+Khi đó:
+1. Miền trong của siêu cầu $S(I, r)$ là một **tập lồi** trong $\mathcal{E}^n$.
+2. Đoạn thẳng nối một điểm thuộc miền trong với một điểm thuộc miền ngoài luôn cắt siêu cầu $S(I, r)$ tại một điểm (duy nhất).
 </Theorem>
 
-<Proof of="thm-e10-4">
-Điểm M thuộc đoạn $PQ: \vect{IM} = t\vect{IP} + (1-t)\vect{IQ}, 0 \le t \le 1$, nên $IM^{2} = t^{2}IP^{2} + (1-t)^{2}IQ^{2} + 2t(1-t)\vect{IP}·\vect{IQ}$.
+<Proof>
+Mọi điểm $M$ thuộc đoạn thẳng $PQ$ được xác định bởi:
+$$
+\overrightarrow{IM} = t\overrightarrow{IP} + (1 - t)\overrightarrow{IQ} \qquad (0 \le t \le 1).
+$$
+Bình phương vô hướng hai vế, ta có:
+$$
+\overrightarrow{IM}^2 = t^2 \overrightarrow{IP}^2 + (1 - t)^2 \overrightarrow{IQ}^2 + 2t(1 - t)(\overrightarrow{IP} \cdot \overrightarrow{IQ}).
+$$
 
-Nếu P, Q thuộc miền trong: $\vect{IP}·\vect{IQ} \le |IP||IQ| < r^{2}$ nên $IM^{2} < r^{2}[t^{2} + (1-t)^{2} + 2t(1-t)] = r^{2}$.
+1. **Nếu $P, Q$ cùng thuộc miền trong:** Ta có $\overrightarrow{IP}^2 < r^2$ và $\overrightarrow{IQ}^2 < r^2$. Áp dụng bất đẳng thức Cauchy–Schwarz:
+   $$
+   \overrightarrow{IP} \cdot \overrightarrow{IQ} \le |\overrightarrow{IP}|\,|\overrightarrow{IQ}| < r^2.
+   $$
+   Vì $t \ge 0$, $1 - t \ge 0$ và không đồng thời bằng $0$, thay vào biểu thức $\overrightarrow{IM}^2$ ta được:
+   $$
+   \overrightarrow{IM}^2 < r^2 \bigl[t^2 + (1 - t)^2 + 2t(1 - t)\bigr] = r^2 \bigl(t + 1 - t\bigr)^2 = r^2,
+   $$
+   tức $d(I, M) < r$. Vậy mọi điểm $M$ trên đoạn $PQ$ đều thuộc miền trong của $S(I, r)$, chứng tỏ miền trong là một tập lồi.
 
-Nếu P trong, Q ngoài: hàm $f(t) = IM^{2}$ có $f(0) = IQ^{2} > r^{2}, f(1) = IP^{2} < r^{2}$, nên có $t \in (0,1)$ để $f(t) = r^{2}$.
+2. **Nếu $P$ thuộc miền trong và $Q$ thuộc miền ngoài:** Xét hàm số liên tục theo biến $t \in [0, 1]$:
+   $$
+   f(t) = \overrightarrow{IM}^2 = t^2 \overrightarrow{IP}^2 + (1 - t)^2 \overrightarrow{IQ}^2 + 2t(1 - t)(\overrightarrow{IP} \cdot \overrightarrow{IQ}).
+   $$
+   Tại hai đầu mút ta có $f(0) = \overrightarrow{IQ}^2 > r^2$ và $f(1) = \overrightarrow{IP}^2 < r^2$. Theo định lí giá trị trung gian của hàm liên tục, tồn tại $t \in (0, 1)$ sao cho $f(t) = r^2$, tức đoạn thẳng $PQ$ cắt siêu cầu $S(I, r)$ tại một điểm *(hơn nữa, vì $f(t) = |\overrightarrow{QP}|^2 t^2 + 2(\overrightarrow{IQ} \cdot \overrightarrow{QP})t + \overrightarrow{IQ}^2$ là tam thức bậc hai có hệ số bậc hai $|\overrightarrow{QP}|^2 > 0$, nên phương trình $f(t) = r^2$ có hai nghiệm nằm về hai phía của $t = 1$ và do đó chỉ có đúng một nghiệm thuộc $(0, 1)$)*.
 </Proof>
 
-<Example id="ex-e10-6" title="Ví dụ">
-Đường tròn $S(O,5)$ trong $\mathbb{E} ^{2}$: P(1,1) thuộc miền trong $(OP = \sqrt{2} < 5), Q(6,0)$ thuộc miền ngoài.
+<Example id="ex-e10-6" title="Ví dụ xác định giao điểm của đoạn nối điểm trong và điểm ngoài">
+**Đề bài:** Trong $\mathcal{E}^2$ với mục tiêu trực chuẩn, cho đường tròn $S(O, 5)$ (tâm $O(0, 0)$, bán kính $5$) và hai điểm $P(1, 1)$, $Q(6, 0)$. Chứng minh $P$ thuộc miền trong, $Q$ thuộc miền ngoài của $S(O, 5)$ và tìm giao điểm của đoạn thẳng $PQ$ với đường tròn.
 
-Đoạn $PQ: (1 + 5t, 1 - t)$, điều kiện $(1+5t)^{2} + (1-t)^{2} = 25 \iff 26t^{2} + 8t - 23 = 0$, có nghiệm $t ≈ 0,80 \in (0,1)$ (nghiệm kia âm), nên đoạn PQ cắt đường tròn tại đúng một điểm.
+**Lời giải:** Ta có $d(O, P) = \sqrt{1^2 + 1^2} = \sqrt{2} < 5$ nên $P$ thuộc miền trong; $d(O, Q) = 6 > 5$ nên $Q$ thuộc miền ngoài của $S(O, 5)$.
+
+Mọi điểm $M$ thuộc đoạn thẳng $PQ$ có tọa độ $M(1 + 5s,\; 1 - s)$ với $s \in [0, 1]$. Điều kiện $M \in S(O, 5)$ là:
+$$
+(1 + 5s)^2 + (1 - s)^2 = 25 \iff 26s^2 + 8s - 23 = 0.
+$$
+Phương trình bậc hai này có hai nghiệm trái dấu $s = \dfrac{-4 \pm \sqrt{614}}{26}$, trong đó nghiệm duy nhất thuộc $(0, 1)$ là $s_0 = \dfrac{\sqrt{614} - 4}{26} \in (0, 1)$ (vì $24 < \sqrt{614} < 25$). Vậy đoạn thẳng $PQ$ cắt đường tròn $S(O, 5)$ tại đúng một điểm ứng với $s = s_0$.
 </Example>
 
 ## 5. Phương chính và siêu phẳng kính chính của siêu cầu
 
-<Theorem id="thm-e10-7" title="Tính chất">
-• Đối với siêu cầu tổng quát, mọi vectơ $\vec{c} \neq \vec{0}$ đều không phải phương tiệm cận và luôn là phương chính (vì $A = I$, mọi $\vec{c} \neq 0$ là vectơ riêng).
+<Proposition id="thm-e10-7" title="Các tính chất về phương chính, siêu phẳng kính chính và siêu tiếp diện">
+Xét siêu cầu tổng quát $(S): \sum_{i=1}^n x_i^2 + 2\sum_{i=1}^n a_i x_i + a_0 = 0$ trong $\mathcal{E}^n$ với mục tiêu trực chuẩn:
+1. **Phương chính:** Mọi vectơ thực $\vec{c} \neq \vec{0}$ đều **không phải là phương tiệm cận** và luôn là một **phương chính** của siêu cầu $(S)$.
+2. **Siêu phẳng kính chính:** Mọi siêu phẳng đi qua tâm $I(-a_1, -a_2, \dots, -a_n)$ của siêu cầu tổng quát $(S)$ đều là *siêu phẳng kính chính* của $(S)$ *(do đó phép đối xứng trực giao qua mọi siêu phẳng đi qua tâm $I$ đều biến $(S)$ thành chính nó)*.
+3. **Siêu tiếp diện và đường kính:**
+   - Siêu phẳng đi qua điểm $M_0(x_1^0, x_2^0, \dots, x_n^0)$ thuộc siêu cầu thực $S(I, r)$ và vuông góc với đường thẳng $IM_0$ được gọi là *siêu tiếp diện* của siêu cầu đó tại điểm $M_0$. Vectơ $\overrightarrow{IM_0} = (x_1^0 + a_1,\; x_2^0 + a_2,\; \dots,\; x_n^0 + a_n)$ là vectơ pháp tuyến của siêu tiếp diện tại $M_0$.
+   - Đường thẳng đi qua tâm $I$ của siêu cầu được gọi là *đường kính* của nó.
+</Proposition>
 
-• Mọi siêu phẳng đi qua tâm $I(-a_{1}, \dots ,-a_{n})$ có dạng $\sum_{i=1}^{n} \alpha _{i}(x_{i} + a_{i}) = 0$, là siêu phẳng kính liên hợp với phương $\vect{\alpha} = ( \alpha _{1}, \dots , \alpha _{n})$; vì $\vect{\alpha}$ là phương chính nên nó là *siêu phẳng kính chính*.
+<Proof>
+1. Ma trận phần bậc hai của siêu cầu tổng quát $(S)$ đối với mục tiêu trực chuẩn là ma trận đơn vị $A = I_n$. Với mọi vectơ thực $\vec{c} \neq \vec{0}$, ta có $[c]^* A[c] = [c]^* [c] = |\vec{c}|^2 > 0$ (nên $\vec{c}$ không phải là phương tiệm cận) và $A[c] = 1 \cdot [c]$ (nên $\vec{c}$ là vectơ riêng của $A$ ứng với giá trị riêng $\lambda = 1$, tức là một phương chính của $(S)$).
+2. Mọi siêu phẳng đi qua tâm $I(-a_1, -a_2, \dots, -a_n)$ đều có phương trình dạng:
+   $$
+   \sum_{i=1}^n \alpha_i(x_i + a_i) = 0 \iff [x]^* I_n [\alpha] + [a]^* [\alpha] = 0,
+   $$
+   với $\vec{\alpha} = (\alpha_1, \alpha_2, \dots, \alpha_n) \neq \vec{0}$. Đó chính là phương trình của siêu phẳng kính liên hợp với phương $\vec{\alpha}$; vì theo (1) $\vec{\alpha}$ là phương chính của $(S)$, nên siêu phẳng này là siêu phẳng kính chính của $(S)$.
+3. Theo định nghĩa, siêu tiếp diện tại $M_0 \in S(I, r)$ có vectơ pháp tuyến là $\overrightarrow{IM_0} = (x_1^0 + a_1, \dots, x_n^0 + a_n)$, nên có phương trình $\sum_{i=1}^n (x_i^0 + a_i)(x_i - x_i^0) = 0$ (hay viết gọn $\sum_{i=1}^n (x_i^0 + a_i)(x_i + a_i) = r^2$).
+</Proof>
 
-• *Siêu tiếp diện* tại $M_{0}(x^{0}_{i}) \in S(I,r)$ là siêu phẳng qua M$_{0}$ vuông góc với đường thẳng IM$_{0}$; vectơ $\vect{IM_{0}} = (x^{0}_{i} + a_{i})$ là vectơ pháp tuyến của nó.
+<Example id="ex-e10-8" title="Ví dụ viết phương trình mặt phẳng tiếp xúc của mặt cầu trong E3">
+**Đề bài:** Trong $\mathcal{E}^3$ với mục tiêu trực chuẩn, cho mặt cầu $(S): x_1^2 + x_2^2 + x_3^2 = 9$ và điểm $M_0(1, 2, 2)$. Chứng tỏ $M_0 \in (S)$, viết phương trình siêu tiếp diện (mặt phẳng tiếp xúc) của $(S)$ tại $M_0$ và kiểm tra khoảng cách từ tâm mặt cầu đến mặt phẳng đó.
 
-Đường thẳng qua tâm gọi là *đường kính*.
-</Theorem>
+**Lời giải:** Mặt cầu $(S)$ có tâm $O(0, 0, 0)$ và bán kính $r = 3$. Thay tọa độ $M_0(1, 2, 2)$ vào phương trình của $(S)$ ta có $1^2 + 2^2 + 2^2 = 9$, nên $M_0 \in (S)$.
 
-<Example id="ex-e10-8" title="Ví dụ">
-Mặt cầu $x^{2} + y^{2} + z^{2} = 9$ (tâm $O, a_{i} = 0), M_{0}(1,2,2)$ thuộc mặt cầu $(1 + 4 + 4 = 9)$.
-
-$\vect{OM_{0}} = (1,2,2)$ là pháp tuyến nên siêu tiếp diện (mặt phẳng tiếp xúc) tại M$_{0}$ là $x + 2y + 2z - 9 = 0$.
-
-Khoảng cách từ O đến mặt phẳng này là $\frac{9}{\sqrt{1+4+4}} = 3 = r$, đúng như mặt phẳng tiếp xúc.
+Vectơ pháp tuyến của siêu tiếp diện tại $M_0$ là $\overrightarrow{OM_0} = (1, 2, 2)$, nên phương trình mặt phẳng tiếp xúc $(P)$ tại $M_0$ là:
+$$
+1(x_1 - 1) + 2(x_2 - 2) + 2(x_3 - 2) = 0 \iff x_1 + 2x_2 + 2x_3 - 9 = 0.
+$$
+Khoảng cách từ tâm $O(0, 0, 0)$ đến mặt phẳng $(P)$ là $d(O, P) = \dfrac{|-9|}{\sqrt{1^2 + 2^2 + 2^2}} = \dfrac{9}{3} = 3 = r$.
 </Example>
 
 ## 6. Phương tích của một điểm đối với siêu cầu
 
-<Definition id="def-e10-9" title="a) Định nghĩa">
-Với siêu cầu $(S): f(x_{1}, \dots ,x_{n}) = \sum_{i=1}^{n}x^{2}_{i} + 2\sum_{i=1}^{n}a_{i}x_{i} + a_{0} = 0$ và điểm $M_{0}(x^{0}_{i})$, giá trị $f(x^{0}_{1}, \dots ,x^{0}_{n})$ gọi là *phương tích của điểm M$_{0}$ đối với siêu cầu (S)*, kí hiệu $𝒫(M_{0})/(S)$.
+<Definition id="def-e10-9" title="a) Định nghĩa phương tích của một điểm đối với siêu cầu">
+Trong không gian Ơclit $\mathcal{E}^n$ với mục tiêu trực chuẩn cho trước, cho siêu cầu $(S)$ có phương trình:
+$$
+f(x_1, x_2, \dots, x_n) = \sum_{i=1}^n x_i^2 + 2\sum_{i=1}^n a_i x_i + a_0 = 0.
+$$
+Với mỗi điểm $M_0 \in \mathcal{E}^n$ có tọa độ trực chuẩn $(x_1^0, x_2^0, \dots, x_n^0)$, giá trị:
+$$
+f(x_1^0, x_2^0, \dots, x_n^0) = \sum_{i=1}^n (x_i^0)^2 + 2\sum_{i=1}^n a_i x_i^0 + a_0
+$$
+được gọi là *phương tích của điểm $M_0$ đối với siêu cầu $(S)$*, kí hiệu là $\mathcal{P}(M_0)/(S)$. Ta có:
+$$
+\mathcal{P}(M_0)/(S) = f(x_1^0, x_2^0, \dots, x_n^0)
+$$
+*(đặc biệt, khi $(S) = S(I, r)$ là siêu cầu thực thì $\mathcal{P}(M_0)/(S) = d^2(I, M_0) - r^2$)*.
 </Definition>
 
-<Theorem id="thm-e10-10" title="b) Định lí">
-Trong $\mathbb{E} ^{n}$, nếu đường thẳng Δ đi qua M$_{0}$ cắt siêu cầu (S) tại hai điểm M$_{1}$, M$_{2}$ thì $𝒫(M_{0})/(S) = \vect{M_{0}M_{1}}·\vect{M_{0}M_{2}}$.
+<Theorem id="thm-e10-10" title="b) Định lí về phương tích qua cát tuyến">
+Trong $\mathcal{E}^n$, cho siêu cầu $(S)$ tâm $I$ bán kính $r$ và một đường thẳng $\Delta$ đi qua điểm $M_0$ cắt siêu cầu $(S)$ tại hai điểm $M_1$ và $M_2$. Khi đó:
+$$
+\mathcal{P}(M_0)/(S) = \overrightarrow{M_0 M_1} \cdot \overrightarrow{M_0 M_2}.
+$$
 </Theorem>
 
-<Proof of="thm-e10-10">
-Đường thẳng $Δ: x_{i} = x^{0}_{i} + \lambda u_{i}$.
+<Proof>
+Giả sử đối với mục tiêu trực chuẩn đã chọn, điểm $M_0$ có tọa độ $(x_1^0, x_2^0, \dots, x_n^0)$ và vectơ chỉ phương của đường thẳng $\Delta$ là $\vec{u} = (u_1, u_2, \dots, u_n) \neq \vec{0}$. Khi đó đường thẳng $\Delta$ có phương trình tham số:
+$$
+x_i = x_i^0 + \lambda u_i \qquad (i = 1, 2, \dots, n),
+$$
+hay dưới dạng ma trận cột $[x] = [x^0] + \lambda [u]$.
 
-Thay vào $(S): ([u]*[u]) \lambda ^{2} + 2([u]*[x^{0}] + [a]*[u]) \lambda + f(x^{0}) = 0$.
-
-Hai nghiệm λ$_{1}$, λ$_{2}$ ứng với M$_{1}$, M$_{2}$ thỏa $\lambda _{1} \lambda _{2} = f(x^{0}) / ([u]*[u])$.
-
-Mà $\vect{M_{0}M_{1}} = \lambda _{1}\vec{u}, \vect{M_{0}M_{2}} = \lambda _{2}\vec{u}$ nên tích vô hướng bằng $\lambda _{1} \lambda _{2}\vec{u}^{2} = f(x^{0}) = 𝒫(M_{0})/(S)$.
+Để tìm các giao điểm $M_1, M_2$ của đường thẳng $\Delta$ với siêu cầu $(S): [x]^* [x] + 2[a]^* [x] + a_0 = 0$, ta thay $[x] = [x^0] + \lambda [u]$ vào phương trình của $(S)$:
+$$
+\bigl([x^0] + \lambda [u]\bigr)^* \bigl([x^0] + \lambda [u]\bigr) + 2[a]^* \bigl([x^0] + \lambda [u]\bigr) + a_0 = 0,
+$$
+hay khai triển theo lũy thừa của $\lambda$:
+$$
+\bigl([u]^* [u]\bigr)\lambda^2 + 2\bigl([u]^* [x^0] + [a]^* [u]\bigr)\lambda + \bigl([x^0]^* [x^0] + 2[a]^* [x^0] + a_0\bigr) = 0.
+$$
+Đây là một phương trình bậc hai đối với $\lambda$ (vì $[u]^* [u] = \vec{u}^2 > 0$). Gọi $\lambda_1, \lambda_2$ là hai nghiệm của phương trình ứng với hai giao điểm $M_1, M_2$. Theo định lí Viète *(đính chính lỗi in sách gốc tr. 133 thiếu chỉ số trên $0$ ở số hạng $2[a]^* [x^0]$)*:
+$$
+\lambda_1 \lambda_2 = \frac{[x^0]^* [x^0] + 2[a]^* [x^0] + a_0}{[u]^* [u]} = \frac{f(x_1^0, x_2^0, \dots, x_n^0)}{[u]^* [u]}.
+$$
+Mặt khác, ta có $\overrightarrow{M_0 M_1} = \lambda_1 \vec{u}$ và $\overrightarrow{M_0 M_2} = \lambda_2 \vec{u}$. Do đó:
+$$
+\overrightarrow{M_0 M_1} \cdot \overrightarrow{M_0 M_2} = \lambda_1 \lambda_2 \vec{u}^2 = \lambda_1 \lambda_2 \bigl([u]^* [u]\bigr) = f(x_1^0, x_2^0, \dots, x_n^0) = \mathcal{P}(M_0)/(S).
+$$
 </Proof>
 
-<Example id="ex-e10-12" title="Ví dụ">
-$(S): x^{2} + y^{2} - 25 = 0$ và $M_{0}(6,0)$: 
+<Example id="ex-e10-12" title="Ví dụ tính và kiểm chứng phương tích đối với đường tròn trong E2">
+**Đề bài:** Trong $\mathcal{E}^2$ với mục tiêu trực chuẩn, cho đường tròn $(S): x_1^2 + x_2^2 - 25 = 0$ và điểm $M_0(6, 0)$. Tính phương tích $\mathcal{P}(M_0)/(S)$ bằng định nghĩa và kiểm chứng lại bằng tích vô hướng $\overrightarrow{M_0 M_1} \cdot \overrightarrow{M_0 M_2}$ với cát tuyến $\Delta$ đi qua $M_0$ có phương $\vec{u} = (-1, 0)$.
 
-$$
-𝒫 = 36 - 25 = 11.
-$$
-
- Đường thẳng Δ qua M$_{0}$ phương $(-1,0)$ cắt (S) tại $M_{1}(5,0), M_{2}(-5,0)$: 
-
-$$
-\vect{M_{0}M_{1}}·\vect{M_{0}M_{2}} = (-1,0)·(-11,0) = 11 .
-$$
-
- Điểm trên đường tròn có $𝒫 = 0$, điểm bên trong có $𝒫 < 0$.
+**Lời giải:**
+- Theo định nghĩa: $\mathcal{P}(M_0)/(S) = 6^2 + 0^2 - 25 = 11 > 0$ *(vì $M_0$ nằm ngoài đường tròn $(S)$; điểm trên $(S)$ có $\mathcal{P} = 0$, còn điểm thuộc miền trong có $\mathcal{P} < 0$)*.
+- Đường thẳng $\Delta$ đi qua $M_0(6, 0)$ có phương $\vec{u} = (-1, 0)$ là trục $x_2 = 0$, cắt $(S)$ tại hai điểm $M_1(5, 0)$ và $M_2(-5, 0)$. Ta có $\overrightarrow{M_0 M_1} = (-1, 0)$, $\overrightarrow{M_0 M_2} = (-11, 0)$, nên:
+  $$
+  \overrightarrow{M_0 M_1} \cdot \overrightarrow{M_0 M_2} = (-1)(-11) + 0 \cdot 0 = 11 = \mathcal{P}(M_0)/(S).
+  $$
 </Example>
 
 ## 7. Siêu phẳng đẳng phương
 
-<Theorem id="thm-e10-13" title="a) Định lí">
-Trong $\mathbb{E} ^{n}$ cho hai siêu cầu (S$_{1}$), (S$_{2}$) có tâm không trùng nhau.
-
-Khi đó tập hợp những điểm M có cùng phương tích đối với (S$_{1}$) và (S$_{2}$) nằm trên một siêu phẳng, vuông góc với đường thẳng nối hai tâm.
+<Theorem id="thm-e10-13" title="a) Định lí về tập hợp điểm có cùng phương tích đối với hai siêu cầu">
+Trong $\mathcal{E}^n$, cho hai siêu cầu $(S_1)$ và $(S_2)$ có tâm không trùng nhau. Khi đó tập hợp những điểm $M \in \mathcal{E}^n$ có cùng phương tích đối với $(S_1)$ và $(S_2)$ là một siêu phẳng; siêu phẳng này luôn vuông góc với đường thẳng nối hai tâm của hai siêu cầu đã cho.
 </Theorem>
 
-<Proof of="thm-e10-13">
-Với $f_{1} = [x]*[x] + 2[a]*[x] + a_{0} (S_{1}), f_{2} = [x]*[x] + 2[b]*[x] + b_{0} (S_{2})$, điều kiện $f_{1} = f_{2}$ là
- 
-
+<Proof>
+Trong $\mathcal{E}^n$ với mục tiêu trực chuẩn cho trước, giả sử hai siêu cầu không đồng tâm $(S_1)$ và $(S_2)$ lần lượt có phương trình:
 $$
-2([a] - [b])*[x] + a_{0} - b_{0} = 0. (1)
+f_1(x_1, x_2, \dots, x_n) = [x]^* [x] + 2[a]^* [x] + a_0 = 0 \qquad (S_1),
 $$
+$$
+f_2(x_1, x_2, \dots, x_n) = [x]^* [x] + 2[b]^* [x] + b_0 = 0 \qquad (S_2).
+$$
+Những điểm $M(x_1, x_2, \dots, x_n)$ có cùng phương tích đối với $(S_1)$ và $(S_2)$ phải có tọa độ thỏa mãn điều kiện:
+$$
+f_1(x_1, x_2, \dots, x_n) = f_2(x_1, x_2, \dots, x_n) \iff 2\bigl([a] - [b]\bigr)^* [x] + a_0 - b_0 = 0. \tag{1}
+$$
+Siêu cầu $(S_1)$ có tâm $I_1(-a_1, -a_2, \dots, -a_n)$ và siêu cầu $(S_2)$ có tâm $I_2(-b_1, -b_2, \dots, -b_n)$. Vì $I_1 \neq I_2$ nên $[a] \neq [b]$, do đó $(1)$ là phương trình của một siêu phẳng trong $\mathcal{E}^n$.
 
- 
-Tâm $I_{1}(-a_{i}) \neq I_{2}(-b_{i})$ nên $[a] \neq [b]$, và $(1)$ là phương trình một siêu phẳng với vectơ pháp tuyến $\vec{n} = (a_{1}-b_{1}, \dots ,a_{n}-b_{n})$, cùng phương với $\vect{I_{1}I_{2}}$; nên siêu phẳng vuông góc với I$_{1}$I$_{2}$.
+Hơn nữa, siêu phẳng $(1)$ nhận vectơ $\vec{n} = (a_1 - b_1,\; a_2 - b_2,\; \dots,\; a_n - b_n) \neq \vec{0}$ làm vectơ pháp tuyến, mà $\overrightarrow{I_1 I_2} = (a_1 - b_1,\; a_2 - b_2,\; \dots,\; a_n - b_n) = \vec{n}$, nên siêu phẳng này luôn vuông góc với đường thẳng nối hai tâm $I_1$ và $I_2$ của $(S_1)$ và $(S_2)$.
 </Proof>
 
-<Definition id="def-e10-15" title="b) Định nghĩa">
-Siêu phẳng này gọi là *siêu phẳng đẳng phương* của hai siêu cầu.
+<Definition id="def-e10-15" title="b) Định nghĩa siêu phẳng đẳng phương">
+Tập hợp các điểm có cùng phương tích đối với hai siêu cầu $(S_1)$ và $(S_2)$ không đồng tâm là một siêu phẳng, được gọi là *siêu phẳng đẳng phương* của hai siêu cầu đã cho. Siêu phẳng đẳng phương luôn luôn vuông góc với đường thẳng nối hai tâm của hai siêu cầu cho trước.
 </Definition>
 
-<Example id="ex-e10-16" title="Ví dụ">
-$(S_{1}): x^{2} + y^{2} - 1 = 0 (a = 0, a_{0} = -1)$ và $(S_{2}): (x-4)^{2} + y^{2} - 1 = 0$, tức $x^{2} + y^{2} - 8x + 15 = 0 (b = (-4,0), b_{0} = 15)$.Phương trình $(1)$: 
+<Example id="ex-e10-16" title="Ví dụ tìm trục đẳng phương của hai đường tròn trong E2">
+**Đề bài:** Trong $\mathcal{E}^2$ với mục tiêu trực chuẩn, cho hai đường tròn $(S_1): x_1^2 + x_2^2 - 1 = 0$ và $(S_2): (x_1 - 4)^2 + x_2^2 - 1 = 0$. Viết phương trình siêu phẳng đẳng phương (trục đẳng phương) của $(S_1)$ và $(S_2)$, rồi kiểm tra tại điểm $M(2, 5)$.
 
+**Lời giải:** Khai triển $(S_2)$ được $x_1^2 + x_2^2 - 8x_1 + 15 = 0$. Điều kiện $f_1(x_1, x_2) = f_2(x_1, x_2)$ là:
 $$
-2(4,0)·(x,y) - 1 - 15 = 0 \iff x = 2.
+(x_1^2 + x_2^2 - 1) - (x_1^2 + x_2^2 - 8x_1 + 15) = 0 \iff 8x_1 - 16 = 0 \iff x_1 = 2.
 $$
-
- Đây là đường thẳng vuông góc với đường nối hai tâm O(0,0), (4,0), đi qua trung điểm.
-
-Kiểm tra:$M(2,5)$ có $f_{1} = 4 + 25 - 1 = 28$ và $f_{2} = 4 + 25 - 16 + 15 = 28$.
+Trục đẳng phương $x_1 = 2$ vuông góc với đường thẳng nối hai tâm $I_1(0, 0)$, $I_2(4, 0)$ (và đi qua trung điểm của $I_1 I_2$ vì hai đường tròn có cùng bán kính). Kiểm tra tại $M(2, 5)$: $\mathcal{P}(M)/(S_1) = 4 + 25 - 1 = 28$ và $\mathcal{P}(M)/(S_2) = (2 - 4)^2 + 5^2 - 1 = 28$.
 </Example>
 
-## Bài tập vận dụng và củng cố
+## Bài tập
 
-<Exercise id="exr-e10-1" title="Siêu cầu: phương trình tổng quát (§10, mục 3)">
-Mặt cầu x² + y² + z² - 2x + 4y - 6z + 5 = 0 trong E³: tìm tâm và bán kính.
+*(Trọn bộ $7$ bài tập thuộc §10 trong cụm bài tập §9, §10 cuối Chương II, trang 146–147 — khép kín hoàn toàn $70/70$ bài tập của Chương II).*
 
+<Exercise id="exr-e10-63" title="Bài tập 2.63 (Siêu cầu đi qua n + 1 điểm độc lập trong En — tr. 146)">
+Chứng minh rằng $n + 1$ điểm độc lập trong $\mathcal{E}^n$ luôn luôn thuộc một siêu cầu.
 
 <Hint>
-Đưa về Σ[i=1|n](xᵢ + aᵢ)² = Σ[i=1|n]aᵢ² - a₀.
+Trong một mục tiêu trực chuẩn, viết điều kiện cách đều $d^2(I, A_k) = d^2(I, A_0)$ ($k = 1, \dots, n$) cho tâm $I(y_1, \dots, y_n)$ để thu được hệ phương trình tuyến tính $n \times n$ có ma trận hệ số gồm các vectơ độc lập tuyến tính $\overrightarrow{A_0 A_k}$.
 </Hint>
 
 <Solution>
-(x - 1)² + (y + 2)² + (z - 3)² = 1 + 4 + 9 - 5 = 9.
+Giả sử $A_0, A_1, \dots, A_n$ là $n + 1$ điểm độc lập (độc lập affine) trong $\mathcal{E}^n$ ($n \ge 1$). Chọn một mục tiêu trực chuẩn $\{O; \vec{e}_1, \dots, \vec{e}_n\}$ của $\mathcal{E}^n$, trong đó tọa độ của điểm $A_k$ là $(x_{k1}, x_{k2}, \dots, x_{kn})$ với $k = 0, 1, \dots, n$.
 
-**Đáp án:** Tâm I(1, -2, 3), bán kính R = 3
+Ta tìm điểm $I(y_1, y_2, \dots, y_n) \in \mathcal{E}^n$ cách đều tất cả $n + 1$ điểm $A_0, A_1, \dots, A_n$, tức thỏa mãn hệ $n$ phương trình:
+$$
+d^2(I, A_k) = d^2(I, A_0) \qquad (k = 1, 2, \dots, n).
+$$
+Khai triển từng phương trình:
+$$
+\sum_{i=1}^n (y_i - x_{ki})^2 = \sum_{i=1}^n (y_i - x_{0i})^2 \iff 2\sum_{i=1}^n (x_{ki} - x_{0i}) y_i = \sum_{i=1}^n x_{ki}^2 - \sum_{i=1}^n x_{0i}^2 \qquad (k = 1, 2, \dots, n). \tag{*}
+$$
+Đây là một hệ $n$ phương trình tuyến tính với $n$ ẩn $(y_1, y_2, \dots, y_n)$, trong đó hàng thứ $k$ của ma trận hệ số $M$ là $2\overrightarrow{A_0 A_k} = 2(x_{k1} - x_{01},\; \dots,\; x_{kn} - x_{0n})$.
+
+Vì $A_0, A_1, \dots, A_n$ là $n + 1$ điểm độc lập nên $n$ vectơ $\overrightarrow{A_0 A_1}, \overrightarrow{A_0 A_2}, \dots, \overrightarrow{A_0 A_n}$ độc lập tuyến tính trong $\overrightarrow{\mathcal{E}^n}$, suy ra $\det M \neq 0$. Theo quy tắc Cramer, hệ $(*)$ có **một nghiệm duy nhất** $I(y_1, \dots, y_n)$.
+
+Đặt $R = d(I, A_0)$. Vì $A_0 \neq A_1$ nên không thể đồng thời có $I = A_0$ và $I = A_1$, do đó $R > 0$. Mọi điểm $A_0, A_1, \dots, A_n$ đều thỏa mãn $d(I, A_k) = R$, tức là cả $n + 1$ điểm độc lập đều thuộc **một siêu cầu thực duy nhất** $S(I, R)$ tâm $I$, bán kính $R$.
 </Solution>
 </Exercise>
 
-<Exercise id="exr-e10-2" title="Phương tích và trục đẳng phương (§10, mục 6–7)">
-Cho hai đường tròn (C₁): x² + y² - 4 = 0 và (C₂): (x - 3)² + y² - 1 = 0 trong E². Tính phương tích của O(0,0) đối với (C₂) và viết phương trình trục đẳng phương của hai đường tròn.
+<Exercise id="exr-e10-64" title="Bài tập 2.64 (Xác định tâm và bán kính của mặt cầu trong E3 — tr. 146)">
+Trong $\mathcal{E}^3$ (với mục tiêu trực chuẩn) hãy xác định tâm và bán kính của các mặt cầu sau đây:
 
+a) $x_1^2 + x_2^2 + x_3^2 - 12x_1 + 4x_2 - 6x_3 = 0$;
+
+b) $x_1^2 + x_2^2 + x_3^2 - 6x_3 - 7 = 0$.
 
 <Hint>
-Phương tích là giá trị vế trái; trục đẳng phương: f₁ = f₂.
+Đưa phương trình về dạng $(x_1 + a_1)^2 + (x_2 + a_2)^2 + (x_3 + a_3)^2 = a_1^2 + a_2^2 + a_3^2 - a_0$ để đọc trực tiếp tâm $I(-a_1, -a_2, -a_3)$ và bán kính $r$.
 </Hint>
 
 <Solution>
-(C₂): x² + y² - 6x + 8 = 0 nên phương tích của O là 8.
+a) Đối chiếu với phương trình $(2)$ của siêu cầu tổng quát: $a_1 = -6$, $a_2 = 2$, $a_3 = -3$, $a_0 = 0$. Nhóm bình phương đủ:
+$$
+(x_1 - 6)^2 + (x_2 + 2)^2 + (x_3 - 3)^2 = (-6)^2 + 2^2 + (-3)^2 - 0 = 36 + 4 + 9 = 49 = 7^2.
+$$
+Vậy mặt cầu có tâm **$I(6, -2, 3)$** và bán kính **$r = 7$**.
 
-f₁ = f₂: -4 = -6x + 8 nên x = 2.
+b) Đối chiếu với phương trình $(2)$: $a_1 = 0$, $a_2 = 0$, $a_3 = -3$, $a_0 = -7$. Nhóm bình phương đủ:
+$$
+x_1^2 + x_2^2 + (x_3 - 3)^2 = 0^2 + 0^2 + (-3)^2 - (-7) = 9 + 7 = 16 = 4^2.
+$$
+Vậy mặt cầu có tâm **$I(0, 0, 3)$** và bán kính **$r = 4$**.
+</Solution>
+</Exercise>
 
-**Đáp án:** Phương tích 8; trục đẳng phương x = 2
+<Exercise id="exr-e10-65" title="Bài tập 2.65 (Phương trình mặt cầu đi qua bốn điểm không đồng phẳng trong E3 — tr. 146)">
+Trong $\mathcal{E}^3$ với mục tiêu trực chuẩn cho trước, viết phương trình mặt cầu đi qua bốn điểm $A(a_1, a_2, a_3)$, $B(b_1, b_2, b_3)$, $C(c_1, c_2, c_3)$, $D(d_1, d_2, d_3)$ không cùng nằm trên một mặt phẳng.
+
+<Hint>
+Xét phương trình siêu cầu tổng quát dạng thuần nhất theo các hệ số $\lambda_0(x_1^2 + x_2^2 + x_3^2) + \lambda_1 x_1 + \lambda_2 x_2 + \lambda_3 x_3 + \lambda_4 = 0$ và sử dụng điều kiện có nghiệm không tầm thường của hệ $5$ phương trình tuyến tính thuần nhất (định thức cấp $5$ bằng $0$).
+</Hint>
+
+<Solution>
+Theo Bài tập 2.63 (với $n = 3$), bốn điểm $A, B, C, D$ không đồng phẳng (tức $4$ điểm độc lập trong $\mathcal{E}^3$) xác định một mặt cầu thực duy nhất $(S)$ có phương trình dạng:
+$$
+\lambda_0(x_1^2 + x_2^2 + x_3^2) + \lambda_1 x_1 + \lambda_2 x_2 + \lambda_3 x_3 + \lambda_4 = 0 \qquad (\lambda_0 \neq 0).
+$$
+Một điểm $M(x_1, x_2, x_3)$ nằm trên mặt cầu $(S)$ đi qua bốn điểm $A, B, C, D$ khi và chỉ khi tồn tại bộ hệ số $(\lambda_0, \lambda_1, \lambda_2, \lambda_3, \lambda_4) \neq (0, 0, 0, 0, 0)$ (với $\lambda_0 \neq 0$) thỏa mãn hệ $5$ phương trình tuyến tính thuần nhất:
+$$
+\begin{cases}
+\lambda_0(x_1^2 + x_2^2 + x_3^2) + \lambda_1 x_1 + \lambda_2 x_2 + \lambda_3 x_3 + \lambda_4 = 0, \\
+\lambda_0(a_1^2 + a_2^2 + a_3^2) + \lambda_1 a_1 + \lambda_2 a_2 + \lambda_3 a_3 + \lambda_4 = 0, \\
+\lambda_0(b_1^2 + b_2^2 + b_3^2) + \lambda_1 b_1 + \lambda_2 b_2 + \lambda_3 b_3 + \lambda_4 = 0, \\
+\lambda_0(c_1^2 + c_2^2 + c_3^2) + \lambda_1 c_1 + \lambda_2 c_2 + \lambda_3 c_3 + \lambda_4 = 0, \\
+\lambda_0(d_1^2 + d_2^2 + d_3^2) + \lambda_1 d_1 + \lambda_2 d_2 + \lambda_3 d_3 + \lambda_4 = 0.
+\end{cases}
+$$
+Điều kiện cần và đủ để hệ tuyến tính thuần nhất trên có nghiệm không tầm thường là định thức ma trận hệ số bằng $0$:
+$$
+\begin{vmatrix}
+x_1^2 + x_2^2 + x_3^2 & x_1 & x_2 & x_3 & 1 \\
+a_1^2 + a_2^2 + a_3^2 & a_1 & a_2 & a_3 & 1 \\
+b_1^2 + b_2^2 + b_3^2 & b_1 & b_2 & b_3 & 1 \\
+c_1^2 + c_2^2 + c_3^2 & c_1 & c_2 & c_3 & 1 \\
+d_1^2 + d_2^2 + d_3^2 & d_1 & d_2 & d_3 & 1
+\end{vmatrix} = 0. \tag{*}
+$$
+Khai triển định thức $(*)$ theo hàng thứ nhất, hệ số của $(x_1^2 + x_2^2 + x_3^2)$ chính là:
+$$
+\Delta = \begin{vmatrix}
+a_1 & a_2 & a_3 & 1 \\
+b_1 & b_2 & b_3 & 1 \\
+c_1 & c_2 & c_3 & 1 \\
+d_1 & d_2 & d_3 & 1
+\end{vmatrix}.
+$$
+Vì bốn điểm $A, B, C, D$ không cùng nằm trên một mặt phẳng nên $\Delta \neq 0$. Do đó phương trình $(*)$ có hệ số của $x_1^2, x_2^2, x_3^2$ bằng nhau và khác $0$ (bằng $\Delta$), không có số hạng chữ nhật $x_i x_j$ ($i \neq j$), và đồng thời triệt tiêu tại cả bốn điểm $A, B, C, D$ (khi đó hàng $1$ trùng với một trong bốn hàng còn lại). Theo tính duy nhất ở Bài tập 2.63, phương trình $(*)$ chính là phương trình của mặt cầu đi qua bốn điểm $A, B, C, D$.
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e10-66" title="Bài tập 2.66 (Vị trí tương đối của siêu phẳng và siêu cầu trong En — tr. 146–147)">
+Trong $\mathcal{E}^n$ với mục tiêu trực chuẩn, hãy xét vị trí tương đối của siêu phẳng và siêu cầu cho bởi phương trình sau đây:
+- Siêu phẳng $(P)$: $x_n = 0$;
+- Siêu cầu $(S)$: $\displaystyle\sum_{i=1}^n (x_i - a_i)^2 - R^2 = 0$ ($R > 0$).
+
+<Hint>
+Tính khoảng cách $h = d(I, P) = |a_n|$ từ tâm $I(a_1, \dots, a_n)$ của $(S)$ đến siêu phẳng $(P)$ và thay trực tiếp $x_n = 0$ vào phương trình của $(S)$ để biện luận ba trường hợp $|a_n| < R$, $|a_n| = R$, $|a_n| > R$.
+</Hint>
+
+<Solution>
+Siêu cầu thực $(S)$ có tâm $I(a_1, a_2, \dots, a_n)$ và bán kính $R > 0$. Hình chiếu vuông góc của $I$ lên siêu phẳng $(P): x_n = 0$ là điểm $H(a_1, a_2, \dots, a_{n-1}, 0)$, và khoảng cách từ tâm $I$ đến siêu phẳng $(P)$ bằng $d(I, P) = |a_n|$.
+
+Tọa độ của các điểm chung thuộc $(P) \cap (S)$ thỏa mãn hệ phương trình:
+$$
+\begin{cases}
+x_n = 0, \\
+\displaystyle\sum_{i=1}^{n-1} (x_i - a_i)^2 = R^2 - a_n^2.
+\end{cases}
+$$
+Biện luận vị trí tương đối theo dấu của $R^2 - a_n^2$ (tức so sánh $d(I, P) = |a_n|$ với bán kính $R$):
+
+1. **Trường hợp $|a_n| < R$ (tức $d(I, P) < R$):** Ta có $R^2 - a_n^2 > 0$. Siêu phẳng $(P)$ **cắt** siêu cầu $(S)$ theo giao tuyến là một **$(n - 1)$-cầu thực** nằm trong siêu phẳng $(P) \cong \mathcal{E}^{n-1}$, có tâm $H(a_1, \dots, a_{n-1}, 0)$ và bán kính $r' = \sqrt{R^2 - a_n^2} > 0$ *(đặc biệt, khi $n = 2$ giao tuyến gồm đúng $2$ điểm phân biệt $\left(a_1 \pm \sqrt{R^2 - a_2^2},\; 0\right)$; khi $a_n = 0$, siêu phẳng $(P)$ đi qua tâm $I$ nên cắt $(S)$ theo siêu cầu lớn có bán kính $R$)*.
+2. **Trường hợp $|a_n| = R$ (tức $d(I, P) = R$):** Phương trình giao tuyến trở thành $\sum_{i=1}^{n-1} (x_i - a_i)^2 = 0 \iff x_i = a_i$ với mọi $i = 1, \dots, n - 1$. Siêu phẳng $(P)$ **tiếp xúc** với siêu cầu $(S)$ tại điểm duy nhất $H(a_1, \dots, a_{n-1}, 0)$ *(tức $(P)$ là siêu tiếp diện của $(S)$ tại $H$)*.
+3. **Trường hợp $|a_n| > R$ (tức $d(I, P) > R$):** Ta có $R^2 - a_n^2 < 0$, phương trình vô nghiệm thực. Siêu phẳng $(P)$ và siêu cầu $(S)$ **không có điểm chung** (nằm ngoài nhau).
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e10-67" title="Bài tập 2.67 (Quỹ tích điểm thỏa mãn hệ thức bình phương khoảng cách trong En — tr. 147)">
+Trong $\mathcal{E}^n$ cho ba điểm $A, B, C$ phân biệt. Tìm quỹ tích những điểm $M$ sao cho:
+$$
+d^2(M, A) + d^2(M, B) = d^2(M, C).
+$$
+
+<Hint>
+Đưa vào tâm tỉ cự $I$ của hệ điểm $\{(A, 1), (B, 1), (C, -1)\}$, tức điểm $I$ xác định duy nhất bởi $\overrightarrow{IA} + \overrightarrow{IB} - \overrightarrow{IC} = \vec{0}$ (hay $\overrightarrow{CI} = \overrightarrow{CA} + \overrightarrow{CB}$), rồi chèn điểm $I$ vào ba bình phương khoảng cách.
+</Hint>
+
+<Solution>
+Gọi $I \in \mathcal{E}^n$ là điểm duy nhất (tâm tỉ cự của hệ $\{(A, 1), (B, 1), (C, -1)\}$) xác định bởi hệ thức vectơ:
+$$
+\overrightarrow{IA} + \overrightarrow{IB} - \overrightarrow{IC} = \vec{0} \iff \overrightarrow{CI} = \overrightarrow{CA} + \overrightarrow{CB}.
+$$
+*(Khi $A, B, C$ không thẳng hàng, $I$ chính là đỉnh thứ tư của hình bình hành $ACBI$).* Từ $\overrightarrow{CI} = \overrightarrow{CA} + \overrightarrow{CB}$, ta có:
+$$
+\overrightarrow{IA} = \overrightarrow{CA} - \overrightarrow{CI} = -\overrightarrow{CB}, \qquad \overrightarrow{IB} = \overrightarrow{CB} - \overrightarrow{CI} = -\overrightarrow{CA}, \qquad \overrightarrow{IC} = -(\overrightarrow{CA} + \overrightarrow{CB}).
+$$
+
+Chèn điểm $I$ vào từng khoảng cách trong hệ thức $d^2(M, A) + d^2(M, B) - d^2(M, C) = 0$:
+$$
+\begin{aligned}
+d^2(M, A) + d^2(M, B) - d^2(M, C)
+&= (\overrightarrow{MI} + \overrightarrow{IA})^2 + (\overrightarrow{MI} + \overrightarrow{IB})^2 - (\overrightarrow{MI} + \overrightarrow{IC})^2 \\
+&= \overrightarrow{MI}^2 + 2\overrightarrow{MI} \cdot (\overrightarrow{IA} + \overrightarrow{IB} - \overrightarrow{IC}) + \overrightarrow{IA}^2 + \overrightarrow{IB}^2 - \overrightarrow{IC}^2 \\
+&= \overrightarrow{MI}^2 + \overrightarrow{CB}^2 + \overrightarrow{CA}^2 - (\overrightarrow{CA} + \overrightarrow{CB})^2 \\
+&= d^2(I, M) - 2(\overrightarrow{CA} \cdot \overrightarrow{CB}).
+\end{aligned}
+$$
+Vậy hệ thức đã cho tương đương với:
+$$
+d^2(I, M) = 2(\overrightarrow{CA} \cdot \overrightarrow{CB}).
+$$
+Vì $A, B, C$ phân biệt nên $\overrightarrow{CA} \neq \vec{0}$ và $\overrightarrow{CB} \neq \vec{0}$. Ta có ba trường hợp hình học:
+1. **Nếu $\overrightarrow{CA} \cdot \overrightarrow{CB} > 0$** *(góc $\widehat{ACB}$ nhọn, hoặc hai tia $CA, CB$ trùng nhau)*: Quỹ tích các điểm $M$ là **siêu cầu thực** $S(I, R)$ có tâm $I$ (xác định bởi $\overrightarrow{CI} = \overrightarrow{CA} + \overrightarrow{CB}$) và bán kính $R = \sqrt{2(\overrightarrow{CA} \cdot \overrightarrow{CB})} > 0$.
+2. **Nếu $\overrightarrow{CA} \cdot \overrightarrow{CB} = 0$** *(tức $\overrightarrow{CA} \perp \overrightarrow{CB}$, góc $\widehat{ACB} = \dfrac{\pi}{2}$)*: Quỹ tích chỉ gồm **một điểm duy nhất là điểm $I$** (siêu cầu điểm $S(I, 0)$, chính là đỉnh thứ tư của hình chữ nhật $ACBI$).
+3. **Nếu $\overrightarrow{CA} \cdot \overrightarrow{CB} < 0$** *(góc $\widehat{ACB}$ tù hoặc góc bẹt)*: Quỹ tích là **tập rỗng $\varnothing$** (không có điểm thực $M$ nào thỏa mãn).
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e10-68" title="Bài tập 2.68 (Tâm và bán kính siêu cầu ngoại tiếp đơn hình vuông trong En — tr. 147)">
+Trong $\mathcal{E}^n$ với mục tiêu trực chuẩn $\{E_0; E_i\}$ cho $n$ điểm $A_1, A_2, \dots, A_n$ lần lượt có tọa độ là:
+$$
+A_i = (0, \dots, 0, a_i, 0, \dots, 0)
+$$
+với $a_i \neq 0$ nằm ở tọa độ thứ $i$ ($i = 1, 2, \dots, n$). Hãy xác định tâm và bán kính siêu cầu đi qua các điểm $E_0, A_1, A_2, \dots, A_n$.
+
+<Hint>
+Thay trực tiếp tọa độ của $E_0(0, \dots, 0)$ và các điểm $A_1, \dots, A_n$ vào phương trình siêu cầu tổng quát $\sum_{i=1}^n x_i^2 + 2\sum_{i=1}^n \alpha_i x_i + \alpha_0 = 0$.
+</Hint>
+
+<Solution>
+Trong mục tiêu trực chuẩn $\{E_0; E_i\}$, gốc tọa độ là $E_0(0, 0, \dots, 0)$ và các vectơ $\overrightarrow{E_0 A_i} = a_i \overrightarrow{E_0 E_i}$ ($i = 1, \dots, n$, $a_i \neq 0$) độc lập tuyến tính, nên $n + 1$ điểm $E_0, A_1, \dots, A_n$ độc lập và xác định một siêu cầu thực duy nhất $(S)$ (theo Bài tập 2.63).
+
+Giả sử siêu cầu $(S)$ có phương trình tổng quát:
+$$
+\sum_{i=1}^n x_i^2 + 2\sum_{i=1}^n \alpha_i x_i + \alpha_0 = 0.
+$$
+- Vì $E_0(0, 0, \dots, 0) \in (S)$ nên thay tọa độ $E_0$ vào phương trình ta được $\alpha_0 = 0$.
+- Với mỗi $i \in \{1, 2, \dots, n\}$, vì $A_i(0, \dots, 0, a_i, 0, \dots, 0) \in (S)$ nên thay tọa độ $A_i$ vào phương trình (với $\alpha_0 = 0$) ta có:
+  $$
+  a_i^2 + 2\alpha_i a_i = 0 \implies \alpha_i = -\frac{a_i}{2} \qquad (\text{do } a_i \neq 0).
+  $$
+
+Do đó phương trình của siêu cầu $(S)$ là:
+$$
+\sum_{i=1}^n x_i^2 - \sum_{i=1}^n a_i x_i = 0 \iff \sum_{i=1}^n \left(x_i - \frac{a_i}{2}\right)^2 = \frac{1}{4}\sum_{i=1}^n a_i^2.
+$$
+**Kết luận:** Siêu cầu đi qua $E_0, A_1, \dots, A_n$ có:
+- **Tâm:** $I\left(\dfrac{a_1}{2},\; \dfrac{a_2}{2},\; \dots,\; \dfrac{a_n}{2}\right)$;
+- **Bán kính:** $R = \dfrac{1}{2}\sqrt{\displaystyle\sum_{i=1}^n a_i^2} > 0$.
+</Solution>
+</Exercise>
+
+<Exercise id="exr-e10-69" title="Bài tập 2.69 (Phép affine biến siêu cầu thành siêu cầu là phép đồng dạng — tr. 147)">
+Chứng minh rằng nếu một phép biến đổi affine $f: \mathcal{E}^n \to \mathcal{E}^n$ của không gian $\mathcal{E}^n$ biến một siêu cầu tâm $O$ bán kính $R$ ($R > 0$) thành siêu cầu tâm $O'$ bán kính $R'$ ($R' > 0$) thì $f$ là một phép đồng dạng. Xác định tỉ số đồng dạng của $f$.
+
+<Hint>
+Gọi $\varphi: \overrightarrow{\mathcal{E}^n} \to \overrightarrow{\mathcal{E}^n}$ là phép biến đổi tuyến tính liên kết với $f$ và đặt $P = f(O)$. Xét các cặp điểm xuyên tâm đối $M_+ = O + \vec{x}$ và $M_- = O - \vec{x}$ trên $S(O, R)$ (với $|\vec{x}| = R$) để trước hết chứng minh $P = O'$, sau đó suy ra $|\varphi(\vec{u})| = \dfrac{R'}{R}|\vec{u}|$ với mọi $\vec{u} \in \overrightarrow{\mathcal{E}^n}$.
+</Hint>
+
+<Solution>
+Gọi $\varphi: \overrightarrow{\mathcal{E}^n} \to \overrightarrow{\mathcal{E}^n}$ là phép biến đổi tuyến tính song ánh liên kết với phép biến đổi affine $f$, và đặt $P = f(O) \in \mathcal{E}^n$.
+
+**Bước 1 — Chứng minh $f(O) = O'$ (tức $\overrightarrow{O'P} = \vec{0}$):**
+
+Lấy một vectơ $\vec{x} \in \overrightarrow{\mathcal{E}^n}$ bất kì có độ dài $|\vec{x}| = R$. Gọi $M_+, M_- \in \mathcal{E}^n$ là hai điểm xuyên tâm đối trên siêu cầu $S(O, R)$ xác định bởi $\overrightarrow{OM_+} = \vec{x}$ và $\overrightarrow{OM_-} = -\vec{x}$. Vì $f\bigl(S(O, R)\bigr) = S(O', R')$ nên hai điểm ảnh $M'_+ = f(M_+)$ và $M'_- = f(M_-)$ đều nằm trên siêu cầu $S(O', R')$, với:
+$$
+\overrightarrow{O'M'_+} = \overrightarrow{O'P} + \overrightarrow{PM'_+} = \overrightarrow{O'P} + \varphi(\vec{x}), \qquad
+\overrightarrow{O'M'_-} = \overrightarrow{O'P} + \overrightarrow{PM'_-} = \overrightarrow{O'P} - \varphi(\vec{x}).
+$$
+Từ $d^2(O', M'_+) = d^2(O', M'_-) = R'^2$, ta thu được hai đẳng thức:
+$$
+\bigl(\overrightarrow{O'P} + \varphi(\vec{x})\bigr)^2 = R'^2, \qquad \bigl(\overrightarrow{O'P} - \varphi(\vec{x})\bigr)^2 = R'^2. \tag{1}
+$$
+Trừ vế theo vế hai đẳng thức trong $(1)$:
+$$
+4\bigl(\overrightarrow{O'P} \cdot \varphi(\vec{x})\bigr) = 0 \implies \overrightarrow{O'P} \cdot \varphi(\vec{x}) = 0 \qquad (\forall \vec{x} \in \overrightarrow{\mathcal{E}^n},\; |\vec{x}| = R).
+$$
+Với mọi vectơ $\vec{u} \in \overrightarrow{\mathcal{E}^n} \setminus \{\vec{0}\}$, vectơ $\vec{x} = \dfrac{R}{|\vec{u}|}\vec{u}$ có độ dài bằng $R$, nên theo tính tuyến tính của $\varphi$:
+$$
+\overrightarrow{O'P} \cdot \varphi(\vec{u}) = \frac{|\vec{u}|}{R}\bigl(\overrightarrow{O'P} \cdot \varphi(\vec{x})\bigr) = 0.
+$$
+Đẳng thức cũng đúng tầm thường với $\vec{u} = \vec{0}$. Vì $\varphi$ là toàn ánh lên $\overrightarrow{\mathcal{E}^n}$, vectơ $\overrightarrow{O'P}$ trực giao với mọi vectơ của $\overrightarrow{\mathcal{E}^n}$ (đặc biệt $\overrightarrow{O'P} \cdot \overrightarrow{O'P} = 0$), suy ra $\overrightarrow{O'P} = \vec{0}$, tức $f(O) = P = O'$.
+
+**Bước 2 — Chứng minh $f$ là phép đồng dạng và xác định tỉ số đồng dạng:**
+
+Thay $\overrightarrow{O'P} = \vec{0}$ vào $(1)$, ta được:
+$$
+\bigl|\varphi(\vec{x})\bigr| = R' \qquad (\forall \vec{x} \in \overrightarrow{\mathcal{E}^n},\; |\vec{x}| = R).
+$$
+Bây giờ lấy một vectơ $\vec{u} \in \overrightarrow{\mathcal{E}^n}$ bất kì. Nếu $\vec{u} = \vec{0}$ thì $|\varphi(\vec{0})| = 0 = \dfrac{R'}{R}|\vec{0}|$. Nếu $\vec{u} \neq \vec{0}$, đặt $\vec{x} = \dfrac{R}{|\vec{u}|}\vec{u}$ (thỏa mãn $|\vec{x}| = R$), khi đó $\vec{u} = \dfrac{|\vec{u}|}{R}\vec{x}$, nên:
+$$
+|\varphi(\vec{u})| = \left|\varphi\left(\frac{|\vec{u}|}{R}\vec{x}\right)\right| = \frac{|\vec{u}|}{R}|\varphi(\vec{x})| = \frac{R'}{R}|\vec{u}|.
+$$
+Theo Hệ quả ở §8 (Mục 2b), phép biến đổi affine $f$ có phép biến đổi tuyến tính liên kết thỏa mãn $|\varphi(\vec{u})| = k|\vec{u}|$ với mọi $\vec{u} \in \overrightarrow{\mathcal{E}^n}$ và $k = \dfrac{R'}{R} > 0$, nên $f$ là một **phép đồng dạng** của $\mathcal{E}^n$ với **tỉ số đồng dạng $k = \dfrac{R'}{R}$**.
 </Solution>
 </Exercise>
 
 <KeyTakeaways>
-- Siêu cầu trong không gian n chiều là tập hợp các điểm cách đều một điểm cố định (tâm).
-- Giao của siêu cầu với một phẳng nếu không rỗng thì là một siêu cầu trong không gian phẳng đó.
+- Trong mục tiêu trực chuẩn, siêu cầu tổng quát $\sum_{i=1}^n x_i^2 + 2\sum_{i=1}^n a_i x_i + a_0 = 0$ phân loại thành siêu cầu thực, siêu cầu điểm hoặc siêu cầu ảo theo dấu của $\sum_{i=1}^n a_i^2 - a_0$; miền trong của siêu cầu thực là một tập lồi.
+- Với siêu cầu tổng quát, ma trận $A = I_n$ nên mọi vectơ khác $\vec{0}$ đều là phương chính, mọi siêu phẳng qua tâm đều là siêu phẳng kính chính, và siêu tiếp diện tại $M_0 \in S(I, r)$ nhận $\overrightarrow{IM_0}$ làm vectơ pháp tuyến.
+- Phương tích $\mathcal{P}(M_0)/(S) = f(x_1^0, \dots, x_n^0) = \overrightarrow{M_0 M_1} \cdot \overrightarrow{M_0 M_2}$ không phụ thuộc cát tuyến qua $M_0$; tập hợp điểm có cùng phương tích đối với hai siêu cầu không đồng tâm là siêu phẳng đẳng phương vuông góc với đường nối hai tâm.
 </KeyTakeaways>

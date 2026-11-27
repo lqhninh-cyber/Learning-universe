@@ -2,7 +2,7 @@
   "stats": {
     "totalLessons": 122,
     "totalTerms": 67,
-    "totalBacklinks": 519,
+    "totalBacklinks": 521,
     "termsWithBacklinks": 67,
     "lessonsWithBacklinks": 116
   },
@@ -2395,6 +2395,14 @@
         "count": 39
       },
       {
+        "lessonId": "sieu-cau-trong-khong-gian-euclide",
+        "lessonCode": "HHAVE 2.10",
+        "lessonTitle": "Siêu cầu trong Không gian Ơclit",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/sieu-cau-trong-khong-gian-euclide",
+        "count": 37
+      },
+      {
         "lessonId": "phuong-trinh-cua-m-phang-trong-khong-gian-xa-anh",
         "lessonCode": "HHAVE 3.3",
         "lessonTitle": "Phương trình của m-Phẳng trong Không gian Xạ ảnh",
@@ -2465,14 +2473,6 @@
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/tap-loi-trong-khong-gian-afin-thuc",
         "count": 16
-      },
-      {
-        "lessonId": "sieu-cau-trong-khong-gian-euclide",
-        "lessonCode": "HHAVE 2.10",
-        "lessonTitle": "Siêu cầu trong Không gian Ơclit",
-        "subjectId": "hinh-hoc-affine",
-        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/sieu-cau-trong-khong-gian-euclide",
-        "count": 11
       },
       {
         "lessonId": "hinh-hoc-dong-dang",
@@ -2557,6 +2557,14 @@
         "count": 2
       },
       {
+        "lessonId": "sieu-cau-trong-khong-gian-euclide",
+        "lessonCode": "HHAVE 2.10",
+        "lessonTitle": "Siêu cầu trong Không gian Ơclit",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/sieu-cau-trong-khong-gian-euclide",
+        "count": 2
+      },
+      {
         "lessonId": "khong-gian-euclide",
         "lessonCode": "HHAVE 2.2",
         "lessonTitle": "Không gian Ơclit",
@@ -2615,19 +2623,19 @@
         "count": 3
       },
       {
-        "lessonId": "khong-gian-euclide",
-        "lessonCode": "HHAVE 2.2",
-        "lessonTitle": "Không gian Ơclit",
-        "subjectId": "hinh-hoc-affine",
-        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/khong-gian-euclide",
-        "count": 1
-      },
-      {
         "lessonId": "sieu-cau-trong-khong-gian-euclide",
         "lessonCode": "HHAVE 2.10",
         "lessonTitle": "Siêu cầu trong Không gian Ơclit",
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/sieu-cau-trong-khong-gian-euclide",
+        "count": 3
+      },
+      {
+        "lessonId": "khong-gian-euclide",
+        "lessonCode": "HHAVE 2.2",
+        "lessonTitle": "Không gian Ơclit",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/khong-gian-euclide",
         "count": 1
       }
     ],
@@ -2721,6 +2729,14 @@
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/anh-xa-dang-cu-va-phep-bien-doi-dang-cu",
         "count": 6
+      },
+      {
+        "lessonId": "sieu-cau-trong-khong-gian-euclide",
+        "lessonCode": "HHAVE 2.10",
+        "lessonTitle": "Siêu cầu trong Không gian Ơclit",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/sieu-cau-trong-khong-gian-euclide",
+        "count": 3
       },
       {
         "lessonId": "mo-hinh-xa-anh-cua-khong-gian-euclide",
@@ -2823,6 +2839,14 @@
         "count": 7
       },
       {
+        "lessonId": "sieu-cau-trong-khong-gian-euclide",
+        "lessonCode": "HHAVE 2.10",
+        "lessonTitle": "Siêu cầu trong Không gian Ơclit",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/sieu-cau-trong-khong-gian-euclide",
+        "count": 7
+      },
+      {
         "lessonId": "mo-hinh-xa-anh-cua-khong-gian-euclide",
         "lessonCode": "HHAVE 3.11",
         "lessonTitle": "Mô hình Xạ ảnh của Không gian Ơclit",
@@ -2852,14 +2876,6 @@
         "lessonTitle": "Hình học Ơclit theo Quan điểm Klein",
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/hinh-hoc-euclide",
-        "count": 3
-      },
-      {
-        "lessonId": "sieu-cau-trong-khong-gian-euclide",
-        "lessonCode": "HHAVE 2.10",
-        "lessonTitle": "Siêu cầu trong Không gian Ơclit",
-        "subjectId": "hinh-hoc-affine",
-        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/sieu-cau-trong-khong-gian-euclide",
         "count": 3
       },
       {
@@ -2913,6 +2929,14 @@
         "count": 24
       },
       {
+        "lessonId": "sieu-cau-trong-khong-gian-euclide",
+        "lessonCode": "HHAVE 2.10",
+        "lessonTitle": "Siêu cầu trong Không gian Ơclit",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/sieu-cau-trong-khong-gian-euclide",
+        "count": 20
+      },
+      {
         "lessonId": "hinh-hoc-dong-dang",
         "lessonCode": "HHAVE 2.8",
         "lessonTitle": "Hình học Đồng dạng",
@@ -2950,14 +2974,6 @@
         "lessonTitle": "Hình học Ơclit theo Quan điểm Klein",
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/hinh-hoc-euclide",
-        "count": 1
-      },
-      {
-        "lessonId": "sieu-cau-trong-khong-gian-euclide",
-        "lessonCode": "HHAVE 2.10",
-        "lessonTitle": "Siêu cầu trong Không gian Ơclit",
-        "subjectId": "hinh-hoc-affine",
-        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/sieu-cau-trong-khong-gian-euclide",
         "count": 1
       }
     ],
@@ -4728,10 +4744,12 @@
     ],
     "sieu-cau-trong-khong-gian-euclide": [
       "sieu-phang",
-      "khong-gian-euclide",
-      "sieu-mat-bac-hai",
       "muc-tieu-truc-chuan",
-      "tap-loi"
+      "khong-gian-euclide",
+      "phep-bien-doi-afin",
+      "tap-loi",
+      "sieu-mat-bac-hai",
+      "tam-ti-cu"
     ],
     "khong-gian-xa-anh": [
       "khong-gian-xa-anh",
