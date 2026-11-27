@@ -2,7 +2,7 @@
   "stats": {
     "totalLessons": 122,
     "totalTerms": 67,
-    "totalBacklinks": 521,
+    "totalBacklinks": 524,
     "termsWithBacklinks": 67,
     "lessonsWithBacklinks": 116
   },
@@ -2215,6 +2215,14 @@
         "count": 11
       },
       {
+        "lessonId": "khong-gian-xa-anh",
+        "lessonCode": "HHAVE 3.1",
+        "lessonTitle": "Không gian Xạ ảnh",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-xa-anh/khong-gian-xa-anh",
+        "count": 10
+      },
+      {
         "lessonId": "tam-ti-cu-cua-mot-he-diem",
         "lessonCode": "HHAVE 1.4",
         "lessonTitle": "Tâm Tỉ Cự của một Hệ Điểm",
@@ -2244,14 +2252,6 @@
         "lessonTitle": "Góc trong Không gian Ơclit",
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/goc-trong-khong-gian-euclide",
-        "count": 3
-      },
-      {
-        "lessonId": "khong-gian-xa-anh",
-        "lessonCode": "HHAVE 3.1",
-        "lessonTitle": "Không gian Xạ ảnh",
-        "subjectId": "hinh-hoc-affine",
-        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-xa-anh/khong-gian-xa-anh",
         "count": 3
       },
       {
@@ -2361,6 +2361,14 @@
         "count": 2
       },
       {
+        "lessonId": "khong-gian-xa-anh",
+        "lessonCode": "HHAVE 3.1",
+        "lessonTitle": "Không gian Xạ ảnh",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-xa-anh/khong-gian-xa-anh",
+        "count": 2
+      },
+      {
         "lessonId": "muc-tieu-truc-chuan-toa-do-truc-chuan",
         "lessonCode": "HHAVE 2.3",
         "lessonTitle": "Mục tiêu Trực chuẩn và Tọa độ Trực chuẩn",
@@ -2435,6 +2443,14 @@
         "count": 23
       },
       {
+        "lessonId": "khong-gian-xa-anh",
+        "lessonCode": "HHAVE 3.1",
+        "lessonTitle": "Không gian Xạ ảnh",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-xa-anh/khong-gian-xa-anh",
+        "count": 20
+      },
+      {
         "lessonId": "mo-hinh-xa-anh-cua-khong-gian-afin",
         "lessonCode": "HHAVE 3.6",
         "lessonTitle": "Mô hình Xạ ảnh của Không gian Affine",
@@ -2505,14 +2521,6 @@
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-xa-anh/anh-xa-xa-anh-va-bien-doi-xa-anh",
         "count": 7
-      },
-      {
-        "lessonId": "khong-gian-xa-anh",
-        "lessonCode": "HHAVE 3.1",
-        "lessonTitle": "Không gian Xạ ảnh",
-        "subjectId": "hinh-hoc-affine",
-        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-xa-anh/khong-gian-xa-anh",
-        "count": 6
       },
       {
         "lessonId": "sieu-mat-bac-hai-trong-khong-gian-xa-anh",
@@ -2893,6 +2901,14 @@
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-affine/khong-gian-affine",
         "count": 1
+      },
+      {
+        "lessonId": "khong-gian-xa-anh",
+        "lessonCode": "HHAVE 3.1",
+        "lessonTitle": "Không gian Xạ ảnh",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-xa-anh/khong-gian-xa-anh",
+        "count": 1
       }
     ],
     "muc-tieu-truc-chuan": [
@@ -2975,6 +2991,14 @@
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-euclide/hinh-hoc-euclide",
         "count": 1
+      },
+      {
+        "lessonId": "khong-gian-xa-anh",
+        "lessonCode": "HHAVE 3.1",
+        "lessonTitle": "Không gian Xạ ảnh",
+        "subjectId": "hinh-hoc-affine",
+        "href": "/mon-hoc/hinh-hoc-affine/khong-gian-xa-anh/khong-gian-xa-anh",
+        "count": 1
       }
     ],
     "anh-xa-dang-cu": [
@@ -3002,7 +3026,7 @@
         "lessonTitle": "Không gian Xạ ảnh",
         "subjectId": "hinh-hoc-affine",
         "href": "/mon-hoc/hinh-hoc-affine/khong-gian-xa-anh/khong-gian-xa-anh",
-        "count": 18
+        "count": 36
       },
       {
         "lessonId": "nguyen-tac-doi-ngau-trong-khong-gian-xa-anh",
@@ -4754,7 +4778,10 @@
     "khong-gian-xa-anh": [
       "khong-gian-xa-anh",
       "sieu-phang",
-      "khong-gian-afin"
+      "khong-gian-afin",
+      "muc-tieu-afin",
+      "khong-gian-euclide",
+      "muc-tieu-truc-chuan"
     ],
     "toa-do-xa-anh-va-muc-tieu-xa-anh": [
       "toa-do-xa-anh",

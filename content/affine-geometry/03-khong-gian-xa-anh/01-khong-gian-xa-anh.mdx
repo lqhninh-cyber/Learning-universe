@@ -1,17 +1,21 @@
 ---
 id: khong-gian-xa-anh
-title: "Không gian Xạ ảnh"
-description: "Định nghĩa không gian xạ ảnh xây dựng từ không gian vectơ, điểm xạ ảnh và số chiều."
-estimatedMinutes: 45
+title: 'Không gian Xạ ảnh'
+description: 'Định nghĩa không gian xạ ảnh n chiều, các m-phẳng xạ ảnh và bốn mô hình kinh điển: mô hình vectơ, mô hình số học, mô hình bó đường thẳng và mô hình affine bổ sung phần tử vô tận.'
+estimatedMinutes: 55
 level: basic
-prerequisites: []
+prerequisites:
+  - khong-gian-affine
+  - khong-gian-euclide
 tags:
-  - "không gian xạ ảnh"
-  - "tia vectơ"
-  - "chiều xạ ảnh"
+  - 'không gian xạ ảnh'
+  - 'm-phẳng xạ ảnh'
+  - 'bó đường thẳng'
+  - 'điểm vô tận'
+  - 'siêu phẳng vô tận'
 sources:
   - source: gt-hhcc-nmh-2004
-    pages: '165-173'
+    pages: '148-153'
     sections: '§1'
 status: published
 version: 1.0.0
@@ -24,188 +28,263 @@ authoring:
 
 ## 1. Định nghĩa
 
-<Definition id="def-p1-1" title="Định nghĩa">
-Giả sử $V ^{n+1}$ là không gian vectơ $n+1$ chiều $(n \ge 0)$ trên trường $\mathbb{K}$ và **X** là một tập hợp không rỗng tùy ý.
+<Definition id="def-p1-1" title="Định nghĩa không gian xạ ảnh n chiều">
+Giả sử $V^{n+1}$ là không gian vectơ $n + 1$ chiều ($n \ge 0$) trên trường $\mathbb{K}$ và $X$ là một tập hợp không rỗng tùy ý. Ta kí hiệu $P(V^{n+1})$ là tập hợp tất cả các không gian vectơ con một chiều của $V^{n+1}$, nghĩa là mỗi phần tử của $P(V^{n+1})$ là một không gian vectơ con $V^1$ của $V^{n+1}$.
 
-Kí hiệu P($V ^{n+1}$) là tập hợp tất cả các không gian con một chiều của $V ^{n+1}$, nghĩa là mỗi phần tử của P($V ^{n+1}$) là một không gian con $V ^{1}$ của $V ^{n+1}$.
-
-Nếu có song ánh $π: P(V^{n+1}) \to \mathbf{X}$ thì bộ ba (**X**, π, $V ^{n+1}$) gọi là *không gian xạ ảnh n chiều liên kết với không gian vectơ* $V ^{n+1}$ trên trường $\mathbb{K}$, kí hiệu là $\mathbb{P}^{n} = (\mathbf{X}, π, V^{n+1})$.
+Nếu có một song ánh:
+$$
+\pi: P(V^{n+1}) \to X
+$$
+thì bộ ba $(X, \pi, V^{n+1})$ được gọi là một *<GlossaryTerm termId="khong-gian-xa-anh">không gian xạ ảnh</GlossaryTerm> $n$ chiều liên kết với không gian vectơ $V^{n+1}$* trên trường $\mathbb{K}$ và được kí hiệu là $\mathcal{P}^n$:
+$$
+\mathcal{P}^n = (X, \pi, V^{n+1}).
+$$
 </Definition>
 
-Tùy theo $V ^{n+1}$ là không gian vectơ thực hay phức, ta được không gian xạ ảnh $\mathbb{P} ^{n}$ *thực* hay *phức*.
+Tùy theo $V^{n+1}$ là không gian vectơ thực ($\mathbb{K} = \mathbb{R}$) hay phức ($\mathbb{K} = \mathbb{C}$), ta được không gian xạ ảnh $\mathcal{P}^n$ *thực* hay *phức*. Trong giáo trình này, ta chủ yếu trình bày về **không gian xạ ảnh thực**.
 
-Giáo trình này chủ yếu trình bày về không gian xạ ảnh thực.
+Như vậy, mỗi *điểm* của không gian xạ ảnh $\mathcal{P}^n$ là ảnh qua song ánh $\pi$ của một không gian vectơ con một chiều $V^1$ được sinh ra bởi một vectơ $\vec{x} \neq \vec{0}$ của $V^{n+1}$.
 
-Mỗi điểm của $\mathbb{P} ^{n}$ là ảnh, qua song ánh π, của một không gian con $V ^{1}$ sinh bởi một vectơ $\vec{x} \neq \vec{0}$ của $V ^{n+1}$.
+<Definition id="def-p1-2" title="Định nghĩa m-phẳng xạ ảnh">
+Nếu $V^{m+1}$ là một không gian vectơ con $(m + 1)$ chiều của $V^{n+1}$ ($0 \le m \le n$) thì tập hợp con:
+$$
+X' = \pi\bigl[P(V^{m+1})\bigr] \subset X
+$$
+được gọi là một *$m$-phẳng xạ ảnh* của không gian xạ ảnh $\mathcal{P}^n$. Do đó:
+- $0$-phẳng còn gọi là *điểm*;
+- $1$-phẳng còn gọi là *đường thẳng* (đường thẳng xạ ảnh);
+- $2$-phẳng còn gọi là *mặt phẳng* (mặt phẳng xạ ảnh);
+- $(n - 1)$-phẳng còn gọi là *siêu phẳng* (siêu phẳng xạ ảnh).
 
-<Definition id="def-p1-2" title="m-phẳng xạ ảnh">
-Nếu $V ^{m+1}$ là không gian vectơ con của $V^{n+1} (0 \le m \le n)$ thì tập hợp con π[P($V ^{m+1}$)] của **X** gọi là *m-phẳng xạ ảnh* của $\mathbb{P} ^{n}$.
-
-Do đó 0-phẳng còn gọi là *điểm*, 1-phẳng còn gọi là *đường thẳng*, (n−1)-phẳng còn gọi là *siêu phẳng*.
-
-Giả sử $\mathbf{X}' = π[P(V^{m+1})]$ là m-phẳng.
-
-Khi đó $π' = π|P(V^{m+1})$ là song ánh $P(V^{m+1}) \to \mathbf{X}'$, nên $(\mathbf{X}', π', V^{m+1})$ cũng là không gian xạ ảnh m chiều, kí hiệu $\mathbb{P}^{m} = (\mathbf{X}', π', V^{m+1})$.
+Giả sử $X' = \pi\bigl[P(V^{m+1})\bigr]$ là một $m$-phẳng xạ ảnh. Khi đó ánh xạ thu hẹp $\pi': P(V^{m+1}) \to X'$ cảm sinh bởi song ánh $\pi$, tức là $\pi' = \pi|_{P(V^{m+1})}$, cũng là một song ánh. Như vậy bộ ba $(X', \pi', V^{m+1})$ tự thân là một không gian xạ ảnh $m$ chiều và được kí hiệu là:
+$$
+\mathcal{P}^m = (X', \pi', V^{m+1}).
+$$
 </Definition>
 
-<Example id="ex-p1-3" title="Ví dụ">
-Với $V^{2} = \R^{2}, P(V^{2})$ là tập các đường thẳng đi qua gốc tọa độ, nên $\mathbb{P} ^{1}$ là đường thẳng xạ ảnh thực.
+<Example id="ex-p1-3" title="Ví dụ minh họa đường thẳng xạ ảnh P1 và mặt phẳng xạ ảnh P2">
+**Đề bài:** Minh họa tập điểm và các phẳng con của không gian xạ ảnh thực $\mathcal{P}^1$ (khi $V^2 = \mathbb{R}^2$) và $\mathcal{P}^2$ (khi $V^3 = \mathbb{R}^3$).
 
-Mỗi đường thẳng qua gốc có phương trình $y = kx (k \in \R)$ hoặc $x = 0$, tức là có "một điểm ứng với mỗi giá trị k" cộng thêm điểm $x = 0$.
-
-Trong $\R ^{3}$, $\mathbb{P} ^{2}$ có điểm là các đường thẳng qua gốc, và mỗi mặt phẳng qua gốc $(V^{2} \subset V^{3})$ cho một đường thẳng xạ ảnh (1-phẳng).
+**Lời giải:**
+- Với $n = 1$ và $V^2 = \mathbb{R}^2$: $P(\mathbb{R}^2)$ là tập tất cả các đường thẳng vectơ đi qua gốc tọa độ $(0, 0)$ trong $\mathbb{R}^2$. Mỗi đường thẳng qua gốc hoặc có phương trình $x_2 = k x_1$ ($k \in \mathbb{R}$), hoặc là trục tung $x_1 = 0$; do đó đường thẳng xạ ảnh thực $\mathcal{P}^1$ gồm các điểm ứng 1–1 với $k \in \mathbb{R}$ cùng thêm một điểm ứng với phương $x_1 = 0$.
+- Với $n = 2$ và $V^3 = \mathbb{R}^3$: mỗi điểm của mặt phẳng xạ ảnh thực $\mathcal{P}^2$ ứng với một không gian con $1$ chiều $V^1 \subset \mathbb{R}^3$ (đường thẳng qua gốc), còn mỗi đường thẳng xạ ảnh ($1$-phẳng của $\mathcal{P}^2$) ứng với một không gian con $2$ chiều $V^2 \subset \mathbb{R}^3$ (mặt phẳng qua gốc).
 </Example>
 
 ## 2. Các mô hình của không gian xạ ảnh
 
-<Definition id="def-p1-4" title="a) Mô hình vectơ">
-Lấy **X** chính là tập hợp P($V ^{n+1}$) và song ánh π là phép đồng nhất.
+### a) Mô hình vectơ
 
-Điểm của không gian xạ ảnh [P($V ^{n+1}$), π, $V ^{n+1}$] là các không gian con một chiều của $V ^{n+1}$.
-
-Tập hợp các không gian con một chiều thuộc một không gian con $m+1$ chiều nào đó là một m-phẳng của không gian xạ ảnh này.
-</Definition>
-
-<Example id="ex-p1-5" title="Ví dụ">
-Trong $V^{3} = \R^{3}$, các không gian con một chiều span\{(1,0,0)\}, span\{(0,1,0)\}, span\{(1,1,0)\} đều nằm trong không gian con hai chiều ${x_{3} = 0}$.
-
-Vậy ba điểm xạ ảnh tương ứng cùng thuộc một đường thẳng xạ ảnh (1-phẳng).
-</Example>
-
-<Definition id="def-p1-6" title="b) Mô hình số học">
-Xét các bộ số thực có thứ tự $(x_{1}, x_{2}, \dots , x_{n+1})$ trong đó có ít nhất một số khác 0.
-
-Hai bộ (x$_{i}$) và (y$_{i}$) gọi là tương đương khi và chỉ khi có số thực $\lambda \neq 0$ sao cho $x_{i} = \lambda y_{i} (i = 1, \dots ,n+1)$.
-
-Tập hợp các bộ số thực nói trên được phân thành các lớp tương đương.
-
-Gọi $\mathbb{K}$ là tập hợp tất cả các lớp tương đương đó.
-
-Gọi $V ^{n+1}$ là một không gian vectơ đã chọn cơ sở.
-
-Song ánh $π: P(V^{n+1}) \to \mathbb{K}$ được xác định như sau: với không gian con một chiều $V ^{1}$, chọn trên $V ^{1}$ một vectơ $\vec{x} \neq \vec{0}$ có tọa độ $(x_{1}, \dots , x_{n+1})$ đối với cơ sở đã chọn; $V ^{1}$ ứng với lớp tương đương có đại diện là $(x_{1}, \dots , x_{n+1})$.
-
-Vậy ($\mathbb{K}$, π, $V ^{n+1}$) là một *mô hình số học* của $\mathbb{P} ^{n}$.
-</Definition>
-
-<Example id="ex-p1-7" title="Ví dụ">
-Trong $\mathbb{P} ^{2}$, các bộ $(1,2,3), (2,4,6), (-1,-2,-3)$ tương đương nhau $( \lambda = 2, -1)$ nên biểu diễn cùng một điểm.
-
-Bộ $(1,2,4)$ không tương đương với $(1,2,3)$ (không có λ để $1 = \lambda ·1, 2 = \lambda ·2, 4 = \lambda ·3)$, nên là một điểm khác.
-
-Bộ $(0,0,0)$ không biểu diễn điểm nào.
-</Example>
-
-<Definition id="def-p1-8" title="c) Mô hình bó">
-Trong không gian afin $\mathcal{A} ^{n+1}$ xây dựng trên $V ^{n+1}$, lấy một điểm O tùy ý.
-
-Gọi **X** là tập hợp tất cả các đường thẳng của $\mathcal{A} ^{n+1}$ cùng đi qua O; một tập hợp **X** như vậy gọi là *bó đường thẳng tâm O*.
-
-Nếu $V ^{1}$ là không gian con một chiều của $V ^{n+1}$ thì π($V ^{1}$) là đường thẳng có phương $V ^{1}$.
-
-Ta có song ánh $π: P(V^{n+1}) \to \mathbf{X}$, nên (**X**, π, $V ^{n+1}$) là mô hình của $\mathbb{P} ^{n}$.
-
-Mỗi đường thẳng của bó biểu thị một "điểm xạ ảnh".
-
-Hai đường thẳng phân biệt của bó tạo nên một mặt phẳng afin đi qua O, biểu thị một "đường thẳng xạ ảnh".
-
-Tập hợp các "điểm xạ ảnh" cùng thuộc một "đường thẳng xạ ảnh" là một tập hợp "điểm" khép kín: nếu điểm C chuyển động theo chiều từ A đến B của đường thẳng AB thì sau khi vượt qua B, điểm đó vẫn đi theo hướng cũ và sẽ trở về A.
-
-Vì vậy đường thẳng xạ ảnh không giống với đường thẳng afin hay đường thẳng Ơclit: nó là một đường khép kín.
-
-Muốn biểu thị một "mặt phẳng xạ ảnh" (2-phẳng), ta lấy ba đường thẳng của bó tâm O không cùng nằm trong một mặt phẳng afin; chúng biểu thị ba "điểm xạ ảnh" A, B, C không thẳng hàng.
-
-Khi đó trên "mặt phẳng xạ ảnh ABC" có các "đường thẳng xạ ảnh" AB, BC, CA, và từ tính chất khép kín của các đường thẳng đó ta hình dung tính chất khép kín của "mặt phẳng xạ ảnh ABC".
-</Definition>
-
-<Example id="ex-p1-9" title="Ví dụ">
-Trong $\R ^{3}$, bó tâm O gồm các đường thẳng qua gốc.
-
-Ba đường thẳng chứa các vectơ (1,0,0), (0,1,0), (1,1,0) cùng nằm trong mặt phẳng $x_{3} = 0$, nên biểu thị ba điểm xạ ảnh thẳng hàng.
-
-Ba đường thẳng chứa (1,0,0), (0,1,0), (0,0,1) không đồng phẳng, nên biểu thị ba điểm xạ ảnh không thẳng hàng, xác định một mặt phẳng xạ ảnh.
-</Example>
-
-<Definition id="def-p1-10" title="d) Mô hình afin có bổ sung các phần tử vô tận">
-Gọi $\mathcal{A} ^{n+1}$ là không gian afin $n+1$ chiều liên kết với $V ^{n+1}$ và $\mathcal{A} ^{n}$ là một siêu phẳng của $\mathcal{A} ^{n+1}$ có phương là không gian con $V^{n} \subset V^{n+1}$.
-
-Xét tập hợp
- 
-
+<Definition id="def-p1-4" title="a) Mô hình vectơ của không gian xạ ảnh Pn">
+Ta lấy tập nền $X$ là chính tập hợp $P(V^{n+1})$ và song ánh $\pi$ là phép đồng nhất:
 $$
-Ā^{n} = \mathcal{A}^{n} \cup P(V^{n})
+\pi = \mathrm{id}_{P(V^{n+1})}: P(V^{n+1}) \to P(V^{n+1}).
 $$
-
- 
-và xây dựng song ánh $π: P(V^{n+1}) \to Ā^{n}$: lấy một điểm cố định O của $\mathcal{A} ^{n+1}$ không nằm trên $\mathcal{A} ^{n}$; với mỗi không gian con một chiều $V ^{1}$ của $V ^{n+1}$:
-
-– Nếu $V ^{1}$ ⊄ $V ^{n}$ thì trên $\mathcal{A} ^{n}$ có một điểm M duy nhất sao cho $\vect{OM} \in V^{1}$; đặt $π(V^{1}) = M$.
-
-– Nếu $V^{1} \subset V^{n}$ thì đặt $π(V^{1}) = M_{\infty}$.
-
-Có thể hiểu π($V ^{1}$) là điểm gặp nhau của những đường thẳng song song với nhau trong $\mathcal{A} ^{n}$ có cùng phương $V ^{1}$; ta gọi đó là *điểm vô tận* của các đường thẳng song song đó.
-
-Dễ chứng minh π là song ánh, vì mỗi đường thẳng của bó tâm O ứng 1–1 với một điểm của Ā$^{n}$.
-
-Vậy (Ā$^{n}$, π, $V ^{n+1}$) là một không gian xạ ảnh n chiều, gọi là *mô hình afin có bổ sung các phần tử vô tận*.
+- **Điểm** của không gian xạ ảnh $\bigl(P(V^{n+1}), \pi, V^{n+1}\bigr)$ chính là các không gian vectơ con một chiều của $V^{n+1}$.
+- **$m$-phẳng** của không gian xạ ảnh này là tập hợp tất cả các không gian vectơ con một chiều nằm trong một không gian vectơ con $(m + 1)$ chiều $V^{m+1} \subset V^{n+1}$ nào đó.
 </Definition>
 
-<Definition id="def-p1-11" title="Các m-phẳng và siêu phẳng vô tận trong mô hình afin">
-Mỗi điểm xạ ảnh là một điểm thông thường của $\mathcal{A} ^{n}$ hoặc một không gian con một chiều của $V ^{n}$ (là phương của $\mathcal{A} ^{n}$).
+<Example id="ex-p1-5" title="Ví dụ kiểm tra ba điểm thẳng hàng trong mô hình vectơ của P2">
+**Đề bài:** Trong mô hình vectơ của $\mathcal{P}^2$ xây dựng trên $V^3 = \mathbb{R}^3$, xét ba điểm xạ ảnh $A = \operatorname{span}\{(1, 0, 0)\}$, $B = \operatorname{span}\{(0, 1, 0)\}$ và $C = \operatorname{span}\{(1, 1, 0)\}$. Chứng tỏ ba điểm này cùng thuộc một đường thẳng xạ ảnh.
 
-Mỗi m-phẳng của không gian xạ ảnh là:
+**Lời giải:** Xét không gian vectơ con hai chiều $V^2 = \{(x_1, x_2, x_3) \in \mathbb{R}^3 \mid x_3 = 0\}$ của $\mathbb{R}^3$. Cả ba không gian con một chiều $A, B, C$ đều là không gian con của $V^2$ (vì $(1, 1, 0) = (1, 0, 0) + (0, 1, 0) \in V^2$), nên trong mô hình vectơ của $\mathcal{P}^2$, ba điểm $A, B, C$ cùng nằm trên một $1$-phẳng (đường thẳng xạ ảnh) xác định bởi $V^2$.
+</Example>
 
-– hoặc tập hợp $\mathcal{A}^{m} \cup P(V^{m})$, trong đó $\mathcal{A} ^{m}$ là m-phẳng afin, $V ^{m}$ là phương của nó và P($V ^{m}$) là tập hợp các $V^{1} \subset V^{m}$;
+### b) Mô hình số học
 
-– hoặc tập hợp P($V ^{m+1}$) với $V^{m+1} \subset V^{n}$, gọi là *m-phẳng vô tận* (m-phẳng chứa toàn điểm vô tận).
+<Definition id="def-p1-6" title="b) Mô hình số học của không gian xạ ảnh thực Pn">
+Xét các bộ số thực có thứ tự gồm $n + 1$ số $(x_1, x_2, \dots, x_{n+1})$ trong đó có ít nhất một số khác $0$, tức $(x_1, x_2, \dots, x_{n+1}) \neq (0, 0, \dots, 0)$. Hai bộ số thực $(x_1, x_2, \dots, x_{n+1})$ và $(y_1, y_2, \dots, y_{n+1})$ như vậy được gọi là *tương đương* khi và chỉ khi tồn tại một số thực $\lambda \neq 0$ sao cho:
+$$
+x_i = \lambda y_i \qquad (i = 1, 2, \dots, n + 1).
+$$
+Quan hệ tương đương này phân hoạch tập hợp các bộ số thực khác không nói trên thành các lớp tương đương; gọi $\mathbf{K}$ là tập hợp tất cả các lớp tương đương đó.
 
-Nếu a và b là hai đường thẳng song song có cùng phương $V ^{1}$ thì $a \cup π(V^{1})$ và $b \cup π(V^{1})$ là hai đường thẳng của Ā$^{n}$ có chung điểm π($V ^{1}$) (điểm vô tận).
+Bây giờ gọi $V^{n+1}$ là một không gian vectơ thực $(n + 1)$ chiều trên đó đã chọn cố định một cơ sở. Ta xác định ánh xạ:
+$$
+\pi: P(V^{n+1}) \to \mathbf{K}
+$$
+như sau: giả sử $V^1 \in P(V^{n+1})$ là một không gian con một chiều của $V^{n+1}$; chọn trên $V^1$ một vectơ $\vec{x} \neq \vec{0}$ và gọi $(x_1, x_2, \dots, x_{n+1})$ là tọa độ của $\vec{x}$ đối với cơ sở đã chọn. Qua $\pi$, ta đặt $V^1$ tương ứng với lớp tương đương thuộc $\mathbf{K}$ có phần tử đại diện là $(x_1, x_2, \dots, x_{n+1})$.
 
-Tập hợp các điểm vô tận của Ā$^{n}$ nằm trên một (n−1)-phẳng gọi là *siêu phẳng vô tận*.
-
-Như vậy Ā$^{n}$ có được bằng cách lấy $\mathcal{A} ^{n}$ và bổ sung các điểm vô tận của mọi đường thẳng thuộc $\mathcal{A} ^{n}$.
+*(Ánh xạ $\pi$ hoàn toàn xác định không phụ thuộc cách chọn $\vec{x} \neq \vec{0}$ trên $V^1$, vì mọi vectơ khác không trên $V^1$ đều có dạng $\lambda \vec{x}$ với $\lambda \neq 0$, cho bộ tọa độ $(\lambda x_1, \dots, \lambda x_{n+1})$ thuộc cùng một lớp tương đương; đồng thời $\pi$ là song ánh).* Như vậy bộ ba $(\mathbf{K}, \pi, V^{n+1})$ là một mô hình của không gian xạ ảnh $n$ chiều và được gọi là *mô hình số học* của $\mathcal{P}^n$.
 </Definition>
 
-<Remark title="Chú ý">
-Chú ý.
+<Example id="ex-p1-7" title="Ví dụ nhận diện điểm trong mô hình số học của P2">
+**Đề bài:** Trong mô hình số học của $\mathcal{P}^2$, xét các bộ ba số $(1, 2, 3)$, $(2, 4, 6)$, $(-1, -2, -3)$, $(1, 2, 4)$ và $(0, 0, 0)$. Cho biết các bộ nào biểu diễn cùng một điểm xạ ảnh và bộ nào không biểu diễn điểm xạ ảnh.
 
-Trên mỗi đường thẳng của $\mathcal{A} ^{n}$ chỉ được bổ sung thêm một điểm vô tận.
+**Lời giải:**
+- Ba bộ $(1, 2, 3)$, $(2, 4, 6) = 2(1, 2, 3)$ và $(-1, -2, -3) = -1(1, 2, 3)$ tỉ lệ với nhau theo hệ số $\lambda \neq 0$, nên thuộc cùng một lớp tương đương và biểu diễn **cùng một điểm** của $\mathcal{P}^2$.
+- Bộ $(1, 2, 4)$ không tương đương với $(1, 2, 3)$ (vì $\dfrac{1}{1} = \dfrac{2}{2} = 1 \neq \dfrac{4}{3}$), nên biểu diễn một **điểm khác** của $\mathcal{P}^2$.
+- Bộ $(0, 0, 0)$ có tất cả các thành phần bằng $0$ nên **không biểu diễn bất kì điểm nào** của $\mathcal{P}^2$.
+</Example>
 
-Trong không gian xạ ảnh Ā$^{n}$ các điểm afin thông thường và các điểm vô tận có vai trò bình đẳng vì đều là điểm xạ ảnh như nhau.
+### c) Mô hình bó
 
-Vì vậy khi dùng mô hình này để minh họa các khái niệm và tính chất của không gian xạ ảnh, cần hiểu rõ bản chất của điểm vô tận để khỏi nhầm lẫn: điểm vô tận là khái niệm không có trong không gian afin và cũng không được nêu tên trong không gian xạ ảnh.
+<Definition id="def-p1-8" title="c) Mô hình bó đường thẳng tâm O">
+Trong không gian affine $\mathcal{A}^{n+1}$ xây dựng trên không gian vectơ $V^{n+1}$, lấy cố định một điểm $O$ tùy ý. Gọi $X$ là tập hợp tất cả các đường thẳng của $\mathcal{A}^{n+1}$ cùng đi qua điểm $O$; tập hợp $X$ như vậy được gọi là *bó đường thẳng tâm $O$*.
+
+Với mỗi không gian con một chiều $V^1$ thuộc $V^{n+1}$, gọi $\pi(V^1)$ là đường thẳng duy nhất đi qua $O$ có phương $V^1$. Khi đó ta có song ánh:
+$$
+\pi: P(V^{n+1}) \to X,
+$$
+nên bộ ba $(X, \pi, V^{n+1})$ là một mô hình của không gian xạ ảnh $n$ chiều $\mathcal{P}^n$:
+- Mỗi đường thẳng của bó tâm $O$ biểu thị một *"điểm xạ ảnh"*.
+- Hai đường thẳng phân biệt của bó xác định một mặt phẳng affine đi qua $O$, biểu thị cho một *"đường thẳng xạ ảnh"*.
+- **Tính chất khép kín của đường thẳng và mặt phẳng xạ ảnh:** Tập hợp các "điểm xạ ảnh" cùng thuộc một "đường thẳng xạ ảnh" là một tập hợp điểm **khép kín** — nếu một điểm $C$ chuyển động theo chiều từ $A$ đến $B$ trên đường thẳng xạ ảnh $AB$ (ứng với đường thẳng của bó quay liên tục quanh $O$ trong mặt phẳng affine xác định bởi $A, B$) thì sau khi vượt qua điểm $B$, điểm đó vẫn đi tiếp theo hướng cũ và sẽ quay trở về $A$. Như vậy đường thẳng xạ ảnh không giống với đường thẳng affine và đường thẳng Ơclit vì nó là một **đường khép kín**.
+- Tương tự, muốn biểu thị một *"mặt phẳng xạ ảnh"* ($2$-phẳng), ta lấy ba đường thẳng của bó tâm $O$ không cùng nằm trong một mặt phẳng affine; chúng biểu thị ba "điểm xạ ảnh" $A, B, C$ không thẳng hàng, xác định *"mặt phẳng xạ ảnh $ABC$"* chứa các "đường thẳng xạ ảnh" khép kín $AB, BC, CA$, qua đó cho phép hình dung tính chất khép kín của mặt phẳng xạ ảnh.
+</Definition>
+
+<Example id="ex-p1-9" title="Ví dụ minh họa mô hình bó đường thẳng tâm O trong A3">
+**Đề bài:** Trong không gian affine $\mathcal{A}^3 = \mathbb{R}^3$, xét bó đường thẳng tâm $O(0, 0, 0)$. Cho bốn đường thẳng $d_1, d_2, d_3, d_4$ đi qua $O$ lần lượt có các vectơ chỉ phương $(1, 0, 0)$, $(0, 1, 0)$, $(1, 1, 0)$ và $(0, 0, 1)$. Xét quan hệ thẳng hàng của các điểm xạ ảnh tương ứng trong $\mathcal{P}^2$.
+
+**Lời giải:**
+- Ba đường thẳng $d_1, d_2, d_3$ cùng nằm trong mặt phẳng affine $x_3 = 0$ đi qua $O$ (định thức ba vectơ chỉ phương bằng $0$), nên ba điểm xạ ảnh tương ứng cùng thuộc một đường thẳng xạ ảnh (thẳng hàng).
+- Ba đường thẳng $d_1, d_2, d_4$ không cùng nằm trong một mặt phẳng affine nào (định thức ba vectơ chỉ phương bằng $1 \neq 0$), nên biểu thị ba điểm xạ ảnh không thẳng hàng, xác định toàn bộ mặt phẳng xạ ảnh $\mathcal{P}^2$.
+</Example>
+
+### d) Mô hình affine có bổ sung thêm các phần tử vô tận
+
+<Definition id="def-p1-10" title="d) Mô hình affine bổ sung các phần tử vô tận">
+Gọi $\mathcal{A}^{n+1}$ là một không gian affine $(n + 1)$ chiều liên kết với không gian vectơ $V^{n+1}$, và gọi $\mathcal{A}^n$ là một siêu phẳng của $\mathcal{A}^{n+1}$ có phương là không gian vectơ con $V^n \subset V^{n+1}$. Xét tập hợp:
+$$
+\widetilde{\mathcal{A}}^n = \mathcal{A}^n \cup P(V^n)
+$$
+và xây dựng ánh xạ $\pi: P(V^{n+1}) \to \widetilde{\mathcal{A}}^n$ như sau: lấy một điểm cố định $O \in \mathcal{A}^{n+1}$ không nằm trên siêu phẳng $\mathcal{A}^n$. Giả sử $V^1$ là một không gian con một chiều của $V^{n+1}$:
+- **Nếu $V^1 \not\subset V^n$:** Đường thẳng đi qua $O$ có phương $V^1$ không song song với siêu phẳng $\mathcal{A}^n$, nên cắt $\mathcal{A}^n$ tại một điểm $M \in \mathcal{A}^n$ duy nhất sao cho $\overrightarrow{OM} \in V^1$. Trong trường hợp này ta đặt $\pi(V^1) = M$.
+- **Nếu $V^1 \subset V^n$:** Ta đặt $\pi(V^1) = M_\infty \in P(V^n)$ (chính là phần tử $V^1 \in P(V^n)$). Có thể hiểu điểm $\pi(V^1) = M_\infty$ là điểm gặp nhau của tất cả những đường thẳng song song với nhau trong $\mathcal{A}^n$ có cùng phương $V^1$, và ta thường gọi đó là *điểm vô tận* của các đường thẳng song song đó.
+
+Ánh xạ $\pi: P(V^{n+1}) \to \widetilde{\mathcal{A}}^n$ là một song ánh, vì mỗi đường thẳng của bó tâm $O$ trong $\mathcal{A}^{n+1}$ hoặc cắt $\mathcal{A}^n$ tại duy nhất một điểm $M \in \mathcal{A}^n$ (khi không song song với $\mathcal{A}^n$), hoặc song song với $\mathcal{A}^n$ và xác định duy nhất phương $V^1 \in P(V^n)$. Như vậy $(\widetilde{\mathcal{A}}^n, \pi, V^{n+1})$ là một không gian xạ ảnh $n$ chiều và được gọi là *mô hình affine có bổ sung thêm các phần tử vô tận*.
+</Definition>
+
+<Definition id="def-p1-11" title="Cấu trúc các m-phẳng và siêu phẳng vô tận trên mô hình mở rộng">
+Trên mô hình $(\widetilde{\mathcal{A}}^n, \pi, V^{n+1})$:
+- Mỗi **điểm xạ ảnh** hoặc là một *điểm thông thường* của không gian affine $\mathcal{A}^n$, hoặc là một không gian con một chiều $V^1$ của $V^n$ (*điểm vô tận* theo phương $V^1$).
+- Mỗi **$m$-phẳng xạ ảnh** (ứng với không gian vectơ con $V^{m+1} \subset V^{n+1}$, $0 \le m < n$) là một trong hai dạng:
+  1. Hoặc là tập hợp $\mathcal{A}^m \cup P(V^m)$ (khi $V^{m+1} \not\subset V^n$), trong đó $\mathcal{A}^m$ là một $m$-phẳng affine trong $\mathcal{A}^n$, $V^m = V^{m+1} \cap V^n$ là phương của $\mathcal{A}^m$ và $P(V^m)$ là tập hợp các điểm vô tận $V^1 \subset V^m$;
+  2. Hoặc là tập hợp $P(V^{m+1})$ trong đó $V^{m+1} \subset V^n$; ta có thể xem $P(V^{m+1})$ là giao (ở vô tận) của hai $(m + 1)$-phẳng affine song song với nhau trong $\mathcal{A}^n$, và gọi đó là *$m$-phẳng vô tận* ($m$-phẳng chứa toàn điểm vô tận).
+- Đặc biệt, nếu $a$ và $b$ là hai đường thẳng song song trong $\mathcal{A}^n$ có cùng phương $V^1$, thì $a \cup \{\pi(V^1)\}$ và $b \cup \{\pi(V^1)\}$ là hai đường thẳng của không gian xạ ảnh $\widetilde{\mathcal{A}}^n$ có chung nhau đúng một điểm là điểm vô tận $\pi(V^1)$.
+- Tập hợp tất cả các điểm vô tận $P(V^n)$ của $\widetilde{\mathcal{A}}^n$ lập thành một $(n - 1)$-phẳng được gọi là *siêu phẳng vô tận* (chứa toàn bộ các điểm vô tận bổ sung vào $\mathcal{A}^n$). Như vậy $\widetilde{\mathcal{A}}^n$ có được bằng cách lấy không gian affine $\mathcal{A}^n$ và bổ sung thêm các điểm vô tận của tất cả các đường thẳng thuộc $\mathcal{A}^n$.
+</Definition>
+
+<Remark id="rem-p1-11" title="Chú ý về bản chất của các điểm vô tận (tr. 152–153)">
+Trên mỗi đường thẳng của $\mathcal{A}^n$ ta **chỉ được phép bổ sung thêm đúng một điểm vô tận** mà thôi. Trong không gian xạ ảnh $\widetilde{\mathcal{A}}^n$, các điểm affine thông thường và các điểm vô tận đều có **vai trò hoàn toàn bình đẳng** vì chúng đều là các điểm xạ ảnh như nhau.
+
+Vì vậy, khi sử dụng mô hình này để minh họa các khái niệm và tính chất trong không gian xạ ảnh, ta cần hiểu rõ bản chất của các điểm vô tận để tránh nhầm lẫn: *điểm vô tận* là một khái niệm không có trong không gian affine thuần túy và cũng không được nêu tên phân biệt trong bản thân không gian xạ ảnh trừu tượng.
 </Remark>
 
-<Example id="ex-p1-12" title="Ví dụ">
-Lấy $\mathcal{A} ^{2}$ là mặt phẳng $x_{3} = 1$ trong $\R ^{3}$ (siêu phẳng của $\mathcal{A} ^{3}$), O là gốc tọa độ, $V^{2} = {x_{3} = 0}$.
+<Example id="ex-p1-12" title="Ví dụ nhúng mặt phẳng affine x3 = 1 vào mô hình xạ ảnh P2">
+**Đề bài:** Trong $\mathcal{A}^3 = \mathbb{R}^3$, lấy gốc $O(0, 0, 0)$ và siêu phẳng affine $\mathcal{A}^2: x_3 = 1$ (có phương $V^2: x_3 = 0$). Tìm ảnh qua $\pi$ của $V_1^1 = \operatorname{span}\{(2, 4, 1)\}$ và $V_2^1 = \operatorname{span}\{(1, 2, 0)\}$, đồng thời xác định giao điểm trong $\widetilde{\mathcal{A}}^2$ của hai đường thẳng song song $d_1: 2x_1 - x_2 = 0,\; x_3 = 1$ và $d_2: 2x_1 - x_2 + 5 = 0,\; x_3 = 1$.
 
-Đường thẳng $span{(2,4,1)}$ cắt $\mathcal{A} ^{2}$ tại điểm $M(2,4)$, nên π cho điểm afin M.
-
-Đường thẳng $span{(1,2,0)} \subset V^{2}$ ứng với điểm vô tận.
-
-Hai đường thẳng song song $y = 2x$ và $y = 2x + 5$ của $\mathcal{A} ^{2}$ cùng có phương $(1,2)$, nên khi bổ sung chúng cắt nhau tại điểm vô tận $π(span{(1,2,0)})$; tập các điểm vô tận của Ā$^{2}$ là một đường thẳng xạ ảnh (siêu phẳng vô tận).
+**Lời giải:**
+- Vì $V_1^1 = \operatorname{span}\{(2, 4, 1)\} \not\subset V^2$, đường thẳng qua $O$ theo phương $V_1^1$ cắt mặt phẳng $\mathcal{A}^2: x_3 = 1$ tại điểm thông thường duy nhất $M(2, 4, 1)$, nên $\pi(V_1^1) = M$.
+- Vì $V_2^1 = \operatorname{span}\{(1, 2, 0)\} \subset V^2$, ảnh $\pi(V_2^1)$ là điểm vô tận $M_\infty$ ứng với phương $(1, 2, 0)$.
+- Hai đường thẳng affine song song $d_1$ và $d_2$ trên $\mathcal{A}^2$ cùng có phương là $V_2^1 = \operatorname{span}\{(1, 2, 0)\}$; trong mặt phẳng xạ ảnh $\widetilde{\mathcal{A}}^2 = \mathcal{A}^2 \cup P(V^2)$, hai đường thẳng kéo dài $d_1 \cup \{M_\infty\}$ và $d_2 \cup \{M_\infty\}$ cắt nhau tại điểm vô tận $M_\infty = \pi(V_2^1)$ nằm trên đường thẳng vô tận $P(V^2)$.
 </Example>
 
-## Bài tập vận dụng và củng cố
+## Bài tập
 
-<Exercise id="exr-p1-1" title="Không gian xạ ảnh và mô hình vectơ (§1)">
-Trong mô hình vectơ của P², điểm là gì? Hai vectơ (1,2,3) và (2,4,6) của R³ ứng với mấy điểm của P²?
+*(Trọn bộ $3$ bài tập thuộc §1 trong cụm bài tập §1, §2, §3 cuối Chương III, trang 263–264; các bài 3.4, 3.8–3.12 thuộc §2 và 3.5–3.7, 3.13–3.27 thuộc §3 sẽ được trình bày ở Bài 3.2 và Bài 3.3).*
 
+<Exercise id="exr-p1-1" title="Bài tập 3.1 (Mô hình cặp điểm xuyên tâm đối trên siêu cầu đơn vị — tr. 263)">
+Trong <GlossaryTerm termId="khong-gian-euclide">không gian Ơclit</GlossaryTerm> $n$ chiều $\mathcal{E}^n$ ($n \ge 1$) đã cho một mục tiêu trực chuẩn $\{O; \vec{e}_1, \dots, \vec{e}_n\}$, cho một siêu cầu $S$ có phương trình:
+$$
+x_1^2 + x_2^2 + x_3^2 + \dots + x_n^2 = 1.
+$$
+Gọi $S'$ là tập hợp các cặp điểm xuyên tâm đối của $S$. Hãy xây dựng $S'$ trở thành một không gian xạ ảnh $n - 1$ chiều.
 
 <Hint>
-Điểm của P(Vⁿ⁺¹) là không gian con một chiều của Vⁿ⁺¹.
+Xét không gian vectơ nền $V^n = \overrightarrow{\mathcal{E}^n}$ có số chiều $n = (n - 1) + 1$. Với mỗi không gian vectơ con một chiều $V^1 \in P(V^n)$, chứng minh đường thẳng đi qua tâm $O(0, \dots, 0)$ có phương $V^1$ cắt siêu cầu đơn vị $S$ tại đúng một cặp điểm xuyên tâm đối $\{M, M^*\} \in S'$, từ đó thiết lập song ánh $\pi: P(V^n) \to S'$.
 </Hint>
 
 <Solution>
-Mỗi điểm của P² là một không gian con một chiều (đường thẳng qua gốc) của R³.
+Siêu cầu $S$ có tâm là gốc tọa độ $O(0, 0, \dots, 0)$ và bán kính bằng $1$. Hai điểm $M, M^* \in S$ gọi là một cặp điểm xuyên tâm đối của $S$ nếu $O$ là trung điểm của đoạn $MM^*$, tức là $\overrightarrow{OM^*} = -\overrightarrow{OM}$: nếu $M = (x_1, \dots, x_n) \in S$ thì $M^* = (-x_1, \dots, -x_n) \in S$ (với $M^* \neq M$ do $|\overrightarrow{OM}| = 1 > 0$). Do đó:
+$$
+S' = \bigl\{\{M, M^*\} \mid M \in S,\; \overrightarrow{OM^*} = -\overrightarrow{OM}\bigr\}.
+$$
 
-(2,4,6) = 2·(1,2,3) cùng sinh ra một không gian con một chiều.
+Gọi $V^n = \overrightarrow{\mathcal{E}^n}$ là không gian vectơ $n$ chiều liên kết với $\mathcal{E}^n$ (lưu ý $\dim V^n = n = (n - 1) + 1$ với $n - 1 \ge 0$). Ta xây dựng ánh xạ $\pi: P(V^n) \to S'$ như sau:
 
-**Đáp án:** Điểm là một đường thẳng qua gốc của R³; hai vectơ ứng với cùng một điểm của P².
+Với mỗi không gian con một chiều $V^1 \in P(V^n)$, lấy một vectơ sinh $\vec{v} \in V^1 \setminus \{\vec{0}\}$. Mọi vectơ thuộc $V^1$ có dạng $t\vec{v}$ ($t \in \mathbb{R}$), và điều kiện điểm $M \in \mathcal{E}^n$ có $\overrightarrow{OM} = t\vec{v}$ nằm trên siêu cầu đơn vị $S$ là:
+$$
+|\overrightarrow{OM}|^2 = 1 \iff t^2 |\vec{v}|^2 = 1 \iff t = \pm \frac{1}{|\vec{v}|}.
+$$
+Hai giá trị này xác định duy nhất hai vectơ đơn vị đối nhau $\vec{u} = \dfrac{\vec{v}}{|\vec{v}|}$ và $-\vec{u} = -\dfrac{\vec{v}}{|\vec{v}|}$ trên $V^1$ (không phụ thuộc việc chọn $\vec{v} \neq \vec{0}$ trên $V^1$, vì nếu thay $\vec{v}$ bởi $\lambda\vec{v}$ với $\lambda \neq 0$ thì tập hợp $\{\vec{u}, -\vec{u}\}$ không đổi), tương ứng với đúng một cặp điểm xuyên tâm đối $\{M, M^*\} \in S'$ xác định bởi $\overrightarrow{OM} = \vec{u}$, $\overrightarrow{OM^*} = -\vec{u}$. Ta đặt $\pi(V^1) = \{M, M^*\}$.
+
+Ta kiểm tra $\pi: P(V^n) \to S'$ là một song ánh:
+- **Đơn ánh:** Nếu $\pi(V_1^1) = \pi(V_2^1) = \{M, M^*\}$ thì vectơ đơn vị $\overrightarrow{OM} \neq \vec{0}$ đồng thời thuộc cả hai không gian con một chiều $V_1^1$ và $V_2^1$, suy ra $V_1^1 = \operatorname{span}\{\overrightarrow{OM}\} = V_2^1$.
+- **Toàn ánh:** Với mọi cặp điểm xuyên tâm đối $\{M, M^*\} \in S'$, vì $M \in S$ nên $|\overrightarrow{OM}| = 1 \neq 0$. Không gian con một chiều $V^1 = \operatorname{span}\{\overrightarrow{OM}\} \in P(V^n)$ hiển nhiên cho $\pi(V^1) = \{M, M^*\}$.
+
+Vậy theo Định nghĩa ở Mục 1, bộ ba **$(S', \pi, V^n)$ là một không gian xạ ảnh $(n - 1)$ chiều** *(trong mô hình này, mỗi $m$-phẳng xạ ảnh với $0 \le m \le n - 1$ chính là tập các cặp điểm xuyên tâm đối nằm trên giao của $S$ với một $(m + 1)$-phẳng đi qua tâm $O$ trong $\mathcal{E}^n$)*.
+</Solution>
+</Exercise>
+
+<Exercise id="exr-p1-2" title="Bài tập 3.2 (Mô hình hình cầu đóng với biên đồng nhất xuyên tâm đối — tr. 264)">
+Gọi $S$ và $S'$ là các tập hợp như ở Bài tập 3.1, còn $B$ là tập hợp các điểm nằm trong siêu cầu $S$:
+$$
+B = \bigl\{(x_1, x_2, \dots, x_n) \in \mathcal{E}^n \;\big|\; x_1^2 + x_2^2 + \dots + x_n^2 < 1\bigr\}.
+$$
+Hãy xây dựng $B' = B \cup S'$ trở thành một không gian xạ ảnh $n$ chiều.
+
+<Hint>
+Xét không gian vectơ $(n + 1)$ chiều $V^{n+1} = \mathbb{R}^{n+1}$ với tích vô hướng chính tắc và siêu cầu đơn vị $S^n \subset \mathbb{R}^{n+1}$. Chiếu trực giao bán cầu mở phía trên ($y_{n+1} > 0$) của $S^n$ lên hình cầu mở $B$, đồng thời đồng nhất các cặp điểm xuyên tâm đối trên xích đạo ($y_{n+1} = 0$) với $S'$ như ở Bài tập 3.1.
+</Hint>
+
+<Solution>
+Ta nhận thấy $B$ (tập các điểm của $\mathcal{E}^n$) và $S'$ (tập các cặp điểm xuyên tâm đối trên $S$) rời nhau ($B \cap S' = \varnothing$). Xét không gian vectơ thực $(n + 1)$ chiều $V^{n+1} = \mathbb{R}^{n+1}$ với tích vô hướng chính tắc $|\vec{y}| = \sqrt{y_1^2 + \dots + y_n^2 + y_{n+1}^2}$ và đặt không gian vectơ con $n$ chiều $V^n = \{(y_1, \dots, y_n, 0) \mid y_i \in \mathbb{R}\} \subset V^{n+1}$.
+
+Ta xây dựng ánh xạ $\pi: P(V^{n+1}) \to B' = B \cup S'$ như sau. Giả sử $V^1 = \operatorname{span}\{\vec{y}\} \in P(V^{n+1})$ được sinh bởi vectơ $\vec{y} = (y_1, \dots, y_n, y_{n+1}) \neq \vec{0}$ có độ dài $r = |\vec{y}| > 0$:
+
+1. **Trường hợp $V^1 \not\subset V^n$ (tức $y_{n+1} \neq 0$):** Trên $V^1$ có duy nhất một vectơ đơn vị $\vec{u} = (u_1, \dots, u_n, u_{n+1})$ có thành phần cuối dương ($u_{n+1} > 0$), đó là:
+   $$
+   \vec{u} = \frac{\operatorname{sgn}(y_{n+1})}{|\vec{y}|}\vec{y} \qquad \left(\sum_{i=1}^n u_i^2 + u_{n+1}^2 = 1,\; u_{n+1} > 0\right).
+   $$
+   Vì $u_{n+1} > 0$ nên $\sum_{i=1}^n u_i^2 = 1 - u_{n+1}^2 < 1$, suy ra điểm $M(u_1, u_2, \dots, u_n)$ thuộc hình cầu mở $B$. Ta đặt $\pi(V^1) = M(u_1, \dots, u_n) \in B$ *(không phụ thuộc cách chọn $\vec{y} \neq \vec{0}$ trên $V^1$, vì $\lambda\vec{y}$ với $\lambda \neq 0$ vẫn cho đúng cùng một vectơ đơn vị có thành phần thứ $n + 1$ dương)*.
+
+2. **Trường hợp $V^1 \subset V^n$ (tức $y_{n+1} = 0$):** Khi đó $(y_1, \dots, y_n) \neq (0, \dots, 0)$, hai vectơ đơn vị thuộc $V^1$ là $\left(\pm\dfrac{y_1}{r}, \dots, \pm\dfrac{y_n}{r}, 0\right)$, xác định duy nhất một cặp điểm xuyên tâm đối $\{N, N^*\} \in S'$ trên siêu cầu $S \subset \mathcal{E}^n$ với $N = \left(\dfrac{y_1}{r}, \dots, \dfrac{y_n}{r}\right)$ và $N^* = \left(-\dfrac{y_1}{r}, \dots, -\dfrac{y_n}{r}\right)$. Ta đặt $\pi(V^1) = \{N, N^*\} \in S'$.
+
+Để chứng minh $\pi: P(V^{n+1}) \to B'$ là một song ánh, ta chỉ ra tường minh ánh xạ ngược $\psi: B' \to P(V^{n+1})$:
+- Với mỗi điểm $M(x_1, \dots, x_n) \in B$ ($\sum_{i=1}^n x_i^2 < 1$), đặt:
+  $$
+  \psi(M) = \operatorname{span}\left\{\left(x_1,\; x_2,\; \dots,\; x_n,\; \sqrt{1 - \sum_{i=1}^n x_i^2}\right)\right\} \in P(V^{n+1}) \setminus P(V^n).
+  $$
+- Với mỗi cặp điểm xuyên tâm đối $\{N, N^*\} \in S'$ trong đó $N(w_1, \dots, w_n) \in S$ ($\sum_{i=1}^n w_i^2 = 1$), đặt:
+  $$
+  \psi\bigl(\{N, N^*\}\bigr) = \operatorname{span}\{(w_1, w_2, \dots, w_n, 0)\} \in P(V^n),
+  $$
+  hiển nhiên không phụ thuộc việc lấy đại diện $N$ hay $N^* = (-w_1, \dots, -w_n)$ vì hai vectơ đối nhau sinh ra cùng một không gian con một chiều.
+
+Kiểm tra trực tiếp cho thấy $(\pi \circ \psi)(z) = z$ với mọi $z \in B'$ và $(\psi \circ \pi)(V^1) = V^1$ với mọi $V^1 \in P(V^{n+1})$. Vậy $\pi$ là song ánh, và theo Định nghĩa ở Mục 1, bộ ba **$(B', \pi, V^{n+1})$ là một không gian xạ ảnh $n$ chiều** *(trong mô hình hình cầu này, miền mở $B$ đóng vai trò tương tự phần affine thông thường, còn $S'$ đóng vai trò siêu phẳng vô tận $\mathcal{P}^{n-1}$)*.
+</Solution>
+</Exercise>
+
+<Exercise id="exr-p1-3" title="Bài tập 3.3 (Không gian xạ ảnh tạo bởi bó siêu phẳng đi qua một điểm cố định — tr. 264)">
+Chứng minh rằng tập hợp các siêu phẳng cùng đi qua một điểm cố định $O$ của không gian affine $\mathcal{A}^{n+1}$ có thể được xây dựng thành một không gian xạ ảnh $n$ chiều *(đính chính lỗi in chỉ số sách gốc tr. 264: bản in ghi không gian nền là $\mathcal{A}^n$ nhưng kết luận không gian xạ ảnh $n$ chiều; nếu xét trong $\mathcal{A}^n$ với $n \ge 1$ thì bó siêu phẳng qua $O$ lập thành không gian xạ ảnh $(n - 1)$ chiều, còn trong $\mathcal{A}^{n+1}$ thì lập thành không gian xạ ảnh $n$ chiều)*.
+
+<Hint>
+Chọn một mục tiêu affine $\{O; \vec{e}_1, \dots, \vec{e}_{n+1}\}$ có gốc tại điểm cố định $O$ của $\mathcal{A}^{n+1}$. Sử dụng tính chất mỗi siêu phẳng đi qua $O$ được xác định duy nhất sai khác một hằng số nhân khác $0$ bởi bộ hệ số không đồng thời bằng $0$ trong phương trình tuyến tính thuần nhất $u_1 x_1 + \dots + u_{n+1} x_{n+1} = 0$ (tương ứng với không gian đối ngẫu $(V^{n+1})^*$).
+</Hint>
+
+<Solution>
+Xét không gian affine $\mathcal{A}^{n+1}$ ($n \ge 0$) liên kết với không gian vectơ $V^{n+1}$ trên trường $\mathbb{R}$, và gọi $H_O$ là tập hợp tất cả các siêu phẳng của $\mathcal{A}^{n+1}$ cùng đi qua điểm cố định $O \in \mathcal{A}^{n+1}$.
+
+Chọn cố định một cơ sở $\{\vec{e}_1, \vec{e}_2, \dots, \vec{e}_{n+1}\}$ của $V^{n+1}$ để lập mục tiêu affine $\{O; \vec{e}_1, \dots, \vec{e}_{n+1}\}$ gốc $O$ trong $\mathcal{A}^{n+1}$. Theo lý thuyết siêu phẳng trong không gian affine (Chương I, §3):
+- Mỗi siêu phẳng $\alpha \in H_O$ (vì đi qua gốc $O(0, \dots, 0)$ nên hệ số tự do bằng $0$) có phương trình tổng quát dạng tuyến tính thuần nhất:
+  $$
+  u_1 x_1 + u_2 x_2 + \dots + u_{n+1} x_{n+1} = 0,
+  $$
+  trong đó bộ hệ số $(u_1, u_2, \dots, u_{n+1}) \in \mathbb{R}^{n+1} \setminus \{(0, \dots, 0)\}$, tức ứng với một phiếm hàm tuyến tính khác không $\varphi \in (V^{n+1})^* \setminus \{0\}$ xác định bởi $\varphi(\vec{x}) = \sum_{i=1}^{n+1} u_i x_i$ (với $\alpha = \{M \in \mathcal{A}^{n+1} \mid \overrightarrow{OM} \in \ker\varphi\}$).
+- Hai bộ hệ số khác không $(u_1, \dots, u_{n+1})$ và $(v_1, \dots, v_{n+1})$ (tức hai phiếm hàm $\varphi, \psi \in (V^{n+1})^* \setminus \{0\}$) xác định **cùng một siêu phẳng** đi qua $O$ ($\ker\varphi = \ker\psi$) khi và chỉ khi tồn tại số thực $\lambda \neq 0$ sao cho $u_i = \lambda v_i$ với mọi $i = 1, \dots, n + 1$ (tức $\varphi = \lambda\psi$, nghĩa là $\varphi$ và $\psi$ sinh ra cùng một không gian con một chiều trong không gian vectơ đối ngẫu $W^{n+1} = (V^{n+1})^*$).
+
+Vì $\dim W^{n+1} = \dim (V^{n+1})^* = \dim V^{n+1} = n + 1$, ta xây dựng ánh xạ:
+$$
+\pi: P(W^{n+1}) \to H_O, \qquad \pi\bigl(\operatorname{span}\{\varphi\}\bigr) = \alpha_\varphi = \{M \in \mathcal{A}^{n+1} \mid \varphi(\overrightarrow{OM}) = 0\}.
+$$
+- **Tính xác định tốt và đơn ánh:** Với $\varphi, \psi \in W^{n+1} \setminus \{0\}$, ta có $\alpha_\varphi = \alpha_\psi \iff \ker\varphi = \ker\psi \iff \varphi = \lambda\psi$ ($\lambda \neq 0$) $\iff \operatorname{span}\{\varphi\} = \operatorname{span}\{\psi\}$.
+- **Tính toàn ánh:** Mọi siêu phẳng $\alpha \in H_O$ có phương là một không gian vectơ con $n$ chiều $U^n \subset V^{n+1}$, luôn là hạt nhân $\ker\varphi$ của một phiếm hàm tuyến tính $\varphi \in W^{n+1} \setminus \{0\}$, nên $\alpha = \pi\bigl(\operatorname{span}\{\varphi\}\bigr)$.
+
+Do đó $\pi: P(W^{n+1}) \to H_O$ là một song ánh, và bộ ba **$\bigl(H_O, \pi, (V^{n+1})^*\bigr)$ là một không gian xạ ảnh $n$ chiều** *(hoàn toàn tương tự, nếu xét bó siêu phẳng đi qua điểm cố định $O$ trong không gian affine $n$ chiều $\mathcal{A}^n$ với $n \ge 1$, không gian đối ngẫu $(V^n)^*$ có số chiều $n = (n - 1) + 1$, nên bó siêu phẳng đó lập thành một không gian xạ ảnh $(n - 1)$ chiều $\mathcal{P}^{n-1}$)*.
 </Solution>
 </Exercise>
 
 <KeyTakeaways>
-- Không gian xạ ảnh n chiều là tập hợp tất cả các đường thẳng đi qua gốc tọa độ trong không gian vectơ n+1 chiều.
-- Mọi cặp đường thẳng phân biệt trong mặt phẳng xạ ảnh đều cắt nhau tại đúng một điểm.
+- Không gian xạ ảnh $n$ chiều $\mathcal{P}^n = (X, \pi, V^{n+1})$ được xây dựng từ song ánh $\pi$ giữa tập các không gian vectơ con một chiều $P(V^{n+1})$ của $V^{n+1}$ và tập nền $X$; mỗi không gian con $V^{m+1} \subset V^{n+1}$ xác định một $m$-phẳng xạ ảnh $\mathcal{P}^m$.
+- Bốn mô hình nền tảng của $\mathcal{P}^n$ (mô hình vectơ, mô hình số học, mô hình bó đường thẳng tâm $O$ trong $\mathcal{A}^{n+1}$ và mô hình affine mở rộng $\widetilde{\mathcal{A}}^n = \mathcal{A}^n \cup P(V^n)$) cho thấy đường thẳng xạ ảnh là đường khép kín và mọi điểm thông thường lẫn điểm vô tận đều bình đẳng như nhau trong $\mathcal{P}^n$.
 </KeyTakeaways>
